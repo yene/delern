@@ -176,6 +176,16 @@ class Auth {
       return null;
     }
     final auth = await account.authentication;
+    // NOTE: `auth` may contain an access token that is not valid at this point
+    //       anymore, or will expire in a few seconds. There is no guarantee
+    //       that the token is up to date. If this happens, further use of the
+    //       token (e.g. `signInWithCredential`) will fail. To recover from
+    //       this, we can force token re-generation when signIn fails, by using
+    //       `await account.clearAuthCache()`. Note that `getCredential()` call
+    //       below will never fail as it merely copies tokens into a different
+    //       structure without validation.
+    //       Another solution is to always call `clearAuthCache()`, but what are
+    //       the side effects of it?
     return GoogleAuthProvider.getCredential(
       accessToken: auth.accessToken,
       idToken: auth.idToken,

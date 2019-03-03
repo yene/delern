@@ -60,20 +60,19 @@ cache:
     - $SDK_ROOT/flutter
 
 # When one of the steps in the install fails, the build stops immediately and is
-# marked as errored.
-install:
-  - tools/ci.sh dependencies
-  - tools/ci.sh build
-
+# marked as errored. The after_failure is not run in this case, not printing the
+# extended log.
 # When one of the build commands returns a non-zero exit code, the Travis CI
 # build runs the subsequent commands as well, and accumulates the build result.
-script:
-  - |
-    # Deploy only from "master" branch or a tag.
-    if [[ "$TRAVIS_PULL_REQUEST" == "false" &&
-          ( "$TRAVIS_BRANCH" == "master" || "$TRAVIS_TAG" != "" ) ]]; then
-      tools/ci.sh deploy
-    fi
+# We don't want it to advance to publish if test fail.
+script: |
+  tools/ci.sh dependencies &&
+  tools/ci.sh build &&
+  # Deploy only from "master" branch or a tag.
+  if [[ "$TRAVIS_PULL_REQUEST" == "false" &&
+        ( "$TRAVIS_BRANCH" == "master" || "$TRAVIS_TAG" != "" ) ]]; then
+    tools/ci.sh deploy
+  fi
 
 after_failure: cat "${BUILD_LOG?}"
 

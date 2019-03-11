@@ -231,11 +231,19 @@ class DeckListItemWidget extends StatelessWidget {
                 _onDeckMenuItemSelected(context, itemType),
             itemBuilder: (context) => _buildMenu(context)
                 .entries
-                .map((entry) => PopupMenuItem<_DeckMenuItemType>(
+                .map((entry) => DeckPopupMenuItem<_DeckMenuItemType>(
                       value: entry.key,
-                      child: Text(
-                        entry.value,
-                        style: app_styles.secondaryText,
+                      child: RaisedButton(
+                        color: Colors.tealAccent,
+                        padding: EdgeInsets.all(8.0),
+                        shape: RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(10))),
+                        child: Text(
+                          entry.value,
+                          style: app_styles.secondaryText,
+                        ),
+                        onPressed: () {},
                       ),
                     ))
                 .toList(),
@@ -302,6 +310,28 @@ class DeckListItemWidget extends StatelessWidget {
   }
 }
 
+class DeckPopupMenuItem<T> extends PopupMenuItem<T> {
+  const DeckPopupMenuItem({@required value, @required Widget child})
+      : assert(child != null),
+        super(value: value, child: child);
+
+  @override
+  _DeckPopupMenuState<T> createState() => _DeckPopupMenuState();
+}
+
+class _DeckPopupMenuState<T>
+    extends PopupMenuItemState<T, DeckPopupMenuItem<T>> {
+  /*@override
+  Widget buildChild() => RaisedButton(
+        color: Colors.tealAccent,
+        padding: EdgeInsets.all(8.0),
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(10))),
+        child: Text('Add'),
+        onPressed: () {},
+      );*/
+}
+
 class DeckMenu extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => _DeckMenuState();
@@ -326,18 +356,16 @@ class _DeckMenuState extends State<DeckMenu>
     opacityAnimation = Tween(begin: 0.0, end: 1.0).animate(anim);
   }
 
-  Widget getItem(String menuItemName) {
-    return RaisedButton(
-      color: Colors.tealAccent,
-      padding: EdgeInsets.all(8.0),
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(10))),
-      child: Text(menuItemName),
-      onPressed: () {
-        controller.reverse();
-      },
-    );
-  }
+  Widget getItem(String menuItemName) => RaisedButton(
+        color: Colors.tealAccent,
+        padding: EdgeInsets.all(8.0),
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(10))),
+        child: Text(menuItemName),
+        onPressed: () {
+          controller.reverse();
+        },
+      );
 
   Widget buildPrimaryItem(IconData source) {
     const size = 45.0;

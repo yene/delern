@@ -3,6 +3,7 @@ import 'package:delern_flutter/flutter/user_messages.dart';
 import 'package:delern_flutter/models/card_model.dart';
 import 'package:delern_flutter/models/deck_model.dart';
 import 'package:delern_flutter/view_models/card_preview_bloc.dart';
+import 'package:delern_flutter/views/base/screen_bloc_view.dart';
 import 'package:delern_flutter/views/card_create_update/card_create_update.dart';
 import 'package:delern_flutter/views/helpers/card_background_specifier.dart';
 import 'package:delern_flutter/views/helpers/card_display_widget.dart';
@@ -13,6 +14,8 @@ import 'package:flutter/material.dart';
 class CardPreview extends StatefulWidget {
   final CardModel card;
   final DeckModel deck;
+  // TODO(ksheremet): Consider to get rid of allow edit.
+  // allowEdit = deck.access != AccessType.read
   final bool allowEdit;
 
   const CardPreview(
@@ -26,47 +29,40 @@ class CardPreview extends StatefulWidget {
 }
 
 class _CardPreviewState extends State<CardPreview> {
-  CardPreviewBloc _cardPreviewBloc;
+  CardPreviewBloc _bloc;
 
   @override
   void initState() {
     super.initState();
     // TODO(dotdoom): replace with a simple assignment.
-    _cardPreviewBloc = CardPreviewBloc(card: widget.card, deck: widget.deck);
+    _bloc = CardPreviewBloc(card: widget.card, deck: widget.deck);
+    _bloc.doShowConfirmationDialog.listen(_showDeleteCardDialog);
+    _bloc.doShowUserMessage.listen(_showUserMessage);
   }
 
   @override
-  Widget build(BuildContext context) => Scaffold(
+  void didChangeDependencies() {
+    // TODO(ksheremet): Locale must be somewhere in ScreenBlocView
+    final locale = AppLocalizations.of(context);
+    if (_bloc?.locale != locale) {
+      _bloc.onLocale.add(locale);
+    }
+    super.didChangeDependencies();
+  }
+
+  @override
+  Widget build(BuildContext context) => ScreenBlocView(
         appBar: AppBar(
-          title: Text(_cardPreviewBloc.deckNameValue),
+          title: StreamBuilder(
+              initialData: widget.deck.name,
+              stream: _bloc.onDeckNameChanged,
+              builder: (context, snapshot) => Text(snapshot.data)),
           actions: <Widget>[
             Builder(
               builder: (context) => IconButton(
                   icon: const Icon(Icons.delete),
                   onPressed: () async {
-                    if (widget.allowEdit) {
-                      var locale = AppLocalizations.of(context);
-                      var saveChanges = await showSaveUpdatesDialog(
-                          context: context,
-                          changesQuestion: locale.deleteCardQuestion,
-                          yesAnswer: locale.delete,
-                          noAnswer: MaterialLocalizations.of(context)
-                              .cancelButtonLabel);
-                      if (saveChanges) {
-                        _cardPreviewBloc.deleteCard
-                            .add(CurrentUserWidget.of(context).user.uid);
-                        // TODO(ksheremet): It would be better to close
-                        //  screen in StreamBuilder when
-                        //  snapshot.connectionState == Done, but StreamBuilder
-                        //   requires a Widget in return statement.
-                        Navigator.of(context).pop();
-                      }
-                    } else {
-                      UserMessages.showMessage(
-                          Scaffold.of(context),
-                          AppLocalizations.of(context)
-                              .noDeletingWithReadAccessUserMessage);
-                    }
+                    _bloc.onDeleteDeckIntention.add(null);
                   }),
             )
           ],
@@ -75,8 +71,8 @@ class _CardPreviewState extends State<CardPreview> {
           children: <Widget>[
             Expanded(
                 child: StreamBuilder<CardViewModel>(
-                    stream: _cardPreviewBloc.cardStream,
-                    initialData: _cardPreviewBloc.cardValue,
+                    stream: _bloc.cardStream,
+                    initialData: _bloc.cardValue,
                     builder: (context, snapshot) => CardDisplayWidget(
                         front: snapshot.requireData.card.front,
                         back: snapshot.requireData.card.back,
@@ -109,5 +105,22 @@ class _CardPreviewState extends State<CardPreview> {
                 }
               }),
         ),
+        bloc: _bloc,
       );
+
+  void _showDeleteCardDialog(deleteCardQuestion) async {
+    var deleteCardDialog = await showSaveUpdatesDialog(
+        context: context,
+        changesQuestion: deleteCardQuestion,
+        yesAnswer: AppLocalizations.of(context).delete,
+        noAnswer: MaterialLocalizations.of(context).cancelButtonLabel);
+    if (deleteCardDialog) {
+      _bloc.onDeleteCard.add(CurrentUserWidget.of(context).user.uid);
+    }
+  }
+
+  void _showUserMessage(message) {
+    UserMessages.showMessage(Scaffold.of(context),
+        AppLocalizations.of(context).noDeletingWithReadAccessUserMessage);
+  }
 }

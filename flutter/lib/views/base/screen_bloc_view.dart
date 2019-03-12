@@ -6,12 +6,14 @@ class ScreenBlocView extends StatefulWidget {
   final Widget appBar;
   final Widget body;
   final ScreenBloc bloc;
+  final Widget floatingActionButton;
 
-  const ScreenBlocView({
-    @required this.appBar,
-    @required this.body,
-    @required this.bloc,
-  })  : assert(appBar != null),
+  const ScreenBlocView(
+      {@required this.appBar,
+      @required this.body,
+      @required this.bloc,
+      this.floatingActionButton})
+      : assert(appBar != null),
         assert(body != null),
         assert(bloc != null);
 
@@ -36,11 +38,19 @@ class _ScreenBlocViewState extends State<ScreenBlocView> {
         widget.bloc.onCloseScreen.add(null);
         return false;
       },
-      child: Scaffold(
-        key: _scaffoldKey,
-        appBar: widget.appBar,
-        body: widget.body,
-      ));
+      // Some screens have FAB, check before creating Scaffold
+      child: widget.floatingActionButton == null
+          ? Scaffold(
+              key: _scaffoldKey,
+              appBar: widget.appBar,
+              body: widget.body,
+            )
+          : Scaffold(
+              key: _scaffoldKey,
+              appBar: widget.appBar,
+              body: widget.body,
+              floatingActionButton: widget.floatingActionButton,
+            ));
 
   void _showUserMessage(String message) {
     UserMessages.showMessage(_scaffoldKey.currentState, message);

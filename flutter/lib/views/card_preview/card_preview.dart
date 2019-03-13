@@ -13,15 +13,10 @@ import 'package:flutter/material.dart';
 class CardPreview extends StatefulWidget {
   final CardModel card;
   final DeckModel deck;
-  // TODO(ksheremet): Consider to get rid of allow edit.
-  // allowEdit = deck.access != AccessType.read
-  final bool allowEdit;
 
-  const CardPreview(
-      {@required this.card, @required this.deck, @required this.allowEdit})
+  const CardPreview({@required this.card, @required this.deck})
       : assert(card != null),
-        assert(deck != null),
-        assert(allowEdit != null);
+        assert(deck != null);
 
   @override
   State<StatefulWidget> createState() => _CardPreviewState();

@@ -28,6 +28,7 @@ class _ScreenBlocViewState extends State<ScreenBlocView> {
   void initState() {
     widget.bloc.doPop.listen((_) => Navigator.pop(context));
     widget.bloc.doShowError.listen(_showUserMessage);
+    widget.bloc.doShowMessage.listen(_showUserMessage);
     super.initState();
   }
 
@@ -38,7 +39,8 @@ class _ScreenBlocViewState extends State<ScreenBlocView> {
         widget.bloc.onCloseScreen.add(null);
         return false;
       },
-      // Some screens have FAB, check before creating Scaffold
+      // TODO(ksheremet): Some screens have FAB, check before creating Scaffold.
+      //  Consider more elegant solution
       child: widget.floatingActionButton == null
           ? Scaffold(
               key: _scaffoldKey,

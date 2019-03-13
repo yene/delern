@@ -1,5 +1,4 @@
 import 'package:delern_flutter/flutter/localization.dart';
-import 'package:delern_flutter/flutter/user_messages.dart';
 import 'package:delern_flutter/models/card_model.dart';
 import 'package:delern_flutter/models/deck_model.dart';
 import 'package:delern_flutter/view_models/card_preview_bloc.dart';
@@ -36,8 +35,10 @@ class _CardPreviewState extends State<CardPreview> {
     super.initState();
     // TODO(dotdoom): replace with a simple assignment.
     _bloc = CardPreviewBloc(card: widget.card, deck: widget.deck);
-    _bloc.doShowConfirmationDialog.listen(_showDeleteCardDialog);
-    _bloc.doShowUserMessage.listen(_showUserMessage);
+    _bloc.doShowDeleteDialog.listen(_showDeleteCardDialog);
+    _bloc.doEditCard.listen((_) {
+      _editCard();
+    });
   }
 
   @override
@@ -55,16 +56,14 @@ class _CardPreviewState extends State<CardPreview> {
         appBar: AppBar(
           title: StreamBuilder(
               initialData: widget.deck.name,
-              stream: _bloc.onDeckNameChanged,
+              stream: _bloc.doDeckNameChanged,
               builder: (context, snapshot) => Text(snapshot.data)),
           actions: <Widget>[
-            Builder(
-              builder: (context) => IconButton(
-                  icon: const Icon(Icons.delete),
-                  onPressed: () async {
-                    _bloc.onDeleteDeckIntention.add(null);
-                  }),
-            )
+            IconButton(
+                icon: const Icon(Icons.delete),
+                onPressed: () async {
+                  _bloc.onDeleteDeckIntention.add(null);
+                }),
           ],
         ),
         body: Column(
@@ -84,27 +83,11 @@ class _CardPreviewState extends State<CardPreview> {
             const Padding(padding: EdgeInsets.only(bottom: 100.0))
           ],
         ),
-        floatingActionButton: Builder(
-          builder: (context) => FloatingActionButton(
-              child: const Icon(Icons.edit),
-              onPressed: () {
-                if (widget.allowEdit) {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          // 'name' is used by Firebase Analytics to log events.
-                          // TODO(dotdoom): consider better route names.
-                          settings: const RouteSettings(name: '/cards/edit'),
-                          builder: (context) => CardCreateUpdate(
-                              card: widget.card, deck: widget.deck)));
-                } else {
-                  UserMessages.showMessage(
-                      Scaffold.of(context),
-                      AppLocalizations.of(context)
-                          .noEditingWithReadAccessUserMessage);
-                }
-              }),
-        ),
+        floatingActionButton: FloatingActionButton(
+            child: const Icon(Icons.edit),
+            onPressed: () {
+              _bloc.onEditCardIntention.add(null);
+            }),
         bloc: _bloc,
       );
 
@@ -119,8 +102,14 @@ class _CardPreviewState extends State<CardPreview> {
     }
   }
 
-  void _showUserMessage(message) {
-    UserMessages.showMessage(Scaffold.of(context),
-        AppLocalizations.of(context).noDeletingWithReadAccessUserMessage);
+  void _editCard() {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            // 'name' is used by Firebase Analytics to log events.
+            // TODO(dotdoom): consider better route names.
+            settings: const RouteSettings(name: '/cards/edit'),
+            builder: (context) =>
+                CardCreateUpdate(card: widget.card, deck: widget.deck)));
   }
 }

@@ -29,6 +29,10 @@ abstract class ScreenBloc {
   Stream<String> get doShowError => _doShowErrorController.stream;
   final _doShowErrorController = StreamController<String>();
 
+  /// A stream that emits a message to show to user.
+  Stream<String> get doShowMessage => _doShowMessageController.stream;
+  final _doShowMessageController = StreamController<String>();
+
   /// Sink to write when locale is changed
   Sink<AppLocalizations> get onLocale => _onLocaleController.sink;
   final _onLocaleController = StreamController<AppLocalizations>();
@@ -42,6 +46,12 @@ abstract class ScreenBloc {
   void notifyErrorOccurred(Exception e) {
     _doShowErrorController
         .add(UserMessages.formUserFriendlyErrorMessage(locale, e));
+  }
+
+  /// Call to show message to user
+  @protected
+  void showUserMessage(String message) {
+    _doShowMessageController.add(message);
   }
 
   /// Method that checks whether it is ok to close the screen.
@@ -63,5 +73,6 @@ abstract class ScreenBloc {
     _doShowErrorController.close();
     _onLocaleController.close();
     _onCloseScreenController.close();
+    _doShowMessageController.close();
   }
 }

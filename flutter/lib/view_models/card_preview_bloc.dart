@@ -40,13 +40,19 @@ class CardPreviewBloc extends ScreenBloc {
         notifyErrorOccurred(e);
       }
     });
-    _onDeckNameController.stream.listen(_onDeckNameChangedController.add);
+    _onDeckNameController.stream.listen(_doDeckNameChangedController.add);
     _onDeleteCardIntention.stream.listen((_) {
       if (_isEditAllowed()) {
-        _doShowConfirmationDialogController.add(locale.deleteCardQuestion);
+        _doShowDeleteDialogController.add(locale.deleteCardQuestion);
       } else {
-        _doShowUserMessageController
-            .add(locale.noDeletingWithReadAccessUserMessage);
+        showUserMessage(locale.noDeletingWithReadAccessUserMessage);
+      }
+    });
+    _onEditCardIntentionController.stream.listen((_) {
+      if (_isEditAllowed()) {
+        _doEditCardController.add(null);
+      } else {
+        showUserMessage(locale.noEditingWithReadAccessUserMessage);
       }
     });
   }
@@ -57,19 +63,20 @@ class CardPreviewBloc extends ScreenBloc {
   final _onDeleteCardIntention = StreamController<void>();
   Sink<void> get onDeleteDeckIntention => _onDeleteCardIntention.sink;
 
-  final _doShowConfirmationDialogController = StreamController<String>();
-  Stream<String> get doShowConfirmationDialog =>
-      _doShowConfirmationDialogController.stream;
+  final _onEditCardIntentionController = StreamController<void>();
+  Sink<void> get onEditCardIntention => _onEditCardIntentionController.sink;
+
+  final _doEditCardController = StreamController<void>();
+  Stream get doEditCard => _doEditCardController.stream;
+
+  final _doShowDeleteDialogController = StreamController<String>();
+  Stream<String> get doShowDeleteDialog => _doShowDeleteDialogController.stream;
 
   final _onDeckNameController = StreamController<String>();
   Sink<String> get onDeckName => _onDeckNameController.sink;
 
-  final _onDeckNameChangedController = StreamController<String>();
-  Stream<String> get onDeckNameChanged => _onDeckNameChangedController.stream;
-
-  // TODO(ksheremet): Consider to move to ScreenBloc
-  final _doShowUserMessageController = StreamController<String>();
-  Stream<String> get doShowUserMessage => _doShowUserMessageController.stream;
+  final _doDeckNameChangedController = StreamController<String>();
+  Stream<String> get doDeckNameChanged => _doDeckNameChangedController.stream;
 
   CardViewModel _cardValue;
   CardViewModel get cardValue => CardViewModel._copyFrom(_cardValue);
@@ -103,10 +110,11 @@ class CardPreviewBloc extends ScreenBloc {
   void dispose() {
     _onDeleteCardController.close();
     _onDeleteCardIntention.close();
-    _doShowConfirmationDialogController.close();
+    _doShowDeleteDialogController.close();
     _onDeckNameController.close();
-    _onDeckNameChangedController.close();
-    _doShowUserMessageController.close();
+    _doDeckNameChangedController.close();
+    _onEditCardIntentionController.close();
+    _doEditCardController.close();
     super.dispose();
   }
 }

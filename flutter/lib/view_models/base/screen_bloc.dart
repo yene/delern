@@ -50,7 +50,7 @@ abstract class ScreenBloc {
 
   /// Call to show message to user
   @protected
-  void showUserMessage(String message) {
+  void showMessage(String message) {
     _doShowMessageController.add(message);
   }
 

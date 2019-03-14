@@ -39,20 +39,12 @@ class _ScreenBlocViewState extends State<ScreenBlocView> {
         widget.bloc.onCloseScreen.add(null);
         return false;
       },
-      // TODO(ksheremet): Some screens have FAB, check before creating Scaffold.
-      //  Consider more elegant solution
-      child: widget.floatingActionButton == null
-          ? Scaffold(
-              key: _scaffoldKey,
-              appBar: widget.appBar,
-              body: widget.body,
-            )
-          : Scaffold(
-              key: _scaffoldKey,
-              appBar: widget.appBar,
-              body: widget.body,
-              floatingActionButton: widget.floatingActionButton,
-            ));
+      child: Scaffold(
+        key: _scaffoldKey,
+        appBar: widget.appBar,
+        body: widget.body,
+        floatingActionButton: widget.floatingActionButton,
+      ));
 
   void _showUserMessage(String message) {
     UserMessages.showMessage(_scaffoldKey.currentState, message);

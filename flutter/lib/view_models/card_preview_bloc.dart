@@ -41,18 +41,18 @@ class CardPreviewBloc extends ScreenBloc {
       }
     });
     _onDeckNameController.stream.listen(_doDeckNameChangedController.add);
-    _onDeleteCardIntention.stream.listen((_) {
+    _onDeleteCardIntentionController.stream.listen((_) {
       if (_isEditAllowed()) {
         _doShowDeleteDialogController.add(locale.deleteCardQuestion);
       } else {
-        showUserMessage(locale.noDeletingWithReadAccessUserMessage);
+        showMessage(locale.noDeletingWithReadAccessUserMessage);
       }
     });
     _onEditCardIntentionController.stream.listen((_) {
       if (_isEditAllowed()) {
         _doEditCardController.add(null);
       } else {
-        showUserMessage(locale.noEditingWithReadAccessUserMessage);
+        showMessage(locale.noEditingWithReadAccessUserMessage);
       }
     });
   }
@@ -60,8 +60,8 @@ class CardPreviewBloc extends ScreenBloc {
   final _onDeleteCardController = StreamController<String>();
   Sink<String> get onDeleteCard => _onDeleteCardController.sink;
 
-  final _onDeleteCardIntention = StreamController<void>();
-  Sink<void> get onDeleteDeckIntention => _onDeleteCardIntention.sink;
+  final _onDeleteCardIntentionController = StreamController<void>();
+  Sink<void> get onDeleteDeckIntention => _onDeleteCardIntentionController.sink;
 
   final _onEditCardIntentionController = StreamController<void>();
   Sink<void> get onEditCardIntention => _onEditCardIntentionController.sink;
@@ -95,21 +95,18 @@ class CardPreviewBloc extends ScreenBloc {
         }
       }));
 
-  Future<void> _deleteCard(String uid) async {
-    // TODO(dotdoom): move to models?
-    await (Transaction()
-          ..delete(_cardValue.card)
-          ..delete(ScheduledCardModel(deckKey: _cardValue.deck.key, uid: uid)
-            ..key = _cardValue.card.key))
-        .commit();
-  }
+  Future<void> _deleteCard(String uid) => (Transaction()
+        ..delete(_cardValue.card)
+        ..delete(ScheduledCardModel(deckKey: _cardValue.deck.key, uid: uid)
+          ..key = _cardValue.card.key))
+      .commit();
 
   bool _isEditAllowed() => cardValue.deck.access != AccessType.read;
 
   @override
   void dispose() {
     _onDeleteCardController.close();
-    _onDeleteCardIntention.close();
+    _onDeleteCardIntentionController.close();
     _doShowDeleteDialogController.close();
     _onDeckNameController.close();
     _doDeckNameChangedController.close();

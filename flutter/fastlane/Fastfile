@@ -90,7 +90,7 @@ platform :ios do
       #                https://github.com/flutter/flutter/issues/28802.
       build_name_override: '^vcs',
     )
-    gym(silent: true)
+    gym(silent: true, suppress_xcode_output: true)
     # TODO(dotdoom): set also "changelog"
     pilot(
       ipa: 'build/Runner.ipa',

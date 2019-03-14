@@ -110,7 +110,6 @@ class CardGridItem extends StatelessWidget {
                     builder: (context) => CardPreview(
                           card: card,
                           deck: deck,
-                          allowEdit: allowEdit,
                         ))),
             child: Container(
               padding: const EdgeInsets.all(5.0),

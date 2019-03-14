@@ -6,12 +6,14 @@ class ScreenBlocView extends StatefulWidget {
   final Widget appBar;
   final Widget body;
   final ScreenBloc bloc;
+  final Widget floatingActionButton;
 
-  const ScreenBlocView({
-    @required this.appBar,
-    @required this.body,
-    @required this.bloc,
-  })  : assert(appBar != null),
+  const ScreenBlocView(
+      {@required this.appBar,
+      @required this.body,
+      @required this.bloc,
+      this.floatingActionButton})
+      : assert(appBar != null),
         assert(body != null),
         assert(bloc != null);
 
@@ -26,6 +28,7 @@ class _ScreenBlocViewState extends State<ScreenBlocView> {
   void initState() {
     widget.bloc.doPop.listen((_) => Navigator.pop(context));
     widget.bloc.doShowError.listen(_showUserMessage);
+    widget.bloc.doShowMessage.listen(_showUserMessage);
     super.initState();
   }
 
@@ -40,6 +43,7 @@ class _ScreenBlocViewState extends State<ScreenBlocView> {
         key: _scaffoldKey,
         appBar: widget.appBar,
         body: widget.body,
+        floatingActionButton: widget.floatingActionButton,
       ));
 
   void _showUserMessage(String message) {

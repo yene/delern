@@ -98,8 +98,8 @@ class DeckSettingsBloc extends ScreenBloc {
         await _delete();
         notifyPop();
       } catch (e, stackTrace) {
-        ErrorReporting.report('deleteCard', e, stackTrace);
-        super.notifyErrorOccurred(e);
+        ErrorReporting.report('deleteDeck', e, stackTrace);
+        notifyErrorOccurred(e);
       }
     });
 

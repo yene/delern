@@ -1,6 +1,7 @@
 [![Travis CI](https://travis-ci.org/dasfoo/delern.svg?branch=master)](https://travis-ci.org/dasfoo/delern)
 [![codecov](https://codecov.io/gh/dasfoo/delern/branch/master/graph/badge.svg)](https://codecov.io/gh/dasfoo/delern)
-[![Codemagic build status](https://api.codemagic.io/apps/5c7687c8989e5e000c102345/5c7687c8989e5e000c102344/status_badge.svg)](https://codemagic.io/apps/5c7687c8989e5e000c102345/5c7687c8989e5e000c102344/latest_build)
+[![Codemagic](https://api.codemagic.io/apps/5c7687c8989e5e000c102345/5c7687c8989e5e000c102344/status_badge.svg)](https://codemagic.io/apps/5c7687c8989e5e000c102345/5c7687c8989e5e000c102344/latest_build)
+[![Appveyor](https://ci.appveyor.com/api/projects/status/689esuw57tfyjbkd/branch/master?svg=true)](https://ci.appveyor.com/project/dotdoom/delern/branch/master)
 
 
 

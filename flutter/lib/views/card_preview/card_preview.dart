@@ -31,9 +31,7 @@ class _CardPreviewState extends State<CardPreview> {
     // TODO(dotdoom): replace with a simple assignment.
     _bloc = CardPreviewBloc(card: widget.card, deck: widget.deck);
     _bloc.doShowDeleteDialog.listen(_showDeleteCardDialog);
-    _bloc.doEditCard.listen((_) {
-      _editCard();
-    });
+    _bloc.doEditCard.listen((_) => _editCard());
   }
 
   @override
@@ -49,7 +47,7 @@ class _CardPreviewState extends State<CardPreview> {
   @override
   Widget build(BuildContext context) => ScreenBlocView(
         appBar: AppBar(
-          title: StreamBuilder(
+          title: StreamBuilder<String>(
               initialData: widget.deck.name,
               stream: _bloc.doDeckNameChanged,
               builder: (context, snapshot) => Text(snapshot.data)),

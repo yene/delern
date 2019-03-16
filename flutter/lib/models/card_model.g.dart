@@ -23,6 +23,14 @@ class _$CardModelSerializer implements StructuredSerializer<CardModel> {
           specifiedType: const FullType(String)),
       'back',
       serializers.serialize(object.back, specifiedType: const FullType(String)),
+      'frontImagesUri',
+      serializers.serialize(object.frontImagesUri,
+          specifiedType:
+              const FullType(BuiltList, const [const FullType(String)])),
+      'backImagesUri',
+      serializers.serialize(object.backImagesUri,
+          specifiedType:
+              const FullType(BuiltList, const [const FullType(String)])),
     ];
     if (object.deckKey != null) {
       result
@@ -76,6 +84,18 @@ class _$CardModelSerializer implements StructuredSerializer<CardModel> {
           result.createdAt = serializers.deserialize(value,
               specifiedType: const FullType(DateTime)) as DateTime;
           break;
+        case 'frontImagesUri':
+          result.frontImagesUri.replace(serializers.deserialize(value,
+                  specifiedType:
+                      const FullType(BuiltList, const [const FullType(String)]))
+              as BuiltList<dynamic>);
+          break;
+        case 'backImagesUri':
+          result.backImagesUri.replace(serializers.deserialize(value,
+                  specifiedType:
+                      const FullType(BuiltList, const [const FullType(String)]))
+              as BuiltList<dynamic>);
+          break;
       }
     }
 
@@ -94,17 +114,34 @@ class _$CardModel extends CardModel {
   final String back;
   @override
   final DateTime createdAt;
+  @override
+  final BuiltList<String> frontImagesUri;
+  @override
+  final BuiltList<String> backImagesUri;
 
   factory _$CardModel([void Function(CardModelBuilder) updates]) =>
       (new CardModelBuilder()..update(updates)).build();
 
-  _$CardModel._({this.deckKey, this.key, this.front, this.back, this.createdAt})
+  _$CardModel._(
+      {this.deckKey,
+      this.key,
+      this.front,
+      this.back,
+      this.createdAt,
+      this.frontImagesUri,
+      this.backImagesUri})
       : super._() {
     if (front == null) {
       throw new BuiltValueNullFieldError('CardModel', 'front');
     }
     if (back == null) {
       throw new BuiltValueNullFieldError('CardModel', 'back');
+    }
+    if (frontImagesUri == null) {
+      throw new BuiltValueNullFieldError('CardModel', 'frontImagesUri');
+    }
+    if (backImagesUri == null) {
+      throw new BuiltValueNullFieldError('CardModel', 'backImagesUri');
     }
   }
 
@@ -123,15 +160,23 @@ class _$CardModel extends CardModel {
         key == other.key &&
         front == other.front &&
         back == other.back &&
-        createdAt == other.createdAt;
+        createdAt == other.createdAt &&
+        frontImagesUri == other.frontImagesUri &&
+        backImagesUri == other.backImagesUri;
   }
 
   @override
   int get hashCode {
     return $jf($jc(
-        $jc($jc($jc($jc(0, deckKey.hashCode), key.hashCode), front.hashCode),
-            back.hashCode),
-        createdAt.hashCode));
+        $jc(
+            $jc(
+                $jc(
+                    $jc($jc($jc(0, deckKey.hashCode), key.hashCode),
+                        front.hashCode),
+                    back.hashCode),
+                createdAt.hashCode),
+            frontImagesUri.hashCode),
+        backImagesUri.hashCode));
   }
 
   @override
@@ -141,7 +186,9 @@ class _$CardModel extends CardModel {
           ..add('key', key)
           ..add('front', front)
           ..add('back', back)
-          ..add('createdAt', createdAt))
+          ..add('createdAt', createdAt)
+          ..add('frontImagesUri', frontImagesUri)
+          ..add('backImagesUri', backImagesUri))
         .toString();
   }
 }
@@ -169,6 +216,18 @@ class CardModelBuilder implements Builder<CardModel, CardModelBuilder> {
   DateTime get createdAt => _$this._createdAt;
   set createdAt(DateTime createdAt) => _$this._createdAt = createdAt;
 
+  ListBuilder<String> _frontImagesUri;
+  ListBuilder<String> get frontImagesUri =>
+      _$this._frontImagesUri ??= new ListBuilder<String>();
+  set frontImagesUri(ListBuilder<String> frontImagesUri) =>
+      _$this._frontImagesUri = frontImagesUri;
+
+  ListBuilder<String> _backImagesUri;
+  ListBuilder<String> get backImagesUri =>
+      _$this._backImagesUri ??= new ListBuilder<String>();
+  set backImagesUri(ListBuilder<String> backImagesUri) =>
+      _$this._backImagesUri = backImagesUri;
+
   CardModelBuilder() {
     CardModel._initializeBuilder(this);
   }
@@ -180,6 +239,8 @@ class CardModelBuilder implements Builder<CardModel, CardModelBuilder> {
       _front = _$v.front;
       _back = _$v.back;
       _createdAt = _$v.createdAt;
+      _frontImagesUri = _$v.frontImagesUri?.toBuilder();
+      _backImagesUri = _$v.backImagesUri?.toBuilder();
       _$v = null;
     }
     return this;
@@ -200,13 +261,30 @@ class CardModelBuilder implements Builder<CardModel, CardModelBuilder> {
 
   @override
   _$CardModel build() {
-    final _$result = _$v ??
-        new _$CardModel._(
-            deckKey: deckKey,
-            key: key,
-            front: front,
-            back: back,
-            createdAt: createdAt);
+    _$CardModel _$result;
+    try {
+      _$result = _$v ??
+          new _$CardModel._(
+              deckKey: deckKey,
+              key: key,
+              front: front,
+              back: back,
+              createdAt: createdAt,
+              frontImagesUri: frontImagesUri.build(),
+              backImagesUri: backImagesUri.build());
+    } catch (_) {
+      String _$failedField;
+      try {
+        _$failedField = 'frontImagesUri';
+        frontImagesUri.build();
+        _$failedField = 'backImagesUri';
+        backImagesUri.build();
+      } catch (e) {
+        throw new BuiltValueNestedFieldError(
+            'CardModel', _$failedField, e.toString());
+      }
+      rethrow;
+    }
     replace(_$result);
     return _$result;
   }

@@ -36,6 +36,9 @@ def parse_KV_file(file, separator='=')
 end
 
 target 'Runner' do
+  # Per instructions in flutter_exif_rotation plugin README:
+  # https://github.com/NGhebreial/flutter_exif_rotation/blob/49bbebb7808563daba5a2d3a8da6b8ba065ddb90/README.md.
+  use_frameworks!
   # Flutter Pod
 
   copied_flutter_dir = File.join(__dir__, 'Flutter')
@@ -86,6 +89,9 @@ post_install do |installer|
     target.build_configurations.each do |config|
       config.build_settings['PROVISIONING_PROFILE_SPECIFIER'] = ''
       config.build_settings['ENABLE_BITCODE'] = 'NO'
+      # Temporary workaround for missing dependency configuration:
+      # https://github.com/NGhebreial/flutter_exif_rotation/issues/26.
+      config.build_settings['SWIFT_VERSION'] = '4.2'
     end
   end
 end

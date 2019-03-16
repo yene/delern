@@ -1,3 +1,4 @@
+import 'package:delern_flutter/flutter/localization.dart';
 import 'package:delern_flutter/views/card_create_update/card_side_input_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -11,6 +12,9 @@ void main() {
     // Widget must be wrapped in MaterialApp widget because it uses material
     // related classes.
     await tester.pumpWidget(MaterialApp(
+      localizationsDelegates: [
+        AppLocalizationsDelegate(),
+      ],
       home: CardSideInputWidget(
         key: key,
         controller: controller,
@@ -20,6 +24,8 @@ void main() {
         },
       ),
     ));
+    await tester.pumpAndSettle();
+    expect(find.byType(CardSideInputWidget), findsOneWidget);
     expect(find.text(hint), findsOneWidget);
     expect(find.byKey(key), findsOneWidget);
     await tester.enterText(find.byType(TextField), 'front');
@@ -36,15 +42,22 @@ void main() {
     // Widget must be wrapped in MaterialApp widget because it uses material
     // related classes.
     await tester.pumpWidget(MaterialApp(
-      home: CardSideInputWidget(
-        key: key,
-        controller: controller,
-        hint: hint,
-        onTextChanged: (text) {
-          currentText = text;
-        },
+      localizationsDelegates: [
+        AppLocalizationsDelegate(),
+      ],
+      home: Scaffold(
+        body: CardSideInputWidget(
+          key: key,
+          controller: controller,
+          hint: hint,
+          onTextChanged: (text) {
+            currentText = text;
+          },
+        ),
       ),
     ));
+    await tester.pumpAndSettle();
+    expect(find.byType(Scaffold), findsOneWidget);
     expect(find.text(hint), findsOneWidget);
     expect(find.text(currentText), findsOneWidget);
     expect(find.byKey(key), findsOneWidget);

@@ -114,8 +114,10 @@ class _CardsViewLearningState extends State<CardsViewLearning>
                         child: Padding(
                           padding: const EdgeInsets.all(_kCardPadding),
                           child: FlipCardWidget(
-                            front: snapshot.data[index].frontWithoutTags,
+                            front: snapshot.data[index].front,
+                            frontImages: snapshot.data[index].frontImagesUri,
                             back: snapshot.data[index].back,
+                            backImages: snapshot.data[index].backImagesUri,
                             colors: specifyCardColors(
                                 widget.deck.type, snapshot.data[index].back),
                             key: ValueKey(snapshot.data[index].key),

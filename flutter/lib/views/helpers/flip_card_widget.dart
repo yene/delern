@@ -1,9 +1,10 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:built_collection/built_collection.dart';
 import 'package:delern_flutter/flutter/localization.dart' as localization;
 import 'package:delern_flutter/flutter/styles.dart' as app_styles;
-import 'package:delern_flutter/views/helpers/non_scrolling_markdown_widget.dart';
+import 'package:delern_flutter/views/helpers/card_side_widget.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -14,7 +15,10 @@ typedef CardFlipCallback = void Function();
 
 class FlipCardWidget extends StatefulWidget {
   final String front;
+  final BuiltList<String> frontImages;
   final String back;
+  final BuiltList<String> backImages;
+
   final app_styles.CardColor colors;
   final ValueNotifier<bool> hasBeenFlipped;
 
@@ -33,8 +37,10 @@ class FlipCardWidget extends StatefulWidget {
   /// widgets of the same class, even when they change order.
   const FlipCardWidget({
     @required this.front,
+    @required this.frontImages,
     @required this.back,
     @required this.colors,
+    @required this.backImages,
     @required Key key,
     this.hasBeenFlipped,
   })  : assert(key != null),
@@ -150,10 +156,15 @@ class _FlipCardWidgetState extends State<FlipCardWidget>
                       constraints: BoxConstraints(
                         minHeight: viewportConstraints.maxHeight,
                       ),
-                      child: NonScrollingMarkdownWidget(
-                        text: _isFront ? widget.front : widget.back,
-                        textStyle: app_styles.primaryText,
-                      ),
+                      child: _isFront
+                          ? CardSideWidget(
+                              text: widget.front,
+                              imagesList: widget.frontImages,
+                            )
+                          : CardSideWidget(
+                              text: widget.back,
+                              imagesList: widget.backImages,
+                            ),
                     ),
                   ),
                 ),

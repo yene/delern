@@ -1,5 +1,6 @@
 import 'package:delern_flutter/flutter/localization.dart' as localizations;
 import 'package:delern_flutter/flutter/user_messages.dart';
+import 'package:delern_flutter/views/helpers/display_image_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:pedantic/pedantic.dart';
@@ -22,6 +23,8 @@ class NonScrollingMarkdownWidget extends StatelessWidget {
               listBullet: textStyle,
               textScaleFactor: MediaQuery.of(context).textScaleFactor,
             ),
+            // Use custom image builder to have loading
+            imageBuilder: (uri) => buildDisplayImageWidget(uri.toString()),
             onTapLink: (href) async {
               if (await canLaunch(href)) {
                 await launch(href, forceSafariVC: false);

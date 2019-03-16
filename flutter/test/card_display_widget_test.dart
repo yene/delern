@@ -16,7 +16,9 @@ void main() {
       home: Scaffold(
         body: CardDisplayWidget(
           front: frontSide,
+          frontImages: null,
           back: backSide,
+          backImages: null,
           tags: const ['#family', '#feminine', '#german'],
           color: app_styles
               .cardBackgroundColors[Gender.feminine].defaultBackground,

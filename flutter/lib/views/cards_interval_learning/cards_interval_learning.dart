@@ -20,6 +20,7 @@ import 'package:delern_flutter/views/helpers/stream_with_value_builder.dart';
 import 'package:delern_flutter/views/helpers/text_overflow_ellipsis_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:pedantic/pedantic.dart';
 
 const _kCardPaddingRatio = 0.07;
 
@@ -89,117 +90,116 @@ class CardsIntervalLearningState extends State<CardsIntervalLearning> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        // TODO(dotdoom): find out why build triggers twice for next card.
-        appBar: AppBar(
-          title: buildStreamBuilderWithValue<DeckModel>(
-            streamWithValue: _deck,
-            builder: (context, snapshot) => snapshot.hasData
-                ? TextOverflowEllipsisWidget(
-                    textDetails: snapshot.data.name,
-                  )
-                : ProgressIndicatorWidget(),
-          ),
-          actions: _card == null
-              ? null
-              : <Widget>[
-                  CardActionsMenuWidget(
-                    user: _user,
-                    deck: _deck.value,
-                    card: _card.value,
-                  ),
-                ],
+      // TODO(dotdoom): find out why build triggers twice for next card.
+      appBar: AppBar(
+        title: buildStreamBuilderWithValue<DeckModel>(
+          streamWithValue: _deck,
+          builder: (context, snapshot) => snapshot.hasData
+              ? TextOverflowEllipsisWidget(
+                  textDetails: snapshot.data.name,
+                )
+              : ProgressIndicatorWidget(),
         ),
-        body: _card == null
-            ? ProgressIndicatorWidget()
-            : Column(
-                children: <Widget>[
-                  Expanded(
-                      child: Padding(
-                    padding: MediaQuery.of(context).orientation ==
-                            Orientation.portrait
-                        ? EdgeInsets.all(MediaQuery.of(context).size.width *
-                            _kCardPaddingRatio)
-                        : EdgeInsets.only(
-                            top: 10,
-                            left: MediaQuery.of(context).size.width *
-                                _kCardPaddingRatio,
-                            right: MediaQuery.of(context).size.width *
-                                _kCardPaddingRatio),
-                    child: buildStreamBuilderWithValue<CardModel>(
-                        // TODO(dotdoom): find a prettier way to trigger the
-                        //                builder() when initialData changes.
-                        key: ValueKey(_card.value?.key),
-                        streamWithValue: _card,
-                        builder: (context, snapshot) {
-                          // TODO(dotdoom): handle removed data (in model).
-                          if (!snapshot.hasData) {
-                            return ProgressIndicatorWidget();
-                          }
-                          final card = snapshot.data;
-                          // TODO(dotdoom): handle card updates.
-                          return FlipCardWidget(
-                            front: card.frontWithoutTags,
-                            back: card.back,
-                            colors:
-                                specifyCardColors(_deck.value.type, card.back),
-                            hasBeenFlipped: _showReplyButtons,
-                            key: ValueKey(card.key),
-                          );
-                        }),
-                  )),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 20),
-                    child: ValueListenableBuilder<bool>(
-                      valueListenable: _showReplyButtons,
-                      builder: (context, showReplyButtons, child) => Visibility(
-                        visible: showReplyButtons,
-                        maintainSize: true,
-                        // Required when maintainSize is set.
-                        maintainAnimation: true,
-                        maintainState: true,
-                        child: child,
-                      ),
-                      child: CardAnswerButtonsWidget(
-                        user: _user,
-                        scheduledCard: _scheduledCard,
-                        onAnswer: (knows) {
-                          if (_answersCount == 0) {
-                            logStartLearning(_deck.value.key);
-                          }
-                          logCardResponse(
-                            deckId: _deck.value.key,
-                            knows: knows,
-                          );
+        actions: _card == null
+            ? null
+            : <Widget>[
+                CardActionsMenuWidget(
+                  user: _user,
+                  deck: _deck.value,
+                  card: _card.value,
+                ),
+              ],
+      ),
+      body: _card == null
+          ? ProgressIndicatorWidget()
+          : Column(
+              children: <Widget>[
+                Expanded(
+                    child: Padding(
+                  padding:
+                      MediaQuery.of(context).orientation == Orientation.portrait
+                          ? EdgeInsets.all(MediaQuery.of(context).size.width *
+                              _kCardPaddingRatio)
+                          : EdgeInsets.only(
+                              top: 10,
+                              left: MediaQuery.of(context).size.width *
+                                  _kCardPaddingRatio,
+                              right: MediaQuery.of(context).size.width *
+                                  _kCardPaddingRatio),
+                  child: buildStreamBuilderWithValue<CardModel>(
+                      // TODO(dotdoom): find a prettier way to trigger the
+                      //                builder() when initialData changes.
+                      key: ValueKey(_card.value?.key),
+                      streamWithValue: _card,
+                      builder: (context, snapshot) {
+                        // TODO(dotdoom): handle removed data (in model).
+                        if (!snapshot.hasData) {
+                          return ProgressIndicatorWidget();
+                        }
+                        final card = snapshot.data;
+                        // TODO(dotdoom): handle card updates.
+                        return FlipCardWidget(
+                          front: card.frontWithoutTags,
+                          frontImages: card.frontImagesUri,
+                          back: card.back,
+                          backImages: card.backImagesUri,
+                          colors:
+                              specifyCardColors(_deck.value.type, card.back),
+                          hasBeenFlipped: _showReplyButtons,
+                          key: ValueKey(card.key),
+                        );
+                      }),
+                )),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 20),
+                  child: ValueListenableBuilder<bool>(
+                    valueListenable: _showReplyButtons,
+                    builder: (context, showReplyButtons, child) => Visibility(
+                      visible: showReplyButtons,
+                      maintainSize: true,
+                      // Required when maintainSize is set.
+                      maintainAnimation: true,
+                      maintainState: true,
+                      child: child,
+                    ),
+                    child: CardAnswerButtonsWidget(
+                      user: _user,
+                      scheduledCard: _scheduledCard,
+                      onAnswer: (knows) {
+                        if (_answersCount == 0) {
+                          unawaited(logStartLearning(_deck.value.key));
+                        }
+                        unawaited(logCardResponse(
+                          deckId: _deck.value.key,
+                          knows: knows,
+                        ));
 
-                          if (mounted) {
-                            setState(() {
-                              _answersCount++;
-                            });
-                          }
-                        },
-                      ),
+                        if (mounted) {
+                          setState(() {
+                            _answersCount++;
+                          });
+                        }
+                      },
                     ),
                   ),
-                  Row(
-                    children: <Widget>[
-                      // Use SafeArea to indent the child by the amount
-                      // necessary to avoid The Notch on the iPhone X,
-                      // or other similar creative physical features of
-                      // the display.
-                      SafeArea(
-                        minimum: const EdgeInsets.only(left: 8, bottom: 8),
-                        child: Text(
-                          localizations
-                              .of(context)
-                              .answeredCards(_answersCount),
-                          style: app_styles.secondaryText,
-                        ),
+                ),
+                Row(
+                  children: <Widget>[
+                    // Use SafeArea to indent the child by the amount
+                    // necessary to avoid The Notch on the iPhone X,
+                    // or other similar creative physical features of
+                    // the display.
+                    SafeArea(
+                      minimum: const EdgeInsets.only(left: 8, bottom: 8),
+                      child: Text(
+                        localizations.of(context).answeredCards(_answersCount),
+                        style: app_styles.secondaryText,
                       ),
-                    ],
-                  ),
-                ],
-              ),
-      );
+                    ),
+                  ],
+                )
+              ],
+            ));
 
   Future<void> _nextCardArrived(ScheduledCardModel scheduledCard) async {
     if (!mounted) {

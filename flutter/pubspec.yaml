@@ -11,7 +11,7 @@ dependencies:
   device_info: ^0.4.0
   package_info: ^0.4.0
   url_launcher: ^5.0.1
-  flutter_markdown: ^0.3.1
+  flutter_markdown: ^0.3.2
   http: ^0.12.0
   share: ^0.6.0
   shared_preferences: ^0.5.1
@@ -23,6 +23,10 @@ dependencies:
 
   flutter_sentry: ^0.3.1
   sentry: any
+  image_picker: ^0.6.1
+  # https://github.com/renefloor/flutter_cached_network_image/issues/261
+  cached_network_image: 2.0.0-rc
+  permission_handler: ^4.0.0
 
   firebase_auth: ^0.15.3
   firebase_analytics: ^5.0.9
@@ -32,6 +36,8 @@ dependencies:
 
   google_sign_in: ^4.0.1
   flutter_facebook_login: ^3.0.0
+  firebase_storage: ^3.1.1
+  uuid: ^2.0.1
 
   flutter:
     sdk: flutter

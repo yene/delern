@@ -82,3 +82,8 @@ Future<void> logOnboardingDoneEvent() =>
 
 Future<void> logOnboardingSkipEvent() =>
     FirebaseAnalytics().logEvent(name: 'onboarding_skip');
+
+Future<void> logAddImageToCard({@required bool isFrontSide}) =>
+    FirebaseAnalytics().logEvent(
+        name: 'card_create_with_image',
+        parameters: {'front': isFrontSide ? 1 : 0});

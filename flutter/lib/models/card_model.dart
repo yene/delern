@@ -1,11 +1,13 @@
 import 'dart:core';
 
+import 'package:built_collection/built_collection.dart';
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
 import 'package:delern_flutter/models/base/keyed_list_item.dart';
 import 'package:delern_flutter/models/base/list_accessor.dart';
 import 'package:delern_flutter/models/serializers.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/foundation.dart';
 import 'package:meta/meta.dart';
 
 part 'card_model.g.dart';
@@ -21,6 +23,8 @@ abstract class CardModel
   String get back;
   @nullable
   DateTime get createdAt;
+  BuiltList<String> get frontImagesUri;
+  BuiltList<String> get backImagesUri;
 
   static Serializer<CardModel> get serializer => _$cardModelSerializer;
 

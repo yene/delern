@@ -50,15 +50,9 @@ class _SignInWidgetState extends State<SignInWidget> {
           (Transaction()..save(fcm)).commit();
         });
 
-        // Notifications permission dialog on iOS is definitive: if the user
-        // declines, there's no way to ask confirmation again.
-        // TODO(dotdoom): avoid asking when the app installs (useless).
-        // TODO(dotdoom): present a custom dialog first, and then iOS.
-        _firebaseMessaging
-          ..requestNotificationPermissions()
-          // TODO(dotdoom): register onMessage to show a snack bar with
-          //                notification when the app is in foreground.
-          ..configure();
+        // TODO(dotdoom): register onMessage to show a snack bar with
+        //                notification when the app is in foreground.
+        _firebaseMessaging.configure();
       }
     });
 

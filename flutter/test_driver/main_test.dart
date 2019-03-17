@@ -39,7 +39,10 @@ void main() {
       await driver.waitFor(add);
       await driver.enterText('My Test Deck');
       await driver.waitFor(find.text('My Test Deck'));
-      await driver.tap(add);
+      // When text was entered business logic needs some time to enable
+      // "Add" button. Otherwise disabled button will be clicked and test fails.
+      await Future.delayed(const Duration(seconds: 1));
+      await driver.tap(add, timeout: timeoutDuration);
     });
 
     test('create_card', () async {

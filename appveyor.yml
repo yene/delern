@@ -1,0 +1,46 @@
+# Reference: https://www.appveyor.com/docs/appveyor-yml/
+# Validation:
+# $ ruby -ryaml -e 'puts (YAML.load_file "appveyor.yml")["build_script"]'
+
+# Version format. We don't use this, so let it just be less confusing on UI.
+version: "#{build}"
+
+environment:
+  FLUTTER_SDK_ROOT: "C:\\flutter"
+  PATH: "C:\\Ruby22-x64\\bin;%FLUTTER_SDK_ROOT%\\bin;%PATH%"
+  ANDROID_SDK_ROOT: "C:\\Android\\Sdk"
+  ANDROID_HOME: "%ANDROID_SDK_ROOT%"
+  GRADLE_OPTS: "-Dorg.gradle.daemon=false"
+  TRAVIS_BUILD_NUMBER: 42
+
+install:
+  - ruby -v
+  - gem -v
+  - bundle -v
+  - bundle install --deployment
+  - git clone -b beta https://github.com/flutter/flutter.git C:\flutter
+  - copy tools\ci\google-services.json flutter\android\app\google-services.json
+  - copy tools\ci\debug.keystore "%USERPROFILE%\\.android\\debug.keystore"
+
+build: off
+
+build_script:
+  - ps: pushd flutter
+  - bundle exec fastlane android build
+  - ps: popd
+
+before_test:
+  - ruby -v
+  - gem -v
+  - bundle -v
+
+test_script:
+  # Workaround for fastlane generating README.md with LF instead of CRLF.
+  # TODO(dotdoom): file a bug.
+  - git add flutter/fastlane/README.md
+  - bundle exec fastlane ensure_clean_git
+
+#branches:
+#  only:
+#    - master
+#    - gssoc19

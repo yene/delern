@@ -47,7 +47,7 @@ class _CardsListState extends State<CardsList> {
   Widget build(BuildContext context) => Scaffold(
         appBar: SearchBarWidget(
             title: widget.deck.name, search: _searchTextChanged),
-        body: ObservingGridWidget(
+        body: ObservingGridWidget<CardModel>(
           maxCrossAxisExtent: 240.0,
           items: _cardListViewModel.list,
           itemBuilder: (item) => CardGridItem(

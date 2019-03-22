@@ -165,7 +165,7 @@ class _DeckUsersState extends State<DeckUsersWidget> {
             ),
           ),
           Expanded(
-            child: ObservingAnimatedListWidget(
+            child: ObservingAnimatedListWidget<DeckAccessModel>(
               list: _deckAccessesViewModel.list,
               itemBuilder: (context, item, animation, index) => SizeTransition(
                     child: _buildUserAccessInfo(item),

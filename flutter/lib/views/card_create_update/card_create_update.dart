@@ -81,7 +81,7 @@ class _CardCreateUpdateState extends State<CardCreateUpdate> {
         ),
       );
 
-  Widget _buildAppBar() => AppBar(
+  AppBar _buildAppBar() => AppBar(
         title: Text(widget.deck.name),
         actions: <Widget>[
           StreamBuilder<bool>(
@@ -113,7 +113,7 @@ class _CardCreateUpdateState extends State<CardCreateUpdate> {
   }
 
   // Show error message to user. Do not clean fields
-  void _onErrorOccurred(message) {
+  void _onErrorOccurred(String message) {
     UserMessages.showMessage(_scaffoldKey.currentState, message);
   }
 

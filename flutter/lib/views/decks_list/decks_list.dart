@@ -130,7 +130,7 @@ class DecksListState extends State<DecksList> {
         body: Column(
           children: <Widget>[
             Expanded(
-              child: ObservingAnimatedListWidget(
+              child: ObservingAnimatedListWidget<DeckModel>(
                 list: _bloc.decksList,
                 itemBuilder: (context, item, animation, index) =>
                     SizeTransition(

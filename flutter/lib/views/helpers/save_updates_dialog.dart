@@ -3,10 +3,10 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 Future<bool> showSaveUpdatesDialog(
-        {@required context,
-        @required changesQuestion,
-        @required yesAnswer,
-        @required noAnswer}) =>
+        {@required BuildContext context,
+        @required String changesQuestion,
+        @required String yesAnswer,
+        @required String noAnswer}) =>
     showDialog<bool>(
       context: context,
       // user must tap button!

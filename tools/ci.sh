@@ -55,8 +55,8 @@ dependencies() {
 
 	_section 'Installing Firebase dependencies'
 	# This command tries to install fsevents, failing and flooding terminal.
-	npm --prefix firebase install >>"${BUILD_LOG?}" 2>&1
-	npm --prefix firebase/functions install
+	npm --prefix firebase ci >>"${BUILD_LOG?}" 2>&1
+	npm --prefix firebase/functions ci
 	(
 		cd firebase/www &&
 		../node_modules/.bin/bower --silent --allow-root install

@@ -62,7 +62,7 @@ test_script:
   - git add flutter/fastlane/README.md
   - bundle exec fastlane ensure_clean_git
 
-#branches:
-#  only:
-#    - master
-#    - gssoc19
+branches:
+  only:
+    - master
+    - gssoc19

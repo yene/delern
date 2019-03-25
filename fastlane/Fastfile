@@ -7,11 +7,7 @@
 #
 
 lane :ensure_clean_git do
-  unless sh(*%w(git status --porcelain), log: false).strip.empty?
-    status = sh(*%w(git status), log: false)
-    diff = sh(*%w(git diff), log: false)
-    UI.build_failure!("Working directory not clean!\n#{status}\n#{diff}")
-  end
+  ensure_git_status_clean(show_diff: true)
 end
 
 # vim: ft=ruby

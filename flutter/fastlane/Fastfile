@@ -11,9 +11,39 @@
 
 default_platform(:android)
 
-# A fixed integer to add to CI build number to calculate an application build
-# number.
-CI_BUILD_NUMBER_BASE = 4000
+def build_versions()
+  # Workaround for Fastlane Git actions broken in Windows. We don't build
+  # release version on Windows, so it's okay to put fake values here.
+  # TODO(dotdoom): https://github.com/fastlane/fastlane/pull/14471.
+  if Gem.win_platform?
+    return {
+      build_number_override: '1',
+      build_name_override: '1.0.0',
+    }
+  end
+
+  commits_since_last_tag = changelog_from_git_commits(
+    quiet: true,
+    # One line per commit, which allows us to easily count them.
+    pretty: 'oneline',
+    # We push to "master" only when merging a PR, so increment with each merge.
+    merge_commit_filtering: 'only_include_merges',
+  ).lines.count
+
+  {
+    # Add a fixed integer to CI build number, because we drifted away. Outside
+    # of CI, usually on a developer's workstation, just use number of commits.
+    # TODO(dotdoom): remove #to_s once plugin supports integers.
+    build_number_override: (
+      is_ci? ? Integer(ci_build_number) + 4000 : number_of_commits
+    ).to_s,
+    # If there are any commits since the last tag (ex.: "2.1"), add them as the
+    # third version number, turning it into "2.1.42". Otherwise just keep "2.1".
+    build_name_override: commits_since_last_tag > 0 ?
+      '%s.%d' % [last_git_tag, commits_since_last_tag] :
+      last_git_tag,
+  }
+end
 
 def android_build(options={})
   flutter(
@@ -25,11 +55,10 @@ def android_build(options={})
       'android-sdk-license' => '24333f8a63b6825ea9c5514f83c2829b004d1fee',
     },
   )
+
   flutter({
     action: 'build',
-    build_number_override: "ci+#{CI_BUILD_NUMBER_BASE}",
-    build_name_override: '^vcs*',
-  }.merge(options))
+  }.merge(options).merge(build_versions))
 end
 
 lane :build do
@@ -60,13 +89,11 @@ end
 
 platform :ios do
   lane :build do
-    flutter(
+    flutter({
       action: 'build',
-      build_number_override: "ci+#{CI_BUILD_NUMBER_BASE}",
-      build_name_override: '^vcs*',
       debug: true,
       codesign: false,
-    )
+    }.merge(build_versions))
   end
 
   lane :publish do
@@ -81,15 +108,9 @@ platform :ios do
     # Build the app to:
     # - add version
     # - switch to release mode
-    flutter(
+    flutter({
       action: 'build',
-      build_number_override: "ci+#{CI_BUILD_NUMBER_BASE}",
-      # TODO(dotdoom): since this changes Podfile.lock and other files to
-      #                symlink the release version of packages, we have to clear
-      #                dirty mark:
-      #                https://github.com/flutter/flutter/issues/28802.
-      build_name_override: '^vcs',
-    )
+    }.merge(build_versions))
     gym(silent: true, suppress_xcode_output: true)
     # TODO(dotdoom): set also "changelog"
     pilot(

@@ -5,6 +5,9 @@
 # Version format. We don't use this, so let it just be less confusing on UI.
 version: "#{build}"
 
+# Allow filenames longer than 260 characters (what year is it?!).
+init: git config --system core.longpaths true
+
 environment:
   FLUTTER_SDK_ROOT: "C:\\flutter"
   PATH: "C:\\Ruby22-x64\\bin;%FLUTTER_SDK_ROOT%\\bin;%PATH%"

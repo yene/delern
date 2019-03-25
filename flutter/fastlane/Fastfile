@@ -14,7 +14,7 @@ default_platform(:android)
 def build_versions()
   # Workaround for Fastlane Git actions broken in Windows. We don't build
   # release version on Windows, so it's okay to put fake values here.
-  # TODO(dotdoom): add PR / issue number.
+  # TODO(dotdoom): https://github.com/fastlane/fastlane/pull/14471.
   if Gem.win_platform?
     return {
       build_number_override: '1',

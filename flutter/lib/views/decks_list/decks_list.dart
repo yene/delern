@@ -249,7 +249,8 @@ class _DeckMenuState extends State<DeckMenu>
     opacityAnimation = Tween(begin: 0.0, end: 1.0).animate(anim);
   }
 
-  Widget getItem(_DeckMenuItemType type, String menuItemName) => RaisedButton(
+  Widget _buildMenuItem(_DeckMenuItemType type, String menuItemName) =>
+      RaisedButton(
         // TODO(ksheremet): Set color from styles
         color: Colors.tealAccent,
         padding: const EdgeInsets.all(8.0),
@@ -293,12 +294,13 @@ class _DeckMenuState extends State<DeckMenu>
     return OverlayEntry(
         builder: (context) => Positioned(
               // TODO(ksheremet): Count position of menu
-              left: offset.dx - 60,
+              right: 8.0,
               top: offset.dy,
               height: expandedSize,
               child: AnimatedBuilder(
                 animation: controller,
                 builder: (context, child) => Stack(
+                      alignment: AlignmentDirectional.topEnd,
                       children: //menuList
                           <Widget>[
                         FadeTransition(
@@ -307,7 +309,7 @@ class _DeckMenuState extends State<DeckMenu>
                               alignment: moveAnimation.value,
                               child: Container(
                                   padding: const EdgeInsets.only(bottom: 135),
-                                  child: getItem(_DeckMenuItemType.add,
+                                  child: _buildMenuItem(_DeckMenuItemType.add,
                                       menu[_DeckMenuItemType.add]))),
                         ),
                         FadeTransition(
@@ -316,7 +318,7 @@ class _DeckMenuState extends State<DeckMenu>
                               alignment: moveAnimation.value,
                               child: Container(
                                 padding: const EdgeInsets.only(bottom: 90),
-                                child: getItem(_DeckMenuItemType.edit,
+                                child: _buildMenuItem(_DeckMenuItemType.edit,
                                     menu[_DeckMenuItemType.edit]),
                               )),
                         ),
@@ -326,7 +328,7 @@ class _DeckMenuState extends State<DeckMenu>
                               alignment: moveAnimation.value,
                               child: Container(
                                 padding: const EdgeInsets.only(bottom: 45),
-                                child: getItem(_DeckMenuItemType.setting,
+                                child: _buildMenuItem(_DeckMenuItemType.setting,
                                     menu[_DeckMenuItemType.setting]),
                               )),
                         ),
@@ -336,7 +338,7 @@ class _DeckMenuState extends State<DeckMenu>
                               alignment: moveAnimation.value,
                               child: Container(
                                 padding: const EdgeInsets.only(bottom: 0),
-                                child: getItem(_DeckMenuItemType.share,
+                                child: _buildMenuItem(_DeckMenuItemType.share,
                                     menu[_DeckMenuItemType.share]),
                               )),
                         ),

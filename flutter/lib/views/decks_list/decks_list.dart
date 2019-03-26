@@ -170,7 +170,7 @@ class DeckListItemWidget extends StatelessWidget {
                   child: _buildDeckName(context),
                 ),
                 _buildNumberOfCards(context),
-                DeckMenu(),
+                DeckMenu(deck: deck),
               ],
             ),
           ),
@@ -219,67 +219,13 @@ class DeckListItemWidget extends StatelessWidget {
                   style: app_styles.primaryText),
             ),
       );
-
-  void _onDeckMenuItemSelected(BuildContext context, _DeckMenuItemType item) {
-    // Not allow to add/edit or delete cards with read access
-    // If some error occurred and it is null access
-    // we still give a try to edit for a user. If user
-    // doesn't have permissions they will see "Permission
-    // denied".
-    final allowEdit = deck.access != AccessType.read;
-    switch (item) {
-      case _DeckMenuItemType.add:
-        if (allowEdit) {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  settings: const RouteSettings(name: '/cards/new'),
-                  builder: (context) => CardCreateUpdate(
-                        card: CardModel(deckKey: deck.key),
-                        deck: deck,
-                      )));
-        } else {
-          UserMessages.showMessage(Scaffold.of(context),
-              AppLocalizations.of(context).noAddingWithReadAccessUserMessage);
-        }
-        break;
-      case _DeckMenuItemType.edit:
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-              settings: const RouteSettings(name: '/decks/view'),
-              builder: (context) => CardsList(
-                    deck: deck,
-                    allowEdit: allowEdit,
-                  )),
-        );
-        break;
-      case _DeckMenuItemType.setting:
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-              settings: const RouteSettings(name: '/decks/settings'),
-              builder: (context) => DeckSettings(deck)),
-        );
-        break;
-      case _DeckMenuItemType.share:
-        if (deck.access == AccessType.owner) {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-                settings: const RouteSettings(name: '/decks/share'),
-                builder: (context) => DeckSharing(deck)),
-          );
-        } else {
-          UserMessages.showMessage(Scaffold.of(context),
-              AppLocalizations.of(context).noSharingAccessUserMessage);
-        }
-        break;
-    }
-  }
 }
 
 class DeckMenu extends StatefulWidget {
+  DeckModel deck;
+
+  DeckMenu({@required this.deck});
+
   @override
   State<StatefulWidget> createState() => _DeckMenuState();
 }
@@ -303,14 +249,19 @@ class _DeckMenuState extends State<DeckMenu>
     opacityAnimation = Tween(begin: 0.0, end: 1.0).animate(anim);
   }
 
-  Widget getItem(String menuItemName) => RaisedButton(
+  Widget getItem(_DeckMenuItemType type, String menuItemName) => RaisedButton(
+        // TODO(ksheremet): Set color from styles
         color: Colors.tealAccent,
-        padding: EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(8.0),
         shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(10))),
+            borderRadius: const BorderRadius.all(Radius.circular(10))),
         child: Text(menuItemName),
         onPressed: () {
-          controller.reverse();
+          controller.reverse().then((_) {
+            icon = Icons.more_vert;
+            _overlayEntry.remove();
+            _onDeckMenuItemSelected(context, type);
+          });
         },
       );
 
@@ -328,7 +279,7 @@ class _DeckMenuState extends State<DeckMenu>
     );
   }
 
-  final double expandedSize = 180.0;
+  final double expandedSize = 225.0;
 
   OverlayEntry _overlayEntry;
   var icon = Icons.more_vert;
@@ -348,29 +299,46 @@ class _DeckMenuState extends State<DeckMenu>
               child: AnimatedBuilder(
                 animation: controller,
                 builder: (context, child) => Stack(
-                      children: <Widget>[
+                      children: //menuList
+                          <Widget>[
                         FadeTransition(
                           opacity: opacityAnimation,
                           child: Align(
                               alignment: moveAnimation.value,
                               child: Container(
-                                  padding: EdgeInsets.only(bottom: 90),
-                                  child: getItem(menu[_DeckMenuItemType.add]))),
+                                  padding: const EdgeInsets.only(bottom: 135),
+                                  child: getItem(_DeckMenuItemType.add,
+                                      menu[_DeckMenuItemType.add]))),
                         ),
                         FadeTransition(
                           opacity: opacityAnimation,
                           child: Align(
                               alignment: moveAnimation.value,
                               child: Container(
-                                padding: EdgeInsets.only(bottom: 45),
-                                child: getItem(menu[_DeckMenuItemType.edit]),
+                                padding: const EdgeInsets.only(bottom: 90),
+                                child: getItem(_DeckMenuItemType.edit,
+                                    menu[_DeckMenuItemType.edit]),
                               )),
                         ),
                         FadeTransition(
                           opacity: opacityAnimation,
                           child: Align(
                               alignment: moveAnimation.value,
-                              child: getItem(menu[_DeckMenuItemType.setting])),
+                              child: Container(
+                                padding: const EdgeInsets.only(bottom: 45),
+                                child: getItem(_DeckMenuItemType.setting,
+                                    menu[_DeckMenuItemType.setting]),
+                              )),
+                        ),
+                        FadeTransition(
+                          opacity: opacityAnimation,
+                          child: Align(
+                              alignment: moveAnimation.value,
+                              child: Container(
+                                padding: const EdgeInsets.only(bottom: 0),
+                                child: getItem(_DeckMenuItemType.share,
+                                    menu[_DeckMenuItemType.share]),
+                              )),
                         ),
                       ],
                     ),
@@ -400,6 +368,64 @@ class _DeckMenuState extends State<DeckMenu>
         }
       },
       child: buildPrimaryItem(icon));
+
+  void _onDeckMenuItemSelected(BuildContext context, _DeckMenuItemType item) {
+    // Not allow to add/edit or delete cards with read access
+    // If some error occurred and it is null access
+    // we still give a try to edit for a user. If user
+    // doesn't have permissions they will see "Permission
+    // denied".
+    var allowEdit = widget.deck.access != AccessType.read;
+    switch (item) {
+      case _DeckMenuItemType.add:
+        if (allowEdit) {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  settings: const RouteSettings(name: '/cards/new'),
+                  builder: (context) => CardCreateUpdate(
+                        card: CardModel(deckKey: widget.deck.key),
+                        deck: widget.deck,
+                      )));
+        } else {
+          UserMessages.showMessage(Scaffold.of(context),
+              AppLocalizations.of(context).noAddingWithReadAccessUserMessage);
+        }
+        break;
+      case _DeckMenuItemType.edit:
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              settings: const RouteSettings(name: '/decks/view'),
+              builder: (context) => CardsList(
+                    deck: widget.deck,
+                    allowEdit: allowEdit,
+                  )),
+        );
+        break;
+      case _DeckMenuItemType.setting:
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              settings: const RouteSettings(name: '/decks/settings'),
+              builder: (context) => DeckSettings(widget.deck)),
+        );
+        break;
+      case _DeckMenuItemType.share:
+        if (widget.deck.access == AccessType.owner) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                settings: const RouteSettings(name: '/decks/share'),
+                builder: (context) => DeckSharing(widget.deck)),
+          );
+        } else {
+          UserMessages.showMessage(Scaffold.of(context),
+              AppLocalizations.of(context).noSharingAccessUserMessage);
+        }
+        break;
+    }
+  }
 }
 
 enum _DeckMenuItemType { add, edit, setting, share }

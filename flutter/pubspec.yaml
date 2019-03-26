@@ -23,7 +23,7 @@ dependencies:
       url: https://github.com/dotdoom/observable.git
       ref: list-observed-unobserved
 
-  firebase_auth: ^0.8.1
+  firebase_auth: ^0.8.2
   firebase_analytics: ^2.0.3
   firebase_database: ^2.0.2
   firebase_messaging: ^4.0.0

@@ -170,7 +170,6 @@ class DeckListItemWidget extends StatelessWidget {
                   child: _buildDeckName(context),
                 ),
                 _buildNumberOfCards(context),
-                _buildDeckMenu(context),
                 DeckMenu(),
               ],
             ),
@@ -219,36 +218,6 @@ class DeckListItemWidget extends StatelessWidget {
               child: Text(snapshot.data?.toString() ?? 'N/A',
                   style: app_styles.primaryText),
             ),
-      );
-
-  Widget _buildDeckMenu(BuildContext context) => Material(
-        child: InkResponse(
-          splashColor: Theme.of(context).splashColor,
-          radius: 15,
-          onTap: () {},
-          child: PopupMenuButton<_DeckMenuItemType>(
-            onSelected: (itemType) =>
-                _onDeckMenuItemSelected(context, itemType),
-            itemBuilder: (context) => _buildMenu(context)
-                .entries
-                .map((entry) => DeckPopupMenuItem<_DeckMenuItemType>(
-                      value: entry.key,
-                      child: RaisedButton(
-                        color: Colors.tealAccent,
-                        padding: EdgeInsets.all(8.0),
-                        shape: RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10))),
-                        child: Text(
-                          entry.value,
-                          style: app_styles.secondaryText,
-                        ),
-                        onPressed: () {},
-                      ),
-                    ))
-                .toList(),
-          ),
-        ),
       );
 
   void _onDeckMenuItemSelected(BuildContext context, _DeckMenuItemType item) {
@@ -310,28 +279,6 @@ class DeckListItemWidget extends StatelessWidget {
   }
 }
 
-class DeckPopupMenuItem<T> extends PopupMenuItem<T> {
-  const DeckPopupMenuItem({@required value, @required Widget child})
-      : assert(child != null),
-        super(value: value, child: child);
-
-  @override
-  _DeckPopupMenuState<T> createState() => _DeckPopupMenuState();
-}
-
-class _DeckPopupMenuState<T>
-    extends PopupMenuItemState<T, DeckPopupMenuItem<T>> {
-  /*@override
-  Widget buildChild() => RaisedButton(
-        color: Colors.tealAccent,
-        padding: EdgeInsets.all(8.0),
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(10))),
-        child: Text('Add'),
-        onPressed: () {},
-      );*/
-}
-
 class DeckMenu extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => _DeckMenuState();
@@ -382,66 +329,77 @@ class _DeckMenuState extends State<DeckMenu>
   }
 
   final double expandedSize = 180.0;
-  final double hiddenSize = 20.0;
 
-  @override
-  Widget build(BuildContext context) {
+  OverlayEntry _overlayEntry;
+  var icon = Icons.more_vert;
+
+  OverlayEntry _createOverlayEntry() {
+    RenderBox renderBox = context.findRenderObject();
+    var offset = renderBox.localToGlobal(Offset.zero);
+
     final menu = _buildMenu(context);
 
-    return AnimatedBuilder(
-        animation: controller,
-        builder: (context, child) => SizedOverflowBox(
-            size: Size(100, 100),
-            alignment: Alignment.topLeft,
-            child: Container(
-                width: 100,
-                height: 200,
-                child: Container(
-                  width: 100,
-                  height: hiddenSize +
-                      (expandedSize - hiddenSize) * controller.value,
-                  child: Stack(
-                    children: <Widget>[
-                      FadeTransition(
-                        opacity: opacityAnimation,
-                        child: Align(
-                            alignment: moveAnimation.value,
-                            child: Container(
-                                padding: EdgeInsets.only(bottom: 90),
-                                child: getItem(menu[_DeckMenuItemType.add]))),
-                      ),
-                      FadeTransition(
-                        opacity: opacityAnimation,
-                        child: Align(
-                            alignment: moveAnimation.value,
-                            child: Container(
-                              padding: EdgeInsets.only(bottom: 50),
-                              child: getItem(menu[_DeckMenuItemType.edit]),
-                            )),
-                      ),
-                      FadeTransition(
-                        opacity: opacityAnimation,
-                        child: Align(
-                            alignment: moveAnimation.value,
-                            child: getItem(menu[_DeckMenuItemType.setting])),
-                      ),
-                      Align(
-                        alignment: Alignment.topRight,
-                        child: GestureDetector(
-                            onTap: () {
-                              controller.isCompleted
-                                  ? controller.reverse()
-                                  : controller.forward();
-                            },
-                            child: buildPrimaryItem(
-                                controller.isCompleted || controller.isAnimating
-                                    ? Icons.close
-                                    : Icons.more_vert)),
-                      )
-                    ],
-                  ),
-                ))));
+    return OverlayEntry(
+        builder: (context) => Positioned(
+              // TODO(ksheremet): Count position of menu
+              left: offset.dx - 60,
+              top: offset.dy,
+              height: expandedSize,
+              child: AnimatedBuilder(
+                animation: controller,
+                builder: (context, child) => Stack(
+                      children: <Widget>[
+                        FadeTransition(
+                          opacity: opacityAnimation,
+                          child: Align(
+                              alignment: moveAnimation.value,
+                              child: Container(
+                                  padding: EdgeInsets.only(bottom: 90),
+                                  child: getItem(menu[_DeckMenuItemType.add]))),
+                        ),
+                        FadeTransition(
+                          opacity: opacityAnimation,
+                          child: Align(
+                              alignment: moveAnimation.value,
+                              child: Container(
+                                padding: EdgeInsets.only(bottom: 45),
+                                child: getItem(menu[_DeckMenuItemType.edit]),
+                              )),
+                        ),
+                        FadeTransition(
+                          opacity: opacityAnimation,
+                          child: Align(
+                              alignment: moveAnimation.value,
+                              child: getItem(menu[_DeckMenuItemType.setting])),
+                        ),
+                      ],
+                    ),
+              ),
+            ));
   }
+
+  @override
+  Widget build(BuildContext context) => GestureDetector(
+      onTap: () {
+        if (controller.isCompleted) {
+          setState(() {
+            controller.reverse().then((_) {
+              _overlayEntry.remove();
+            });
+            icon = Icons.more_vert;
+          });
+        } else {
+          setState(() {
+            icon = Icons.close;
+            _overlayEntry = _createOverlayEntry();
+            var state = Overlay.of(context)..insert(_overlayEntry);
+            if (state.mounted) {
+              controller.forward();
+            }
+          });
+        }
+      },
+      child: buildPrimaryItem(icon));
 }
 
 enum _DeckMenuItemType { add, edit, setting, share }

@@ -222,9 +222,9 @@ class DeckListItemWidget extends StatelessWidget {
 }
 
 class DeckMenu extends StatefulWidget {
-  DeckModel deck;
+  final DeckModel deck;
 
-  DeckMenu({@required this.deck});
+  const DeckMenu({@required this.deck});
 
   @override
   State<StatefulWidget> createState() => _DeckMenuState();
@@ -301,48 +301,21 @@ class _DeckMenuState extends State<DeckMenu>
                 animation: controller,
                 builder: (context, child) => Stack(
                       alignment: AlignmentDirectional.topEnd,
-                      children: //menuList
-                          <Widget>[
-                        FadeTransition(
-                          opacity: opacityAnimation,
-                          child: Align(
-                              alignment: moveAnimation.value,
-                              child: Container(
-                                  padding: const EdgeInsets.only(bottom: 135),
-                                  child: _buildMenuItem(_DeckMenuItemType.add,
-                                      menu[_DeckMenuItemType.add]))),
-                        ),
-                        FadeTransition(
-                          opacity: opacityAnimation,
-                          child: Align(
-                              alignment: moveAnimation.value,
-                              child: Container(
-                                padding: const EdgeInsets.only(bottom: 90),
-                                child: _buildMenuItem(_DeckMenuItemType.edit,
-                                    menu[_DeckMenuItemType.edit]),
-                              )),
-                        ),
-                        FadeTransition(
-                          opacity: opacityAnimation,
-                          child: Align(
-                              alignment: moveAnimation.value,
-                              child: Container(
-                                padding: const EdgeInsets.only(bottom: 45),
-                                child: _buildMenuItem(_DeckMenuItemType.setting,
-                                    menu[_DeckMenuItemType.setting]),
-                              )),
-                        ),
-                        FadeTransition(
-                          opacity: opacityAnimation,
-                          child: Align(
-                              alignment: moveAnimation.value,
-                              child: Container(
-                                padding: const EdgeInsets.only(bottom: 0),
-                                child: _buildMenuItem(_DeckMenuItemType.share,
-                                    menu[_DeckMenuItemType.share]),
-                              )),
-                        ),
-                      ],
+                      children: menu.entries
+                          .map((entry) => FadeTransition(
+                                opacity: opacityAnimation,
+                                child: Align(
+                                    alignment: moveAnimation.value,
+                                    child: Container(
+                                        padding: EdgeInsets.only(
+                                            bottom: (menu.length -
+                                                    1 -
+                                                    entry.key.index) *
+                                                45.0),
+                                        child: _buildMenuItem(
+                                            entry.key, entry.value))),
+                              ))
+                          .toList(),
                     ),
               ),
             ));

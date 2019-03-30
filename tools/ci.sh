@@ -158,7 +158,7 @@ deploy() {
 
 	if [ -n "${OSX?}" ]; then
 		_section 'Publishing iOS app'
-		( cd flutter && bundle exec fastlane ios publish )
+		( cd flutter && _retry bundle exec fastlane ios publish )
 		# Do not verify clean Git because we know that the build process
 		# unfortunately changes the files:
 		# https://github.com/flutter/flutter/issues/28802.

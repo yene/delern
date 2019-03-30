@@ -2,7 +2,7 @@ import 'package:delern_flutter/main.dart' as app;
 import 'package:delern_flutter/remote/auth.dart';
 import 'package:flutter_driver/driver_extension.dart';
 
-void main() async {
+Future<void> main() async {
   // This line enables the extension
   enableFlutterDriverExtension();
   // Sign out before running tests to clear cached data

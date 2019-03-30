@@ -84,7 +84,7 @@ class _CardPreviewState extends State<CardPreview> {
         bloc: _bloc,
       );
 
-  void _showDeleteCardDialog(deleteCardQuestion) async {
+  Future<void> _showDeleteCardDialog(deleteCardQuestion) async {
     final deleteCardDialog = await showSaveUpdatesDialog(
         context: context,
         changesQuestion: deleteCardQuestion,

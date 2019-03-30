@@ -106,7 +106,7 @@ class CardCreateUpdateBloc {
     }
   }
 
-  void _processSavingCard() async {
+  Future<void> _processSavingCard() async {
     _cardModel
       ..front = _frontText.trim()
       ..back = _backText.trim();

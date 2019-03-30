@@ -48,7 +48,7 @@ class _DeckSettingsState extends State<DeckSettings> {
     super.didChangeDependencies();
   }
 
-  void _showDeleteDeckDialog(deleteDeckQuestion) async {
+  Future<void> _showDeleteDeckDialog(deleteDeckQuestion) async {
     final deleteDeckDialog = await showSaveUpdatesDialog(
         context: context,
         changesQuestion: deleteDeckQuestion,

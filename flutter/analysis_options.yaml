@@ -27,9 +27,6 @@ linter:
     #- public_member_api_docs
     #- type_annotate_public_apis
 
-    # Not yet in the linter version we use.
-    #- avoid_void_async
-
     # "Correcting" input parameters is too useful to let go of.
     #- parameter_assignments
 
@@ -71,6 +68,7 @@ linter:
     - avoid_types_as_parameter_names
     - avoid_types_on_closure_parameters
     - avoid_unused_constructor_parameters
+    - avoid_void_async
     - await_only_futures
     - camel_case_types
     - cancel_subscriptions

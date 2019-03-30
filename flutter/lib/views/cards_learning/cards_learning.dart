@@ -211,7 +211,7 @@ class CardsLearningState extends State<CardsLearning> {
     }
   }
 
-  void _deleteCard(BuildContext context) async {
+  Future<void> _deleteCard(BuildContext context) async {
     final locale = AppLocalizations.of(context);
     final saveChanges = await showSaveUpdatesDialog(
         context: context,
@@ -229,7 +229,7 @@ class CardsLearningState extends State<CardsLearning> {
     }
   }
 
-  void _nextCardArrived() async {
+  Future<void> _nextCardArrived() async {
     setState(() {
       // For a new card we show, hide the back side.
       _isBackShown = false;

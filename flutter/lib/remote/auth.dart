@@ -113,7 +113,7 @@ class Auth {
   /// account picker), the Future will still complete successfully, but no
   /// changes are done.
   Future<void> signIn(SignInProvider provider,
-      {forceAccountPicker = true}) async {
+      {bool forceAccountPicker = true}) async {
     FirebaseUser user;
 
     if (provider == null) {

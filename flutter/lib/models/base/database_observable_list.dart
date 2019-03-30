@@ -83,7 +83,7 @@ class DatabaseObservableList<T extends KeyedListItem> extends ObservableList<T>
 
   @override
   @protected
-  void listObserved() async {
+  Future<void> listObserved() async {
     super.listObserved();
 
     if (_fetchFullValueFirst) {

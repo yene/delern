@@ -73,7 +73,7 @@ class _CardPreviewState extends State<CardPreview> {
                             snapshot.requireData.deck.type,
                             snapshot.requireData.card.back),
                         isMarkdown: snapshot.requireData.deck.markdown))),
-            const Padding(padding: EdgeInsets.only(bottom: 100.0))
+            const Padding(padding: EdgeInsets.only(bottom: 100))
           ],
         ),
         floatingActionButton: FloatingActionButton(

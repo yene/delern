@@ -48,7 +48,7 @@ class _CardsListState extends State<CardsList> {
         appBar: SearchBarWidget(
             title: widget.deck.name, search: _searchTextChanged),
         body: ObservingGridWidget<CardModel>(
-          maxCrossAxisExtent: 240.0,
+          maxCrossAxisExtent: 240,
           items: _cardListViewModel.list,
           itemBuilder: (item) => CardGridItem(
                 card: item,
@@ -112,7 +112,7 @@ class CardGridItem extends StatelessWidget {
                           deck: deck,
                         ))),
             child: Container(
-              padding: const EdgeInsets.all(5.0),
+              padding: const EdgeInsets.all(5),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
@@ -124,7 +124,7 @@ class CardGridItem extends StatelessWidget {
                     style: AppStyles.primaryText,
                   ),
                   Container(
-                    padding: const EdgeInsets.only(top: 10.0),
+                    padding: const EdgeInsets.only(top: 10),
                     child: Text(
                       card.back ?? '',
                       maxLines: 3,

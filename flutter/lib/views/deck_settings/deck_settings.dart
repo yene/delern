@@ -74,7 +74,7 @@ class _DeckSettingsState extends State<DeckSettings> {
       );
 
   Widget _buildBody() => Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(8),
         child: SingleChildScrollView(
           child: Column(
             children: <Widget>[
@@ -94,7 +94,7 @@ class _DeckSettingsState extends State<DeckSettings> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
                   Padding(
-                    padding: const EdgeInsets.only(top: 24.0),
+                    padding: const EdgeInsets.only(top: 24),
                     child: Text(
                       AppLocalizations.of(context).deckType,
                       style: AppStyles.secondaryText,

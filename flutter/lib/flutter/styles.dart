@@ -12,13 +12,13 @@ class AppStyles {
   static final Color signInBackgroundColor = Colors.greenAccent[100];
 
   static const TextStyle primaryText = TextStyle(
-    fontSize: 19.0,
+    fontSize: 19,
     fontWeight: FontWeight.w400,
     color: Colors.black,
   );
 
   static const TextStyle secondaryText = TextStyle(
-    fontSize: 16.0,
+    fontSize: 16,
     fontWeight: FontWeight.w400,
     color: Colors.black87,
   );
@@ -30,6 +30,6 @@ class AppStyles {
 
   static const TextStyle searchBarText = TextStyle(
     color: Colors.white,
-    fontSize: 19.0,
+    fontSize: 19,
   );
 }

@@ -95,7 +95,7 @@ class CardsLearningState extends State<CardsLearning> {
                         isMarkdown: _viewModel.deck.markdown,
                       )),
                       Padding(
-                        padding: const EdgeInsets.only(top: 25.0, bottom: 20.0),
+                        padding: const EdgeInsets.only(top: 25, bottom: 20),
                         child: _buildButtons(context),
                       ),
                       Row(

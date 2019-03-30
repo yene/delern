@@ -66,7 +66,7 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
             }
           },
         ),
-        const Divider(height: 1.0),
+        const Divider(height: 1),
         ListTile(
           title: Text(
             AppLocalizations.of(context).navigationDrawerCommunicateGroup,
@@ -103,9 +103,7 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
                     builder: (context) => SupportDevelopment()));
           },
         ),
-        const Divider(
-          height: 1.0,
-        ),
+        const Divider(height: 1),
         AboutListTile(
           icon: const Icon(Icons.perm_device_information),
           child: Text(AppLocalizations.of(context).navigationDrawerAbout),

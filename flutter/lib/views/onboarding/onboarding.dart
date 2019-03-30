@@ -108,7 +108,7 @@ class _OnboardingWidget extends StatelessWidget {
         showSkipButton: true,
         pageButtonTextStyles: const TextStyle(
           color: Colors.white,
-          fontSize: 18.0,
+          fontSize: 18,
         ),
       );
 }

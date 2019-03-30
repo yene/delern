@@ -176,7 +176,7 @@ class DeckListItemWidget extends StatelessWidget {
               ],
             ),
           ),
-          const Divider(height: 1.0),
+          const Divider(height: 1),
         ],
       );
 
@@ -202,8 +202,8 @@ class DeckListItemWidget extends StatelessWidget {
             }
           },
           child: Container(
-            padding: const EdgeInsets.only(
-                top: 14.0, bottom: 14.0, left: 8.0, right: 8.0),
+            padding:
+                const EdgeInsets.only(top: 14, bottom: 14, left: 8, right: 8),
             child: Text(
               deck.name,
               style: AppStyles.primaryText,
@@ -225,7 +225,7 @@ class DeckListItemWidget extends StatelessWidget {
   Widget _buildDeckMenu(BuildContext context) => Material(
         child: InkResponse(
           splashColor: Theme.of(context).splashColor,
-          radius: 15.0,
+          radius: 15,
           onTap: () {},
           child: PopupMenuButton<_DeckMenuItemType>(
             onSelected: (itemType) =>

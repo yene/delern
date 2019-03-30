@@ -181,7 +181,7 @@ class _CardCreateUpdateState extends State<CardCreateUpdate> {
     }
 
     return ListView(
-      padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+      padding: const EdgeInsets.only(left: 8, right: 8),
       children: widgetsList,
     );
   }

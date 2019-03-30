@@ -50,7 +50,7 @@ class _DeckSharingState extends State<DeckSharing> {
         body: Column(
           children: <Widget>[
             Padding(
-              padding: const EdgeInsets.only(left: 8.0, top: 8.0),
+              padding: const EdgeInsets.only(left: 8, top: 8),
               child: Row(
                 children: <Widget>[
                   Text(
@@ -154,7 +154,7 @@ class _DeckUsersState extends State<DeckUsersWidget> {
   Widget build(BuildContext context) => Column(
         children: <Widget>[
           Padding(
-            padding: const EdgeInsets.only(left: 8.0, top: 8.0),
+            padding: const EdgeInsets.only(left: 8, top: 8),
             child: Row(
               children: <Widget>[
                 Text(

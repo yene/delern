@@ -24,7 +24,7 @@ class SignInWidget extends StatefulWidget {
 
 class _SignInWidgetState extends State<SignInWidget> {
   final _itemPadding =
-      const Padding(padding: EdgeInsets.symmetric(vertical: 10.0));
+      const Padding(padding: EdgeInsets.symmetric(vertical: 10));
 
   @override
   void initState() {
@@ -62,7 +62,7 @@ class _SignInWidgetState extends State<SignInWidget> {
   Widget _buildFeatureText(String text) => ListTile(
       leading: const Icon(Icons.check_circle),
       title: Text(text, style: AppStyles.primaryText),
-      contentPadding: const EdgeInsets.symmetric(horizontal: 8.0));
+      contentPadding: const EdgeInsets.symmetric(horizontal: 8));
 
   @override
   Widget build(BuildContext context) {
@@ -92,7 +92,7 @@ class _SignInWidgetState extends State<SignInWidget> {
           .toList();
 
   Widget _buildGoogleSignInButton(Orientation orientation) => Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 15.0),
+        padding: const EdgeInsets.symmetric(horizontal: 15),
         child: RaisedButton(
             color: Colors.white,
             onPressed: () => Auth.instance.signIn(SignInProvider.google),
@@ -104,12 +104,12 @@ class _SignInWidgetState extends State<SignInWidget> {
                       Orientation.portrait == orientation ? 10.0 : 5.0),
                   child: Image.asset(
                     'images/google_sign_in.png',
-                    height: 35.0,
-                    width: 35.0,
+                    height: 35,
+                    width: 35,
                   ),
                 ),
                 Container(
-                    padding: const EdgeInsets.only(left: 10.0),
+                    padding: const EdgeInsets.only(left: 10),
                     child: Text(
                       AppLocalizations.of(context).signInWithGoogle,
                       style: AppStyles.primaryText,
@@ -119,7 +119,7 @@ class _SignInWidgetState extends State<SignInWidget> {
       );
 
   Widget _buildLogoPicture() => Padding(
-        padding: const EdgeInsets.symmetric(vertical: 20.0),
+        padding: const EdgeInsets.symmetric(vertical: 20),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
@@ -129,7 +129,7 @@ class _SignInWidgetState extends State<SignInWidget> {
             Text(
               AppLocalizations.of(context).appLogoName,
               style: const TextStyle(
-                  fontSize: 20.0,
+                  fontSize: 20,
                   color: Colors.green,
                   fontWeight: FontWeight.w700),
             ),
@@ -138,7 +138,7 @@ class _SignInWidgetState extends State<SignInWidget> {
       );
 
   Widget _buildAnonymousSignInButton(Orientation orientation) => Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 15.0),
+        padding: const EdgeInsets.symmetric(horizontal: 15),
         child: RaisedButton(
             color: Colors.white,
             onPressed: () => Auth.instance.signIn(null),

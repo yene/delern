@@ -148,7 +148,7 @@ class _HorizontalDialog extends StatelessWidget {
     const insetAnimationCurve = Curves.decelerate;
 
     const dialogShape = RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(Radius.circular(2.0)));
+        borderRadius: BorderRadius.all(Radius.circular(2)));
 
     return AnimatedPadding(
       padding: MediaQuery.of(context).viewInsets,
@@ -156,7 +156,7 @@ class _HorizontalDialog extends StatelessWidget {
       curve: insetAnimationCurve,
       child: Center(
         child: Material(
-          elevation: 24.0,
+          elevation: 24,
           color: Theme.of(context).dialogBackgroundColor,
           type: MaterialType.card,
           child: child,

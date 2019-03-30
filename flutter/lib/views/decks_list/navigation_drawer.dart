@@ -32,9 +32,9 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
 
   @override
   Widget build(BuildContext context) {
-    var user = CurrentUserWidget.of(context).user;
+    final user = CurrentUserWidget.of(context).user;
 
-    var accountName =
+    final accountName =
         user.displayName ?? AppLocalizations.of(context).anonymous;
 
     return Drawer(
@@ -122,7 +122,7 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
     } on PlatformException catch (_) {
       // TODO(ksheremet): Merge data
       logPromoteAnonymousFail();
-      var signIn = await showSaveUpdatesDialog(
+      final signIn = await showSaveUpdatesDialog(
           context: context,
           changesQuestion: AppLocalizations.of(context).accountExistUserWarning,
           yesAnswer: AppLocalizations.of(context).navigationDrawerSignIn,

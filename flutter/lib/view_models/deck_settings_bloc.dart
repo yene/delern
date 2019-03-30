@@ -47,8 +47,8 @@ class DeckSettingsBloc extends ScreenBloc {
 
   Future<void> _delete() async {
     logDeckDelete(_deck.key);
-    var t = Transaction()..delete(_deck);
-    var card = CardModel(deckKey: _deck.key);
+    final t = Transaction()..delete(_deck);
+    final card = CardModel(deckKey: _deck.key);
     if (_deck.access == AccessType.owner) {
       final accessList = DeckAccessModel.getList(deckKey: _deck.key);
       await accessList.fetchFullValue();

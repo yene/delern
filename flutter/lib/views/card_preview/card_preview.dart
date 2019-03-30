@@ -85,7 +85,7 @@ class _CardPreviewState extends State<CardPreview> {
       );
 
   void _showDeleteCardDialog(deleteCardQuestion) async {
-    var deleteCardDialog = await showSaveUpdatesDialog(
+    final deleteCardDialog = await showSaveUpdatesDialog(
         context: context,
         changesQuestion: deleteCardQuestion,
         yesAnswer: AppLocalizations.of(context).delete,

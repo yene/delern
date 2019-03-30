@@ -44,7 +44,7 @@ class Transaction {
 
   Future<void> commit() async {
     // Firebase update() does not return until it gets response from the server.
-    var updateFuture = _root.update(_updates);
+    final updateFuture = _root.update(_updates);
 
     if (!_isOnline) {
       updateFuture.catchError((error, stackTrace) => error_reporting.report(

@@ -9,12 +9,12 @@ class UserMessages {
   // TODO(ksheremet): Get rid of it
   static Future<void> showError(ScaffoldState scaffoldFinder(), e,
       [StackTrace stackTrace]) {
-    var errorFuture = error_reporting.report('showError', e, stackTrace);
+    final errorFuture = error_reporting.report('showError', e, stackTrace);
 
     // Call a finder only *after* reporting the error, in case it crashes
     // (often because Scaffold.of cannot find Scaffold ancestor widget).
-    var scaffoldState = scaffoldFinder();
-    var message = formUserFriendlyErrorMessage(
+    final scaffoldState = scaffoldFinder();
+    final message = formUserFriendlyErrorMessage(
         AppLocalizations.of(scaffoldState.context), e);
     showMessage(scaffoldState, message);
 

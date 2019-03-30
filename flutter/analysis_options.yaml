@@ -41,10 +41,6 @@ linter:
     #- avoid_function_literals_in_foreach_calls
     #- sort_constructors_first
 
-    # Disabled pre-existing findings.
-    # TODO(dotdoom): make this list empty.
-    #- prefer_final_locals
-
     - always_declare_return_types
     - always_put_control_body_on_new_line
     - always_put_required_named_parameters_first
@@ -124,6 +120,7 @@ linter:
     - prefer_equal_for_default_values
     - prefer_expression_function_bodies
     - prefer_final_fields
+    - prefer_final_locals
     - prefer_foreach
     - prefer_function_declarations_over_variables
     - prefer_generic_function_type_aliases

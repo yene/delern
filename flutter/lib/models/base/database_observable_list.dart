@@ -73,7 +73,7 @@ class DatabaseObservableList<T extends KeyedListItem> extends ObservableList<T>
   /// `fetchFullValueFirst` is set in the constructor, this method also
   /// completes [initializationComplete] future, if not completed yet.
   Future<void> fetchFullValue() async {
-    Map fullValue = (await _query.onValue.first).snapshot.value ?? {};
+    final Map fullValue = (await _query.onValue.first).snapshot.value ?? {};
     replaceRange(0, length,
         fullValue.entries.map((item) => _snapshotParser(item.key, item.value)));
     if (_fullValueArrived?.isCompleted == false) {

@@ -38,9 +38,9 @@ Future<void> report(String src, error, stackTrace,
         }() !=
         null);
 
-    var packageInfo = await PackageInfo.fromPlatform();
-    var deviceInfo = await DeviceInfo.getDeviceInfo();
-    var environmentAttributes = Event(
+    final packageInfo = await PackageInfo.fromPlatform();
+    final deviceInfo = await DeviceInfo.getDeviceInfo();
+    final environmentAttributes = Event(
       release: '${packageInfo.version} (${packageInfo.buildNumber})',
       environment: environment,
       extra: {

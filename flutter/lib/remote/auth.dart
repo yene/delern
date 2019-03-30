@@ -207,7 +207,7 @@ class Auth {
   }
 
   static Future<bool> _updateProfileFromProviders(FirebaseUser user) async {
-    var update = UserUpdateInfo();
+    final update = UserUpdateInfo();
 
     var anyUpdates = false;
     for (final providerData in user.providerData) {

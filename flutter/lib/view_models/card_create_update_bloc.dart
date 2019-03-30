@@ -76,19 +76,20 @@ class CardCreateUpdateBloc {
 
   Future<void> _saveCard() {
     logCardCreate(_cardModel.deckKey);
-    var t = Transaction()..save(_cardModel);
+    final t = Transaction()..save(_cardModel);
     final sCard = ScheduledCardModel(deckKey: _cardModel.deckKey, uid: uid)
       ..key = _cardModel.key;
     t.save(sCard);
 
     if (_addReversedCard) {
-      var reverse = CardModel.copyFrom(_cardModel)
+      final reverse = CardModel.copyFrom(_cardModel)
         ..key = null
         ..front = _cardModel.back
         ..back = _cardModel.front;
       t.save(reverse);
-      var reverseScCard = ScheduledCardModel(deckKey: reverse.deckKey, uid: uid)
-        ..key = reverse.key;
+      final reverseScCard =
+          ScheduledCardModel(deckKey: reverse.deckKey, uid: uid)
+            ..key = reverse.key;
       t.save(reverseScCard);
     }
     return t.commit();

@@ -49,7 +49,7 @@ class _DeckSettingsState extends State<DeckSettings> {
   }
 
   void _showDeleteDeckDialog(deleteDeckQuestion) async {
-    var deleteDeckDialog = await showSaveUpdatesDialog(
+    final deleteDeckDialog = await showSaveUpdatesDialog(
         context: context,
         changesQuestion: deleteDeckQuestion,
         yesAnswer: AppLocalizations.of(context).delete,

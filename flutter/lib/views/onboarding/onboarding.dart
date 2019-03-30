@@ -54,7 +54,7 @@ class _OnboardingWidget extends StatelessWidget {
     final textStyle = DeviceInfo.isDeviceSmall(context)
         ? _textStyle.merge(const TextStyle(fontSize: 25))
         : _textStyle;
-    var pages = [
+    final pages = [
       PageViewModel(
           pageColor: const Color(0xFF3F51A5),
           body: Text(

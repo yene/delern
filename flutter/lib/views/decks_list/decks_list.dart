@@ -184,7 +184,7 @@ class DeckListItemWidget extends StatelessWidget {
         child: InkWell(
           splashColor: Theme.of(context).splashColor,
           onTap: () async {
-            var anyCardsShown = await Navigator.push(
+            final anyCardsShown = await Navigator.push(
                 context,
                 MaterialPageRoute(
                   settings: const RouteSettings(name: '/decks/learn'),
@@ -250,7 +250,7 @@ class DeckListItemWidget extends StatelessWidget {
     // we still give a try to edit for a user. If user
     // doesn't have permissions they will see "Permission
     // denied".
-    var allowEdit = deck.access != AccessType.read;
+    final allowEdit = deck.access != AccessType.read;
     switch (item) {
       case _DeckMenuItemType.add:
         if (allowEdit) {
@@ -308,7 +308,7 @@ enum _DeckMenuItemType { add, edit, setting, share }
 Map<_DeckMenuItemType, String> _buildMenu(BuildContext context) {
   // We want this Map to be ordered.
   // ignore: prefer_collection_literals
-  var deckMenu = LinkedHashMap<_DeckMenuItemType, String>()
+  final deckMenu = LinkedHashMap<_DeckMenuItemType, String>()
     ..[_DeckMenuItemType.add] = AppLocalizations.of(context).addCardsDeckMenu
     ..[_DeckMenuItemType.edit] = AppLocalizations.of(context).editCardsDeckMenu
     ..[_DeckMenuItemType.setting] =

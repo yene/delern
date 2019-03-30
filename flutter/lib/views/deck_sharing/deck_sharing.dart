@@ -90,7 +90,7 @@ class _DeckSharingState extends State<DeckSharing> {
 
   Future<void> _shareDeck(AccessType deckAccess, BuildContext context) async {
     try {
-      var uid = await userLookup(_textController.text.toString());
+      final uid = await userLookup(_textController.text.toString());
       if (uid == null) {
         if (await _inviteUser()) {
           setState(_textController.clear);
@@ -118,8 +118,8 @@ class _DeckSharingState extends State<DeckSharing> {
   }
 
   Future<bool> _inviteUser() async {
-    var locale = AppLocalizations.of(context);
-    var inviteUser = await showSaveUpdatesDialog(
+    final locale = AppLocalizations.of(context);
+    final inviteUser = await showSaveUpdatesDialog(
         context: context,
         changesQuestion: locale.appNotInstalledSharingDeck,
         yesAnswer: locale.send,

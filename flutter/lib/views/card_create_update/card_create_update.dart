@@ -62,8 +62,8 @@ class _CardCreateUpdateState extends State<CardCreateUpdate> {
   Widget build(BuildContext context) => WillPopScope(
         onWillPop: () async {
           if (_isChanged) {
-            var locale = AppLocalizations.of(context);
-            var continueEditingDialog = await showSaveUpdatesDialog(
+            final locale = AppLocalizations.of(context);
+            final continueEditingDialog = await showSaveUpdatesDialog(
                 context: context,
                 changesQuestion: locale.continueEditingQuestion,
                 yesAnswer: locale.yes,

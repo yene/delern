@@ -62,7 +62,7 @@ void main() {
         printErrorInfo: false);
   };
   Isolate.current.addErrorListener(RawReceivePort((pair) async {
-    List<dynamic> errorAndStacktrace = pair;
+    final List<dynamic> errorAndStacktrace = pair;
     await error_reporting.report(
       'Isolate ErrorListener',
       errorAndStacktrace.first,

@@ -37,7 +37,7 @@ class _DeckTypeDropdownWidgetState extends State<DeckTypeDropdownWidget> {
 
   Widget _buildDropdownItem(DeckType deckType) {
     String text;
-    var locale = AppLocalizations.of(context);
+    final locale = AppLocalizations.of(context);
 
     switch (deckType) {
       case DeckType.basic:

@@ -213,8 +213,8 @@ class CardsLearningState extends State<CardsLearning> {
   }
 
   void _deleteCard(BuildContext context) async {
-    var locale = AppLocalizations.of(context);
-    var saveChanges = await showSaveUpdatesDialog(
+    final locale = AppLocalizations.of(context);
+    final saveChanges = await showSaveUpdatesDialog(
         context: context,
         changesQuestion: locale.deleteCardQuestion,
         yesAnswer: locale.delete,

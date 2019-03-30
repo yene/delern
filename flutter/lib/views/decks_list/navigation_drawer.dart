@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:delern_flutter/flutter/localization.dart';
-import 'package:delern_flutter/flutter/styles.dart';
+import 'package:delern_flutter/flutter/styles.dart' as AppStyles;
 import 'package:delern_flutter/remote/analytics.dart';
 import 'package:delern_flutter/remote/auth.dart';
 import 'package:delern_flutter/views/helpers/email_launcher.dart';

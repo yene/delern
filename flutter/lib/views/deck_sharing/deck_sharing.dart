@@ -2,11 +2,11 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:delern_flutter/flutter/localization.dart';
-import 'package:delern_flutter/flutter/styles.dart';
+import 'package:delern_flutter/flutter/styles.dart' as AppStyles;
 import 'package:delern_flutter/flutter/user_messages.dart';
 import 'package:delern_flutter/models/deck_access_model.dart';
 import 'package:delern_flutter/models/deck_model.dart';
-import 'package:delern_flutter/remote/error_reporting.dart';
+import 'package:delern_flutter/remote/error_reporting.dart' as ErrorReporting;
 import 'package:delern_flutter/remote/user_lookup.dart';
 import 'package:delern_flutter/view_models/deck_access_view_model.dart';
 import 'package:delern_flutter/views/deck_sharing/deck_access_dropdown.dart';

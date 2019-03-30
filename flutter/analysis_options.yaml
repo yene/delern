@@ -43,7 +43,6 @@ linter:
 
     # Disabled pre-existing findings.
     # TODO(dotdoom): make this list empty.
-    #- avoid_classes_with_only_static_members
     #- prefer_final_locals
 
     - always_declare_return_types
@@ -51,6 +50,7 @@ linter:
     - always_put_required_named_parameters_first
     - always_require_non_null_named_parameters
     - avoid_annotating_with_dynamic
+    - avoid_classes_with_only_static_members
     - avoid_as
     - avoid_bool_literals_in_conditional_expressions
     - avoid_catching_errors

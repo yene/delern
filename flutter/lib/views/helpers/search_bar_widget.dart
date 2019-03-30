@@ -1,5 +1,5 @@
 import 'package:delern_flutter/flutter/localization.dart';
-import 'package:delern_flutter/flutter/styles.dart';
+import 'package:delern_flutter/flutter/styles.dart' as AppStyles;
 import 'package:flutter/material.dart';
 
 typedef SearchCallback = void Function(String input);

@@ -1,5 +1,5 @@
 import 'package:delern_flutter/flutter/localization.dart';
-import 'package:delern_flutter/flutter/styles.dart';
+import 'package:delern_flutter/flutter/styles.dart' as AppStyles;
 import 'package:delern_flutter/models/deck_model.dart';
 import 'package:delern_flutter/view_models/deck_settings_bloc.dart';
 import 'package:delern_flutter/views/base/screen_bloc_view.dart';

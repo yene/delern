@@ -1,5 +1,5 @@
 import 'package:delern_flutter/flutter/localization.dart';
-import 'package:delern_flutter/flutter/styles.dart';
+import 'package:delern_flutter/flutter/styles.dart' as AppStyles;
 import 'package:delern_flutter/flutter/user_messages.dart';
 import 'package:delern_flutter/models/card_model.dart' as card_model;
 import 'package:delern_flutter/models/deck_model.dart';

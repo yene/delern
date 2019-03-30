@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:delern_flutter/models/base/model.dart';
-import 'package:delern_flutter/remote/error_reporting.dart';
+import 'package:delern_flutter/remote/error_reporting.dart' as ErrorReporting;
 import 'package:firebase_database/firebase_database.dart';
 
 class Transaction {

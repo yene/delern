@@ -9,7 +9,7 @@ import 'package:delern_flutter/models/base/transaction.dart';
 import 'package:delern_flutter/models/card_model.dart';
 import 'package:delern_flutter/models/card_reply_model.dart';
 import 'package:delern_flutter/models/deck_model.dart';
-import 'package:delern_flutter/remote/error_reporting.dart';
+import 'package:delern_flutter/remote/error_reporting.dart' as ErrorReporting;
 import 'package:firebase_database/firebase_database.dart';
 import 'package:meta/meta.dart';
 

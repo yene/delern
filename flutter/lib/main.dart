@@ -3,7 +3,7 @@ import 'dart:isolate';
 
 import 'package:delern_flutter/flutter/localization.dart';
 import 'package:delern_flutter/models/base/transaction.dart';
-import 'package:delern_flutter/remote/error_reporting.dart';
+import 'package:delern_flutter/remote/error_reporting.dart' as ErrorReporting;
 import 'package:delern_flutter/views/decks_list/decks_list.dart';
 import 'package:delern_flutter/views/helpers/sign_in_widget.dart';
 import 'package:delern_flutter/views/onboarding/onboarding.dart';

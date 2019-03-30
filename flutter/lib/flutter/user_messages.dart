@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:delern_flutter/flutter/localization.dart';
-import 'package:delern_flutter/remote/error_reporting.dart';
+import 'package:delern_flutter/remote/error_reporting.dart' as ErrorReporting;
 import 'package:flutter/material.dart';
 
 class UserMessages {

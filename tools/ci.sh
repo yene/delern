@@ -18,6 +18,19 @@ if [[ "$OSTYPE" == "darwin"*  ]]; then
 	OSX=1
 fi
 
+_retry() {
+	local attempts=1
+	while :; do
+		"$@" && break
+		if [ $attempts -gt 3 ]; then
+			false
+		else
+			echo "Failed $attempts times, retrying..."
+			let attempts+=1
+		fi
+	done
+}
+
 _section() {
 	printf "\n\n\e[32m%30s CI: %s\e[m\n\n" \
 		"$(TZ=Europe/Zurich date +%Y-%m-%dT%H:%M:%S%z)" \
@@ -135,8 +148,8 @@ deploy() {
 	bundle exec fastlane ensure_clean_git >>"${BUILD_LOG?}"
 
 	_section 'Deploying Firebase'
-	PROJECT=delern-debug npm --prefix firebase run deploy
-	PROJECT=delern-e1b33 npm --prefix firebase run deploy
+	PROJECT=delern-debug _retry npm --prefix firebase run deploy
+	PROJECT=delern-e1b33 _retry npm --prefix firebase run deploy
 	_section 'Publishing Android app'
 	( cd flutter && bundle exec fastlane android publish )
 

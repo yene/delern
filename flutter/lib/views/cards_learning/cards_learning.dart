@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:collection';
 
 import 'package:delern_flutter/flutter/localization.dart';
 import 'package:delern_flutter/flutter/styles.dart' as app_styles;
@@ -260,9 +259,7 @@ class CardsLearningState extends State<CardsLearning> {
 
 enum _CardMenuItemType { edit, delete }
 
-Map<_CardMenuItemType, String> _buildMenu(BuildContext context) =>
-    // We want this Map to be ordered.
-    // ignore: prefer_collection_literals
-    LinkedHashMap<_CardMenuItemType, String>()
-      ..[_CardMenuItemType.edit] = AppLocalizations.of(context).edit
-      ..[_CardMenuItemType.delete] = AppLocalizations.of(context).delete;
+Map<_CardMenuItemType, String> _buildMenu(BuildContext context) => {
+      _CardMenuItemType.edit: AppLocalizations.of(context).edit,
+      _CardMenuItemType.delete: AppLocalizations.of(context).delete,
+    };

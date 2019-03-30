@@ -1,5 +1,3 @@
-import 'dart:collection';
-
 import 'package:delern_flutter/flutter/localization.dart';
 import 'package:delern_flutter/flutter/styles.dart' as app_styles;
 import 'package:delern_flutter/flutter/user_messages.dart';
@@ -306,13 +304,11 @@ class DeckListItemWidget extends StatelessWidget {
 enum _DeckMenuItemType { add, edit, setting, share }
 
 Map<_DeckMenuItemType, String> _buildMenu(BuildContext context) {
-  // We want this Map to be ordered.
-  // ignore: prefer_collection_literals
-  final deckMenu = LinkedHashMap<_DeckMenuItemType, String>()
-    ..[_DeckMenuItemType.add] = AppLocalizations.of(context).addCardsDeckMenu
-    ..[_DeckMenuItemType.edit] = AppLocalizations.of(context).editCardsDeckMenu
-    ..[_DeckMenuItemType.setting] =
-        AppLocalizations.of(context).settingsDeckMenu;
+  final deckMenu = {
+    _DeckMenuItemType.add: AppLocalizations.of(context).addCardsDeckMenu,
+    _DeckMenuItemType.edit: AppLocalizations.of(context).editCardsDeckMenu,
+    _DeckMenuItemType.setting: AppLocalizations.of(context).settingsDeckMenu,
+  };
 
   if (!CurrentUserWidget.of(context).user.isAnonymous) {
     deckMenu[_DeckMenuItemType.share] =

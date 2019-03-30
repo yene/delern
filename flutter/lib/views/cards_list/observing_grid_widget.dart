@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:delern_flutter/flutter/localization.dart';
-import 'package:delern_flutter/flutter/styles.dart' as AppStyles;
+import 'package:delern_flutter/flutter/styles.dart' as app_styles;
 import 'package:delern_flutter/models/base/delayed_initialization.dart';
 import 'package:delern_flutter/models/base/keyed_list_item.dart';
 import 'package:delern_flutter/views/helpers/empty_list_message_widget.dart';
@@ -69,7 +69,7 @@ class ObservingGridWidgetState<T extends KeyedListItem>
                   // TODO(dotdoom): make this more abstract.
                   AppLocalizations.of(context)
                       .numberOfCards(widget.items.length),
-                  style: AppStyles.secondaryText,
+                  style: app_styles.secondaryText,
                 ),
               ],
             ),

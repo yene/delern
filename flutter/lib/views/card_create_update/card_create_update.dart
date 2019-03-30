@@ -1,5 +1,5 @@
 import 'package:delern_flutter/flutter/localization.dart';
-import 'package:delern_flutter/flutter/styles.dart' as AppStyles;
+import 'package:delern_flutter/flutter/styles.dart' as app_styles;
 import 'package:delern_flutter/flutter/user_messages.dart';
 import 'package:delern_flutter/models/card_model.dart';
 import 'package:delern_flutter/models/deck_model.dart';
@@ -137,7 +137,7 @@ class _CardCreateUpdateState extends State<CardCreateUpdate> {
             _isChanged = true;
           });
         },
-        style: AppStyles.primaryText,
+        style: app_styles.primaryText,
         decoration: InputDecoration(
             hintText: AppLocalizations.of(context).frontSideHint),
       ),
@@ -152,7 +152,7 @@ class _CardCreateUpdateState extends State<CardCreateUpdate> {
             _isChanged = true;
           });
         },
-        style: AppStyles.primaryText,
+        style: app_styles.primaryText,
         decoration: InputDecoration(
           hintText: AppLocalizations.of(context).backSideHint,
         ),
@@ -166,7 +166,7 @@ class _CardCreateUpdateState extends State<CardCreateUpdate> {
       widgetsList.add(CheckboxListTile(
         title: Text(
           AppLocalizations.of(context).reversedCardLabel,
-          style: AppStyles.secondaryText,
+          style: app_styles.secondaryText,
         ),
         value: _addReversedCard,
         onChanged: (newValue) {

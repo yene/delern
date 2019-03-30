@@ -1,4 +1,4 @@
-import 'package:delern_flutter/flutter/styles.dart' as AppStyles;
+import 'package:delern_flutter/flutter/styles.dart' as app_styles;
 import 'package:delern_flutter/models/deck_model.dart';
 import 'package:flutter/material.dart';
 
@@ -11,7 +11,7 @@ enum Gender {
 
 Color specifyCardBackground(DeckType deckType, String text) {
   if (deckType == DeckType.basic) {
-    return AppStyles.cardBackgroundColors[Gender.noGender];
+    return app_styles.cardBackgroundColors[Gender.noGender];
   }
   var textGender = Gender.noGender;
   text = text.toLowerCase();
@@ -20,7 +20,7 @@ Color specifyCardBackground(DeckType deckType, String text) {
   } else {
     textGender = _germanCardGender(text);
   }
-  return AppStyles.cardBackgroundColors[textGender];
+  return app_styles.cardBackgroundColors[textGender];
 }
 
 Gender _swissCardGender(String text) {

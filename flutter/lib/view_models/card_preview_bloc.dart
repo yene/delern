@@ -5,7 +5,7 @@ import 'package:delern_flutter/models/card_model.dart';
 import 'package:delern_flutter/models/deck_access_model.dart';
 import 'package:delern_flutter/models/deck_model.dart';
 import 'package:delern_flutter/models/scheduled_card_model.dart';
-import 'package:delern_flutter/remote/error_reporting.dart' as ErrorReporting;
+import 'package:delern_flutter/remote/error_reporting.dart' as error_reporting;
 import 'package:delern_flutter/view_models/base/screen_bloc.dart';
 import 'package:meta/meta.dart';
 
@@ -36,7 +36,7 @@ class CardPreviewBloc extends ScreenBloc {
         await _deleteCard(uid);
         notifyPop();
       } catch (e, stackTrace) {
-        ErrorReporting.report('deleteCard', e, stackTrace);
+        error_reporting.report('deleteCard', e, stackTrace);
         notifyErrorOccurred(e);
       }
     });

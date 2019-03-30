@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:collection';
 
 import 'package:delern_flutter/flutter/localization.dart';
-import 'package:delern_flutter/flutter/styles.dart' as AppStyles;
+import 'package:delern_flutter/flutter/styles.dart' as app_styles;
 import 'package:delern_flutter/flutter/user_messages.dart';
 import 'package:delern_flutter/models/deck_access_model.dart';
 import 'package:delern_flutter/models/deck_model.dart';
@@ -108,7 +108,7 @@ class CardsLearningState extends State<CardsLearning> {
                             child: Text(
                               AppLocalizations.of(context)
                                   .watchedCards(_watchedCount),
-                              style: AppStyles.secondaryText,
+                              style: app_styles.secondaryText,
                             ),
                           ),
                         ],

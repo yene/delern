@@ -1,4 +1,4 @@
-import 'package:delern_flutter/flutter/styles.dart' as AppStyles;
+import 'package:delern_flutter/flutter/styles.dart' as app_styles;
 import 'package:delern_flutter/views/helpers/non_scrolling_markdown.dart';
 import 'package:flutter/material.dart';
 
@@ -50,7 +50,7 @@ class CardDisplayWidget extends StatelessWidget {
     return Text(
       text,
       textAlign: TextAlign.center,
-      style: AppStyles.primaryText,
+      style: app_styles.primaryText,
     );
   }
 }

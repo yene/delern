@@ -6,7 +6,7 @@ import 'package:delern_flutter/models/base/transaction.dart';
 import 'package:delern_flutter/models/card_model.dart';
 import 'package:delern_flutter/models/scheduled_card_model.dart';
 import 'package:delern_flutter/remote/analytics.dart';
-import 'package:delern_flutter/remote/error_reporting.dart' as ErrorReporting;
+import 'package:delern_flutter/remote/error_reporting.dart' as error_reporting;
 import 'package:meta/meta.dart';
 
 class CardCreateUpdateBloc {
@@ -122,7 +122,7 @@ class CardCreateUpdateBloc {
         _onCardAddedController.add(locale.cardAddedUserMessage);
       }
     } catch (e, stackTrace) {
-      ErrorReporting.report('saveCard', e, stackTrace);
+      error_reporting.report('saveCard', e, stackTrace);
       _onErrorController
           .add(UserMessages.formUserFriendlyErrorMessage(locale, e));
     }

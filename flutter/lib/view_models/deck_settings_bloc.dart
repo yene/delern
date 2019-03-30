@@ -7,7 +7,7 @@ import 'package:delern_flutter/models/deck_access_model.dart';
 import 'package:delern_flutter/models/deck_model.dart';
 import 'package:delern_flutter/models/scheduled_card_model.dart';
 import 'package:delern_flutter/remote/analytics.dart';
-import 'package:delern_flutter/remote/error_reporting.dart' as ErrorReporting;
+import 'package:delern_flutter/remote/error_reporting.dart' as error_reporting;
 import 'package:delern_flutter/view_models/base/screen_bloc.dart';
 import 'package:meta/meta.dart';
 
@@ -86,7 +86,7 @@ class DeckSettingsBloc extends ScreenBloc {
       await _save();
       return true;
     } catch (e, stackTrace) {
-      ErrorReporting.report('updateDeck', e, stackTrace);
+      error_reporting.report('updateDeck', e, stackTrace);
       notifyErrorOccurred(e);
     }
     return false;
@@ -98,7 +98,7 @@ class DeckSettingsBloc extends ScreenBloc {
         await _delete();
         notifyPop();
       } catch (e, stackTrace) {
-        ErrorReporting.report('deleteDeck', e, stackTrace);
+        error_reporting.report('deleteDeck', e, stackTrace);
         notifyErrorOccurred(e);
       }
     });

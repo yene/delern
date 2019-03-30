@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:delern_flutter/remote/error_reporting.dart' as ErrorReporting;
+import 'package:delern_flutter/remote/error_reporting.dart' as error_reporting;
 import 'package:device_info/device_info.dart';
 import 'package:flutter/material.dart';
 
@@ -56,7 +56,7 @@ class DeviceInfo {
       } catch (e, stackTrace) {
         // Can't report directly because ErrorReporting uses this method.
         scheduleMicrotask(() {
-          ErrorReporting.report('getDeviceInfo', e, stackTrace);
+          error_reporting.report('getDeviceInfo', e, stackTrace);
         });
       }
     }

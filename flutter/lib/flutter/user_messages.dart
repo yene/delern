@@ -2,14 +2,14 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:delern_flutter/flutter/localization.dart';
-import 'package:delern_flutter/remote/error_reporting.dart' as ErrorReporting;
+import 'package:delern_flutter/remote/error_reporting.dart' as error_reporting;
 import 'package:flutter/material.dart';
 
 class UserMessages {
   // TODO(ksheremet): Get rid of it
   static Future<void> showError(ScaffoldState scaffoldFinder(), e,
       [StackTrace stackTrace]) {
-    var errorFuture = ErrorReporting.report('showError', e, stackTrace);
+    var errorFuture = error_reporting.report('showError', e, stackTrace);
 
     // Call a finder only *after* reporting the error, in case it crashes
     // (often because Scaffold.of cannot find Scaffold ancestor widget).

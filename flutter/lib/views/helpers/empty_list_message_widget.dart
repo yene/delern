@@ -1,4 +1,4 @@
-import 'package:delern_flutter/flutter/styles.dart' as AppStyles;
+import 'package:delern_flutter/flutter/styles.dart' as app_styles;
 import 'package:flutter/material.dart';
 
 class EmptyListMessageWidget extends StatelessWidget {
@@ -10,7 +10,7 @@ class EmptyListMessageWidget extends StatelessWidget {
   Widget build(BuildContext context) => Center(
         child: Text(
           _displayText,
-          style: AppStyles.secondaryText,
+          style: app_styles.secondaryText,
         ),
       );
 }

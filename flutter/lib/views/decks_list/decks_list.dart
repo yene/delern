@@ -1,7 +1,7 @@
 import 'dart:collection';
 
 import 'package:delern_flutter/flutter/localization.dart';
-import 'package:delern_flutter/flutter/styles.dart' as AppStyles;
+import 'package:delern_flutter/flutter/styles.dart' as app_styles;
 import 'package:delern_flutter/flutter/user_messages.dart';
 import 'package:delern_flutter/models/card_model.dart';
 import 'package:delern_flutter/models/deck_access_model.dart';
@@ -206,7 +206,7 @@ class DeckListItemWidget extends StatelessWidget {
                 const EdgeInsets.only(top: 14, bottom: 14, left: 8, right: 8),
             child: Text(
               deck.name,
-              style: AppStyles.primaryText,
+              style: app_styles.primaryText,
             ),
           ),
         ),
@@ -218,7 +218,7 @@ class DeckListItemWidget extends StatelessWidget {
         stream: bloc.numberOfCardsDue(deck.key).stream,
         builder: (context, snapshot) => Container(
               child: Text(snapshot.data?.toString() ?? 'N/A',
-                  style: AppStyles.primaryText),
+                  style: app_styles.primaryText),
             ),
       );
 
@@ -236,7 +236,7 @@ class DeckListItemWidget extends StatelessWidget {
                       value: entry.key,
                       child: Text(
                         entry.value,
-                        style: AppStyles.secondaryText,
+                        style: app_styles.secondaryText,
                       ),
                     ))
                 .toList(),

@@ -9,7 +9,7 @@ import 'package:delern_flutter/models/base/transaction.dart';
 import 'package:delern_flutter/models/card_model.dart';
 import 'package:delern_flutter/models/card_reply_model.dart';
 import 'package:delern_flutter/models/deck_model.dart';
-import 'package:delern_flutter/remote/error_reporting.dart' as ErrorReporting;
+import 'package:delern_flutter/remote/error_reporting.dart' as error_reporting;
 import 'package:firebase_database/firebase_database.dart';
 import 'package:meta/meta.dart';
 
@@ -71,7 +71,7 @@ class ScheduledCardModel implements Model {
     try {
       level = int.parse(value['level'].toString().substring(1));
     } on FormatException catch (e, stackTrace) {
-      ErrorReporting.report('ScheduledCard', e, stackTrace);
+      error_reporting.report('ScheduledCard', e, stackTrace);
       level = 0;
     }
     repeatAt = DateTime.fromMillisecondsSinceEpoch(value['repeatAt']);

@@ -1,5 +1,5 @@
 import 'package:delern_flutter/flutter/localization.dart';
-import 'package:delern_flutter/flutter/styles.dart' as AppStyles;
+import 'package:delern_flutter/flutter/styles.dart' as app_styles;
 import 'package:delern_flutter/models/deck_model.dart';
 import 'package:flutter/material.dart';
 
@@ -53,7 +53,7 @@ class _DeckTypeDropdownWidgetState extends State<DeckTypeDropdownWidget> {
     // TODO(ksheremet): Expand to fill parent
     return Text(
       text,
-      style: AppStyles.primaryText,
+      style: app_styles.primaryText,
     );
   }
 }

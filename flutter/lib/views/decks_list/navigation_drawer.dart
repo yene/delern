@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:delern_flutter/flutter/localization.dart';
-import 'package:delern_flutter/flutter/styles.dart' as AppStyles;
+import 'package:delern_flutter/flutter/styles.dart' as app_styles;
 import 'package:delern_flutter/remote/analytics.dart';
 import 'package:delern_flutter/remote/auth.dart';
 import 'package:delern_flutter/views/helpers/email_launcher.dart';
@@ -70,7 +70,7 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
         ListTile(
           title: Text(
             AppLocalizations.of(context).navigationDrawerCommunicateGroup,
-            style: AppStyles.navigationDrawerGroupText,
+            style: app_styles.navigationDrawerGroupText,
           ),
         ),
         ListTile(

@@ -1,5 +1,5 @@
 import 'package:delern_flutter/flutter/localization.dart';
-import 'package:delern_flutter/flutter/styles.dart';
+import 'package:delern_flutter/flutter/styles.dart' as app_styles;
 import 'package:delern_flutter/models/deck_model.dart';
 import 'package:delern_flutter/view_models/deck_settings_bloc.dart';
 import 'package:delern_flutter/views/base/screen_bloc_view.dart';
@@ -48,8 +48,8 @@ class _DeckSettingsState extends State<DeckSettings> {
     super.didChangeDependencies();
   }
 
-  void _showDeleteDeckDialog(deleteDeckQuestion) async {
-    var deleteDeckDialog = await showSaveUpdatesDialog(
+  Future<void> _showDeleteDeckDialog(deleteDeckQuestion) async {
+    final deleteDeckDialog = await showSaveUpdatesDialog(
         context: context,
         changesQuestion: deleteDeckQuestion,
         yesAnswer: AppLocalizations.of(context).delete,
@@ -74,7 +74,7 @@ class _DeckSettingsState extends State<DeckSettings> {
       );
 
   Widget _buildBody() => Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(8),
         child: SingleChildScrollView(
           child: Column(
             children: <Widget>[
@@ -82,7 +82,7 @@ class _DeckSettingsState extends State<DeckSettings> {
                 maxLines: null,
                 keyboardType: TextInputType.multiline,
                 controller: _deckNameController,
-                style: AppStyles.primaryText,
+                style: app_styles.primaryText,
                 onChanged: (text) {
                   setState(() {
                     _deckName = text;
@@ -94,10 +94,10 @@ class _DeckSettingsState extends State<DeckSettings> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
                   Padding(
-                    padding: const EdgeInsets.only(top: 24.0),
+                    padding: const EdgeInsets.only(top: 24),
                     child: Text(
                       AppLocalizations.of(context).deckType,
-                      style: AppStyles.secondaryText,
+                      style: app_styles.secondaryText,
                     ),
                   ),
                 ],
@@ -119,7 +119,7 @@ class _DeckSettingsState extends State<DeckSettings> {
                 children: <Widget>[
                   Text(
                     AppLocalizations.of(context).markdown,
-                    style: AppStyles.secondaryText,
+                    style: app_styles.secondaryText,
                   ),
                   Switch(
                     value: _isMarkdown,

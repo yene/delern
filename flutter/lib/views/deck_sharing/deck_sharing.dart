@@ -2,11 +2,11 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:delern_flutter/flutter/localization.dart';
-import 'package:delern_flutter/flutter/styles.dart';
+import 'package:delern_flutter/flutter/styles.dart' as app_styles;
 import 'package:delern_flutter/flutter/user_messages.dart';
 import 'package:delern_flutter/models/deck_access_model.dart';
 import 'package:delern_flutter/models/deck_model.dart';
-import 'package:delern_flutter/remote/error_reporting.dart';
+import 'package:delern_flutter/remote/error_reporting.dart' as error_reporting;
 import 'package:delern_flutter/remote/user_lookup.dart';
 import 'package:delern_flutter/view_models/deck_access_view_model.dart';
 import 'package:delern_flutter/views/deck_sharing/deck_access_dropdown.dart';
@@ -50,12 +50,12 @@ class _DeckSharingState extends State<DeckSharing> {
         body: Column(
           children: <Widget>[
             Padding(
-              padding: const EdgeInsets.only(left: 8.0, top: 8.0),
+              padding: const EdgeInsets.only(left: 8, top: 8),
               child: Row(
                 children: <Widget>[
                   Text(
                     AppLocalizations.of(context).peopleLabel,
-                    style: AppStyles.secondaryText,
+                    style: app_styles.secondaryText,
                   ),
                 ],
               ),
@@ -72,7 +72,7 @@ class _DeckSharingState extends State<DeckSharing> {
           onChanged: (text) {
             setState(() {});
           },
-          style: AppStyles.primaryText,
+          style: app_styles.primaryText,
           decoration: InputDecoration(
             hintText: AppLocalizations.of(context).emailAddressHint,
           ),
@@ -90,7 +90,7 @@ class _DeckSharingState extends State<DeckSharing> {
 
   Future<void> _shareDeck(AccessType deckAccess, BuildContext context) async {
     try {
-      var uid = await userLookup(_textController.text.toString());
+      final uid = await userLookup(_textController.text.toString());
       if (uid == null) {
         if (await _inviteUser()) {
           setState(_textController.clear);
@@ -109,7 +109,7 @@ class _DeckSharingState extends State<DeckSharing> {
       UserMessages.showMessage(Scaffold.of(context),
           AppLocalizations.of(context).offlineUserMessage);
     } on HttpException catch (e, stackTrace) {
-      ErrorReporting.report('share deck', e, stackTrace);
+      error_reporting.report('share deck', e, stackTrace);
       UserMessages.showMessage(Scaffold.of(context),
           AppLocalizations.of(context).serverUnavailableUserMessage);
     } catch (e, stackTrace) {
@@ -118,8 +118,8 @@ class _DeckSharingState extends State<DeckSharing> {
   }
 
   Future<bool> _inviteUser() async {
-    var locale = AppLocalizations.of(context);
-    var inviteUser = await showSaveUpdatesDialog(
+    final locale = AppLocalizations.of(context);
+    final inviteUser = await showSaveUpdatesDialog(
         context: context,
         changesQuestion: locale.appNotInstalledSharingDeck,
         yesAnswer: locale.send,
@@ -154,12 +154,12 @@ class _DeckUsersState extends State<DeckUsersWidget> {
   Widget build(BuildContext context) => Column(
         children: <Widget>[
           Padding(
-            padding: const EdgeInsets.only(left: 8.0, top: 8.0),
+            padding: const EdgeInsets.only(left: 8, top: 8),
             child: Row(
               children: <Widget>[
                 Text(
                   AppLocalizations.of(context).whoHasAccessLabel,
-                  style: AppStyles.secondaryText,
+                  style: app_styles.secondaryText,
                 ),
               ],
             ),
@@ -198,7 +198,7 @@ class _DeckUsersState extends State<DeckUsersWidget> {
           ? ProgressIndicatorWidget()
           : Text(
               displayName,
-              style: AppStyles.primaryText,
+              style: app_styles.primaryText,
             ),
       trailing: DeckAccessDropdownWidget(
         value: accessViewModel.access,

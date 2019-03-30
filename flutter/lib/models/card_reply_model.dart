@@ -23,7 +23,7 @@ class CardReplyModel implements Model {
   String get rootPath => 'views/$uid/$deckKey/$cardKey';
 
   @override
-  Map<String, dynamic> toMap(bool isNew) => {
+  Map<String, dynamic> toMap({@required bool isNew}) => {
         '$rootPath/$key': {
           'levelBefore': 'L$levelBefore',
           'reply': reply ? 'Y' : 'N',

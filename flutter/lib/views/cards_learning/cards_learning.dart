@@ -1,8 +1,7 @@
 import 'dart:async';
-import 'dart:collection';
 
 import 'package:delern_flutter/flutter/localization.dart';
-import 'package:delern_flutter/flutter/styles.dart';
+import 'package:delern_flutter/flutter/styles.dart' as app_styles;
 import 'package:delern_flutter/flutter/user_messages.dart';
 import 'package:delern_flutter/models/deck_access_model.dart';
 import 'package:delern_flutter/models/deck_model.dart';
@@ -95,7 +94,7 @@ class CardsLearningState extends State<CardsLearning> {
                         isMarkdown: _viewModel.deck.markdown,
                       )),
                       Padding(
-                        padding: const EdgeInsets.only(top: 25.0, bottom: 20.0),
+                        padding: const EdgeInsets.only(top: 25, bottom: 20),
                         child: _buildButtons(context),
                       ),
                       Row(
@@ -108,7 +107,7 @@ class CardsLearningState extends State<CardsLearning> {
                             child: Text(
                               AppLocalizations.of(context)
                                   .watchedCards(_watchedCount),
-                              style: AppStyles.secondaryText,
+                              style: app_styles.secondaryText,
                             ),
                           ),
                         ],
@@ -170,7 +169,8 @@ class CardsLearningState extends State<CardsLearning> {
 
   Future<void> _answerCard(bool answer, BuildContext context) async {
     try {
-      await _viewModel.answer(answer, _learnBeyondHorizon);
+      await _viewModel.answer(
+          knows: answer, learnBeyondHorizon: _learnBeyondHorizon);
     } catch (e, stacktrace) {
       UserMessages.showError(() => Scaffold.of(context), e, stacktrace);
       return;
@@ -211,9 +211,9 @@ class CardsLearningState extends State<CardsLearning> {
     }
   }
 
-  void _deleteCard(BuildContext context) async {
-    var locale = AppLocalizations.of(context);
-    var saveChanges = await showSaveUpdatesDialog(
+  Future<void> _deleteCard(BuildContext context) async {
+    final locale = AppLocalizations.of(context);
+    final saveChanges = await showSaveUpdatesDialog(
         context: context,
         changesQuestion: locale.deleteCardQuestion,
         yesAnswer: locale.delete,
@@ -229,7 +229,7 @@ class CardsLearningState extends State<CardsLearning> {
     }
   }
 
-  void _nextCardArrived() async {
+  Future<void> _nextCardArrived() async {
     setState(() {
       // For a new card we show, hide the back side.
       _isBackShown = false;
@@ -259,9 +259,7 @@ class CardsLearningState extends State<CardsLearning> {
 
 enum _CardMenuItemType { edit, delete }
 
-Map<_CardMenuItemType, String> _buildMenu(BuildContext context) =>
-    // We want this Map to be ordered.
-    // ignore: prefer_collection_literals
-    LinkedHashMap<_CardMenuItemType, String>()
-      ..[_CardMenuItemType.edit] = AppLocalizations.of(context).edit
-      ..[_CardMenuItemType.delete] = AppLocalizations.of(context).delete;
+Map<_CardMenuItemType, String> _buildMenu(BuildContext context) => {
+      _CardMenuItemType.edit: AppLocalizations.of(context).edit,
+      _CardMenuItemType.delete: AppLocalizations.of(context).delete,
+    };

@@ -1,5 +1,5 @@
 import 'package:delern_flutter/flutter/localization.dart';
-import 'package:delern_flutter/flutter/styles.dart';
+import 'package:delern_flutter/flutter/styles.dart' as app_styles;
 import 'package:delern_flutter/flutter/user_messages.dart';
 import 'package:delern_flutter/models/card_model.dart' as card_model;
 import 'package:delern_flutter/models/deck_model.dart';
@@ -15,7 +15,7 @@ class CreateDeckWidget extends StatelessWidget {
   Widget build(BuildContext context) => FloatingActionButton(
         child: const Icon(Icons.add),
         onPressed: () async {
-          var newDeck = await showDialog<DeckModel>(
+          final newDeck = await showDialog<DeckModel>(
             context: context,
             // User must tap a button to dismiss dialog
             barrierDismissible: false,
@@ -85,7 +85,7 @@ class _CreateDeckDialogState extends State<_CreateDeckDialog> {
       onChanged: (text) {
         setState(() {});
       },
-      style: AppStyles.primaryText,
+      style: app_styles.primaryText,
     );
 
     if (MediaQuery.of(context).orientation == Orientation.portrait) {
@@ -148,7 +148,7 @@ class _HorizontalDialog extends StatelessWidget {
     const insetAnimationCurve = Curves.decelerate;
 
     const dialogShape = RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(Radius.circular(2.0)));
+        borderRadius: BorderRadius.all(Radius.circular(2)));
 
     return AnimatedPadding(
       padding: MediaQuery.of(context).viewInsets,
@@ -156,7 +156,7 @@ class _HorizontalDialog extends StatelessWidget {
       curve: insetAnimationCurve,
       child: Center(
         child: Material(
-          elevation: 24.0,
+          elevation: 24,
           color: Theme.of(context).dialogBackgroundColor,
           type: MaterialType.card,
           child: child,

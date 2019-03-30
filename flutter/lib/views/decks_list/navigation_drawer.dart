@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:delern_flutter/flutter/localization.dart';
-import 'package:delern_flutter/flutter/styles.dart';
+import 'package:delern_flutter/flutter/styles.dart' as app_styles;
 import 'package:delern_flutter/remote/analytics.dart';
 import 'package:delern_flutter/remote/auth.dart';
 import 'package:delern_flutter/views/helpers/email_launcher.dart';
@@ -32,9 +32,9 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
 
   @override
   Widget build(BuildContext context) {
-    var user = CurrentUserWidget.of(context).user;
+    final user = CurrentUserWidget.of(context).user;
 
-    var accountName =
+    final accountName =
         user.displayName ?? AppLocalizations.of(context).anonymous;
 
     return Drawer(
@@ -66,11 +66,11 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
             }
           },
         ),
-        const Divider(height: 1.0),
+        const Divider(height: 1),
         ListTile(
           title: Text(
             AppLocalizations.of(context).navigationDrawerCommunicateGroup,
-            style: AppStyles.navigationDrawerGroupText,
+            style: app_styles.navigationDrawerGroupText,
           ),
         ),
         ListTile(
@@ -103,9 +103,7 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
                     builder: (context) => SupportDevelopment()));
           },
         ),
-        const Divider(
-          height: 1.0,
-        ),
+        const Divider(height: 1),
         AboutListTile(
           icon: const Icon(Icons.perm_device_information),
           child: Text(AppLocalizations.of(context).navigationDrawerAbout),
@@ -124,7 +122,7 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
     } on PlatformException catch (_) {
       // TODO(ksheremet): Merge data
       logPromoteAnonymousFail();
-      var signIn = await showSaveUpdatesDialog(
+      final signIn = await showSaveUpdatesDialog(
           context: context,
           changesQuestion: AppLocalizations.of(context).accountExistUserWarning,
           yesAnswer: AppLocalizations.of(context).navigationDrawerSignIn,

@@ -8,7 +8,7 @@ FirebaseOptions _opts;
 
 Future<String> userLookup(String email) async {
   _opts ??= await FirebaseApp.instance.options;
-  var uri = Uri(
+  final uri = Uri(
       scheme: 'https',
       host: 'us-central1-${_opts.projectID}.cloudfunctions.net',
       path: 'userLookup',

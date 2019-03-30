@@ -76,7 +76,7 @@ class DeckAccessModel implements KeyedListItem, Model {
   String get rootPath => 'deck_access/$deckKey';
 
   @override
-  Map<String, dynamic> toMap(bool isNew) => {
+  Map<String, dynamic> toMap({@required bool isNew}) => {
         // Do not save displayName and photoUrl because these are populated by
         // Cloud functions.
         '$rootPath/$key/access': Enum.asString(access),

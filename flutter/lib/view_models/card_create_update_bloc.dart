@@ -6,7 +6,7 @@ import 'package:delern_flutter/models/base/transaction.dart';
 import 'package:delern_flutter/models/card_model.dart';
 import 'package:delern_flutter/models/scheduled_card_model.dart';
 import 'package:delern_flutter/remote/analytics.dart';
-import 'package:delern_flutter/remote/error_reporting.dart';
+import 'package:delern_flutter/remote/error_reporting.dart' as error_reporting;
 import 'package:meta/meta.dart';
 
 class CardCreateUpdateBloc {
@@ -76,25 +76,26 @@ class CardCreateUpdateBloc {
 
   Future<void> _saveCard() {
     logCardCreate(_cardModel.deckKey);
-    var t = Transaction()..save(_cardModel);
+    final t = Transaction()..save(_cardModel);
     final sCard = ScheduledCardModel(deckKey: _cardModel.deckKey, uid: uid)
       ..key = _cardModel.key;
     t.save(sCard);
 
     if (_addReversedCard) {
-      var reverse = CardModel.copyFrom(_cardModel)
+      final reverse = CardModel.copyFrom(_cardModel)
         ..key = null
         ..front = _cardModel.back
         ..back = _cardModel.front;
       t.save(reverse);
-      var reverseScCard = ScheduledCardModel(deckKey: reverse.deckKey, uid: uid)
-        ..key = reverse.key;
+      final reverseScCard =
+          ScheduledCardModel(deckKey: reverse.deckKey, uid: uid)
+            ..key = reverse.key;
       t.save(reverseScCard);
     }
     return t.commit();
   }
 
-  Future<void> _disableUI(Future<void> f()) async {
+  Future<void> _disableUI(Future<void> Function() f) async {
     _isOperationEnabled = false;
     _isOperationEnabledController.add(_isOperationEnabled);
     try {
@@ -105,7 +106,7 @@ class CardCreateUpdateBloc {
     }
   }
 
-  void _processSavingCard() async {
+  Future<void> _processSavingCard() async {
     _cardModel
       ..front = _frontText.trim()
       ..back = _backText.trim();
@@ -122,7 +123,7 @@ class CardCreateUpdateBloc {
         _onCardAddedController.add(locale.cardAddedUserMessage);
       }
     } catch (e, stackTrace) {
-      ErrorReporting.report('saveCard', e, stackTrace);
+      error_reporting.report('saveCard', e, stackTrace);
       _onErrorController
           .add(UserMessages.formUserFriendlyErrorMessage(locale, e));
     }

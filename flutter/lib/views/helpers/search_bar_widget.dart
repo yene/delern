@@ -1,5 +1,5 @@
 import 'package:delern_flutter/flutter/localization.dart';
-import 'package:delern_flutter/flutter/styles.dart';
+import 'package:delern_flutter/flutter/styles.dart' as app_styles;
 import 'package:flutter/material.dart';
 
 typedef SearchCallback = void Function(String input);
@@ -55,11 +55,11 @@ class SearchBarWidgetState extends State<SearchBarWidget> {
       appBarTitle = TextField(
         autofocus: true,
         controller: _searchController,
-        style: AppStyles.searchBarText,
+        style: app_styles.searchBarText,
         decoration: InputDecoration(
             border: InputBorder.none,
             hintText: AppLocalizations.of(context).searchHint,
-            hintStyle: AppStyles.searchBarText),
+            hintStyle: app_styles.searchBarText),
       );
     } else {
       appBarTitle = Text(widget.title);

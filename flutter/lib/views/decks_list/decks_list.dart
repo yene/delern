@@ -1,7 +1,5 @@
-import 'dart:collection';
-
 import 'package:delern_flutter/flutter/localization.dart';
-import 'package:delern_flutter/flutter/styles.dart';
+import 'package:delern_flutter/flutter/styles.dart' as app_styles;
 import 'package:delern_flutter/flutter/user_messages.dart';
 import 'package:delern_flutter/models/card_model.dart';
 import 'package:delern_flutter/models/deck_access_model.dart';
@@ -176,7 +174,7 @@ class DeckListItemWidget extends StatelessWidget {
               ],
             ),
           ),
-          const Divider(height: 1.0),
+          const Divider(height: 1),
         ],
       );
 
@@ -184,7 +182,7 @@ class DeckListItemWidget extends StatelessWidget {
         child: InkWell(
           splashColor: Theme.of(context).splashColor,
           onTap: () async {
-            var anyCardsShown = await Navigator.push(
+            final anyCardsShown = await Navigator.push(
                 context,
                 MaterialPageRoute(
                   settings: const RouteSettings(name: '/decks/learn'),
@@ -202,11 +200,11 @@ class DeckListItemWidget extends StatelessWidget {
             }
           },
           child: Container(
-            padding: const EdgeInsets.only(
-                top: 14.0, bottom: 14.0, left: 8.0, right: 8.0),
+            padding:
+                const EdgeInsets.only(top: 14, bottom: 14, left: 8, right: 8),
             child: Text(
               deck.name,
-              style: AppStyles.primaryText,
+              style: app_styles.primaryText,
             ),
           ),
         ),
@@ -218,14 +216,14 @@ class DeckListItemWidget extends StatelessWidget {
         stream: bloc.numberOfCardsDue(deck.key).stream,
         builder: (context, snapshot) => Container(
               child: Text(snapshot.data?.toString() ?? 'N/A',
-                  style: AppStyles.primaryText),
+                  style: app_styles.primaryText),
             ),
       );
 
   Widget _buildDeckMenu(BuildContext context) => Material(
         child: InkResponse(
           splashColor: Theme.of(context).splashColor,
-          radius: 15.0,
+          radius: 15,
           onTap: () {},
           child: PopupMenuButton<_DeckMenuItemType>(
             onSelected: (itemType) =>
@@ -236,7 +234,7 @@ class DeckListItemWidget extends StatelessWidget {
                       value: entry.key,
                       child: Text(
                         entry.value,
-                        style: AppStyles.secondaryText,
+                        style: app_styles.secondaryText,
                       ),
                     ))
                 .toList(),
@@ -250,7 +248,7 @@ class DeckListItemWidget extends StatelessWidget {
     // we still give a try to edit for a user. If user
     // doesn't have permissions they will see "Permission
     // denied".
-    var allowEdit = deck.access != AccessType.read;
+    final allowEdit = deck.access != AccessType.read;
     switch (item) {
       case _DeckMenuItemType.add:
         if (allowEdit) {
@@ -306,13 +304,11 @@ class DeckListItemWidget extends StatelessWidget {
 enum _DeckMenuItemType { add, edit, setting, share }
 
 Map<_DeckMenuItemType, String> _buildMenu(BuildContext context) {
-  // We want this Map to be ordered.
-  // ignore: prefer_collection_literals
-  var deckMenu = LinkedHashMap<_DeckMenuItemType, String>()
-    ..[_DeckMenuItemType.add] = AppLocalizations.of(context).addCardsDeckMenu
-    ..[_DeckMenuItemType.edit] = AppLocalizations.of(context).editCardsDeckMenu
-    ..[_DeckMenuItemType.setting] =
-        AppLocalizations.of(context).settingsDeckMenu;
+  final deckMenu = {
+    _DeckMenuItemType.add: AppLocalizations.of(context).addCardsDeckMenu,
+    _DeckMenuItemType.edit: AppLocalizations.of(context).editCardsDeckMenu,
+    _DeckMenuItemType.setting: AppLocalizations.of(context).settingsDeckMenu,
+  };
 
   if (!CurrentUserWidget.of(context).user.isAnonymous) {
     deckMenu[_DeckMenuItemType.share] =

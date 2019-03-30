@@ -1,4 +1,4 @@
-import 'package:delern_flutter/flutter/styles.dart';
+import 'package:delern_flutter/flutter/styles.dart' as app_styles;
 import 'package:delern_flutter/views/helpers/non_scrolling_markdown.dart';
 import 'package:flutter/material.dart';
 
@@ -19,25 +19,23 @@ class CardDisplayWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Card(
         color: backgroundColor,
-        margin: const EdgeInsets.all(8.0),
+        margin: const EdgeInsets.all(8),
         child: ListView(
-          padding: const EdgeInsets.all(20.0),
+          padding: const EdgeInsets.all(20),
           children: _buildCardBody(context),
         ),
       );
 
   List<Widget> _buildCardBody(BuildContext context) {
-    var widgetList = [
+    final widgetList = [
       _sideText(front, context),
     ];
 
     if (showBack) {
       widgetList
         ..add(const Padding(
-          padding: EdgeInsets.symmetric(vertical: 15.0),
-          child: Divider(
-            height: 1.0,
-          ),
+          padding: EdgeInsets.symmetric(vertical: 15),
+          child: Divider(height: 1),
         ))
         ..add(_sideText(back, context));
     }
@@ -52,7 +50,7 @@ class CardDisplayWidget extends StatelessWidget {
     return Text(
       text,
       textAlign: TextAlign.center,
-      style: AppStyles.primaryText,
+      style: app_styles.primaryText,
     );
   }
 }

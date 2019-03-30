@@ -113,7 +113,7 @@ class Auth {
   /// account picker), the Future will still complete successfully, but no
   /// changes are done.
   Future<void> signIn(SignInProvider provider,
-      {forceAccountPicker = true}) async {
+      {bool forceAccountPicker = true}) async {
     FirebaseUser user;
 
     if (provider == null) {
@@ -207,7 +207,7 @@ class Auth {
   }
 
   static Future<bool> _updateProfileFromProviders(FirebaseUser user) async {
-    var update = UserUpdateInfo();
+    final update = UserUpdateInfo();
 
     var anyUpdates = false;
     for (final providerData in user.providerData) {

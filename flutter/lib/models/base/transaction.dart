@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:delern_flutter/models/base/model.dart';
-import 'package:delern_flutter/remote/error_reporting.dart';
+import 'package:delern_flutter/remote/error_reporting.dart' as error_reporting;
 import 'package:firebase_database/firebase_database.dart';
 
 class Transaction {
@@ -23,9 +23,9 @@ class Transaction {
   void save(Model m) {
     if (m.key == null) {
       m.key = _root.child(m.rootPath).push().key;
-      _updates.addAll(m.toMap(true));
+      _updates.addAll(m.toMap(isNew: true));
     } else {
-      _updates.addAll(m.toMap(false));
+      _updates.addAll(m.toMap(isNew: false));
     }
   }
 
@@ -44,10 +44,10 @@ class Transaction {
 
   Future<void> commit() async {
     // Firebase update() does not return until it gets response from the server.
-    var updateFuture = _root.update(_updates);
+    final updateFuture = _root.update(_updates);
 
     if (!_isOnline) {
-      updateFuture.catchError((error, stackTrace) => ErrorReporting.report(
+      updateFuture.catchError((error, stackTrace) => error_reporting.report(
           'Transaction', error, stackTrace,
           extra: {'updates': _updates, 'online': false}));
       return;
@@ -56,7 +56,7 @@ class Transaction {
     try {
       await updateFuture;
     } catch (error, stackTrace) {
-      ErrorReporting.report('Transaction', error, stackTrace,
+      error_reporting.report('Transaction', error, stackTrace,
           extra: {'updates': _updates, 'online': true});
       rethrow;
     }

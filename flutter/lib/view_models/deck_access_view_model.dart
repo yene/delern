@@ -31,7 +31,7 @@ class DeckAccessesViewModel {
     assert(deck.key == access.deckKey);
 
     logShare(access.deckKey);
-    var tr = Transaction();
+    final tr = Transaction();
 
     if (access.access == null) {
       return (tr..delete(access)).commit();

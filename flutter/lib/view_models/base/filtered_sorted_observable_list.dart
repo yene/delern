@@ -23,9 +23,9 @@ class FilteredSortedObservableList<T extends KeyedListItem>
     _filter = value;
 
     for (var srcIndex = 0; srcIndex < _source.length; ++srcIndex) {
-      var item = _source[srcIndex];
-      var currentIndex = indexOfKey(item.key);
-      var newIndex = _indexForNewItem(srcIndex);
+      final item = _source[srcIndex];
+      final currentIndex = indexOfKey(item.key);
+      final newIndex = _indexForNewItem(srcIndex);
 
       if (currentIndex >= 0 && newIndex < 0) {
         removeAt(currentIndex);
@@ -86,7 +86,7 @@ class FilteredSortedObservableList<T extends KeyedListItem>
   }
 
   int _indexForNewItem(int srcIndex) {
-    var item = _source[srcIndex];
+    final item = _source[srcIndex];
 
     if (_filter != null && !_filter(item)) {
       return -1;
@@ -95,7 +95,7 @@ class FilteredSortedObservableList<T extends KeyedListItem>
     if (_comparator == null) {
       // Find where in our list the next item from _source is.
       for (++srcIndex; srcIndex < _source.length; ++srcIndex) {
-        var index = indexOfKey(_source[srcIndex].key);
+        final index = indexOfKey(_source[srcIndex].key);
         if (index >= 0) {
           return index;
         }

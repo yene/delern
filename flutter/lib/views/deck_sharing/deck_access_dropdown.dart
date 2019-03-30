@@ -1,5 +1,5 @@
 import 'package:delern_flutter/flutter/localization.dart';
-import 'package:delern_flutter/flutter/styles.dart';
+import 'package:delern_flutter/flutter/styles.dart' as app_styles;
 import 'package:delern_flutter/models/deck_access_model.dart';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
@@ -78,7 +78,7 @@ class _DropdownState extends State<DeckAccessDropdownWidget> {
       children: <Widget>[
         Text(
           text,
-          style: AppStyles.secondaryText,
+          style: app_styles.secondaryText,
         ),
         icon,
       ],

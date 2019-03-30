@@ -1,10 +1,10 @@
 import 'package:delern_flutter/flutter/device_info.dart';
 import 'package:delern_flutter/flutter/localization.dart';
-import 'package:delern_flutter/flutter/styles.dart';
+import 'package:delern_flutter/flutter/styles.dart' as app_styles;
 import 'package:delern_flutter/models/base/transaction.dart';
 import 'package:delern_flutter/models/fcm.dart';
 import 'package:delern_flutter/remote/auth.dart';
-import 'package:delern_flutter/remote/error_reporting.dart';
+import 'package:delern_flutter/remote/error_reporting.dart' as error_reporting;
 import 'package:delern_flutter/views/helpers/progress_indicator_widget.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -24,7 +24,7 @@ class SignInWidget extends StatefulWidget {
 
 class _SignInWidgetState extends State<SignInWidget> {
   final _itemPadding =
-      const Padding(padding: EdgeInsets.symmetric(vertical: 10.0));
+      const Padding(padding: EdgeInsets.symmetric(vertical: 10));
 
   @override
   void initState() {
@@ -34,14 +34,14 @@ class _SignInWidgetState extends State<SignInWidget> {
       setState(() {});
 
       if (Auth.instance.currentUser != null) {
-        ErrorReporting.uid = Auth.instance.currentUser.uid;
+        error_reporting.uid = Auth.instance.currentUser.uid;
 
         FirebaseAnalytics()
           ..setUserId(Auth.instance.currentUser.uid)
           ..logLogin();
 
         _firebaseMessaging.onTokenRefresh.listen((token) async {
-          var fcm = FCM(uid: Auth.instance.currentUser.uid)
+          final fcm = FCM(uid: Auth.instance.currentUser.uid)
             ..language = Localizations.localeOf(context).toString()
             ..name = (await DeviceInfo.getDeviceInfo()).userFriendlyName
             ..key = token;
@@ -61,8 +61,8 @@ class _SignInWidgetState extends State<SignInWidget> {
 
   Widget _buildFeatureText(String text) => ListTile(
       leading: const Icon(Icons.check_circle),
-      title: Text(text, style: AppStyles.primaryText),
-      contentPadding: const EdgeInsets.symmetric(horizontal: 8.0));
+      title: Text(text, style: app_styles.primaryText),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 8));
 
   @override
   Widget build(BuildContext context) {
@@ -75,7 +75,7 @@ class _SignInWidgetState extends State<SignInWidget> {
     }
 
     return Scaffold(
-      backgroundColor: AppStyles.signInBackgroundColor,
+      backgroundColor: app_styles.signInBackgroundColor,
       body: OrientationBuilder(
           builder: (context, orientation) =>
               (orientation == Orientation.portrait)
@@ -92,7 +92,7 @@ class _SignInWidgetState extends State<SignInWidget> {
           .toList();
 
   Widget _buildGoogleSignInButton(Orientation orientation) => Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 15.0),
+        padding: const EdgeInsets.symmetric(horizontal: 15),
         child: RaisedButton(
             color: Colors.white,
             onPressed: () => Auth.instance.signIn(SignInProvider.google),
@@ -104,22 +104,22 @@ class _SignInWidgetState extends State<SignInWidget> {
                       Orientation.portrait == orientation ? 10.0 : 5.0),
                   child: Image.asset(
                     'images/google_sign_in.png',
-                    height: 35.0,
-                    width: 35.0,
+                    height: 35,
+                    width: 35,
                   ),
                 ),
                 Container(
-                    padding: const EdgeInsets.only(left: 10.0),
+                    padding: const EdgeInsets.only(left: 10),
                     child: Text(
                       AppLocalizations.of(context).signInWithGoogle,
-                      style: AppStyles.primaryText,
+                      style: app_styles.primaryText,
                     )),
               ],
             )),
       );
 
   Widget _buildLogoPicture() => Padding(
-        padding: const EdgeInsets.symmetric(vertical: 20.0),
+        padding: const EdgeInsets.symmetric(vertical: 20),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
@@ -129,7 +129,7 @@ class _SignInWidgetState extends State<SignInWidget> {
             Text(
               AppLocalizations.of(context).appLogoName,
               style: const TextStyle(
-                  fontSize: 20.0,
+                  fontSize: 20,
                   color: Colors.green,
                   fontWeight: FontWeight.w700),
             ),
@@ -138,7 +138,7 @@ class _SignInWidgetState extends State<SignInWidget> {
       );
 
   Widget _buildAnonymousSignInButton(Orientation orientation) => Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 15.0),
+        padding: const EdgeInsets.symmetric(horizontal: 15),
         child: RaisedButton(
             color: Colors.white,
             onPressed: () => Auth.instance.signIn(null),
@@ -152,7 +152,7 @@ class _SignInWidgetState extends State<SignInWidget> {
                           Orientation.portrait == orientation ? 15.0 : 10.0),
                   child: Text(
                     AppLocalizations.of(context).continueAnonymously,
-                    style: AppStyles.primaryText,
+                    style: app_styles.primaryText,
                   ),
                 ),
               ],
@@ -184,7 +184,7 @@ class _SignInWidgetState extends State<SignInWidget> {
                       _itemPadding,
                       Text(
                         AppLocalizations.of(context).doNotNeedFeaturesText,
-                        style: AppStyles.primaryText,
+                        style: app_styles.primaryText,
                       ),
                       _itemPadding,
                       _buildAnonymousSignInButton(Orientation.landscape),
@@ -210,7 +210,7 @@ class _SignInWidgetState extends State<SignInWidget> {
               _itemPadding,
               Text(
                 AppLocalizations.of(context).doNotNeedFeaturesText,
-                style: AppStyles.primaryText,
+                style: app_styles.primaryText,
               ),
               _itemPadding,
               _buildAnonymousSignInButton(Orientation.portrait),

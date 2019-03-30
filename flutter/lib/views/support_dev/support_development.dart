@@ -1,5 +1,5 @@
 import 'package:delern_flutter/flutter/localization.dart';
-import 'package:delern_flutter/flutter/styles.dart';
+import 'package:delern_flutter/flutter/styles.dart' as app_styles;
 import 'package:delern_flutter/flutter/user_messages.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
@@ -15,7 +15,7 @@ class SupportDevelopment extends StatelessWidget {
         builder: (context) => Markdown(
             data: AppLocalizations.of(context).supportDevelopment,
             styleSheet: MarkdownStyleSheet.fromTheme(Theme.of(context))
-                .copyWith(p: AppStyles.primaryText),
+                .copyWith(p: app_styles.primaryText),
             onTapLink: (href) async {
               if (await canLaunch(href)) {
                 await launch(href, forceSafariVC: false);

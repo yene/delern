@@ -9,7 +9,7 @@ import 'package:delern_flutter/models/base/transaction.dart';
 import 'package:delern_flutter/models/card_model.dart';
 import 'package:delern_flutter/models/card_reply_model.dart';
 import 'package:delern_flutter/models/deck_model.dart';
-import 'package:delern_flutter/remote/error_reporting.dart';
+import 'package:delern_flutter/remote/error_reporting.dart' as error_reporting;
 import 'package:firebase_database/firebase_database.dart';
 import 'package:meta/meta.dart';
 
@@ -71,7 +71,7 @@ class ScheduledCardModel implements Model {
     try {
       level = int.parse(value['level'].toString().substring(1));
     } on FormatException catch (e, stackTrace) {
-      ErrorReporting.report('ScheduledCard', e, stackTrace);
+      error_reporting.report('ScheduledCard', e, stackTrace);
       level = 0;
     }
     repeatAt = DateTime.fromMillisecondsSinceEpoch(value['repeatAt']);
@@ -106,10 +106,10 @@ class ScheduledCardModel implements Model {
 
         // TODO(dotdoom): remove sorting once Flutter Firebase issue is fixed.
         // Workaround for https://github.com/flutter/flutter/issues/19389.
-        List<MapEntry> allEntries = event.snapshot.value.entries.toList();
-        var latestScheduledCard = (allEntries
+        final List<MapEntry> allEntries = event.snapshot.value.entries.toList();
+        final latestScheduledCard = (allEntries
               ..sort((s1, s2) {
-                var repeatAtComparison =
+                final repeatAtComparison =
                     s1.value['repeatAt'].compareTo(s2.value['repeatAt']);
                 // Sometimes repeatAt of 2 cards may be the same, which
                 // will result in unstable order. Most often this is
@@ -125,10 +125,10 @@ class ScheduledCardModel implements Model {
               }))
             .first;
 
-        var card =
+        final card =
             await CardModel.get(deckKey: deck.key, key: latestScheduledCard.key)
                 .first;
-        var scheduledCard = ScheduledCardModel._fromSnapshot(
+        final scheduledCard = ScheduledCardModel._fromSnapshot(
             uid: deck.uid,
             key: latestScheduledCard.key,
             deckKey: deck.key,
@@ -151,15 +151,16 @@ class ScheduledCardModel implements Model {
   String get rootPath => 'learning/$uid/$deckKey';
 
   @override
-  Map<String, dynamic> toMap(bool isNew) => {
+  Map<String, dynamic> toMap({@required bool isNew}) => {
         '$rootPath/$key': {
           'level': 'L$level',
           'repeatAt': repeatAt.toUtc().millisecondsSinceEpoch,
         }
       };
 
-  CardReplyModel answer(bool knows, bool learnBeyondHorizon) {
-    var cv = CardReplyModel(uid: uid, cardKey: key, deckKey: deckKey)
+  CardReplyModel answer(
+      {@required bool knows, @required bool learnBeyondHorizon}) {
+    final cv = CardReplyModel(uid: uid, cardKey: key, deckKey: deckKey)
       ..reply = knows
       ..levelBefore = level;
 
@@ -182,7 +183,7 @@ class ScheduledCardModel implements Model {
               .child('learning')
               .child(uid),
           snapshotParser: (deckKey, scheduledCardsOfDeck) {
-            Map value = scheduledCardsOfDeck ?? {};
+            final Map value = scheduledCardsOfDeck ?? {};
             return ScheduledCardsListModel(
                 key: deckKey,
                 scheduledCards: List.unmodifiable(value.entries

@@ -100,7 +100,7 @@ install_debug_keys() {
 # Environment: none.
 build() {
 	_section 'Generating Flutter files'
-	( cd flutter && bundle exec fastlane build ) >>"${BUILD_LOG?}"
+	( cd flutter && _retry bundle exec fastlane build ) >>"${BUILD_LOG?}"
 
 	_section 'Running Flutter tests'
 	( cd flutter && flutter test --coverage )

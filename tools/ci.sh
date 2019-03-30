@@ -116,7 +116,8 @@ build() {
 	install_debug_keys
 
 	_section 'Building debug version of the app'
-	( cd flutter && bundle exec fastlane android build ) >>"${BUILD_LOG?}"
+	( cd flutter &&
+		_retry bundle exec fastlane android build ) >>"${BUILD_LOG?}"
 	if [ -n "${OSX?}" ]; then
 		( cd flutter && bundle exec fastlane ios build ) \
 			>>"${BUILD_LOG?}"

@@ -170,7 +170,8 @@ class CardsLearningState extends State<CardsLearning> {
 
   Future<void> _answerCard(bool answer, BuildContext context) async {
     try {
-      await _viewModel.answer(answer, _learnBeyondHorizon);
+      await _viewModel.answer(
+          knows: answer, learnBeyondHorizon: _learnBeyondHorizon);
     } catch (e, stacktrace) {
       UserMessages.showError(() => Scaffold.of(context), e, stacktrace);
       return;

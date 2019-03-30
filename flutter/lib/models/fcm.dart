@@ -12,7 +12,7 @@ class FCM implements KeyedListItem, Model {
 
   FCM({@required this.uid}) : assert(uid != null);
 
-  Map<String, dynamic> toMap(bool isNew) => {
+  Map<String, dynamic> toMap({@required bool isNew}) => {
         'fcm/$uid/$key': {
           'name': name,
           'language': language,

@@ -151,14 +151,15 @@ class ScheduledCardModel implements Model {
   String get rootPath => 'learning/$uid/$deckKey';
 
   @override
-  Map<String, dynamic> toMap(bool isNew) => {
+  Map<String, dynamic> toMap({@required bool isNew}) => {
         '$rootPath/$key': {
           'level': 'L$level',
           'repeatAt': repeatAt.toUtc().millisecondsSinceEpoch,
         }
       };
 
-  CardReplyModel answer(bool knows, bool learnBeyondHorizon) {
+  CardReplyModel answer(
+      {@required bool knows, @required bool learnBeyondHorizon}) {
     var cv = CardReplyModel(uid: uid, cardKey: key, deckKey: deckKey)
       ..reply = knows
       ..levelBefore = level;

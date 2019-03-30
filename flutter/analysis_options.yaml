@@ -44,7 +44,6 @@ linter:
     # Disabled pre-existing findings.
     # TODO(dotdoom): make this list empty.
     #- avoid_classes_with_only_static_members
-    #- avoid_positional_boolean_parameters
     #- prefer_final_locals
 
     - always_declare_return_types
@@ -62,6 +61,7 @@ linter:
     - avoid_init_to_null
     - avoid_js_rounded_ints
     - avoid_null_checks_in_equality_operators
+    - avoid_positional_boolean_parameters
     - avoid_private_typedef_functions
     - avoid_relative_lib_imports
     - avoid_renaming_method_parameters

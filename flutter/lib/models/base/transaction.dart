@@ -23,9 +23,9 @@ class Transaction {
   void save(Model m) {
     if (m.key == null) {
       m.key = _root.child(m.rootPath).push().key;
-      _updates.addAll(m.toMap(true));
+      _updates.addAll(m.toMap(isNew: true));
     } else {
-      _updates.addAll(m.toMap(false));
+      _updates.addAll(m.toMap(isNew: false));
     }
   }
 

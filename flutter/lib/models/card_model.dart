@@ -43,7 +43,7 @@ class CardModel implements Model {
   String get rootPath => 'cards/$deckKey';
 
   @override
-  Map<String, dynamic> toMap(bool isNew) {
+  Map<String, dynamic> toMap({@required bool isNew}) {
     final path = '$rootPath/$key';
     final map = <String, dynamic>{
       '$path/front': front,

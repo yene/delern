@@ -64,7 +64,7 @@ class DeckModel implements Model {
   @override
   String get rootPath => 'decks/$uid';
 
-  Map<String, dynamic> toMap(bool isNew) {
+  Map<String, dynamic> toMap({@required bool isNew}) {
     final path = '$rootPath/$key';
     // Intentionally flatten the update and exclude "access" field because it is
     // written by DeckAccessModel. Firebase does not allow overlapping updates

@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 
 class UserMessages {
   // TODO(ksheremet): Get rid of it
-  static Future<void> showError(ScaffoldState scaffoldFinder(), e,
+  static Future<void> showError(ScaffoldState Function() scaffoldFinder, e,
       [StackTrace stackTrace]) {
     final errorFuture = error_reporting.report('showError', e, stackTrace);
 

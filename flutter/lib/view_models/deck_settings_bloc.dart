@@ -125,5 +125,6 @@ class DeckSettingsBloc extends ScreenBloc {
   }
 
   @override
-  Future<bool> userClosesScreen() async => await _saveDeckSettings();
+  @protected
+  Future<bool> userClosesScreen() => _saveDeckSettings();
 }

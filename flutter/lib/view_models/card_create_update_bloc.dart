@@ -95,7 +95,7 @@ class CardCreateUpdateBloc {
     return t.commit();
   }
 
-  Future<void> _disableUI(Future<void> f()) async {
+  Future<void> _disableUI(Future<void> Function() f) async {
     _isOperationEnabled = false;
     _isOperationEnabledController.add(_isOperationEnabled);
     try {

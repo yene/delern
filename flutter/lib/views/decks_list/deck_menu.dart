@@ -26,39 +26,35 @@ class DeckMenu extends StatefulWidget {
 
 class _DeckMenuState extends State<DeckMenu>
     with SingleTickerProviderStateMixin {
-  Animation<Alignment> _moveAnimation;
-  Animation<double> _opacityAnimation;
   AnimationController _controller;
-  final duration = Duration(milliseconds: 270);
+  final _duration = Duration(milliseconds: 270);
+  var _menuIcon = Icons.more_vert;
 
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(vsync: this, duration: duration);
-
-    final anim = CurvedAnimation(parent: _controller, curve: Curves.linear);
-    _moveAnimation = Tween<Alignment>(
-            begin: Alignment.centerRight, end: Alignment.bottomRight)
-        .animate(anim);
-    _opacityAnimation = Tween(begin: 0.0, end: 1.0).animate(anim);
+    _controller = AnimationController(vsync: this, duration: _duration)
+      ..addStatusListener((status) {
+        if (status == AnimationStatus.completed) {
+          _onMenuExpanded();
+        }
+        if (status == AnimationStatus.reverse) {
+          _onMenuClosed();
+        }
+      });
   }
 
-  Widget _buildMenuItem(_DeckMenuItemType type, String menuItemName) =>
-      RaisedButton(
-        // TODO(ksheremet): Set color from styles
-        color: Colors.greenAccent[100],
-        padding: const EdgeInsets.all(8.0),
-        shape: RoundedRectangleBorder(
-            borderRadius: const BorderRadius.all(Radius.circular(10))),
-        child: Text(menuItemName),
-        onPressed: () {
-          _controller.reverse().then((_) {
-            icon = Icons.more_vert;
-            _overlayEntry.remove();
-            _onDeckMenuItemSelected(context, type);
-          });
-        },
-      );
+  void _onMenuExpanded() {
+    setState(() {
+      _menuIcon = Icons.close;
+    });
+  }
+
+  void _onMenuClosed() {
+    setState(() {
+      _menuIcon = Icons.more_vert;
+    });
+  }
 
   Widget _buildMenuIcon(IconData source) => Material(
         borderRadius: BorderRadius.circular(40),
@@ -71,72 +67,21 @@ class _DeckMenuState extends State<DeckMenu>
         ),
       );
 
-  OverlayEntry _overlayEntry;
-  var icon = Icons.more_vert;
-
-  // TODO(ksheremet): Consider to have a new Route to disable other buttons
-  OverlayEntry _createOverlayEntry() {
-    RenderBox renderBox = context.findRenderObject();
-    var offset = renderBox.localToGlobal(Offset.zero);
-    var rightOffset = _iconSize;
-    var topOffset =
-        (MediaQuery.of(context).size.height > (_menuExpandedSize + offset.dy))
-            ? offset.dy
-            : MediaQuery.of(context).size.height - _menuExpandedSize - 8;
-
-    final menu = _buildMenu(context);
-
-    return OverlayEntry(
-        builder: (context) => Positioned(
-              right: rightOffset,
-              top: topOffset,
-              height: _menuExpandedSize,
-              child: AnimatedBuilder(
-                animation: _controller,
-                builder: (context, child) => Stack(
-                      alignment: AlignmentDirectional.topEnd,
-                      children: menu.entries
-                          .map((entry) => FadeTransition(
-                                opacity: _opacityAnimation,
-                                child: Align(
-                                    alignment: _moveAnimation.value,
-                                    child: Container(
-                                        padding: EdgeInsets.only(
-                                            bottom: (menu.length -
-                                                    1 -
-                                                    entry.key.index) *
-                                                45.0),
-                                        child: _buildMenuItem(
-                                            entry.key, entry.value))),
-                              ))
-                          .toList(),
-                    ),
-              ),
-            ));
-  }
-
   @override
   Widget build(BuildContext context) => GestureDetector(
-      onTap: () {
-        if (_controller.isCompleted) {
-          setState(() {
-            _controller.reverse().then((_) {
-              _overlayEntry.remove();
-            });
-            icon = Icons.more_vert;
-          });
-        } else {
-          setState(() {
-            icon = Icons.close;
-            _overlayEntry = _createOverlayEntry();
-            var state = Overlay.of(context)..insert(_overlayEntry);
-            if (state.mounted) {
-              _controller.forward();
-            }
-          });
+      onTap: () async {
+        var menuItemType = await Navigator.push(
+            context,
+            _MenuRoute<_DeckMenuItemType>(
+                parent: context,
+                child: _MenuItemsWidget(controller: _controller),
+                controller: _controller));
+        _onMenuClosed();
+        if (menuItemType != null) {
+          _onDeckMenuItemSelected(context, menuItemType);
         }
       },
-      child: _buildMenuIcon(icon));
+      child: _buildMenuIcon(_menuIcon));
 
   void _onDeckMenuItemSelected(BuildContext context, _DeckMenuItemType item) {
     // Not allow to add/edit or delete cards with read access
@@ -213,4 +158,137 @@ Map<_DeckMenuItemType, String> _buildMenu(BuildContext context) {
         AppLocalizations.of(context).shareDeckMenu;
   }
   return deckMenu;
+}
+
+// TODO(ksheremet): Consider to try different routes
+class _MenuRoute<_DeckMenuItemType> extends PopupRoute<_DeckMenuItemType> {
+  // We need parent to count position of menu.
+  BuildContext parent;
+
+  // TODO(ksheremet): Refactor
+  AnimationController controller;
+
+  Widget child;
+
+  _MenuRoute(
+      {@required this.parent, @required this.child, @required this.controller})
+      : assert(parent != null),
+        assert(child != null);
+
+  final duration = Duration(milliseconds: 270);
+
+  @override
+  Color get barrierColor => null;
+
+  @override
+  bool get barrierDismissible => true;
+
+  @override
+  String get barrierLabel => null;
+
+  @override
+  void didComplete(_DeckMenuItemType result) {
+    controller.reverse();
+    super.didComplete(result);
+  }
+
+  @override
+  Widget buildPage(BuildContext context, Animation<double> animation,
+      Animation<double> secondaryAnimation) {
+    RenderBox renderBox = parent.findRenderObject();
+    var offset = renderBox.localToGlobal(Offset.zero);
+    var rightOffset = _iconSize;
+    var topOffset =
+        (MediaQuery.of(context).size.height > (_menuExpandedSize + offset.dy))
+            ? offset.dy
+            : MediaQuery.of(context).size.height - _menuExpandedSize - 8;
+
+    return Stack(children: <Widget>[
+      Positioned(
+        right: rightOffset,
+        top: topOffset,
+        height: _menuExpandedSize,
+        child: child,
+      )
+    ]);
+  }
+
+  @override
+  Duration get transitionDuration => Duration(milliseconds: 200);
+
+  @override
+  Animation<double> createAnimation() => CurvedAnimation(
+        parent: super.createAnimation(),
+        curve: Curves.linear,
+        reverseCurve: const Interval(0.0, 200),
+      );
+}
+
+class _MenuItemsWidget extends StatefulWidget {
+  final AnimationController controller;
+
+  const _MenuItemsWidget({@required this.controller});
+
+  @override
+  State<StatefulWidget> createState() => _MenuItemsWidgetState();
+}
+
+class _MenuItemsWidgetState extends State<_MenuItemsWidget>
+    with SingleTickerProviderStateMixin {
+  Animation<Alignment> _moveAnimation;
+  Animation<double> _opacityAnimation;
+  AnimationController _controller;
+  final duration = Duration(milliseconds: 270);
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = widget.controller;
+
+    final anim = CurvedAnimation(parent: _controller, curve: Curves.linear);
+    _moveAnimation = Tween<Alignment>(
+            begin: Alignment.centerRight, end: Alignment.bottomRight)
+        .animate(anim);
+    _opacityAnimation = Tween(begin: 0.0, end: 1.0).animate(anim);
+    _controller.forward();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final menu = _buildMenu(context);
+    return AnimatedBuilder(
+      animation: _controller,
+      builder: (context, child) => Stack(
+            alignment: AlignmentDirectional.topEnd,
+            children: menu.entries
+                .map((entry) => FadeTransition(
+                      opacity: _opacityAnimation,
+                      child: Align(
+                          alignment: _moveAnimation.value,
+                          child: Container(
+                              padding: EdgeInsets.only(
+                                  bottom: (menu.length - 1 - entry.key.index) *
+                                      45.0),
+                              child: _buildMenuItem(entry.key, entry.value))),
+                    ))
+                .toList(),
+          ),
+    );
+  }
+
+  void finishAnimation() {
+    _controller.reverse();
+  }
+
+  Widget _buildMenuItem(_DeckMenuItemType type, String menuItemName) =>
+      RaisedButton(
+          // TODO(ksheremet): Set color from styles
+          color: Colors.greenAccent[100],
+          padding: const EdgeInsets.all(8.0),
+          shape: RoundedRectangleBorder(
+              borderRadius: const BorderRadius.all(Radius.circular(10))),
+          child: Text(menuItemName),
+          onPressed: () {
+            Navigator.pop(context, type);
+          });
 }

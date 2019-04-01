@@ -1,6 +1,7 @@
 import 'dart:collection';
 
 import 'package:delern_flutter/flutter/localization.dart';
+import 'package:delern_flutter/flutter/styles.dart' as app_styles;
 import 'package:delern_flutter/flutter/user_messages.dart';
 import 'package:delern_flutter/models/card_model.dart';
 import 'package:delern_flutter/models/deck_access_model.dart';
@@ -12,8 +13,8 @@ import 'package:delern_flutter/views/deck_sharing/deck_sharing.dart';
 import 'package:delern_flutter/views/helpers/sign_in_widget.dart';
 import 'package:flutter/material.dart';
 
-const double _iconSize = 48;
-const double _menuExpandedSize = 225.0;
+const double _menuExpandedSize = 225;
+const int _animationDuration = 250;
 
 class DeckMenu extends StatefulWidget {
   final DeckModel deck;
@@ -27,8 +28,8 @@ class DeckMenu extends StatefulWidget {
 class _DeckMenuState extends State<DeckMenu>
     with SingleTickerProviderStateMixin {
   AnimationController _controller;
-  final _duration = Duration(milliseconds: 270);
-  var _menuIcon = Icons.more_vert;
+  final _duration = Duration(milliseconds: _animationDuration);
+  IconData _menuIcon;
 
   @override
   void initState() {
@@ -44,6 +45,14 @@ class _DeckMenuState extends State<DeckMenu>
       });
   }
 
+  IconData _getMenuIcon(TargetPlatform platform) {
+    assert(platform != null);
+    if (platform == TargetPlatform.iOS) {
+      return Icons.more_horiz;
+    }
+    return Icons.more_vert;
+  }
+
   void _onMenuExpanded() {
     setState(() {
       _menuIcon = Icons.close;
@@ -52,36 +61,29 @@ class _DeckMenuState extends State<DeckMenu>
 
   void _onMenuClosed() {
     setState(() {
-      _menuIcon = Icons.more_vert;
+      _menuIcon = _getMenuIcon(Theme.of(context).platform);
     });
   }
 
-  Widget _buildMenuIcon(IconData source) => Material(
-        borderRadius: BorderRadius.circular(40),
-        child: Container(
-          width: _iconSize,
-          height: _iconSize,
-          child: Icon(
-            source,
-          ),
-        ),
-      );
-
   @override
-  Widget build(BuildContext context) => GestureDetector(
-      onTap: () async {
-        var menuItemType = await Navigator.push(
-            context,
-            _MenuRoute<_DeckMenuItemType>(
+  Widget build(BuildContext context) => IconButton(
+        icon: Icon(
+          _menuIcon ?? _getMenuIcon(Theme.of(context).platform),
+        ),
+        tooltip: MaterialLocalizations.of(context).showMenuTooltip,
+        onPressed: () async {
+          final menuItemType = await Navigator.push(
+              context,
+              _MenuRoute<_DeckMenuItemType>(
                 parent: context,
-                child: _MenuItemsWidget(controller: _controller),
-                controller: _controller));
-        _onMenuClosed();
-        if (menuItemType != null) {
-          _onDeckMenuItemSelected(context, menuItemType);
-        }
-      },
-      child: _buildMenuIcon(_menuIcon));
+                controller: _controller,
+              ));
+          _onMenuClosed();
+          if (menuItemType != null) {
+            _onDeckMenuItemSelected(context, menuItemType);
+          }
+        },
+      );
 
   void _onDeckMenuItemSelected(BuildContext context, _DeckMenuItemType item) {
     // Not allow to add/edit or delete cards with read access
@@ -89,7 +91,7 @@ class _DeckMenuState extends State<DeckMenu>
     // we still give a try to edit for a user. If user
     // doesn't have permissions they will see "Permission
     // denied".
-    var allowEdit = widget.deck.access != AccessType.read;
+    final allowEdit = widget.deck.access != AccessType.read;
     switch (item) {
       case _DeckMenuItemType.add:
         if (allowEdit) {
@@ -147,7 +149,7 @@ enum _DeckMenuItemType { add, edit, setting, share }
 Map<_DeckMenuItemType, String> _buildMenu(BuildContext context) {
   // We want this Map to be ordered.
   // ignore: prefer_collection_literals
-  var deckMenu = LinkedHashMap<_DeckMenuItemType, String>()
+  final deckMenu = LinkedHashMap<_DeckMenuItemType, String>()
     ..[_DeckMenuItemType.add] = AppLocalizations.of(context).addCardsDeckMenu
     ..[_DeckMenuItemType.edit] = AppLocalizations.of(context).editCardsDeckMenu
     ..[_DeckMenuItemType.setting] =
@@ -160,22 +162,14 @@ Map<_DeckMenuItemType, String> _buildMenu(BuildContext context) {
   return deckMenu;
 }
 
-// TODO(ksheremet): Consider to try different routes
 class _MenuRoute<_DeckMenuItemType> extends PopupRoute<_DeckMenuItemType> {
   // We need parent to count position of menu.
   BuildContext parent;
 
-  // TODO(ksheremet): Refactor
   AnimationController controller;
 
-  Widget child;
-
-  _MenuRoute(
-      {@required this.parent, @required this.child, @required this.controller})
-      : assert(parent != null),
-        assert(child != null);
-
-  final duration = Duration(milliseconds: 270);
+  _MenuRoute({@required this.parent, @required this.controller})
+      : assert(parent != null);
 
   @override
   Color get barrierColor => null;
@@ -195,10 +189,10 @@ class _MenuRoute<_DeckMenuItemType> extends PopupRoute<_DeckMenuItemType> {
   @override
   Widget buildPage(BuildContext context, Animation<double> animation,
       Animation<double> secondaryAnimation) {
-    RenderBox renderBox = parent.findRenderObject();
-    var offset = renderBox.localToGlobal(Offset.zero);
-    var rightOffset = _iconSize;
-    var topOffset =
+    final RenderBox renderBox = parent.findRenderObject();
+    final offset = renderBox.localToGlobal(Offset.zero);
+    final rightOffset = renderBox.size.width * 3 / 4;
+    final topOffset =
         (MediaQuery.of(context).size.height > (_menuExpandedSize + offset.dy))
             ? offset.dy
             : MediaQuery.of(context).size.height - _menuExpandedSize - 8;
@@ -208,20 +202,13 @@ class _MenuRoute<_DeckMenuItemType> extends PopupRoute<_DeckMenuItemType> {
         right: rightOffset,
         top: topOffset,
         height: _menuExpandedSize,
-        child: child,
+        child: _MenuItemsWidget(controller: controller),
       )
     ]);
   }
 
   @override
-  Duration get transitionDuration => Duration(milliseconds: 200);
-
-  @override
-  Animation<double> createAnimation() => CurvedAnimation(
-        parent: super.createAnimation(),
-        curve: Curves.linear,
-        reverseCurve: const Interval(0.0, 200),
-      );
+  Duration get transitionDuration => Duration(milliseconds: _animationDuration);
 }
 
 class _MenuItemsWidget extends StatefulWidget {
@@ -238,7 +225,6 @@ class _MenuItemsWidgetState extends State<_MenuItemsWidget>
   Animation<Alignment> _moveAnimation;
   Animation<double> _opacityAnimation;
   AnimationController _controller;
-  final duration = Duration(milliseconds: 270);
 
   @override
   void initState() {
@@ -249,6 +235,8 @@ class _MenuItemsWidgetState extends State<_MenuItemsWidget>
     _moveAnimation = Tween<Alignment>(
             begin: Alignment.centerRight, end: Alignment.bottomRight)
         .animate(anim);
+    // Tween animation doesn't support int literals
+    // ignore: prefer_int_literals
     _opacityAnimation = Tween(begin: 0.0, end: 1.0).animate(anim);
     _controller.forward();
   }
@@ -280,15 +268,17 @@ class _MenuItemsWidgetState extends State<_MenuItemsWidget>
     _controller.reverse();
   }
 
-  Widget _buildMenuItem(_DeckMenuItemType type, String menuItemName) =>
+  Widget _buildMenuItem(_DeckMenuItemType menuType, String menuItemName) =>
       RaisedButton(
-          // TODO(ksheremet): Set color from styles
-          color: Colors.greenAccent[100],
-          padding: const EdgeInsets.all(8.0),
+          color: app_styles.menuItemBackgroundColor,
+          padding: const EdgeInsets.all(8),
           shape: RoundedRectangleBorder(
               borderRadius: const BorderRadius.all(Radius.circular(10))),
-          child: Text(menuItemName),
+          child: Text(
+            menuItemName,
+            style: app_styles.menuItemText,
+          ),
           onPressed: () {
-            Navigator.pop(context, type);
+            Navigator.pop(context, menuType);
           });
 }

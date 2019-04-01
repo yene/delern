@@ -41,6 +41,7 @@ class App extends StatelessWidget {
           afterOnboardingBuilder: () =>
               SignInWidget(afterSignInBuilder: () => child)),
       theme:
+          // TODO(ksheremet): Move all colors to styles.dart
           ThemeData(primarySwatch: Colors.green, accentColor: Colors.redAccent),
       home: DecksList(title: title),
     );

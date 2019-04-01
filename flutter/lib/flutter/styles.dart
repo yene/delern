@@ -31,3 +31,9 @@ const TextStyle searchBarText = TextStyle(
   color: Colors.white,
   fontSize: 19,
 );
+
+const Color menuItemBackgroundColor = Colors.redAccent;
+
+const TextStyle menuItemText = TextStyle(
+  color: Colors.white,
+);

@@ -91,14 +91,14 @@ packages:
       name: firebase_analytics
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.3"
+    version: "2.1.1"
   firebase_auth:
     dependency: "direct main"
     description:
       name: firebase_auth
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.8.2"
+    version: "0.8.3"
   firebase_core:
     dependency: transitive
     description:
@@ -214,7 +214,7 @@ packages:
       name: intro_views_flutter
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.4.0"
+    version: "2.6.0"
   io:
     dependency: transitive
     description:
@@ -405,7 +405,7 @@ packages:
       name: shelf
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.7.4"
+    version: "0.7.5"
   shelf_packages_handler:
     dependency: transitive
     description:
@@ -426,7 +426,7 @@ packages:
       name: shelf_web_socket
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.2.2+4"
+    version: "0.2.2+5"
   sky_engine:
     dependency: transitive
     description: flutter

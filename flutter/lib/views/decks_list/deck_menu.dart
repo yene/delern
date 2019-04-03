@@ -28,7 +28,7 @@ class DeckMenu extends StatefulWidget {
 class _DeckMenuState extends State<DeckMenu>
     with SingleTickerProviderStateMixin {
   AnimationController _controller;
-  final _duration = Duration(milliseconds: _animationDuration);
+  final _duration = const Duration(milliseconds: _animationDuration);
   IconData _menuIcon;
 
   @override
@@ -208,7 +208,8 @@ class _MenuRoute<_DeckMenuItemType> extends PopupRoute<_DeckMenuItemType> {
   }
 
   @override
-  Duration get transitionDuration => Duration(milliseconds: _animationDuration);
+  Duration get transitionDuration =>
+      const Duration(milliseconds: _animationDuration);
 }
 
 class _MenuItemsWidget extends StatefulWidget {
@@ -272,8 +273,8 @@ class _MenuItemsWidgetState extends State<_MenuItemsWidget>
       RaisedButton(
           color: app_styles.menuItemBackgroundColor,
           padding: const EdgeInsets.all(8),
-          shape: RoundedRectangleBorder(
-              borderRadius: const BorderRadius.all(Radius.circular(10))),
+          shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(10))),
           child: Text(
             menuItemName,
             style: app_styles.menuItemText,

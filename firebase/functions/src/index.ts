@@ -230,7 +230,9 @@ delern.forEachUser = async (batchSize: number,
     }
 };
 
-export const databaseMaintenance = functions.https
+export const databaseMaintenance = functions
+    .runWith({ timeoutSeconds: 300 })  // Bump timeout from default 60s to 5min.
+    .https
     .onRequest(async (req, res) => {
         const deckAccesses = (await admin.database()
             .ref('deck_access').once('value')).val();

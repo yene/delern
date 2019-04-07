@@ -1,0 +1,178 @@
+# Reference: https://cirrus-ci.org/guide/writing-tasks/
+# Validation: ruby -ryaml -e 'puts (YAML.load_file ".cirrus.yml")'
+
+env:
+  FLUTTER_CHANNEL: beta
+
+task:
+  name: firebase (linux)
+  container:
+    image: node:8
+  node_modules_cache:
+    folder: firebase/node_modules
+    fingerprint_script: cat firebase/package-lock.json
+    populate_script: cd firebase && npm ci
+  functions_node_modules_cache:
+    folder: firebase/functions/node_modules
+    fingerprint_script: cat firebase/functions/package-lock.json
+    populate_script: cd firebase/functions && npm ci
+  bower_components_cache:
+    folder: firebase/www/bower_components
+    # NOTE: this file contains floating versions and is not a good SoT!
+    fingerprint_script: cat firebase/www/bower.json
+    populate_script: >
+      cd firebase/www &&
+      ../node_modules/.bin/bower --silent --allow-root install
+  lint_script:
+  - ( cd firebase/functions && npm run lint )
+  - ( cd firebase/www && ../node_modules/.bin/polymer lint )
+  build_script:
+  - ( cd firebase && npm run build )
+  - ( cd firebase/functions && npm run build )
+
+task:
+  name: flutter (linux)
+  container:
+    image: dasfoo/dev:latest
+  env:
+    FLUTTER_SDK_ROOT: "${HOME}/flutter"
+    ANDROID_SDK_ROOT: "${HOME}/android"
+    # For Gradle plugin <3.4: https://issuetracker.google.com/issues/125138969.
+    ANDROID_HOME: "${ANDROID_SDK_ROOT}"
+    PATH: "${FLUTTER_SDK_ROOT}/bin:${PATH}"
+  flutter_cache: &FLUTTER_CACHE
+    folder: $FLUTTER_SDK_ROOT
+    fingerprint_script:
+    - uname -ms
+    - git ls-remote https://github.com/flutter/flutter.git "${FLUTTER_CHANNEL?}"
+    populate_script:
+    - >
+      flutter upgrade ||
+      git clone --quiet --depth 2 --branch "${FLUTTER_CHANNEL?}"
+      https://github.com/flutter/flutter.git "${FLUTTER_SDK_ROOT?}"
+    - flutter precache
+    # Remove symlinks that point to non-existing files (usually OSX tests),
+    # because Cirrus CI cache chokes up on uploading them.
+    - find "${FLUTTER_SDK_ROOT?}" -type l -exec test ! -e {} \; -print -delete
+  test_script: ( cd flutter && flutter test --coverage )
+  bundler_cache: &BUNDLER_CACHE
+    folder: vendor/bundle
+    fingerprint_script:
+    - uname -ms
+    - cat Gemfile.lock
+  # This script not only updates dependencies, but also configures bundler where
+  # to search for them (via "--deployment" flag, i.e. "vendor/bundle").
+  install_fastlane_script: bundle install --quiet --clean --deployment
+  generate_and_lint_script: ( cd flutter && bundle exec fastlane build )
+  gradle_cache:
+    folder: ~/.gradle/caches
+    fingerprint_script:
+    - cd flutter
+    - cat pubspec.lock
+    - cat android/build.gradle
+    - cat android/app/build.gradle
+  android_sdk_cache:
+    folder: $ANDROID_SDK_ROOT
+    fingerprint_script:
+    - uname -ms
+    - cat flutter/android/app/build.gradle
+  install_debug_keys_script: tools/ci.sh install_debug_keys
+  build_script:
+  - git fetch --tags --quiet
+  - ( cd flutter && bundle exec fastlane android build )
+  ensure_clean_git_script: bundle exec fastlane ensure_clean_git
+  cleanup_before_cache_script:
+  # https://cirrus-ci.org/examples/#caching
+  - rm -rf ~/.gradle/caches/*.*/
+  - find ~/.gradle/caches/ -name "*.lock" -type f -delete
+  # Some additional files.
+  - rm -rf ~/.gradle/caches/transforms-1 ~/.gradle/caches/journal-1
+
+task:
+  name: flutter (osx)
+  osx_instance:
+    image: mojave-xcode-10.2
+  env:
+    FLUTTER_SDK_ROOT: "${HOME}/flutter"
+    PATH: "${FLUTTER_SDK_ROOT}/bin:${PATH}"
+  bundler_cache:
+    << : *BUNDLER_CACHE
+  install_fastlane_script: bundle install --quiet --clean --deployment
+  flutter_cache:
+    << : *FLUTTER_CACHE
+  # TODO(dotdoom): do not lint on OSX, it is already done on Linux.
+  generate_and_lint_script: ( cd flutter && bundle exec fastlane build )
+  install_debug_keys_script: tools/ci.sh install_debug_keys
+  build_script:
+  - git fetch --tags --quiet
+  - ( cd flutter && bundle exec fastlane ios build )
+  ensure_clean_git_script: bundle exec fastlane ensure_clean_git
+
+task:
+  # TODO(dotdoom): add cache for Ruby, MSYS, JDK, Gradle.
+  name: flutter (windows)
+  windows_container:
+    image: cirrusci/windowsservercore:2019
+    os_version: 2019
+  env:
+    FLUTTER_SDK_ROOT: C:\flutter
+    ANDROID_SDK_ROOT: C:\android
+    RUBY_ROOT: C:\ruby
+    MSYS2_ROOT: C:\msys2
+    JAVA_HOME: C:\jdk
+    PATH: "${FLUTTER_SDK_ROOT}\\bin;${RUBY_ROOT}\\bin;${MSYS2_ROOT};${PATH}"
+  configure_chocolatey_script:
+  # https://github.com/chocolatey/choco/blob/0.10.11/src/chocolatey/infrastructure.app/ApplicationParameters.cs#L148
+  - choco feature enable -n allowGlobalConfirmation
+  - choco feature disable -n showDownloadProgress
+  install_ruby_script:
+  - choco install ruby --version 2.4.3.1 --params "/InstallDir:%RUBY_ROOT%"
+  bundler_cache:
+    folder: vendor\bundle
+    fingerprint_script:
+    - ver
+    - type Gemfile.lock
+    populate_script:
+    # This is not really a cache populating script; rather, we install
+    # environment that may be necessary for compiling new gems that will be put
+    # into this cache in the next step.
+    - choco install msys2 --params "/NoUpdate /InstallDir:%MSYS2_ROOT%"
+    - ridk install 2 3
+  install_fastlane_script:
+  - gem install bundler --no-document
+  - bundle install --quiet --clean --deployment
+  flutter_cache:
+    folder: "${FLUTTER_SDK_ROOT}"
+    fingerprint_script:
+    - ver
+    - git ls-remote https://github.com/flutter/flutter.git "%FLUTTER_CHANNEL%"
+    populate_script:
+    - >
+      flutter upgrade ||
+      git clone --quiet --depth 2 --branch "%FLUTTER_CHANNEL%"
+      https://github.com/flutter/flutter.git "%FLUTTER_SDK_ROOT%"
+    - flutter precache
+    # Remove the folder containing symlinks that point to non-existing files
+    # (usually OSX tests), because Cirrus CI cache chokes up on uploading them.
+    - >
+      del /F /Q /S
+      "%FLUTTER_SDK_ROOT%/dev/integration_tests/ios_add2app/Pods/Headers" > NUL
+  generate_and_lint_script:
+  - pushd flutter
+  # If this fails with ambiguous message similar to "gem ... is not installed",
+  # check that mingw platforms are present in Gemfile.lock (bundle lock).
+  - bundle exec fastlane build
+  - popd
+  install_debug_keys_script:
+  - copy tools\ci\google-services.json flutter\android\app\google-services.json
+  - mkdir "%USERPROFILE%\\.android"
+  - copy tools\ci\debug.keystore "%USERPROFILE%\\.android\\debug.keystore"
+  # Can't use %JAVA_HOME% because backslash has to be additionally escaped here.
+  install_jdk_script: choco install jdk8 --params 'installdir=C:\\jdk'
+  build_script:
+  - git fetch --tags --quiet
+  - pushd flutter
+  - bundle exec fastlane android build
+  - popd
+  # TODO(dotdoom): make this pass and uncomment.
+  # ensure_clean_git_script: bundle exec fastlane ensure_clean_git

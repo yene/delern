@@ -1,16 +1,12 @@
 import 'package:delern_flutter/flutter/localization.dart';
 import 'package:delern_flutter/flutter/styles.dart' as app_styles;
-import 'package:delern_flutter/flutter/user_messages.dart';
 import 'package:delern_flutter/models/card_model.dart';
-import 'package:delern_flutter/models/deck_access_model.dart';
 import 'package:delern_flutter/models/deck_model.dart';
 import 'package:delern_flutter/view_models/decks_list_bloc.dart';
 import 'package:delern_flutter/views/card_create_update/card_create_update.dart';
 import 'package:delern_flutter/views/cards_learning/cards_learning.dart';
-import 'package:delern_flutter/views/cards_list/cards_list.dart';
-import 'package:delern_flutter/views/deck_settings/deck_settings.dart';
-import 'package:delern_flutter/views/deck_sharing/deck_sharing.dart';
 import 'package:delern_flutter/views/decks_list/create_deck_widget.dart';
+import 'package:delern_flutter/views/decks_list/deck_menu.dart';
 import 'package:delern_flutter/views/decks_list/navigation_drawer.dart';
 import 'package:delern_flutter/views/helpers/empty_list_message_widget.dart';
 import 'package:delern_flutter/views/helpers/observing_animated_list_widget.dart';
@@ -26,7 +22,7 @@ class DecksList extends StatefulWidget {
         super(key: key);
 
   @override
-  DecksListState createState() => DecksListState();
+  _DecksListState createState() => _DecksListState();
 }
 
 class _ArrowToFloatingActionButton extends CustomPainter {
@@ -89,7 +85,7 @@ class ArrowToFloatingActionButtonWidget extends StatelessWidget {
           child: child));
 }
 
-class DecksListState extends State<DecksList> {
+class _DecksListState extends State<DecksList> {
   DecksListBloc _bloc;
 
   @override
@@ -170,7 +166,7 @@ class DeckListItemWidget extends StatelessWidget {
                   child: _buildDeckName(context),
                 ),
                 _buildNumberOfCards(context),
-                _buildDeckMenu(context),
+                DeckMenu(deck: deck),
               ],
             ),
           ),
@@ -219,100 +215,4 @@ class DeckListItemWidget extends StatelessWidget {
                   style: app_styles.primaryText),
             ),
       );
-
-  Widget _buildDeckMenu(BuildContext context) => Material(
-        child: InkResponse(
-          splashColor: Theme.of(context).splashColor,
-          radius: 15,
-          onTap: () {},
-          child: PopupMenuButton<_DeckMenuItemType>(
-            onSelected: (itemType) =>
-                _onDeckMenuItemSelected(context, itemType),
-            itemBuilder: (context) => _buildMenu(context)
-                .entries
-                .map((entry) => PopupMenuItem<_DeckMenuItemType>(
-                      value: entry.key,
-                      child: Text(
-                        entry.value,
-                        style: app_styles.secondaryText,
-                      ),
-                    ))
-                .toList(),
-          ),
-        ),
-      );
-
-  void _onDeckMenuItemSelected(BuildContext context, _DeckMenuItemType item) {
-    // Not allow to add/edit or delete cards with read access
-    // If some error occurred and it is null access
-    // we still give a try to edit for a user. If user
-    // doesn't have permissions they will see "Permission
-    // denied".
-    final allowEdit = deck.access != AccessType.read;
-    switch (item) {
-      case _DeckMenuItemType.add:
-        if (allowEdit) {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  settings: const RouteSettings(name: '/cards/new'),
-                  builder: (context) => CardCreateUpdate(
-                        card: CardModel(deckKey: deck.key),
-                        deck: deck,
-                      )));
-        } else {
-          UserMessages.showMessage(Scaffold.of(context),
-              AppLocalizations.of(context).noAddingWithReadAccessUserMessage);
-        }
-        break;
-      case _DeckMenuItemType.edit:
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-              settings: const RouteSettings(name: '/decks/view'),
-              builder: (context) => CardsList(
-                    deck: deck,
-                    allowEdit: allowEdit,
-                  )),
-        );
-        break;
-      case _DeckMenuItemType.setting:
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-              settings: const RouteSettings(name: '/decks/settings'),
-              builder: (context) => DeckSettings(deck)),
-        );
-        break;
-      case _DeckMenuItemType.share:
-        if (deck.access == AccessType.owner) {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-                settings: const RouteSettings(name: '/decks/share'),
-                builder: (context) => DeckSharing(deck)),
-          );
-        } else {
-          UserMessages.showMessage(Scaffold.of(context),
-              AppLocalizations.of(context).noSharingAccessUserMessage);
-        }
-        break;
-    }
-  }
-}
-
-enum _DeckMenuItemType { add, edit, setting, share }
-
-Map<_DeckMenuItemType, String> _buildMenu(BuildContext context) {
-  final deckMenu = {
-    _DeckMenuItemType.add: AppLocalizations.of(context).addCardsDeckMenu,
-    _DeckMenuItemType.edit: AppLocalizations.of(context).editCardsDeckMenu,
-    _DeckMenuItemType.setting: AppLocalizations.of(context).settingsDeckMenu,
-  };
-
-  if (!CurrentUserWidget.of(context).user.isAnonymous) {
-    deckMenu[_DeckMenuItemType.share] =
-        AppLocalizations.of(context).shareDeckMenu;
-  }
-  return deckMenu;
 }

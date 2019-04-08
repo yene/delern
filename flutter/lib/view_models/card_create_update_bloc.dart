@@ -40,8 +40,8 @@ class CardCreateUpdateBloc extends ScreenBloc {
   final _addReversedCardController = StreamController<bool>();
   Sink<bool> get onAddReversedCard => _addReversedCardController.sink;
 
-  final _doCardAddedController = StreamController<void>();
-  Stream<void> get doCardAdded => _doCardAddedController.stream;
+  final _doClearInputFieldsController = StreamController<void>();
+  Stream<void> get doClearInputFields => _doClearInputFieldsController.stream;
 
   final _isOperationEnabledController = StreamController<bool>();
   Stream<bool> get isOperationEnabled => _isOperationEnabledController.stream;
@@ -126,7 +126,7 @@ class CardCreateUpdateBloc extends ScreenBloc {
       } else {
         showMessage(locale.cardAddedUserMessage);
       }
-      _doCardAddedController.add(null);
+      _doClearInputFieldsController.add(null);
     } catch (e, stackTrace) {
       error_reporting.report('saveCard', e, stackTrace);
       notifyErrorOccurred(e);
@@ -155,7 +155,7 @@ class CardCreateUpdateBloc extends ScreenBloc {
   @override
   void dispose() {
     _onSaveCardController.close();
-    _doCardAddedController.close();
+    _doClearInputFieldsController.close();
     _onFrontSideTextController.close();
     _onBackSideTextController.close();
     _isOperationEnabledController.close();

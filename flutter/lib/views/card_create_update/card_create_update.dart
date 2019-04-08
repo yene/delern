@@ -31,12 +31,8 @@ class _CardCreateUpdateState extends State<CardCreateUpdate> {
   @override
   void initState() {
     _bloc = CardCreateUpdateBloc(cardModel: widget.card);
-    _bloc.doCardAdded.listen((_) {
-      _onCardAdded();
-    });
-    _bloc.doShowConfirmationDialog.listen((_) {
-      showCardSaveUpdateDialog();
-    });
+    _bloc.doClearInputFields.listen((_) => _clearInputFields());
+    _bloc.doShowConfirmationDialog.listen((_) => showCardSaveUpdateDialog());
     _frontTextController.text = widget.card.front;
     _backTextController.text = widget.card.back;
     super.initState();
@@ -45,11 +41,11 @@ class _CardCreateUpdateState extends State<CardCreateUpdate> {
   @override
   void didChangeDependencies() {
     final locale = AppLocalizations.of(context);
-    if (_bloc?.locale != locale) {
+    if (_bloc.locale != locale) {
       _bloc.onLocale.add(locale);
     }
     final uid = CurrentUserWidget.of(context).user.uid;
-    if (_bloc?.uid != uid) {
+    if (_bloc.uid != uid) {
       _bloc.onUid.add(uid);
     }
     super.didChangeDependencies();
@@ -106,13 +102,6 @@ class _CardCreateUpdateState extends State<CardCreateUpdate> {
           )
         ],
       );
-
-  void _onCardAdded() {
-    setState(() {
-      _isChanged = false;
-      _clearInputFields();
-    });
-  }
 
   void _saveCard() {
     _bloc.onSaveCard.add(null);
@@ -184,10 +173,13 @@ class _CardCreateUpdateState extends State<CardCreateUpdate> {
   }
 
   void _clearInputFields() {
-    _frontTextController.clear();
-    _backTextController.clear();
-    _bloc.onFrontSideText.add('');
-    _bloc.onBackSideText.add('');
-    FocusScope.of(context).requestFocus(_frontSideFocus);
+    setState(() {
+      _isChanged = false;
+      _frontTextController.clear();
+      _backTextController.clear();
+      _bloc.onFrontSideText.add('');
+      _bloc.onBackSideText.add('');
+      FocusScope.of(context).requestFocus(_frontSideFocus);
+    });
   }
 }

@@ -1,5 +1,3 @@
-import 'dart:collection';
-
 import 'package:delern_flutter/flutter/localization.dart';
 import 'package:delern_flutter/flutter/styles.dart' as app_styles;
 import 'package:delern_flutter/flutter/user_messages.dart';
@@ -14,7 +12,7 @@ import 'package:delern_flutter/views/helpers/sign_in_widget.dart';
 import 'package:flutter/material.dart';
 
 const double _menuExpandedSize = 225;
-const int _animationDuration = 250;
+const _animationDuration = Duration(milliseconds: 250);
 
 class DeckMenu extends StatefulWidget {
   final DeckModel deck;
@@ -28,7 +26,7 @@ class DeckMenu extends StatefulWidget {
 class _DeckMenuState extends State<DeckMenu>
     with SingleTickerProviderStateMixin {
   AnimationController _controller;
-  final _duration = const Duration(milliseconds: _animationDuration);
+  final _duration = _animationDuration;
   IconData _menuIcon;
 
   @override
@@ -68,6 +66,7 @@ class _DeckMenuState extends State<DeckMenu>
   @override
   Widget build(BuildContext context) => IconButton(
         icon: Icon(
+          // TODO(ksheremet): Does not work with iOS / Android mode switch
           _menuIcon ?? _getMenuIcon(Theme.of(context).platform),
         ),
         tooltip: MaterialLocalizations.of(context).showMenuTooltip,
@@ -147,13 +146,11 @@ class _DeckMenuState extends State<DeckMenu>
 enum _DeckMenuItemType { add, edit, setting, share }
 
 Map<_DeckMenuItemType, String> _buildMenu(BuildContext context) {
-  // We want this Map to be ordered.
-  // ignore: prefer_collection_literals
-  final deckMenu = LinkedHashMap<_DeckMenuItemType, String>()
-    ..[_DeckMenuItemType.add] = AppLocalizations.of(context).addCardsDeckMenu
-    ..[_DeckMenuItemType.edit] = AppLocalizations.of(context).editCardsDeckMenu
-    ..[_DeckMenuItemType.setting] =
-        AppLocalizations.of(context).settingsDeckMenu;
+  final deckMenu = <_DeckMenuItemType, String>{
+    _DeckMenuItemType.add: AppLocalizations.of(context).addCardsDeckMenu,
+    _DeckMenuItemType.edit: AppLocalizations.of(context).editCardsDeckMenu,
+    _DeckMenuItemType.setting: AppLocalizations.of(context).settingsDeckMenu
+  };
 
   if (!CurrentUserWidget.of(context).user.isAnonymous) {
     deckMenu[_DeckMenuItemType.share] =
@@ -164,9 +161,9 @@ Map<_DeckMenuItemType, String> _buildMenu(BuildContext context) {
 
 class _MenuRoute<_DeckMenuItemType> extends PopupRoute<_DeckMenuItemType> {
   // We need parent to count position of menu.
-  BuildContext parent;
+  final BuildContext parent;
 
-  AnimationController controller;
+  final AnimationController controller;
 
   _MenuRoute({@required this.parent, @required this.controller})
       : assert(parent != null);
@@ -208,8 +205,7 @@ class _MenuRoute<_DeckMenuItemType> extends PopupRoute<_DeckMenuItemType> {
   }
 
   @override
-  Duration get transitionDuration =>
-      const Duration(milliseconds: _animationDuration);
+  Duration get transitionDuration => _animationDuration;
 }
 
 class _MenuItemsWidget extends StatefulWidget {
@@ -236,9 +232,7 @@ class _MenuItemsWidgetState extends State<_MenuItemsWidget>
     _moveAnimation = Tween<Alignment>(
             begin: Alignment.centerRight, end: Alignment.bottomRight)
         .animate(anim);
-    // Tween animation doesn't support int literals
-    // ignore: prefer_int_literals
-    _opacityAnimation = Tween(begin: 0.0, end: 1.0).animate(anim);
+    _opacityAnimation = Tween<double>(begin: 0, end: 1).animate(anim);
     _controller.forward();
   }
 

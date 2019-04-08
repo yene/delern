@@ -1,9 +1,9 @@
 import 'package:delern_flutter/flutter/localization.dart';
 import 'package:delern_flutter/flutter/styles.dart' as app_styles;
-import 'package:delern_flutter/flutter/user_messages.dart';
 import 'package:delern_flutter/models/card_model.dart';
 import 'package:delern_flutter/models/deck_model.dart';
 import 'package:delern_flutter/view_models/card_create_update_bloc.dart';
+import 'package:delern_flutter/views/base/screen_bloc_view.dart';
 import 'package:delern_flutter/views/helpers/save_updates_dialog.dart';
 import 'package:delern_flutter/views/helpers/sign_in_widget.dart';
 import 'package:flutter/material.dart';
@@ -25,28 +25,28 @@ class _CardCreateUpdateState extends State<CardCreateUpdate> {
   bool _isChanged = false;
   final TextEditingController _frontTextController = TextEditingController();
   final TextEditingController _backTextController = TextEditingController();
-  final _scaffoldKey = GlobalKey<ScaffoldState>();
   final FocusNode _frontSideFocus = FocusNode();
   CardCreateUpdateBloc _bloc;
 
   @override
+  void initState() {
+    _bloc = CardCreateUpdateBloc(cardModel: widget.card);
+    _bloc.doClearInputFields.listen((_) => _clearInputFields());
+    _bloc.doShowConfirmationDialog.listen((_) => showCardSaveUpdateDialog());
+    _frontTextController.text = widget.card.front;
+    _backTextController.text = widget.card.back;
+    super.initState();
+  }
+
+  @override
   void didChangeDependencies() {
-    // TODO(ksheremet): Wrap Bloc in Stateful widget and use InheritedWidget
-    // to access it. It will help to avoid "if" statements when
-    // uid or locale changed, therefore helps to prevent bugs
-    final uid = CurrentUserWidget.of(context).user.uid;
     final locale = AppLocalizations.of(context);
-    if (_bloc?.uid != uid || _bloc?.locale != locale) {
-      _bloc?.dispose();
-      _bloc = CardCreateUpdateBloc(
-          uid: uid,
-          cardModel: widget.card,
-          locale: AppLocalizations.of(context));
-      _bloc.onCardAdded.listen(_onCardAdded);
-      _bloc.onPop.listen((_) => Navigator.pop(context));
-      _bloc.onErrorOccurred.listen(_onErrorOccurred);
-      _frontTextController.text = widget.card.front;
-      _backTextController.text = widget.card.back;
+    if (_bloc.locale != locale) {
+      _bloc.onLocale.add(locale);
+    }
+    final uid = CurrentUserWidget.of(context).user.uid;
+    if (_bloc.uid != uid) {
+      _bloc.onUid.add(uid);
     }
     super.didChangeDependencies();
   }
@@ -58,27 +58,26 @@ class _CardCreateUpdateState extends State<CardCreateUpdate> {
     super.dispose();
   }
 
+  Future<void> showCardSaveUpdateDialog() async {
+    if (_isChanged) {
+      final locale = AppLocalizations.of(context);
+      final continueEditingDialog = await showSaveUpdatesDialog(
+          context: context,
+          changesQuestion: locale.continueEditingQuestion,
+          yesAnswer: locale.yes,
+          noAnswer: locale.discard);
+      if (continueEditingDialog) {
+        return false;
+      }
+    }
+    _bloc.onDiscardChanges.add(null);
+  }
+
   @override
-  Widget build(BuildContext context) => WillPopScope(
-        onWillPop: () async {
-          if (_isChanged) {
-            final locale = AppLocalizations.of(context);
-            final continueEditingDialog = await showSaveUpdatesDialog(
-                context: context,
-                changesQuestion: locale.continueEditingQuestion,
-                yesAnswer: locale.yes,
-                noAnswer: locale.discard);
-            if (continueEditingDialog) {
-              return false;
-            }
-          }
-          return true;
-        },
-        child: Scaffold(
-          key: _scaffoldKey,
-          appBar: _buildAppBar(),
-          body: _buildUserInput(),
-        ),
+  Widget build(BuildContext context) => ScreenBlocView(
+        appBar: _buildAppBar(),
+        body: _buildUserInput(),
+        bloc: _bloc,
       );
 
   AppBar _buildAppBar() => AppBar(
@@ -104,21 +103,8 @@ class _CardCreateUpdateState extends State<CardCreateUpdate> {
         ],
       );
 
-  void _onCardAdded(String userMessage) {
-    UserMessages.showMessage(_scaffoldKey.currentState, userMessage);
-    setState(() {
-      _isChanged = false;
-      _clearInputFields();
-    });
-  }
-
-  // Show error message to user. Do not clean fields
-  void _onErrorOccurred(String message) {
-    UserMessages.showMessage(_scaffoldKey.currentState, message);
-  }
-
   void _saveCard() {
-    _bloc.saveCardSink.add(null);
+    _bloc.onSaveCard.add(null);
   }
 
   Widget _buildUserInput() {
@@ -133,7 +119,7 @@ class _CardCreateUpdateState extends State<CardCreateUpdate> {
         controller: _frontTextController,
         onChanged: (text) {
           setState(() {
-            _bloc.frontSideTextSink.add(text);
+            _bloc.onFrontSideText.add(text);
             _isChanged = true;
           });
         },
@@ -148,7 +134,7 @@ class _CardCreateUpdateState extends State<CardCreateUpdate> {
         controller: _backTextController,
         onChanged: (text) {
           setState(() {
-            _bloc.backSideTextSink.add(text);
+            _bloc.onBackSideText.add(text);
             _isChanged = true;
           });
         },
@@ -170,7 +156,7 @@ class _CardCreateUpdateState extends State<CardCreateUpdate> {
         ),
         value: _addReversedCard,
         onChanged: (newValue) {
-          _bloc.addReversedCardSink.add(newValue);
+          _bloc.onAddReversedCard.add(newValue);
           setState(() {
             _addReversedCard = newValue;
           });
@@ -187,10 +173,13 @@ class _CardCreateUpdateState extends State<CardCreateUpdate> {
   }
 
   void _clearInputFields() {
-    _frontTextController.clear();
-    _backTextController.clear();
-    _bloc.frontSideTextSink.add('');
-    _bloc.backSideTextSink.add('');
-    FocusScope.of(context).requestFocus(_frontSideFocus);
+    setState(() {
+      _isChanged = false;
+      _frontTextController.clear();
+      _backTextController.clear();
+      _bloc.onFrontSideText.add('');
+      _bloc.onBackSideText.add('');
+      FocusScope.of(context).requestFocus(_frontSideFocus);
+    });
   }
 }

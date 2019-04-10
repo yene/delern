@@ -27,61 +27,35 @@ class _DeckMenuState extends State<DeckMenu>
     with SingleTickerProviderStateMixin {
   AnimationController _controller;
   final _duration = _animationDuration;
-  IconData _menuIcon;
 
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(vsync: this, duration: _duration)
-      ..addStatusListener((status) {
-        if (status == AnimationStatus.completed) {
-          _onMenuExpanded();
-        }
-        if (status == AnimationStatus.reverse) {
-          _onMenuClosed();
-        }
-      });
-  }
-
-  IconData _getMenuIcon(TargetPlatform platform) {
-    assert(platform != null);
-    if (platform == TargetPlatform.iOS) {
-      return Icons.more_horiz;
-    }
-    return Icons.more_vert;
-  }
-
-  void _onMenuExpanded() {
-    setState(() {
-      _menuIcon = Icons.close;
-    });
-  }
-
-  void _onMenuClosed() {
-    setState(() {
-      _menuIcon = _getMenuIcon(Theme.of(context).platform);
-    });
+    _controller = AnimationController(vsync: this, duration: _duration);
   }
 
   @override
-  Widget build(BuildContext context) => IconButton(
-        icon: Icon(
-          // TODO(ksheremet): Does not work with iOS / Android mode switch
-          _menuIcon ?? _getMenuIcon(Theme.of(context).platform),
-        ),
-        tooltip: MaterialLocalizations.of(context).showMenuTooltip,
-        onPressed: () async {
+  Widget build(BuildContext context) => InkWell(
+        splashColor: Theme.of(context).splashColor,
+        onTap: () async {
           final menuItemType = await Navigator.push(
               context,
               _MenuRoute<_DeckMenuItemType>(
                 parent: context,
                 controller: _controller,
               ));
-          _onMenuClosed();
           if (menuItemType != null) {
             _onDeckMenuItemSelected(context, menuItemType);
           }
         },
+        child: Padding(
+          padding: const EdgeInsets.all(10),
+          child: AnimatedIcon(
+            progress: _controller,
+            icon: AnimatedIcons.menu_close,
+            semanticLabel: MaterialLocalizations.of(context).showMenuTooltip,
+          ),
+        ),
       );
 
   void _onDeckMenuItemSelected(BuildContext context, _DeckMenuItemType item) {

@@ -26,12 +26,12 @@ class DeckMenu extends StatefulWidget {
 class _DeckMenuState extends State<DeckMenu>
     with SingleTickerProviderStateMixin {
   AnimationController _controller;
-  final _duration = _animationDuration;
 
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(vsync: this, duration: _duration);
+    _controller =
+        AnimationController(vsync: this, duration: _animationDuration);
   }
 
   @override

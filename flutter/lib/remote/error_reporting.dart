@@ -12,17 +12,8 @@ String uid;
 
 Future<void> report(String src, error, stackTrace,
     {Map<String, dynamic> extra, bool printErrorInfo = true}) async {
-  var message = error.toString();
-  try {
-    // For DatabaseError, toString() returns "Instance of 'DatabaseError'":
-    // https://github.com/flutter/plugins/pull/1096.
-    message += ': ${error.message}';
-  } catch (e) {
-    // We tried.
-  }
-
   if (printErrorInfo) {
-    debugPrint('/!\\ /!\\ /!\\ Caught error in $src: $message');
+    debugPrint('/!\\ /!\\ /!\\ Caught error in $src: $error');
   }
 
   if (stackTrace == null && error is Error) {
@@ -61,7 +52,7 @@ Future<void> report(String src, error, stackTrace,
   print('Reporting to Sentry.io...');
   final response = await _sentry.capture(
       event: Event(
-    message: message,
+    message: error.toString(),
     stackTrace: stackTrace,
     loggerName: src,
     userContext: User(id: uid),

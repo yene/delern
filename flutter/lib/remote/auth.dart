@@ -66,14 +66,11 @@ class User {
 
   static SignInProvider _parseSignInProvider(String providerId) {
     switch (providerId) {
-      // TODO(dotdoom): use GoogleAuthProvider.providerId once it's a const:
-      //                https://github.com/flutter/plugins/pull/1292
-      case 'google.com':
+      case GoogleAuthProvider.providerId:
         return SignInProvider.google;
-      case 'firebase':
-        return null;
       // TODO(dotdoom): add more providers here #944.
     }
+    // For anonymous users, providerId == 'firebase'.
     return null;
   }
 }

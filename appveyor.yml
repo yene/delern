@@ -5,22 +5,40 @@
 # Version format. We don't use this, so let it just be less confusing on UI.
 version: "#{build}"
 
-# Allow filenames longer than 260 characters (what year is it?!).
-init: git config --system core.longpaths true
-
 environment:
-  FLUTTER_SDK_ROOT: "C:\\flutter"
-  PATH: "C:\\Ruby22-x64\\bin;%FLUTTER_SDK_ROOT%\\bin;%PATH%"
-  ANDROID_SDK_ROOT: "C:\\Android\\Sdk"
-  ANDROID_HOME: "%ANDROID_SDK_ROOT%"
-  GRADLE_OPTS: "-Dorg.gradle.daemon=false"
-  TRAVIS_BUILD_NUMBER: 42
+  FLUTTER_SDK_ROOT: C:\flutter
+  PATH: 'C:\Ruby22-x64\bin;%FLUTTER_SDK_ROOT%\bin;%PATH%'
+  ANDROID_SDK_ROOT: C:\Android\Sdk
+  ANDROID_HOME: '%ANDROID_SDK_ROOT%'
+  GRADLE_OPTS: -Dorg.gradle.daemon=false
+  FLUTTER_CHANNEL: beta
+  FLUTTER_CHANNEL_HASH: C:\flutter-hash.txt
+  FLUTTER_REPO_URL: https://github.com/flutter/flutter.git
+
+init:
+  - tzutil /s "Central Europe Standard Time"
+  - 'echo [timing: %time%] build started'
+  # Allow filenames longer than 260 characters (what year is it?!).
+  - git config --system core.longpaths true
+  - git ls-remote %FLUTTER_REPO_URL% %FLUTTER_CHANNEL% > %FLUTTER_CHANNEL_HASH%
+
+cache:
+  - '%FLUTTER_SDK_ROOT% -> %FLUTTER_CHANNEL_HASH%'
+  - '%APPDATA%\Pub\Cache -> flutter\pubspec.yaml'
+  - '%USERPROFILE%\.gradle ->
+    flutter\pubspec.yaml,
+    flutter\android\build.gradle,
+    flutter\android\app\build.gradle'
+  - vendor\bundle -> Gemfile.lock
 
 install:
+  - 'echo [timing: %time%] install started'
+
   - ruby -v
   - gem -v
   - bundle -v
   - bundle install --quiet --clean --deployment
+  - 'echo [timing: %time%] Fastlane dependencies installed'
 
   - ps: Install-Product node 8
   - node --version
@@ -34,11 +52,16 @@ install:
   - ..\node_modules\.bin\bower --silent --allow-root install
   - ps: popd
   - ps: popd
+  - 'echo [timing: %time%] Firebase dependencies installed'
 
-  - git clone -b beta https://github.com/flutter/flutter.git C:\flutter
+  - 'flutter upgrade ||
+    git clone --quiet --depth 2 --branch %FLUTTER_CHANNEL%
+    %FLUTTER_REPO_URL% %FLUTTER_SDK_ROOT%'
+  - flutter precache
+  - 'echo [timing: %time%] Flutter installed'
 
   - copy tools\ci\google-services.json flutter\android\app\google-services.json
-  - copy tools\ci\debug.keystore "%USERPROFILE%\\.android\\debug.keystore"
+  - copy tools\ci\debug.keystore %USERPROFILE%\.android\debug.keystore
 
 build: off
 
@@ -54,16 +77,22 @@ build_script:
   #- ..\node_modules\.bin\polymer lint
   - ps: popd
   - ps: popd
+  - 'echo [timing: %time%] Firebase built'
 
   - ps: pushd flutter
   - bundle exec fastlane android build
   - ps: popd
+  - 'echo [timing: %time%] Flutter built'
 
 test_script:
   # Workaround for fastlane generating README.md with LF instead of CRLF.
   # TODO(dotdoom): file a bug.
   - git add flutter/fastlane/README.md
   - bundle exec fastlane ensure_clean_git
+
+artifacts:
+  - path: flutter\build\app\outputs\apk\debug\app-debug.apk
+    name: Debug APK
 
 branches:
   only:

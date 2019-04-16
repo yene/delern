@@ -30,6 +30,78 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
         }));
   }
 
+  List<Widget> _buildUserButtons(User user) {
+    final list = <Widget>[
+      ListTile(
+        title: Text(
+          AppLocalizations.of(context).navigationDrawerCommunicateGroup,
+          style: app_styles.navigationDrawerGroupText,
+        ),
+      ),
+      ListTile(
+        leading: const Icon(Icons.contact_mail),
+        title: Text(AppLocalizations.of(context).navigationDrawerInviteFriends),
+        onTap: () {
+          sendInvite(context);
+          Navigator.pop(context);
+        },
+      ),
+      ListTile(
+        leading: const Icon(Icons.live_help),
+        title: Text(AppLocalizations.of(context).navigationDrawerContactUs),
+        onTap: () async {
+          Navigator.pop(context);
+          await launchEmail(context);
+        },
+      ),
+      ListTile(
+        leading: const Icon(Icons.developer_board),
+        title: Text(
+            AppLocalizations.of(context).navigationDrawerSupportDevelopment),
+        onTap: () {
+          Navigator.pop(context);
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  settings: const RouteSettings(name: '/support'),
+                  builder: (context) => SupportDevelopment()));
+        },
+      ),
+      const Divider(height: 1),
+      AboutListTile(
+        icon: const Icon(Icons.perm_device_information),
+        child: Text(AppLocalizations.of(context).navigationDrawerAbout),
+        applicationIcon: Image.asset('images/ic_launcher.png'),
+        applicationVersion: versionCode,
+        applicationLegalese: 'GNU General Public License v3.0',
+      ),
+    ];
+
+    final signInOutWidget = ListTile(
+      leading: const Icon(Icons.perm_identity),
+      title: Text(user.isAnonymous
+          ? AppLocalizations.of(context).navigationDrawerSignIn
+          : AppLocalizations.of(context).navigationDrawerSignOut),
+      onTap: () async {
+        if (user.isAnonymous) {
+          _promoteAnonymous(context);
+        } else {
+          Auth.instance.signOut();
+          Navigator.pop(context);
+        }
+      },
+    );
+
+    if (user.isAnonymous) {
+      list..insert(0, signInOutWidget)..insert(1, const Divider(height: 1));
+    } else {
+      list
+        ..insert(list.length, const Divider(height: 1))
+        ..insert(list.length, signInOutWidget);
+    }
+    return list;
+  }
+
   @override
   Widget build(BuildContext context) {
     final user = CurrentUserWidget.of(context).user;
@@ -52,66 +124,7 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
                 : NetworkImage(user.photoUrl),
           ),
         ),
-        ListTile(
-          leading: const Icon(Icons.perm_identity),
-          title: Text(user.isAnonymous
-              ? AppLocalizations.of(context).navigationDrawerSignIn
-              : AppLocalizations.of(context).navigationDrawerSignOut),
-          onTap: () async {
-            if (user.isAnonymous) {
-              _promoteAnonymous(context);
-            } else {
-              Auth.instance.signOut();
-              Navigator.pop(context);
-            }
-          },
-        ),
-        const Divider(height: 1),
-        ListTile(
-          title: Text(
-            AppLocalizations.of(context).navigationDrawerCommunicateGroup,
-            style: app_styles.navigationDrawerGroupText,
-          ),
-        ),
-        ListTile(
-          leading: const Icon(Icons.contact_mail),
-          title:
-              Text(AppLocalizations.of(context).navigationDrawerInviteFriends),
-          onTap: () {
-            sendInvite(context);
-            Navigator.pop(context);
-          },
-        ),
-        ListTile(
-          leading: const Icon(Icons.live_help),
-          title: Text(AppLocalizations.of(context).navigationDrawerContactUs),
-          onTap: () async {
-            Navigator.pop(context);
-            await launchEmail(context);
-          },
-        ),
-        ListTile(
-          leading: const Icon(Icons.developer_board),
-          title: Text(
-              AppLocalizations.of(context).navigationDrawerSupportDevelopment),
-          onTap: () {
-            Navigator.pop(context);
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    settings: const RouteSettings(name: '/support'),
-                    builder: (context) => SupportDevelopment()));
-          },
-        ),
-        const Divider(height: 1),
-        AboutListTile(
-          icon: const Icon(Icons.perm_device_information),
-          child: Text(AppLocalizations.of(context).navigationDrawerAbout),
-          applicationIcon: Image.asset('images/ic_launcher.png'),
-          applicationVersion: versionCode,
-          applicationLegalese: 'GNU General Public License v3.0',
-        ),
-      ],
+      ]..addAll(_buildUserButtons(user)),
     ));
   }
 

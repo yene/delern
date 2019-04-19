@@ -159,6 +159,11 @@ class _SignInWidgetState extends State<SignInWidget> {
             )),
       );
 
+  Widget _buildDoNotNeedFeaturesText() => Text(
+        AppLocalizations.of(context).doNotNeedFeaturesText,
+        style: app_styles.secondaryText,
+      );
+
   Widget _buildLandscapeSignInScreen(BuildContext context) => Row(
         children: <Widget>[
           Expanded(
@@ -182,10 +187,7 @@ class _SignInWidgetState extends State<SignInWidget> {
                     [
                       _buildGoogleSignInButton(Orientation.landscape),
                       _itemPadding,
-                      Text(
-                        AppLocalizations.of(context).doNotNeedFeaturesText,
-                        style: app_styles.primaryText,
-                      ),
+                      _buildDoNotNeedFeaturesText(),
                       _itemPadding,
                       _buildAnonymousSignInButton(Orientation.landscape),
                       _itemPadding,
@@ -202,16 +204,14 @@ class _SignInWidgetState extends State<SignInWidget> {
         mainAxisAlignment: MainAxisAlignment.end,
         children: <Widget>[
               Expanded(child: Center(child: _buildLogoPicture())),
+              _itemPadding,
+              _buildGoogleSignInButton(Orientation.portrait),
+              _itemPadding,
             ] +
             _getFeatures(context) +
             [
               _itemPadding,
-              _buildGoogleSignInButton(Orientation.portrait),
-              _itemPadding,
-              Text(
-                AppLocalizations.of(context).doNotNeedFeaturesText,
-                style: app_styles.primaryText,
-              ),
+              _buildDoNotNeedFeaturesText(),
               _itemPadding,
               _buildAnonymousSignInButton(Orientation.portrait),
               _itemPadding

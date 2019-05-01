@@ -1,4 +1,4 @@
-import 'package:delern_flutter/flutter/localization.dart';
+import 'package:delern_flutter/flutter/localization.dart' as localizations;
 import 'package:delern_flutter/flutter/styles.dart' as app_styles;
 import 'package:delern_flutter/flutter/user_messages.dart';
 import 'package:delern_flutter/models/card_model.dart';
@@ -56,7 +56,7 @@ class _CardsListState extends State<CardsList> {
                 allowEdit: widget.allowEdit,
               ),
           // TODO(ksheremet): Consider to remove this field
-          emptyGridUserMessage: AppLocalizations.of(context).emptyCardsList,
+          emptyGridUserMessage: localizations.of(context).emptyCardsList,
         ),
         floatingActionButton: buildAddCard(),
       );
@@ -76,7 +76,8 @@ class _CardsListState extends State<CardsList> {
                 } else {
                   UserMessages.showMessage(
                       Scaffold.of(context),
-                      AppLocalizations.of(context)
+                      localizations
+                          .of(context)
                           .noAddingWithReadAccessUserMessage);
                 }
               },

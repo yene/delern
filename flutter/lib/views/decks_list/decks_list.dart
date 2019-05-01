@@ -1,4 +1,4 @@
-import 'package:delern_flutter/flutter/localization.dart';
+import 'package:delern_flutter/flutter/localization.dart' as localizations;
 import 'package:delern_flutter/flutter/styles.dart' as app_styles;
 import 'package:delern_flutter/models/card_model.dart';
 import 'package:delern_flutter/models/deck_model.dart';
@@ -135,7 +135,7 @@ class _DecksListState extends State<DecksList> {
                 emptyMessageBuilder: () => ArrowToFloatingActionButtonWidget(
                     fabKey: fabKey,
                     child: EmptyListMessageWidget(
-                        AppLocalizations.of(context).emptyDecksList)),
+                        localizations.of(context).emptyDecksList)),
               ),
             ),
             // The size of FAB = 56 logical pixels from Material Design.

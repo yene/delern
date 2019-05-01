@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:delern_flutter/flutter/localization.dart';
+import 'package:delern_flutter/flutter/localization.dart' as localizations;
 import 'package:delern_flutter/flutter/styles.dart' as app_styles;
 import 'package:delern_flutter/flutter/user_messages.dart';
 import 'package:delern_flutter/models/deck_access_model.dart';
@@ -55,7 +55,7 @@ class _DeckSharingState extends State<DeckSharing> {
               child: Row(
                 children: <Widget>[
                   Text(
-                    AppLocalizations.of(context).peopleLabel,
+                    localizations.of(context).peopleLabel,
                     style: app_styles.secondaryText,
                   ),
                 ],
@@ -75,7 +75,7 @@ class _DeckSharingState extends State<DeckSharing> {
           },
           style: app_styles.primaryText,
           decoration: InputDecoration(
-            hintText: AppLocalizations.of(context).emailAddressHint,
+            hintText: localizations.of(context).emailAddressHint,
           ),
         ),
         trailing: DeckAccessDropdownWidget(
@@ -107,12 +107,12 @@ class _DeckSharingState extends State<DeckSharing> {
             widget._deck);
       }
     } on SocketException catch (_) {
-      UserMessages.showMessage(Scaffold.of(context),
-          AppLocalizations.of(context).offlineUserMessage);
+      UserMessages.showMessage(
+          Scaffold.of(context), localizations.of(context).offlineUserMessage);
     } on HttpException catch (e, stackTrace) {
       unawaited(error_reporting.report('share deck', e, stackTrace));
       UserMessages.showMessage(Scaffold.of(context),
-          AppLocalizations.of(context).serverUnavailableUserMessage);
+          localizations.of(context).serverUnavailableUserMessage);
     } catch (e, stackTrace) {
       unawaited(
           UserMessages.showError(() => Scaffold.of(context), e, stackTrace));
@@ -120,7 +120,7 @@ class _DeckSharingState extends State<DeckSharing> {
   }
 
   Future<bool> _inviteUser() async {
-    final locale = AppLocalizations.of(context);
+    final locale = localizations.of(context);
     final inviteUser = await showSaveUpdatesDialog(
         context: context,
         changesQuestion: locale.appNotInstalledSharingDeck,
@@ -160,7 +160,7 @@ class _DeckUsersState extends State<DeckUsersWidget> {
             child: Row(
               children: <Widget>[
                 Text(
-                  AppLocalizations.of(context).whoHasAccessLabel,
+                  localizations.of(context).whoHasAccessLabel,
                   style: app_styles.secondaryText,
                 ),
               ],
@@ -174,7 +174,7 @@ class _DeckUsersState extends State<DeckUsersWidget> {
                     sizeFactor: animation,
                   ),
               emptyMessageBuilder: () => EmptyListMessageWidget(
-                  AppLocalizations.of(context).emptyUserSharingList),
+                  localizations.of(context).emptyUserSharingList),
             ),
           ),
         ],

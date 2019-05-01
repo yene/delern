@@ -1,4 +1,4 @@
-import 'package:delern_flutter/flutter/localization.dart';
+import 'package:delern_flutter/flutter/localization.dart' as localizations;
 import 'package:delern_flutter/flutter/styles.dart' as app_styles;
 import 'package:delern_flutter/models/deck_model.dart';
 import 'package:delern_flutter/view_models/deck_settings_bloc.dart';
@@ -41,7 +41,7 @@ class _DeckSettingsState extends State<DeckSettings> {
   @override
   void didChangeDependencies() {
     // TODO(ksheremet): Locale must be somewhere in ScreenBlocView
-    final locale = AppLocalizations.of(context);
+    final locale = localizations.of(context);
     if (_bloc?.locale != locale) {
       _bloc.onLocale.add(locale);
     }
@@ -52,7 +52,7 @@ class _DeckSettingsState extends State<DeckSettings> {
     final deleteDeckDialog = await showSaveUpdatesDialog(
         context: context,
         changesQuestion: deleteDeckQuestion,
-        yesAnswer: AppLocalizations.of(context).delete,
+        yesAnswer: localizations.of(context).delete,
         noAnswer: MaterialLocalizations.of(context).cancelButtonLabel);
     if (deleteDeckDialog) {
       _bloc.onDeleteDeck.add(null);
@@ -96,7 +96,7 @@ class _DeckSettingsState extends State<DeckSettings> {
                   Padding(
                     padding: const EdgeInsets.only(top: 24),
                     child: Text(
-                      AppLocalizations.of(context).deckType,
+                      localizations.of(context).deckType,
                       style: app_styles.secondaryText,
                     ),
                   ),
@@ -118,7 +118,7 @@ class _DeckSettingsState extends State<DeckSettings> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Text(
-                    AppLocalizations.of(context).markdown,
+                    localizations.of(context).markdown,
                     style: app_styles.secondaryText,
                   ),
                   Switch(

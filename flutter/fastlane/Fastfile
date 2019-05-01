@@ -84,7 +84,7 @@ lane :build do
   sh('cd .. && flutter packages get')
   flutter(
     action: 'l10n',
-    l10n_strings_file: 'lib/flutter/localization.dart',
+    l10n_strings_file: 'lib/l10n/app_localizations.dart',
     l10n_strings_locale: 'en',
     l10n_reformat_arb: true,
   )

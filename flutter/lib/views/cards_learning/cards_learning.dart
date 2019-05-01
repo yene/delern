@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:delern_flutter/flutter/localization.dart';
+import 'package:delern_flutter/flutter/localization.dart' as localizations;
 import 'package:delern_flutter/flutter/styles.dart' as app_styles;
 import 'package:delern_flutter/flutter/user_messages.dart';
 import 'package:delern_flutter/models/deck_access_model.dart';
@@ -106,7 +106,8 @@ class CardsLearningState extends State<CardsLearning> {
                           // the display.
                           SafeArea(
                             child: Text(
-                              AppLocalizations.of(context)
+                              localizations
+                                  .of(context)
                                   .watchedCards(_watchedCount),
                               style: app_styles.secondaryText,
                             ),
@@ -199,7 +200,7 @@ class CardsLearningState extends State<CardsLearning> {
                       )));
         } else {
           UserMessages.showMessage(Scaffold.of(context),
-              AppLocalizations.of(context).noEditingWithReadAccessUserMessage);
+              localizations.of(context).noEditingWithReadAccessUserMessage);
         }
         break;
       case _CardMenuItemType.delete:
@@ -207,14 +208,14 @@ class CardsLearningState extends State<CardsLearning> {
           _deleteCard(context);
         } else {
           UserMessages.showMessage(Scaffold.of(context),
-              AppLocalizations.of(context).noDeletingWithReadAccessUserMessage);
+              localizations.of(context).noDeletingWithReadAccessUserMessage);
         }
         break;
     }
   }
 
   Future<void> _deleteCard(BuildContext context) async {
-    final locale = AppLocalizations.of(context);
+    final locale = localizations.of(context);
     final saveChanges = await showSaveUpdatesDialog(
         context: context,
         changesQuestion: locale.deleteCardQuestion,
@@ -224,7 +225,7 @@ class CardsLearningState extends State<CardsLearning> {
       try {
         await _viewModel.deleteCard();
         UserMessages.showMessage(Scaffold.of(context),
-            AppLocalizations.of(context).cardDeletedUserMessage);
+            localizations.of(context).cardDeletedUserMessage);
       } catch (e, stackTrace) {
         unawaited(
             UserMessages.showError(() => Scaffold.of(context), e, stackTrace));
@@ -243,12 +244,13 @@ class CardsLearningState extends State<CardsLearning> {
       if (!_atLeastOneCardShown) {
         _learnBeyondHorizon = await showSaveUpdatesDialog(
                 context: context,
-                changesQuestion: AppLocalizations.of(context)
+                changesQuestion: localizations
+                    .of(context)
                     .continueLearningQuestion(DateFormat.yMMMd()
                         .add_jm()
                         .format(_viewModel.scheduledCard.repeatAt)),
-                noAnswer: AppLocalizations.of(context).no,
-                yesAnswer: AppLocalizations.of(context).yes) ==
+                noAnswer: localizations.of(context).no,
+                yesAnswer: localizations.of(context).yes) ==
             true;
       }
       if (!_learnBeyondHorizon) {
@@ -263,6 +265,6 @@ class CardsLearningState extends State<CardsLearning> {
 enum _CardMenuItemType { edit, delete }
 
 Map<_CardMenuItemType, String> _buildMenu(BuildContext context) => {
-      _CardMenuItemType.edit: AppLocalizations.of(context).edit,
-      _CardMenuItemType.delete: AppLocalizations.of(context).delete,
+      _CardMenuItemType.edit: localizations.of(context).edit,
+      _CardMenuItemType.delete: localizations.of(context).delete,
     };

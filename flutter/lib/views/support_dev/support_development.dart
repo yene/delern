@@ -1,4 +1,4 @@
-import 'package:delern_flutter/flutter/localization.dart';
+import 'package:delern_flutter/flutter/localization.dart' as localizations;
 import 'package:delern_flutter/flutter/styles.dart' as app_styles;
 import 'package:delern_flutter/flutter/user_messages.dart';
 import 'package:flutter/material.dart';
@@ -11,10 +11,10 @@ class SupportDevelopment extends StatelessWidget {
   Widget build(BuildContext context) => Scaffold(
       appBar: AppBar(
           title: Text(
-              AppLocalizations.of(context).navigationDrawerSupportDevelopment)),
+              localizations.of(context).navigationDrawerSupportDevelopment)),
       body: Builder(
         builder: (context) => Markdown(
-            data: AppLocalizations.of(context).supportDevelopment,
+            data: localizations.of(context).supportDevelopment,
             styleSheet: MarkdownStyleSheet.fromTheme(Theme.of(context))
                 .copyWith(p: app_styles.primaryText),
             onTapLink: (href) async {

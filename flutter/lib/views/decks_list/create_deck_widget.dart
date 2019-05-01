@@ -1,4 +1,4 @@
-import 'package:delern_flutter/flutter/localization.dart';
+import 'package:delern_flutter/flutter/localization.dart' as localizations;
 import 'package:delern_flutter/flutter/styles.dart' as app_styles;
 import 'package:delern_flutter/flutter/user_messages.dart';
 import 'package:delern_flutter/models/card_model.dart' as card_model;
@@ -58,7 +58,7 @@ class _CreateDeckDialogState extends State<_CreateDeckDialog> {
   Widget build(BuildContext context) {
     final addDeckButton = FlatButton(
         child: Text(
-          AppLocalizations.of(context).add.toUpperCase(),
+          localizations.of(context).add.toUpperCase(),
           style: TextStyle(
               color: _textController.text.isEmpty
                   ? Theme.of(context).disabledColor
@@ -93,7 +93,7 @@ class _CreateDeckDialogState extends State<_CreateDeckDialog> {
     if (MediaQuery.of(context).orientation == Orientation.portrait) {
       return AlertDialog(
         title: Text(
-          AppLocalizations.of(context).deck,
+          localizations.of(context).deck,
           style: const TextStyle(fontWeight: FontWeight.w600),
         ),
         content: SingleChildScrollView(

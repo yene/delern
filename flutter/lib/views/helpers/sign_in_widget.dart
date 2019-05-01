@@ -1,5 +1,5 @@
 import 'package:delern_flutter/flutter/device_info.dart';
-import 'package:delern_flutter/flutter/localization.dart';
+import 'package:delern_flutter/flutter/localization.dart' as localizations;
 import 'package:delern_flutter/flutter/styles.dart' as app_styles;
 import 'package:delern_flutter/models/base/transaction.dart';
 import 'package:delern_flutter/models/fcm.dart';
@@ -84,12 +84,12 @@ class _SignInWidgetState extends State<SignInWidget> {
     );
   }
 
-  List<Widget> _getFeatures(BuildContext context) =>
-      AppLocalizations.of(context)
-          .splashScreenFeatures
-          .split('\n')
-          .map(_buildFeatureText)
-          .toList();
+  List<Widget> _getFeatures(BuildContext context) => localizations
+      .of(context)
+      .splashScreenFeatures
+      .split('\n')
+      .map(_buildFeatureText)
+      .toList();
 
   Widget _buildGoogleSignInButton(Orientation orientation) => Padding(
         padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -111,7 +111,7 @@ class _SignInWidgetState extends State<SignInWidget> {
                 Container(
                     padding: const EdgeInsets.only(left: 10),
                     child: Text(
-                      AppLocalizations.of(context).signInWithGoogle,
+                      localizations.of(context).signInWithGoogle,
                       style: app_styles.primaryText,
                     )),
               ],
@@ -127,7 +127,7 @@ class _SignInWidgetState extends State<SignInWidget> {
               'images/ic_launcher.png',
             ),
             Text(
-              AppLocalizations.of(context).appLogoName,
+              localizations.of(context).appLogoName,
               style: const TextStyle(
                   fontSize: 20,
                   color: Colors.green,
@@ -151,7 +151,7 @@ class _SignInWidgetState extends State<SignInWidget> {
                       vertical:
                           Orientation.portrait == orientation ? 15.0 : 10.0),
                   child: Text(
-                    AppLocalizations.of(context).continueAnonymously,
+                    localizations.of(context).continueAnonymously,
                     style: app_styles.primaryText,
                   ),
                 ),
@@ -160,7 +160,7 @@ class _SignInWidgetState extends State<SignInWidget> {
       );
 
   Widget _buildDoNotNeedFeaturesText() => Text(
-        AppLocalizations.of(context).doNotNeedFeaturesText,
+        localizations.of(context).doNotNeedFeaturesText,
         style: app_styles.secondaryText,
       );
 

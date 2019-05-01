@@ -1,4 +1,4 @@
-import 'package:delern_flutter/flutter/localization.dart';
+import 'package:delern_flutter/flutter/localization.dart' as localizations;
 import 'package:delern_flutter/models/card_model.dart';
 import 'package:delern_flutter/models/deck_model.dart';
 import 'package:delern_flutter/view_models/card_preview_bloc.dart';
@@ -37,7 +37,7 @@ class _CardPreviewState extends State<CardPreview> {
   @override
   void didChangeDependencies() {
     // TODO(ksheremet): Locale must be somewhere in ScreenBlocView
-    final locale = AppLocalizations.of(context);
+    final locale = localizations.of(context);
     if (_bloc?.locale != locale) {
       _bloc.onLocale.add(locale);
     }
@@ -88,7 +88,7 @@ class _CardPreviewState extends State<CardPreview> {
     final deleteCardDialog = await showSaveUpdatesDialog(
         context: context,
         changesQuestion: deleteCardQuestion,
-        yesAnswer: AppLocalizations.of(context).delete,
+        yesAnswer: localizations.of(context).delete,
         noAnswer: MaterialLocalizations.of(context).cancelButtonLabel);
     if (deleteCardDialog) {
       _bloc.onDeleteCard.add(CurrentUserWidget.of(context).user.uid);

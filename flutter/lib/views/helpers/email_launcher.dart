@@ -1,5 +1,5 @@
 import 'package:delern_flutter/flutter/device_info.dart';
-import 'package:delern_flutter/flutter/localization.dart';
+import 'package:delern_flutter/flutter/localization.dart' as localizations;
 import 'package:delern_flutter/flutter/user_messages.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info/package_info.dart';
@@ -57,6 +57,6 @@ Future<void> launchEmail(BuildContext context) async {
     await launch(mailUrl, forceSafariVC: false);
   } catch (e, stackTrace) {
     unawaited(UserMessages.showError(() => Scaffold.of(context),
-        AppLocalizations.of(context).installEmailApp, stackTrace));
+        localizations.of(context).installEmailApp, stackTrace));
   }
 }

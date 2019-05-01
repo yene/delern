@@ -1,4 +1,4 @@
-import 'package:delern_flutter/flutter/localization.dart';
+import 'package:delern_flutter/flutter/localization.dart' as localizations;
 import 'package:delern_flutter/flutter/styles.dart' as app_styles;
 import 'package:delern_flutter/models/deck_model.dart';
 import 'package:flutter/material.dart';
@@ -37,7 +37,7 @@ class _DeckTypeDropdownWidgetState extends State<DeckTypeDropdownWidget> {
 
   Widget _buildDropdownItem(DeckType deckType) {
     String text;
-    final locale = AppLocalizations.of(context);
+    final locale = localizations.of(context);
 
     switch (deckType) {
       case DeckType.basic:

@@ -40,7 +40,7 @@ def cirrus_ci_build_number
   }).data.github_repository.builds.edges.size
 end
 
-def build_versions()
+before_all do
   commits_since_last_tag = changelog_from_git_commits(
     quiet: true,
     # One line per commit, which allows us to easily count them.
@@ -49,74 +49,77 @@ def build_versions()
     merge_commit_filtering: 'only_include_merges',
   ).lines.count
 
-  {
-    # Add a fixed integer to CI build number, because we drifted away. Outside
-    # of CI, usually on a developer's workstation, just use number of commits.
-    # TODO(dotdoom): remove #to_s once plugin supports integers.
-    build_number_override: (
-      is_ci? ? Integer(cirrus_ci_build_number) + 5000 : number_of_commits
-    ).to_s,
-    # If there are any commits since the last tag (ex.: "2.1"), add them as the
-    # third version number, turning it into "2.1.42". Otherwise just keep "2.1".
-    build_name_override: commits_since_last_tag > 0 ?
+  # Add a fixed integer to CI build number, because we drifted away. Outside of
+  # CI, usually on a developer's workstation, just use number of commits.
+  lane_context[SharedValues::BUILD_NUMBER] = is_ci ?
+    Integer(cirrus_ci_build_number) + 5000 :
+    number_of_commits
+
+  # If there are any commits since the last tag (ex.: "2.1"), add them as the
+  # third version number, turning it into "2.1.42". Otherwise just keep "2.1".
+  lane_context[SharedValues::VERSION_NUMBER] = commits_since_last_tag > 0 ?
       '%s.%d' % [last_git_tag, commits_since_last_tag] :
-      last_git_tag,
+      last_git_tag
+end
+
+desc 'Install or upgrade Flutter and Android SDK licenses'
+lane :install_dependencies do
+  bootstrap_options = {
+    flutter_channel: 'beta',
   }
-end
 
-def android_build(options={})
-  flutter(
-    action: 'bootstrap',
-    android_licenses: {
-      # License hashes. These are NOT secret!
-      # Copy them from $ANDROID_SDK_ROOT/licenses directory for the license
-      # agreements you accept.
+  if ENV.key?('ANDROID_SDK_ROOT')
+    # License hashes. These are NOT secret!
+    # Copy them from $ANDROID_SDK_ROOT/licenses/ directory for the license
+    # agreements you accept.
+    bootstrap_options[:android_licenses] = {
       'android-sdk-license' => '24333f8a63b6825ea9c5514f83c2829b004d1fee',
-    },
-  )
+    }
+  end
 
-  flutter({
-    action: 'build',
-  }.merge(options).merge(build_versions))
+  flutter_bootstrap(bootstrap_options)
 end
 
-lane :build do
-  sh('cd .. && flutter packages get && ' +
-     # Force re-generate .g.dart files to make sure they are up-to-date.
-     'flutter packages run build_runner build --delete-conflicting-outputs')
-  flutter(
-    action: 'l10n',
-    l10n_strings_file: 'lib/l10n/app_localizations.dart',
-    l10n_strings_locale: 'en',
-    l10n_reformat_arb: true,
+desc 'Generate files for Intl and built_value and format all files'
+lane :generate do
+  flutter_generate(
+    intl_strings_file: 'lib/l10n/app_localizations.dart',
+    intl_strings_locale: 'en_US',
   )
-  flutter(action: 'format')
-  flutter(action: 'analyze')
+  flutter(args: %w(format .))
+end
+
+desc 'Run static analysis on Flutter files'
+lane :lint do
+  flutter(args: %w(analyze lib))
 end
 
 platform :android do
+  desc 'Build a debug APK'
   lane :build do
-    android_build(debug: true)
+    flutter_build(debug: true)
   end
 
+  desc 'Build a release AAB and publish it (including Store artifacts)'
   lane :publish do
-    android_build
+    aab = flutter_build(build: 'appbundle')
     supply(
       track: 'internal',
-      apk: lane_context[SharedValues::FLUTTER_OUTPUT_APK],
+      aab: aab,
     )
   end
 end
 
 platform :ios do
+  desc 'Build a debug iOS package'
   lane :build do
-    flutter({
-      action: 'build',
+    flutter_build(
       debug: true,
       codesign: false,
-    }.merge(build_versions))
+    )
   end
 
+  desc 'Build a release iOS package and publish it (including Store artifacts)'
   lane :publish do
     # Set up OS X keychain and switch match to readonly model. This command has
     # no effect outside CI.
@@ -129,11 +132,9 @@ platform :ios do
     # Build the app to:
     # - add version
     # - switch to release mode
-    flutter({
-      action: 'build',
-    }.merge(build_versions))
+    flutter_build
     gym(silent: true, suppress_xcode_output: true)
-    # TODO(dotdoom): set also "changelog"
+    # TODO(dotdoom): set also "changelog".
     pilot(
       ipa: 'build/Runner.ipa',
     )

@@ -80,6 +80,8 @@ build_script:
   - 'echo [timing: %time%] Firebase built'
 
   - ps: pushd flutter
+  - bundle exec fastlane install_dependencies
+  # TODO(dotdoom): test generate and lint.
   - bundle exec fastlane android build
   - ps: popd
   - 'echo [timing: %time%] Flutter built'

@@ -100,6 +100,8 @@ task:
   # TODO(dotdoom): do not lint on OSX, it is already done on Linux.
   generate_and_lint_script: ( cd flutter && bundle exec fastlane build )
   install_debug_keys_script: tools/ci.sh install_debug_keys
+  # TODO(dotdoom): https://github.com/CocoaPods/CocoaPods/issues/8761
+  pod_specs_repo_update_script: pod setup
   build_script:
   - git fetch --tags --quiet
   - ( cd flutter && bundle exec fastlane ios build )

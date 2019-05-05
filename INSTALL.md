@@ -1,96 +1,20 @@
-# Continuous integration and deploy setup
+# Configuration of production CI/CD environment
 
-## Service Account and permissions
+We use multiple CIs to take advantage of most developed infrastructure for each
+operating system. Configuration files can be found below:
 
-Accessing Developer API requires a special Google Cloud project, see
-[documentation](https://developers.google.com/android-publisher/getting_started)
-for how to set it up. The project is called `Google Play Android Developer`.
-Once created, any service account on GCP console can be used to access API. The
-account ID will look like `12345-compute@developer.googleserviceaccount.com`.
+* [CirrusCI](.cirrus.yml) for Linux and OSX;
+* [AppVeyor](appveyor.yml) for Windows (because it's faster);
+* We also use CodeMagic but it does not have configuration files as of the time
+  of writing this. Configuration is minimal and done in UI. The advantage of
+  CodeMagic is that it runs Flutter Driver tests on an iPhone emulator, which is
+  complicated to configure with a traditional CI.
 
-This account has to have access to:
-
-* **Play Developer Console API**
-
-  Permissions (set via Settings in Play Console):
-
-  - Visibility
-  - Edit store listing
-  - Manage Alpha & Beta APKs
-  - Manage Alpha & Beta users
-
-  Enable API (to deploy App Engine applications via this project's account):
-
-  - [Google Service Management API](https://console.developers.google.com/apis/api/servicemanagement.googleapis.com/)
-  - [Google App Engine Admin API](https://console.developers.google.com/apis/api/appengine.googleapis.com/)
-
-* **Android Keystore** (in GCS bucket)
-
-  Storing data in a bucket requires billing account. Attaching billing account
-  to a Firebase project will automatically switch it into paid plan. Therefore,
-  we attach billing to Play Developer Console API project, and benefit from its
-  ["always free"](https://cloud.google.com/free/docs/always-free-usage-limits)
-  tier to store small amounts of data.
-
-  The bucket is `gs://Google Play Android Developer/dasfoo-keystore`.
-  No access to the bucket itself, but `Reader` permission to specific files:
-
-  - `debug.keystore`, used to access Debug project from Firebase Test Lab
-  - `delern.jks`, **only** used to sign the release version
-
-  Both files can be generated with a command similar to:
-
-  ```shell
-  $ keytool -genkey -v -keystore debug.keystore -alias androiddebugkey \
-      -storepass android -keypass android -keyalg RSA -validity 14000 \
-      -dname 'CN=debug.dasfoo.org, OU=Debug, O=DasFoo, L=Zurich, S=ZH, C=CH'
-  ```
-
-* **Firebase Test Results** (in GCS bucket)
-
-  For the reasons above, this storage bucket also has to belong to a
-  non-Firebase project, so it's stored in
-  `gs://Google Play Android Developer/delern-test-results`. To prevent the
-  bucket from growing above "always free" tier quota, a lifecycle policy is set
-  on it (e.g. 95 days).
-
-  The account has `Owner` access to the bucket to be able to upload test
-  results.
-
-* **Firebase Test Lab**
-
-  `Editor` access to the Google Cloud project for debug purposes
-  (`delern-debug`) to run tests in Firebase Test Lab.
-
-* **AppEngine deployment**
-
-  `Editor` access to Google Cloud project for release (`delern-e1b33`) to be
-  able to deploy cronjobs and change traffic split to the newly deployed
-  version.
-
-## Firebase settings and google-services.json
-
-Firebase project settings are located under a small gear in the side panel.
-You have to add "debug" and "instrumented" apps to the Debug project
-(`delern-debug`), and production app into the Release project. The Release
-project must only contain a single SHA-1, the one from the release keystore. The
-SHA-1 can be obtained with
-
-```shell
-$ keytool -exportcert -keystore <keystore path> -list -v
-```
-
-The Debug project "debug" app must contain SHA-1 of every developer's
-`$HOME/.android/debug.keystore` key aliased as `androiddebugkey`. The Debug
-project "instrumented" app must contain the same plus SHA-1 of the key in
-`debug.keystore` used by CI. The password for the debug keystore is `android`.
-
-After all the SHA-1 are set, you can download `google-services.json` and put the
-one from Debug project into `app`, and the one from Release into
-`app/src/release`.
+## Production environment
 
 Firebase functions need access to email account. Email and password can be set
-via Cloud Functions config (also possible to separate debug and release):
+via Cloud Functions config (also possible to separate Debug and Release GCP
+projects):
 
 ```shell
 $ firebase -P project-name functions:config:set \
@@ -107,44 +31,104 @@ Sometimes your account may be locked out if it's being accessed from a very
 remote geographical location. Visit https://g.co/allowaccess to fix it and
 then retry sending email.
 
-## Crashlytics
+## Build
 
-Put `fabric.properties` with Fabric API key configured into `app` subdirectory.
-You can get the API key (not secret key, which isn't used) on the Fabric
-[organization page](https://www.fabric.io/settings/organizations).
+We build on all major operating systems (Linux, OSX, Windows) to make sure that
+developers are free to choose the one they prefer. We deploy only from Linux for
+Android and OSX for iOS, because deploying Android from Windows would be
+redundant.
 
-## CI environment
+Every Pull Request is built before it can be merged. Pull Requests may come from
+external contributors, therefore Build phase does not have access to secret
+keys. All our dependencies are public and pulled from public external resources.
 
-* `ANDROID_KEYSTORE_PASSWORD`, `ANDROID_KEYSTORE_KEY_PASSWORD`
+There are 3 items that stand out (but not considered secret):
 
-  Passwords to access release version of Android keystore.
+ - CodeCov coverage reporting tool;
+ - `google-services.json` and `GoogleService-Info.plist` from the Debug Firebase
+   project are included to make the application build;
+ - `debug.keystore` is included to sign the application for access to the Debug
+   Firebase project.
 
-* `FIREBASE_TOKEN`
+## Deploy
 
-  Obtained via `firebase login:ci` for release (production, non-debug) Firebase
-  project. Used by `firebase deploy` to publish Database Security Rules,
-  website, Cloud Functions. More information on the GitHub page of
-  [Firebase](https://github.com/firebase/firebase-tools#using-with-ci-systems).
+We deploy multiple artifacts to different services, and each of them requires
+a Release build before being deployed.
 
-  TODO(dotdoom): use `GCLOUD_SERVICE_ACCOUNT_DATA` once Firebase CLI completely
-  [supports](https://github.com/firebase/firebase-tools/issues/787) it.
+### Build Android app, publish to Google Play
 
-* `GCLOUD_SERVICE_ACCOUNT_DATA`
+Building Android app for release requires two artifacts:
 
-  GCloud Service Account key for a Google Cloud Service Account in `JSON`
-  format, which can be obtained from Google Cloud Console in IAM section.
+ - `google-services.json` and `GoogleService-Info.plist` from the Release
+   Firebase are checked in at `app/src/release`;
 
-  You can create multiple keys for the same account, in case you need to debug
-  it from your workstation.
+ - upload key to sign the app for access to the Release Firebase project is
+   stored in `ANDROID_KEYSTORE_DATA` secret environment variable
+   (base64-encoded).
 
-* `FASTLANE_USER` and `FASTLANE_PASSWORD`
+A new key can be generated with `keytool`. Use the following argument:
+`-dname 'CN=dasfoo.org, OU=IT, O=DasFoo, L=Zurich, S=ZH, C=CH'`.
 
-  Login credentials to an Apple account that has access to publish to App Store.
-  This account does not have to be a Developer enabled account, although this is
-  recommended. For a Developer account, the password has to come from a custom
-  login, since accessing a Developer account normally requires 2FA.
+Publishing the app to Google Play requires a GCloud (GCP) Service Account.
 
-* `MATCH_GIT_URL`, `MATCH_PASSWORD`
+Accessing Play Developer API requires a special Google Cloud project, see
+[docs](https://developers.google.com/android-publisher/getting_started) for how
+to set it up. The project is called "Google Play Android Developer".
 
-  Password to decrypt keys inside a
-  [match](https://docs.fastlane.tools/actions/match/) Git repository.
+Any service account on GCP can be used to access API, but for simplicity we pick
+an account from the same project. You can pick an existing or create a new one
+on the
+[Service accounts](https://console.cloud.google.com/iam-admin/serviceaccounts)
+page. On the same page, you can create any number of keys anytime for the same
+account, in case you need to debug it from your workstation. One of the keys has
+to be stored in JSON format in `GOOGLE_APPLICATION_CREDENTIALS_DATA` environment
+variable.
+
+This service account has to be given "Release manager" role on the
+"Settings > Users & permissions" page of
+[Google Play Console](https://play.google.com/apps/publish/).
+
+### Deploy AppEngine (for cron jobs)
+
+We reuse the same account as for publishing to Google Play, to deploy AppEngine
+code. To deploy to AppEngine, it has to be given "App Engine Deployer" role on
+the [IAM page](https://console.cloud.google.com/iam-admin/iam) of GCP project(s)
+that we deploy to (Debug and Release).
+
+In addition, for the project that the service accounts belongs to, enable the
+following APIs:
+
+- [Google Service Management API](https://console.developers.google.com/apis/api/servicemanagement.googleapis.com/)
+- [Google App Engine Admin API](https://console.developers.google.com/apis/api/appengine.googleapis.com/)
+
+### Build iOS app and publish to App Store
+
+Building a release version of iOS app requires signing it, similar to how it is
+done for Android. However, the signing mechanism is different. We use
+[match](https://docs.fastlane.tools/actions/match/) to store the keys in a Git
+repository, on Cloud Source Repositories.
+
+We reuse the same account as for publishing to Google Play, to download the
+repository. For that, the account has to be given "Source Repository Reader"
+role at the
+[Repository Permissions](https://source.cloud.google.com/admin/permissions)
+page. The repository may belong to the same Play-enabled GCP project. The Clone
+URL of the repository has to be in `MATCH_GIT_URL` environment variable.
+
+The repository contains encrypted keys, which have to be decrypted with a
+password stored in `MATCH_PASSWORD` environment variable.
+
+One the app is signed, it is published to App Store. We use a separate Apple
+account (which does not have to be a Developer enabled account). The credentials
+to this account are stored in `FASTLANE_USER` and `FASTLANE_PASSWORD`
+environment variables.
+
+### Deploy Website, Security Rules and Cloud Functions
+
+The website is hosted on Firebase, and we use `firebase` command line tool to
+deploy it, along with the rest of Firebase artifacts. Until Service Accounts are
+[supported](https://github.com/firebase/firebase-tools/issues/787) by Firebase
+CLI, we have to generate a token via `firebase login:ci` and store it in
+`FIREBASE_TOKEN` environment variable. See
+[Firebase](https://github.com/firebase/firebase-tools#using-with-ci-systems)
+documentation for up-to-date information.

@@ -55,8 +55,8 @@ install:
   - 'echo [timing: %time%] Firebase dependencies installed'
 
   - 'flutter upgrade ||
-    git clone --quiet --depth 2 --branch %FLUTTER_CHANNEL%
-    %FLUTTER_REPO_URL% %FLUTTER_SDK_ROOT%'
+    git clone --quiet --branch %FLUTTER_CHANNEL% %FLUTTER_REPO_URL%
+    %FLUTTER_SDK_ROOT%'
   - flutter precache
   - 'echo [timing: %time%] Flutter installed'
 

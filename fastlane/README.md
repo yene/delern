@@ -20,6 +20,11 @@ or alternatively using `brew cask install fastlane`
 fastlane ensure_clean_git
 ```
 
+### update
+```
+fastlane update
+```
+Update all dependencies in lockfiles (bundler, npm, Flutter)
 
 ----
 

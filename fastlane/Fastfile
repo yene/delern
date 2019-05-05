@@ -10,4 +10,22 @@ lane :ensure_clean_git do
   ensure_git_status_clean(show_diff: true)
 end
 
+desc 'Update all dependencies in lockfiles (bundler, npm, Flutter)'
+lane :update do
+  Dir.chdir('..') do
+    sh %w(bundle update)
+    Dir.chdir('flutter') do
+      sh %w(flutter upgrade)
+      sh %w(flutter packages upgrade)
+      Dir.chdir('ios') { sh %w(pod update) } if RUBY_PLATFORM.include? 'darwin'
+    end
+    Dir.chdir('firebase') do
+      sh %w(npm update)
+      Dir.chdir('functions') do
+        sh %w(npm update)
+      end
+    end
+  end
+end
+
 # vim: ft=ruby

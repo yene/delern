@@ -6,19 +6,23 @@ env:
   FLUTTER_SDK_ROOT: "${HOME}/flutter"
   PATH: "${FLUTTER_SDK_ROOT}/bin:${PATH}"
 
+regular_task_template: &REGULAR_TASK_TEMPLATE
+  only_if: $CIRRUS_BRANCH == 'master' || $CIRRUS_TAG != '' || $CIRRUS_PR != ''
+
 task:
-  name: firebase (linux)
+  << : *REGULAR_TASK_TEMPLATE
+  name: firebase
   container:
-    image: node:8
-  node_modules_cache:
+    image: dasfoo/dev:latest
+  node_modules_cache: &NODE_MODULES_CACHE
     folder: firebase/node_modules
     fingerprint_script: cat firebase/package-lock.json
     populate_script: cd firebase && npm ci
-  functions_node_modules_cache:
+  functions_node_modules_cache: &FUNCTIONS_NODE_MODULES_CACHE
     folder: firebase/functions/node_modules
     fingerprint_script: cat firebase/functions/package-lock.json
     populate_script: cd firebase/functions && npm ci
-  bower_components_cache:
+  bower_components_cache: &BOWER_COMPONENTS_CACHE
     folder: firebase/www/bower_components
     # NOTE: this file contains floating versions and is not a good SoT!
     fingerprint_script: cat firebase/www/bower.json
@@ -32,15 +36,8 @@ task:
   - ( cd firebase && npm run build )
   - ( cd firebase/functions && npm run build )
 
-task:
-  name: flutter (linux)
-  container:
-    image: dasfoo/dev:latest
-  env:
-    ANDROID_SDK_ROOT: "${HOME}/android"
-    # For Gradle plugin <3.4: https://issuetracker.google.com/issues/125138969.
-    ANDROID_HOME: "${ANDROID_SDK_ROOT}"
-  flutter_cache: &FLUTTER_CACHE
+flutter_and_fastlane_task_template: &FLUTTER_AND_FASTLANE_TASK_TEMPLATE
+  flutter_cache:
     folder: $FLUTTER_SDK_ROOT
     fingerprint_script:
     - uname -ms
@@ -48,14 +45,13 @@ task:
     populate_script:
     - >
       flutter upgrade ||
-      git clone --quiet --depth 2 --branch "${FLUTTER_CHANNEL?}"
+      git clone --quiet --branch "${FLUTTER_CHANNEL?}"
       https://github.com/flutter/flutter.git "${FLUTTER_SDK_ROOT?}"
     - flutter precache
     # Remove symlinks that point to non-existing files (usually OSX tests),
     # because Cirrus CI cache chokes up on uploading them.
     - find "${FLUTTER_SDK_ROOT?}" -type l -exec test ! -e {} \; -print -delete
-  test_script: ( cd flutter && flutter test --coverage )
-  bundler_cache: &BUNDLER_CACHE
+  bundler_cache:
     folder: vendor/bundle
     fingerprint_script:
     - uname -ms
@@ -63,7 +59,22 @@ task:
   # This script not only updates dependencies, but also configures bundler where
   # to search for them (via "--deployment" flag, i.e. "vendor/bundle").
   install_fastlane_script: bundle install --quiet --clean --deployment
+
+task:
+  << : *REGULAR_TASK_TEMPLATE
+  name: flutter (linux)
+  container:
+    image: dasfoo/dev:latest
+  env: &LINUX_ENV
+    ANDROID_SDK_ROOT: "${HOME}/android"
+    # For Gradle plugin <3.4: https://issuetracker.google.com/issues/125138969.
+    ANDROID_HOME: "${ANDROID_SDK_ROOT}"
+  << : *FLUTTER_AND_FASTLANE_TASK_TEMPLATE
   generate_and_lint_script: ( cd flutter && bundle exec fastlane build )
+  test_script:
+  - ( cd flutter && flutter test --coverage )
+  # Broken until https://github.com/codecov/codecov-bash/pull/127 is merged.
+  - bash <(curl -s https://codecov.io/bash)
   gradle_cache:
     folder: ~/.gradle/caches
     fingerprint_script:
@@ -89,20 +100,114 @@ task:
   - rm -rf ~/.gradle/caches/transforms-1 ~/.gradle/caches/journal-1
 
 task:
+  << : *REGULAR_TASK_TEMPLATE
   name: flutter (osx)
-  osx_instance:
+  osx_instance: &OSX_INSTANCE
     image: mojave-xcode-10.2
-  bundler_cache:
-    << : *BUNDLER_CACHE
-  install_fastlane_script: bundle install --quiet --clean --deployment
-  flutter_cache:
-    << : *FLUTTER_CACHE
+  << : *FLUTTER_AND_FASTLANE_TASK_TEMPLATE
   # TODO(dotdoom): do not lint on OSX, it is already done on Linux.
   generate_and_lint_script: ( cd flutter && bundle exec fastlane build )
   install_debug_keys_script: tools/ci.sh install_debug_keys
-  # TODO(dotdoom): https://github.com/CocoaPods/CocoaPods/issues/8761
-  pod_specs_repo_update_script: pod setup
+  # Keep repo up-to-date: https://github.com/CocoaPods/CocoaPods/issues/8761.
+  pod_specs_repo_update_script: pod repo update
   build_script:
   - git fetch --tags --quiet
   - ( cd flutter && bundle exec fastlane ios build )
   ensure_clean_git_script: bundle exec fastlane ensure_clean_git
+
+deploy_task_template: &DEPLOY_TASK_TEMPLATE
+  only_if: $CIRRUS_BRANCH == 'master' || $CIRRUS_TAG =~ '^[0-9]+[.][0-9]+$'
+
+gcloud_env_template: &GCLOUD_ENV_TEMPLATE
+  CLOUDSDK_CORE_DISABLE_PROMPTS: 1
+  # This environment variable is read by gcloud CLI to e.g. deploy AppEngine.
+  GOOGLE_APPLICATION_CREDENTIALS: $HOME/gcloud-service-account.json
+  GOOGLE_APPLICATION_CREDENTIALS_DATA: "ENCRYPTED\
+    [cb7b54e2c45ee30b31aa25fc72b9c4ba0466d6fb4f87c0aa\
+    13088ca6627460186af52248c2d6287f9be05b6c7889a4b5]"
+
+task:
+  << : *DEPLOY_TASK_TEMPLATE
+  name: deploy (firebase)
+  depends_on: firebase
+  container:
+    image: dasfoo/dev:latest
+  env:
+    FIREBASE_TOKEN: "ENCRYPTED\
+      [206e15874255b9352f2aff03986bcb3aa8017a2cd400f6e8\
+      3589438802735f5377cc732c2e66292abcca63f23fe3d6cf]"
+    << : *GCLOUD_ENV_TEMPLATE
+  node_modules_cache:
+    << : *NODE_MODULES_CACHE
+  functions_node_modules_cache:
+    << : *FUNCTIONS_NODE_MODULES_CACHE
+  bower_components_cache:
+    << : *BOWER_COMPONENTS_CACHE
+  configure_gcloud_script: &CONFIGURE_GCLOUD_SCRIPT
+  - echo "${GOOGLE_APPLICATION_CREDENTIALS_DATA?}" >
+    "${GOOGLE_APPLICATION_CREDENTIALS?}"
+  - gcloud auth activate-service-account
+    --key-file "${GOOGLE_APPLICATION_CREDENTIALS?}"
+  deploy_script:
+  - ( cd firebase && PROJECT=delern-debug npm run deploy )
+  - ( cd firebase && PROJECT=delern-e1b33 npm run deploy )
+
+task:
+  << : *DEPLOY_TASK_TEMPLATE
+  name: deploy (Play Store)
+  depends_on: flutter (linux)
+  container:
+    image: dasfoo/dev:latest
+  env:
+    << : *LINUX_ENV
+    << : *GCLOUD_ENV_TEMPLATE
+    # This environment variable is read by Fastlane Supply, which uses the same
+    # account we use to access GCloud, to upload the app to Play Store.
+    SUPPLY_JSON_KEY: $GOOGLE_APPLICATION_CREDENTIALS
+    ANDROID_KEYSTORE_PATH: $HOME/release.keystore
+    ANDROID_KEYSTORE_DATA: "ENCRYPTED\
+      [5b5017f1721b6ac5f3027aea02c84594ef4f8413bb9b46a2\
+      9bb117b7d8b2fa10a6152bcf0d84bb5bae66f05960d1f9e6]"
+  << : *FLUTTER_AND_FASTLANE_TASK_TEMPLATE
+  configure_gcloud_script: *CONFIGURE_GCLOUD_SCRIPT
+  publish_script:
+  - git fetch --tags --quiet
+  - echo "${ANDROID_KEYSTORE_DATA?}" | base64 -d > "${ANDROID_KEYSTORE_PATH?}"
+  - ( cd flutter && bundle exec fastlane android publish )
+
+task:
+  << : *DEPLOY_TASK_TEMPLATE
+  name: deploy (App Store)
+  depends_on: flutter (osx)
+  osx_instance:
+    << : *OSX_INSTANCE
+  env:
+    << : *GCLOUD_ENV_TEMPLATE
+    # Task-specific env definitions override root-level env.
+    PATH: "${HOME}/google-cloud-sdk/bin:${FLUTTER_SDK_ROOT}/bin:${PATH}"
+    FASTLANE_USER: "ENCRYPTED\
+      [d119882919ae56899d9383eb6cbf1c88d33ad833ecd0c785\
+      16ec12f40f76155e6de77a29d51e653a9fd6c5088ab92853]"
+    FASTLANE_PASSWORD: "ENCRYPTED\
+      [436aaa528374bad76f3a864134d486ca635e6adfc0048ae8\
+      412eb17a7c5c33297a6d5f1e03729badbd2be6d4da30d34c]"
+    MATCH_PASSWORD: "ENCRYPTED\
+      [cd6200a4c7807169411fa73582001e2feea3ce3a1ad95277\
+      b68c248a72538992027a5fb59d80884bdd7bd9d87091a2f7]"
+    MATCH_GIT_URL: "ENCRYPTED\
+      [bcd44b07e11df836376f23b5f6e527c7b6e554a321050c1a\
+      bc7655d8560e1f37d3d27df5d3dcba00dd73ac40148c247b]"
+  << : *FLUTTER_AND_FASTLANE_TASK_TEMPLATE
+  install_gcloud_script:
+  - >
+    curl -sSL https://sdk.cloud.google.com |
+    bash -s -- --disable-prompts --install-dir="${HOME?}"
+  - >
+    git config --global credential.https://source.developers.google.com.helper
+    gcloud.sh
+  configure_gcloud_script: *CONFIGURE_GCLOUD_SCRIPT
+  # Keep repo up-to-date: https://github.com/CocoaPods/CocoaPods/issues/8761.
+  pod_specs_repo_update_script: pod repo update
+  publish_script:
+  - git fetch --tags --quiet
+  - ( cd flutter && bundle exec fastlane ios publish )

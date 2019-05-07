@@ -41,11 +41,11 @@ flutter_and_fastlane_task_template: &FLUTTER_AND_FASTLANE_TASK_TEMPLATE
     folder: $FLUTTER_SDK_ROOT
     fingerprint_script:
     - uname -ms
+    # TODO(dotdoom): do "flutter upgrade" instead once symlinks work:
+    #                https://github.com/cirruslabs/cirrus-ci-docs/issues/288.
     - git ls-remote https://github.com/flutter/flutter.git "${FLUTTER_CHANNEL?}"
     populate_script:
-    - >
-      flutter upgrade ||
-      git clone --quiet --branch "${FLUTTER_CHANNEL?}"
+    - git clone --quiet --branch "${FLUTTER_CHANNEL?}"
       https://github.com/flutter/flutter.git "${FLUTTER_SDK_ROOT?}"
     - flutter precache
     # Remove symlinks that point to non-existing files (usually OSX tests),

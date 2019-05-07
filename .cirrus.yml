@@ -155,7 +155,10 @@ task:
 task:
   << : *DEPLOY_TASK_TEMPLATE
   name: deploy (Play Store)
-  depends_on: flutter (linux)
+  depends_on:
+  # Requires deployment of Security Rules etc.
+  - deploy (firebase)
+  - flutter (linux)
   container:
     image: dasfoo/dev:latest
   env:
@@ -178,7 +181,9 @@ task:
 task:
   << : *DEPLOY_TASK_TEMPLATE
   name: deploy (App Store)
-  depends_on: flutter (osx)
+  depends_on:
+  - deploy (firebase)
+  - flutter (osx)
   osx_instance:
     << : *OSX_INSTANCE
   env:

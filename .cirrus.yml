@@ -98,6 +98,12 @@ task:
   - find ~/.gradle/caches/ -name "*.lock" -type f -delete
   # Some additional files.
   - rm -rf ~/.gradle/caches/transforms-1 ~/.gradle/caches/journal-1
+  always:
+    move_artifacts_script:
+    - mv flutter/build/app/outputs/apk/debug/app-debug.apk
+      "${CIRRUS_REPO_NAME}.apk"
+    apk_artifacts:
+      path: ${CIRRUS_REPO_NAME}.apk
 
 task:
   << : *REGULAR_TASK_TEMPLATE
@@ -114,6 +120,11 @@ task:
   - git fetch --tags --quiet
   - ( cd flutter && bundle exec fastlane ios build )
   ensure_clean_git_script: bundle exec fastlane ensure_clean_git
+  always:
+    move_artifacts_script:
+    - mv flutter/build/ios/iphoneos/Runner.app "${CIRRUS_REPO_NAME}.app"
+    app_artifacts:
+      path: ${CIRRUS_REPO_NAME}.app/**/*
 
 deploy_task_template: &DEPLOY_TASK_TEMPLATE
   only_if: $CIRRUS_BRANCH == 'master' || $CIRRUS_TAG =~ '^[0-9]+[.][0-9]+$'
@@ -177,6 +188,12 @@ task:
   - git fetch --tags --quiet
   - echo "${ANDROID_KEYSTORE_DATA?}" | base64 -d > "${ANDROID_KEYSTORE_PATH?}"
   - ( cd flutter && bundle exec fastlane android publish )
+  always:
+    move_artifacts_script:
+    - mv flutter/build/app/outputs/apk/release/app-release.apk
+      "${CIRRUS_REPO_NAME}.apk"
+    apk_artifacts:
+      path: "${CIRRUS_REPO_NAME}.apk"
 
 task:
   << : *DEPLOY_TASK_TEMPLATE
@@ -216,3 +233,8 @@ task:
   publish_script:
   - git fetch --tags --quiet
   - ( cd flutter && bundle exec fastlane ios publish )
+  always:
+    move_artifacts_script:
+    - mv flutter/build/Runner.ipa "${CIRRUS_REPO_NAME}.ipa"
+    ipa_artifacts:
+      path: ${CIRRUS_REPO_NAME}.ipa

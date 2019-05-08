@@ -41,11 +41,11 @@ flutter_and_fastlane_task_template: &FLUTTER_AND_FASTLANE_TASK_TEMPLATE
     folder: $FLUTTER_SDK_ROOT
     fingerprint_script:
     - uname -ms
+    # TODO(dotdoom): do "flutter upgrade" instead once symlinks work:
+    #                https://github.com/cirruslabs/cirrus-ci-docs/issues/288.
     - git ls-remote https://github.com/flutter/flutter.git "${FLUTTER_CHANNEL?}"
     populate_script:
-    - >
-      flutter upgrade ||
-      git clone --quiet --branch "${FLUTTER_CHANNEL?}"
+    - git clone --quiet --branch "${FLUTTER_CHANNEL?}"
       https://github.com/flutter/flutter.git "${FLUTTER_SDK_ROOT?}"
     - flutter precache
     # Remove symlinks that point to non-existing files (usually OSX tests),
@@ -98,6 +98,12 @@ task:
   - find ~/.gradle/caches/ -name "*.lock" -type f -delete
   # Some additional files.
   - rm -rf ~/.gradle/caches/transforms-1 ~/.gradle/caches/journal-1
+  always:
+    move_artifacts_script:
+    - mv flutter/build/app/outputs/apk/debug/app-debug.apk
+      "${CIRRUS_REPO_NAME}.apk"
+    apk_artifacts:
+      path: ${CIRRUS_REPO_NAME}.apk
 
 task:
   << : *REGULAR_TASK_TEMPLATE
@@ -114,6 +120,11 @@ task:
   - git fetch --tags --quiet
   - ( cd flutter && bundle exec fastlane ios build )
   ensure_clean_git_script: bundle exec fastlane ensure_clean_git
+  always:
+    move_artifacts_script:
+    - mv flutter/build/ios/iphoneos/Runner.app "${CIRRUS_REPO_NAME}.app"
+    app_artifacts:
+      path: ${CIRRUS_REPO_NAME}.app/**/*
 
 deploy_task_template: &DEPLOY_TASK_TEMPLATE
   only_if: $CIRRUS_BRANCH == 'master' || $CIRRUS_TAG =~ '^[0-9]+[.][0-9]+$'
@@ -155,7 +166,10 @@ task:
 task:
   << : *DEPLOY_TASK_TEMPLATE
   name: deploy (Play Store)
-  depends_on: flutter (linux)
+  depends_on:
+  # Requires deployment of Security Rules etc.
+  - deploy (firebase)
+  - flutter (linux)
   container:
     image: dasfoo/dev:latest
   env:
@@ -174,11 +188,19 @@ task:
   - git fetch --tags --quiet
   - echo "${ANDROID_KEYSTORE_DATA?}" | base64 -d > "${ANDROID_KEYSTORE_PATH?}"
   - ( cd flutter && bundle exec fastlane android publish )
+  always:
+    move_artifacts_script:
+    - mv flutter/build/app/outputs/apk/release/app-release.apk
+      "${CIRRUS_REPO_NAME}.apk"
+    apk_artifacts:
+      path: "${CIRRUS_REPO_NAME}.apk"
 
 task:
   << : *DEPLOY_TASK_TEMPLATE
   name: deploy (App Store)
-  depends_on: flutter (osx)
+  depends_on:
+  - deploy (firebase)
+  - flutter (osx)
   osx_instance:
     << : *OSX_INSTANCE
   env:
@@ -211,3 +233,8 @@ task:
   publish_script:
   - git fetch --tags --quiet
   - ( cd flutter && bundle exec fastlane ios publish )
+  always:
+    move_artifacts_script:
+    - mv flutter/build/Runner.ipa "${CIRRUS_REPO_NAME}.ipa"
+    ipa_artifacts:
+      path: ${CIRRUS_REPO_NAME}.ipa

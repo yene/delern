@@ -7,7 +7,7 @@ version: "#{build}"
 
 environment:
   FLUTTER_SDK_ROOT: C:\flutter
-  PATH: 'C:\Ruby22-x64\bin;%FLUTTER_SDK_ROOT%\bin;%PATH%'
+  PATH: 'C:\Ruby23-x64\bin;%FLUTTER_SDK_ROOT%\bin;%PATH%'
   ANDROID_SDK_ROOT: C:\Android\Sdk
   ANDROID_HOME: '%ANDROID_SDK_ROOT%'
   GRADLE_OPTS: -Dorg.gradle.daemon=false

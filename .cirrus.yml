@@ -41,8 +41,10 @@ flutter_and_fastlane_task_template: &FLUTTER_AND_FASTLANE_TASK_TEMPLATE
     folder: $FLUTTER_SDK_ROOT
     fingerprint_script:
     - uname -ms
-    # TODO(dotdoom): do "flutter upgrade" instead once symlinks work:
-    #                https://github.com/cirruslabs/cirrus-ci-docs/issues/288.
+    # The reason we don't just have a subsequent script with a "flutter upgrade"
+    # is that Git would update some of its files in .git directory when fetching
+    # remote repository, even if the changes are made to a different remote
+    # branch.
     - git ls-remote https://github.com/flutter/flutter.git "${FLUTTER_CHANNEL?}"
     populate_script:
     - git clone --quiet --branch "${FLUTTER_CHANNEL?}"

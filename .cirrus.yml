@@ -50,9 +50,6 @@ flutter_and_fastlane_task_template: &FLUTTER_AND_FASTLANE_TASK_TEMPLATE
     - git clone --quiet --branch "${FLUTTER_CHANNEL?}"
       https://github.com/flutter/flutter.git "${FLUTTER_SDK_ROOT?}"
     - flutter precache
-    # Remove symlinks that point to non-existing files (usually OSX tests),
-    # because Cirrus CI cache chokes up on uploading them.
-    - find "${FLUTTER_SDK_ROOT?}" -type l -exec test ! -e {} \; -print -delete
   bundler_cache:
     folder: vendor/bundle
     fingerprint_script:

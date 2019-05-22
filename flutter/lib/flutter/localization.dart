@@ -214,7 +214,6 @@ App Store: https://itunes.apple.com/us/app/delern/id1435734822?ls=1&mt=8
 After install, follow Delern latest news on:
 Facebook: https://fb.me/das.delern
 VK: https://vk.com/delern
-Google+: https://plus.google.com/communities/104603840044649051798
 Twitter: https://twitter.com/dasdelern''',
         name: 'inviteToAppMessage',
         desc: 'Invite to the App message',
@@ -352,7 +351,6 @@ Follow latest news on:
        
 - [Facebook](https://fb.me/das.delern) 
 - [Twitter](https://twitter.com/dasdelern)
-- [Google+](https://plus.google.com/communities/104603840044649051798)
 - [VK](https://vk.com/delern)
        
 To see the source code for this app, please visit the [Delern GitHub repo](https://github.com/dasfoo/delern).

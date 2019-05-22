@@ -352,7 +352,6 @@ Follow latest news on:
        
 - [Facebook](https://fb.me/das.delern) 
 - [Twitter](https://twitter.com/dasdelern)
-- [Google+](https://plus.google.com/communities/104603840044649051798)
 - [VK](https://vk.com/delern)
        
 To see the source code for this app, please visit the [Delern GitHub repo](https://github.com/dasfoo/delern).

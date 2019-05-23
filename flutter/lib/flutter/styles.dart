@@ -1,6 +1,9 @@
 import 'package:delern_flutter/views/helpers/card_background_specifier.dart';
 import 'package:flutter/material.dart';
 
+const kPrimarySwatch = Colors.green;
+const kAccentColor = Colors.redAccent;
+
 final Map<Gender, Color> cardBackgroundColors = {
   Gender.noGender: Colors.greenAccent[100],
   Gender.masculine: Colors.lightBlue[200],

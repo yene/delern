@@ -23,8 +23,8 @@ class UserMessages {
 
   // TODO(ksheremet): Add user message for Snackbar and error message for
   // reporting.
-  // In navigation drawer 'Contact us' show user message to user and send error
-  // message to Sentry.
+  // In navigation drawer 'Contact us' show user message to user and report
+  // error.
   static void showMessage(ScaffoldState scaffoldState, String message) =>
       scaffoldState.showSnackBar(SnackBar(
         content: Text(message),

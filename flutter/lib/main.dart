@@ -49,7 +49,8 @@ class App extends StatelessWidget {
   }
 }
 
-void main() {
+Future<void> main() async {
+  await error_reporting.initialize();
   FlutterError.onError = (details) async {
     FlutterError.dumpErrorToConsole(details);
     await error_reporting.report(

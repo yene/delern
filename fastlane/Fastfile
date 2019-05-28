@@ -42,7 +42,9 @@ lane :update do
     Dir.chdir('flutter') do
       sh %w(flutter upgrade)
       sh %w(flutter packages upgrade)
-      Dir.chdir('ios') { sh %w(pod update) } if RUBY_PLATFORM.include? 'darwin'
+      if RUBY_PLATFORM.include? 'darwin'
+        Dir.chdir('ios') { sh %w(bundle exec pod update) }
+      end
     end
     Dir.chdir('firebase') do
       sh %w(npm update)

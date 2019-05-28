@@ -44,6 +44,7 @@ class App extends StatelessWidget {
       theme: ThemeData(
           primarySwatch: app_styles.kPrimarySwatch,
           accentColor: app_styles.kAccentColor),
+      darkTheme: ThemeData.dark(),
       home: DecksList(title: title),
     );
   }

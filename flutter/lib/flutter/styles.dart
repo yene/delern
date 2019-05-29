@@ -16,18 +16,15 @@ final Color signInBackgroundColor = Colors.greenAccent[100];
 const TextStyle primaryText = TextStyle(
   fontSize: 19,
   fontWeight: FontWeight.w400,
-  color: Colors.black,
 );
 
 const TextStyle secondaryText = TextStyle(
   fontSize: 16,
   fontWeight: FontWeight.w400,
-  color: Colors.black87,
 );
 
-final TextStyle navigationDrawerGroupText = TextStyle(
+const TextStyle navigationDrawerGroupText = TextStyle(
   fontWeight: FontWeight.w600,
-  color: Colors.grey[600],
 );
 
 const TextStyle searchBarText = TextStyle(

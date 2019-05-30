@@ -17,6 +17,7 @@ import 'package:delern_flutter/views/helpers/save_updates_dialog.dart';
 import 'package:delern_flutter/views/helpers/send_invite.dart';
 import 'package:delern_flutter/views/helpers/slow_operation_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:pedantic/pedantic.dart';
 
 class DeckSharing extends StatefulWidget {
   final DeckModel _deck;
@@ -109,11 +110,12 @@ class _DeckSharingState extends State<DeckSharing> {
       UserMessages.showMessage(Scaffold.of(context),
           AppLocalizations.of(context).offlineUserMessage);
     } on HttpException catch (e, stackTrace) {
-      error_reporting.report('share deck', e, stackTrace);
+      unawaited(error_reporting.report('share deck', e, stackTrace));
       UserMessages.showMessage(Scaffold.of(context),
           AppLocalizations.of(context).serverUnavailableUserMessage);
     } catch (e, stackTrace) {
-      UserMessages.showError(() => Scaffold.of(context), e, stackTrace);
+      unawaited(
+          UserMessages.showError(() => Scaffold.of(context), e, stackTrace));
     }
   }
 

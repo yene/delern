@@ -9,6 +9,7 @@ import 'package:delern_flutter/views/helpers/progress_indicator_widget.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:pedantic/pedantic.dart';
 
 final _firebaseMessaging = FirebaseMessaging();
 
@@ -36,9 +37,8 @@ class _SignInWidgetState extends State<SignInWidget> {
       if (Auth.instance.currentUser != null) {
         error_reporting.uid = Auth.instance.currentUser.uid;
 
-        FirebaseAnalytics()
-          ..setUserId(Auth.instance.currentUser.uid)
-          ..logLogin();
+        unawaited(FirebaseAnalytics().setUserId(Auth.instance.currentUser.uid));
+        unawaited(FirebaseAnalytics().logLogin());
 
         _firebaseMessaging.onTokenRefresh.listen((token) async {
           final fcm = FCM(uid: Auth.instance.currentUser.uid)
@@ -47,7 +47,7 @@ class _SignInWidgetState extends State<SignInWidget> {
             ..key = token;
 
           print('Registering for FCM as ${fcm.name} in ${fcm.language}');
-          (Transaction()..save(fcm)).commit();
+          unawaited((Transaction()..save(fcm)).commit());
         });
 
         // TODO(dotdoom): register onMessage to show a snack bar with

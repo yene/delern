@@ -7,6 +7,7 @@ import 'package:delern_flutter/view_models/decks_list_bloc.dart';
 import 'package:delern_flutter/views/card_create_update/card_create_update.dart';
 import 'package:delern_flutter/views/helpers/sign_in_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:pedantic/pedantic.dart';
 
 class CreateDeckWidget extends StatelessWidget {
   const CreateDeckWidget({Key key}) : super(key: key);
@@ -29,16 +30,17 @@ class CreateDeckWidget extends StatelessWidget {
               await DecksListBloc.createDeck(
                   newDeck, currentUser.humanFriendlyIdentifier);
             } catch (e, stackTrace) {
-              UserMessages.showError(() => Scaffold.of(context), e, stackTrace);
+              unawaited(UserMessages.showError(
+                  () => Scaffold.of(context), e, stackTrace));
               return;
             }
-            Navigator.push(
+            unawaited(Navigator.push(
                 context,
                 MaterialPageRoute(
                     settings: const RouteSettings(name: '/cards/new'),
                     builder: (context) => CardCreateUpdate(
                         card: card_model.CardModel(deckKey: newDeck.key),
-                        deck: newDeck)));
+                        deck: newDeck))));
           }
         },
       );

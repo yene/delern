@@ -24,9 +24,6 @@ linter:
     # "Correcting" input parameters is too useful to let go of.
     parameter_assignments: false
 
-    # TODO(dotdoom): use pedantic to annotate intentionally unawaited Futures.
-    unawaited_futures: false
-
     # TODO(dotdoom): add messages to asserts.
     prefer_asserts_with_message: false
 
@@ -150,6 +147,7 @@ linter:
     test_types_in_equals: true
     throw_in_finally: true
     type_init_formals: true
+    unawaited_futures: true
     unnecessary_await_in_return: true
     unnecessary_brace_in_string_interps: true
     unnecessary_const: true

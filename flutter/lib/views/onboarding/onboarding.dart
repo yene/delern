@@ -4,6 +4,7 @@ import 'package:delern_flutter/views/helpers/progress_indicator_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:intro_views_flutter/Models/page_view_model.dart';
 import 'package:intro_views_flutter/intro_views_flutter.dart';
+import 'package:pedantic/pedantic.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Onboarding extends StatefulWidget {
@@ -31,7 +32,7 @@ class _OnboardingState extends State<Onboarding> {
             return widget.afterOnboardingBuilder();
           } else {
             return _OnboardingWidget(callback: () async {
-              (await _prefs).setBool(_introPrefKey, true);
+              unawaited((await _prefs).setBool(_introPrefKey, true));
               setState(() {
                 _isIntroShown = true;
               });

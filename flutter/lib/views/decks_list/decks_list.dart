@@ -13,6 +13,7 @@ import 'package:delern_flutter/views/helpers/observing_animated_list_widget.dart
 import 'package:delern_flutter/views/helpers/search_bar_widget.dart';
 import 'package:delern_flutter/views/helpers/sign_in_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:pedantic/pedantic.dart';
 
 class DecksList extends StatefulWidget {
   final String title;
@@ -187,12 +188,12 @@ class DeckListItemWidget extends StatelessWidget {
                 ));
             if (anyCardsShown == false) {
               // If deck is empty, open a screen with adding cards
-              Navigator.push(
+              unawaited(Navigator.push(
                   context,
                   MaterialPageRoute(
                       settings: const RouteSettings(name: '/cards/new'),
                       builder: (context) => CardCreateUpdate(
-                          card: CardModel(deckKey: deck.key), deck: deck)));
+                          card: CardModel(deckKey: deck.key), deck: deck))));
             }
           },
           child: Container(

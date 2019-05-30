@@ -12,6 +12,7 @@ import 'package:delern_flutter/models/deck_model.dart';
 import 'package:delern_flutter/remote/error_reporting.dart' as error_reporting;
 import 'package:firebase_database/firebase_database.dart';
 import 'package:meta/meta.dart';
+import 'package:pedantic/pedantic.dart';
 
 @immutable
 class CardAndScheduledCard {
@@ -140,7 +141,7 @@ class ScheduledCardModel implements Model {
           // card.key is used within ScheduledCard and must be set.
           card.key = latestScheduledCard.key;
           print('Removing dangling ScheduledCard ${scheduledCard.key}');
-          (Transaction()..delete(scheduledCard)).commit();
+          unawaited((Transaction()..delete(scheduledCard)).commit());
           return;
         }
 

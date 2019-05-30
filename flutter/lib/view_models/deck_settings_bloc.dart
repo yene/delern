@@ -10,6 +10,7 @@ import 'package:delern_flutter/remote/analytics.dart';
 import 'package:delern_flutter/remote/error_reporting.dart' as error_reporting;
 import 'package:delern_flutter/view_models/base/screen_bloc.dart';
 import 'package:meta/meta.dart';
+import 'package:pedantic/pedantic.dart';
 
 class DeckSettingsBloc extends ScreenBloc {
   final DeckModel _deck;
@@ -46,7 +47,7 @@ class DeckSettingsBloc extends ScreenBloc {
   Sink<bool> get onMarkdown => _onMarkdownController.sink;
 
   Future<void> _delete() async {
-    logDeckDelete(_deck.key);
+    unawaited(logDeckDelete(_deck.key));
     final t = Transaction()..delete(_deck);
     final card = CardModel(deckKey: _deck.key);
     if (_deck.access == AccessType.owner) {
@@ -86,7 +87,7 @@ class DeckSettingsBloc extends ScreenBloc {
       await _save();
       return true;
     } catch (e, stackTrace) {
-      error_reporting.report('updateDeck', e, stackTrace);
+      unawaited(error_reporting.report('updateDeck', e, stackTrace));
       notifyErrorOccurred(e);
     }
     return false;
@@ -98,7 +99,7 @@ class DeckSettingsBloc extends ScreenBloc {
         await _delete();
         notifyPop();
       } catch (e, stackTrace) {
-        error_reporting.report('deleteDeck', e, stackTrace);
+        unawaited(error_reporting.report('deleteDeck', e, stackTrace));
         notifyErrorOccurred(e);
       }
     });

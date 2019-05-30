@@ -80,6 +80,6 @@ void main() {
     expect(data[1], 1);
     expect(data[2], 2);
 
-    subscription.cancel();
+    await subscription.cancel();
   });
 }

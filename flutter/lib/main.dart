@@ -13,6 +13,7 @@ import 'package:firebase_analytics/observer.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:pedantic/pedantic.dart';
 
 class App extends StatelessWidget {
   static final _analyticsNavigatorObserver =
@@ -73,12 +74,12 @@ Future<void> main() async {
       errorAndStacktrace.last,
     );
   }).sendPort);
-  runZoned<Future>(() async {
-    FirebaseDatabase.instance.setPersistenceEnabled(true);
+  unawaited(runZoned<Future>(() async {
+    unawaited(FirebaseDatabase.instance.setPersistenceEnabled(true));
     Transaction.subscribeToOnlineStatus();
-    FirebaseAnalytics().logAppOpen();
+    unawaited(FirebaseAnalytics().logAppOpen());
     runApp(App());
   }, onError: (error, stackTrace) async {
     await error_reporting.report('Zone', error, stackTrace);
-  });
+  }));
 }

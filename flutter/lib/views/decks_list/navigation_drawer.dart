@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:delern_flutter/flutter/localization.dart';
+import 'package:delern_flutter/flutter/localization.dart' as localizations;
 import 'package:delern_flutter/flutter/styles.dart' as app_styles;
 import 'package:delern_flutter/remote/analytics.dart';
 import 'package:delern_flutter/remote/auth.dart';
@@ -35,13 +35,13 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
     final list = <Widget>[
       ListTile(
         title: Text(
-          AppLocalizations.of(context).navigationDrawerCommunicateGroup,
+          localizations.of(context).navigationDrawerCommunicateGroup,
           style: app_styles.navigationDrawerGroupText,
         ),
       ),
       ListTile(
         leading: const Icon(Icons.contact_mail),
-        title: Text(AppLocalizations.of(context).navigationDrawerInviteFriends),
+        title: Text(localizations.of(context).navigationDrawerInviteFriends),
         onTap: () {
           sendInvite(context);
           Navigator.pop(context);
@@ -49,7 +49,7 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
       ),
       ListTile(
         leading: const Icon(Icons.live_help),
-        title: Text(AppLocalizations.of(context).navigationDrawerContactUs),
+        title: Text(localizations.of(context).navigationDrawerContactUs),
         onTap: () async {
           Navigator.pop(context);
           await launchEmail(context);
@@ -57,8 +57,8 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
       ),
       ListTile(
         leading: const Icon(Icons.developer_board),
-        title: Text(
-            AppLocalizations.of(context).navigationDrawerSupportDevelopment),
+        title:
+            Text(localizations.of(context).navigationDrawerSupportDevelopment),
         onTap: () {
           Navigator.pop(context);
           Navigator.push(
@@ -71,7 +71,7 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
       const Divider(height: 1),
       AboutListTile(
         icon: const Icon(Icons.perm_device_information),
-        child: Text(AppLocalizations.of(context).navigationDrawerAbout),
+        child: Text(localizations.of(context).navigationDrawerAbout),
         applicationIcon: Image.asset('images/ic_launcher.png'),
         applicationVersion: versionCode,
         applicationLegalese: 'GNU General Public License v3.0',
@@ -81,8 +81,8 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
     final signInOutWidget = ListTile(
       leading: const Icon(Icons.perm_identity),
       title: Text(user.isAnonymous
-          ? AppLocalizations.of(context).navigationDrawerSignIn
-          : AppLocalizations.of(context).navigationDrawerSignOut),
+          ? localizations.of(context).navigationDrawerSignIn
+          : localizations.of(context).navigationDrawerSignOut),
       onTap: () {
         if (user.isAnonymous) {
           unawaited(_promoteAnonymous(context));
@@ -107,8 +107,7 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
   Widget build(BuildContext context) {
     final user = CurrentUserWidget.of(context).user;
 
-    final accountName =
-        user.displayName ?? AppLocalizations.of(context).anonymous;
+    final accountName = user.displayName ?? localizations.of(context).anonymous;
 
     return Drawer(
       child: ListView(
@@ -139,8 +138,8 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
       unawaited(logPromoteAnonymousFail());
       final signIn = await showSaveUpdatesDialog(
           context: context,
-          changesQuestion: AppLocalizations.of(context).accountExistUserWarning,
-          yesAnswer: AppLocalizations.of(context).navigationDrawerSignIn,
+          changesQuestion: localizations.of(context).accountExistUserWarning,
+          yesAnswer: localizations.of(context).navigationDrawerSignIn,
           noAnswer: MaterialLocalizations.of(context).cancelButtonLabel);
       if (signIn) {
         // Sign out of Firebase but retain the account that has been picked by

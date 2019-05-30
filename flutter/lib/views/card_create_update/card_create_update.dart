@@ -1,4 +1,4 @@
-import 'package:delern_flutter/flutter/localization.dart';
+import 'package:delern_flutter/flutter/localization.dart' as localizations;
 import 'package:delern_flutter/flutter/styles.dart' as app_styles;
 import 'package:delern_flutter/models/card_model.dart';
 import 'package:delern_flutter/models/deck_model.dart';
@@ -40,7 +40,7 @@ class _CardCreateUpdateState extends State<CardCreateUpdate> {
 
   @override
   void didChangeDependencies() {
-    final locale = AppLocalizations.of(context);
+    final locale = localizations.of(context);
     if (_bloc.locale != locale) {
       _bloc.onLocale.add(locale);
     }
@@ -60,7 +60,7 @@ class _CardCreateUpdateState extends State<CardCreateUpdate> {
 
   Future<void> showCardSaveUpdateDialog() async {
     if (_isChanged) {
-      final locale = AppLocalizations.of(context);
+      final locale = localizations.of(context);
       final continueEditingDialog = await showSaveUpdatesDialog(
           context: context,
           changesQuestion: locale.continueEditingQuestion,
@@ -88,12 +88,12 @@ class _CardCreateUpdateState extends State<CardCreateUpdate> {
             stream: _bloc.isOperationEnabled,
             builder: (context, snapshot) => _bloc.isAddOperation
                 ? IconButton(
-                    tooltip: AppLocalizations.of(context).addCardTooltip,
+                    tooltip: localizations.of(context).addCardTooltip,
                     icon: const Icon(Icons.check),
                     onPressed: snapshot.data ? _saveCard : null)
                 : FlatButton(
                     child: Text(
-                      AppLocalizations.of(context).save.toUpperCase(),
+                      localizations.of(context).save.toUpperCase(),
                       style: _isChanged && snapshot.data
                           ? const TextStyle(color: Colors.white)
                           : null,
@@ -124,8 +124,8 @@ class _CardCreateUpdateState extends State<CardCreateUpdate> {
           });
         },
         style: app_styles.primaryText,
-        decoration: InputDecoration(
-            hintText: AppLocalizations.of(context).frontSideHint),
+        decoration:
+            InputDecoration(hintText: localizations.of(context).frontSideHint),
       ),
       TextField(
         key: const Key('backCardInput'),
@@ -140,7 +140,7 @@ class _CardCreateUpdateState extends State<CardCreateUpdate> {
         },
         style: app_styles.primaryText,
         decoration: InputDecoration(
-          hintText: AppLocalizations.of(context).backSideHint,
+          hintText: localizations.of(context).backSideHint,
         ),
       ),
     ];
@@ -151,7 +151,7 @@ class _CardCreateUpdateState extends State<CardCreateUpdate> {
       // CheckboxListTile to have a clickable checkbox label.
       widgetsList.add(CheckboxListTile(
         title: Text(
-          AppLocalizations.of(context).reversedCardLabel,
+          localizations.of(context).reversedCardLabel,
           style: app_styles.secondaryText,
         ),
         value: _addReversedCard,

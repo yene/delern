@@ -1,4 +1,4 @@
-import 'package:delern_flutter/flutter/localization.dart';
+import 'package:delern_flutter/flutter/localization.dart' as localizations;
 import 'package:delern_flutter/flutter/styles.dart' as app_styles;
 import 'package:delern_flutter/flutter/user_messages.dart';
 import 'package:delern_flutter/models/card_model.dart';
@@ -78,7 +78,7 @@ class _DeckMenuState extends State<DeckMenu>
                       )));
         } else {
           UserMessages.showMessage(Scaffold.of(context),
-              AppLocalizations.of(context).noAddingWithReadAccessUserMessage);
+              localizations.of(context).noAddingWithReadAccessUserMessage);
         }
         break;
       case _DeckMenuItemType.edit:
@@ -110,7 +110,7 @@ class _DeckMenuState extends State<DeckMenu>
           );
         } else {
           UserMessages.showMessage(Scaffold.of(context),
-              AppLocalizations.of(context).noSharingAccessUserMessage);
+              localizations.of(context).noSharingAccessUserMessage);
         }
         break;
     }
@@ -121,14 +121,13 @@ enum _DeckMenuItemType { add, edit, setting, share }
 
 Map<_DeckMenuItemType, String> _buildMenu(BuildContext context) {
   final deckMenu = <_DeckMenuItemType, String>{
-    _DeckMenuItemType.add: AppLocalizations.of(context).addCardsDeckMenu,
-    _DeckMenuItemType.edit: AppLocalizations.of(context).editCardsDeckMenu,
-    _DeckMenuItemType.setting: AppLocalizations.of(context).settingsDeckMenu
+    _DeckMenuItemType.add: localizations.of(context).addCardsDeckMenu,
+    _DeckMenuItemType.edit: localizations.of(context).editCardsDeckMenu,
+    _DeckMenuItemType.setting: localizations.of(context).settingsDeckMenu
   };
 
   if (!CurrentUserWidget.of(context).user.isAnonymous) {
-    deckMenu[_DeckMenuItemType.share] =
-        AppLocalizations.of(context).shareDeckMenu;
+    deckMenu[_DeckMenuItemType.share] = localizations.of(context).shareDeckMenu;
   }
   return deckMenu;
 }

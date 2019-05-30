@@ -1,5 +1,5 @@
 import 'package:delern_flutter/flutter/device_info.dart';
-import 'package:delern_flutter/flutter/localization.dart';
+import 'package:delern_flutter/flutter/localization.dart' as localizations;
 import 'package:delern_flutter/views/helpers/progress_indicator_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:intro_views_flutter/Models/page_view_model.dart';
@@ -59,10 +59,10 @@ class _OnboardingWidget extends StatelessWidget {
       PageViewModel(
           pageColor: const Color(0xFF3F51A5),
           body: Text(
-            AppLocalizations.of(context).decksIntroDescription,
+            localizations.of(context).decksIntroDescription,
           ),
           title: Text(
-            AppLocalizations.of(context).decksIntroTitle,
+            localizations.of(context).decksIntroTitle,
           ),
           textStyle: textStyle,
           mainImage: Image.asset(
@@ -73,9 +73,9 @@ class _OnboardingWidget extends StatelessWidget {
       PageViewModel(
         pageColor: const Color(0xFFFFB74D),
         body: Text(
-          AppLocalizations.of(context).learnIntroDescription,
+          localizations.of(context).learnIntroDescription,
         ),
-        title: Text(AppLocalizations.of(context).learnIntroTitle),
+        title: Text(localizations.of(context).learnIntroTitle),
         mainImage: Image.asset(
           'images/child_learning.png',
           width: imageWidth,
@@ -86,9 +86,9 @@ class _OnboardingWidget extends StatelessWidget {
       PageViewModel(
         pageColor: const Color(0xFF607D8B),
         body: Text(
-          AppLocalizations.of(context).shareIntroDescription,
+          localizations.of(context).shareIntroDescription,
         ),
-        title: Text(AppLocalizations.of(context).shareIntroTitle),
+        title: Text(localizations.of(context).shareIntroTitle),
         mainImage: Image.asset(
           'images/card_sharing.png',
           width: imageWidth,
@@ -103,8 +103,8 @@ class _OnboardingWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) => IntroViewsFlutter(
         _introPages(context),
-        doneText: Text(AppLocalizations.of(context).done.toUpperCase()),
-        skipText: Text(AppLocalizations.of(context).skip.toUpperCase()),
+        doneText: Text(localizations.of(context).done.toUpperCase()),
+        skipText: Text(localizations.of(context).skip.toUpperCase()),
         onTapDoneButton: callback,
         showSkipButton: true,
         pageButtonTextStyles: const TextStyle(

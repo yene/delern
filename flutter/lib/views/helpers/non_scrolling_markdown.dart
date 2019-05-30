@@ -1,4 +1,4 @@
-import 'package:delern_flutter/flutter/localization.dart';
+import 'package:delern_flutter/flutter/localization.dart' as localizations;
 import 'package:delern_flutter/flutter/styles.dart' as app_styles;
 import 'package:delern_flutter/flutter/user_messages.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +16,6 @@ Widget buildNonScrollingMarkdown(String text, BuildContext context) =>
             await launch(href, forceSafariVC: false);
           } else {
             unawaited(UserMessages.showError(() => Scaffold.of(context),
-                AppLocalizations.of(context).couldNotLaunchUrl(href)));
+                localizations.of(context).couldNotLaunchUrl(href)));
           }
         });

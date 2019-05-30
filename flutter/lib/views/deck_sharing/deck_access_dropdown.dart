@@ -1,4 +1,4 @@
-import 'package:delern_flutter/flutter/localization.dart';
+import 'package:delern_flutter/flutter/localization.dart' as localizations;
 import 'package:delern_flutter/flutter/styles.dart' as app_styles;
 import 'package:delern_flutter/models/deck_access_model.dart';
 import 'package:flutter/material.dart';
@@ -55,20 +55,20 @@ class _DropdownState extends State<DeckAccessDropdownWidget> {
     String text;
     Icon icon;
     if (access == null) {
-      text = AppLocalizations.of(context).noAccess;
+      text = localizations.of(context).noAccess;
       icon = const Icon(Icons.clear);
     } else {
       switch (access) {
         case AccessType.write:
-          text = AppLocalizations.of(context).canEdit;
+          text = localizations.of(context).canEdit;
           icon = const Icon(Icons.edit);
           break;
         case AccessType.read:
-          text = AppLocalizations.of(context).canView;
+          text = localizations.of(context).canView;
           icon = const Icon(Icons.remove_red_eye);
           break;
         case AccessType.owner:
-          text = AppLocalizations.of(context).owner;
+          text = localizations.of(context).owner;
           icon = const Icon(Icons.person);
           break;
       }

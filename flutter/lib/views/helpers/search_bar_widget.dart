@@ -1,4 +1,4 @@
-import 'package:delern_flutter/flutter/localization.dart';
+import 'package:delern_flutter/flutter/localization.dart' as localizations;
 import 'package:delern_flutter/flutter/styles.dart' as app_styles;
 import 'package:flutter/material.dart';
 
@@ -58,7 +58,7 @@ class SearchBarWidgetState extends State<SearchBarWidget> {
         style: app_styles.searchBarText,
         decoration: InputDecoration(
             border: InputBorder.none,
-            hintText: AppLocalizations.of(context).searchHint,
+            hintText: localizations.of(context).searchHint,
             hintStyle: app_styles.searchBarText),
       );
     } else {

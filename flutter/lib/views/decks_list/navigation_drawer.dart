@@ -110,22 +110,23 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
         user.displayName ?? AppLocalizations.of(context).anonymous;
 
     return Drawer(
-        child: ListView(
-      // Remove any padding from the ListView.
-      // https://flutter.io/docs/cookbook/design/drawer
-      padding: EdgeInsets.zero,
-      children: <Widget>[
-        UserAccountsDrawerHeader(
-          accountName: Text(accountName),
-          accountEmail: Text(user.humanFriendlyIdentifier),
-          currentAccountPicture: CircleAvatar(
-            backgroundImage: user.photoUrl == null
-                ? const AssetImage('images/anonymous.jpg')
-                : NetworkImage(user.photoUrl),
-          ),
-        ),
-      ]..addAll(_buildUserButtons(user)),
-    ));
+      child: ListView(
+          // Remove any padding from the ListView.
+          // https://flutter.io/docs/cookbook/design/drawer
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            UserAccountsDrawerHeader(
+              accountName: Text(accountName),
+              accountEmail: Text(user.humanFriendlyIdentifier),
+              currentAccountPicture: CircleAvatar(
+                backgroundImage: user.photoUrl == null
+                    ? const AssetImage('images/anonymous.jpg')
+                    : NetworkImage(user.photoUrl),
+              ),
+            ),
+            ..._buildUserButtons(user),
+          ]),
+    );
   }
 
   Future<void> _promoteAnonymous(BuildContext context) async {

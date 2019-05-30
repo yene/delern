@@ -20,6 +20,11 @@ or alternatively using `brew cask install fastlane`
 fastlane ensure_clean_git
 ```
 
+### update_analysis_options
+```
+fastlane update_analysis_options
+```
+
 ### update
 ```
 fastlane update

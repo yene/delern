@@ -4,7 +4,7 @@
 env:
   FLUTTER_CHANNEL: beta
   FLUTTER_SDK_ROOT: "${HOME}/flutter"
-  PATH: "${FLUTTER_SDK_ROOT}/bin:${PATH}"
+  PATH: "${HOME}/bin:${FLUTTER_SDK_ROOT}/bin:${PATH}"
 
 regular_task_template: &REGULAR_TASK_TEMPLATE
   only_if: $CIRRUS_BRANCH == 'master' || $CIRRUS_TAG != '' || $CIRRUS_PR != ''
@@ -57,7 +57,10 @@ flutter_and_fastlane_task_template: &FLUTTER_AND_FASTLANE_TASK_TEMPLATE
     - cat Gemfile.lock
   # This script not only updates dependencies, but also configures bundler where
   # to search for them (via "--deployment" flag, i.e. "vendor/bundle").
-  install_fastlane_script: bundle install --quiet --clean --deployment
+  install_fastlane_script: bundle install --clean --deployment
+  # Install the exact cocoapods version that we have in development:
+  # https://github.com/CocoaPods/CocoaPods/issues/8848.
+  install_cocoapods_script: bundle binstubs cocoapods --path "${HOME}/bin"
 
 task:
   << : *REGULAR_TASK_TEMPLATE
@@ -205,7 +208,10 @@ task:
   env:
     << : *GCLOUD_ENV_TEMPLATE
     # Task-specific env definitions override root-level env.
-    PATH: "${HOME}/google-cloud-sdk/bin:${FLUTTER_SDK_ROOT}/bin:${PATH}"
+    PATH: "${HOME}/bin:\
+      ${FLUTTER_SDK_ROOT}/bin:\
+      ${HOME}/google-cloud-sdk/bin:\
+      ${PATH}"
     FASTLANE_USER: "ENCRYPTED\
       [d119882919ae56899d9383eb6cbf1c88d33ad833ecd0c785\
       16ec12f40f76155e6de77a29d51e653a9fd6c5088ab92853]"

@@ -8,6 +8,7 @@ import 'package:delern_flutter/models/scheduled_card_model.dart';
 import 'package:delern_flutter/remote/error_reporting.dart' as error_reporting;
 import 'package:delern_flutter/view_models/base/screen_bloc.dart';
 import 'package:meta/meta.dart';
+import 'package:pedantic/pedantic.dart';
 
 class CardViewModel {
   CardModel card;
@@ -36,7 +37,7 @@ class CardPreviewBloc extends ScreenBloc {
         await _deleteCard(uid);
         notifyPop();
       } catch (e, stackTrace) {
-        error_reporting.report('deleteCard', e, stackTrace);
+        unawaited(error_reporting.report('deleteCard', e, stackTrace));
         notifyErrorOccurred(e);
       }
     });

@@ -14,6 +14,7 @@ import 'package:delern_flutter/views/helpers/save_updates_dialog.dart';
 import 'package:delern_flutter/views/helpers/slow_operation_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:pedantic/pedantic.dart';
 
 class CardsLearning extends StatefulWidget {
   final DeckModel deck;
@@ -172,7 +173,8 @@ class CardsLearningState extends State<CardsLearning> {
       await _viewModel.answer(
           knows: answer, learnBeyondHorizon: _learnBeyondHorizon);
     } catch (e, stacktrace) {
-      UserMessages.showError(() => Scaffold.of(context), e, stacktrace);
+      unawaited(
+          UserMessages.showError(() => Scaffold.of(context), e, stacktrace));
       return;
     }
 
@@ -224,7 +226,8 @@ class CardsLearningState extends State<CardsLearning> {
         UserMessages.showMessage(Scaffold.of(context),
             AppLocalizations.of(context).cardDeletedUserMessage);
       } catch (e, stackTrace) {
-        UserMessages.showError(() => Scaffold.of(context), e, stackTrace);
+        unawaited(
+            UserMessages.showError(() => Scaffold.of(context), e, stackTrace));
       }
     }
   }

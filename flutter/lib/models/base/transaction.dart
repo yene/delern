@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:delern_flutter/models/base/model.dart';
 import 'package:delern_flutter/remote/error_reporting.dart' as error_reporting;
 import 'package:firebase_database/firebase_database.dart';
+import 'package:pedantic/pedantic.dart';
 
 class Transaction {
   final _updates = <String, dynamic>{};
@@ -47,17 +48,17 @@ class Transaction {
     final updateFuture = _root.update(_updates);
 
     if (!_isOnline) {
-      updateFuture.catchError((error, stackTrace) => error_reporting.report(
-          'Transaction', error, stackTrace,
-          extra: {'updates': _updates, 'online': false}));
+      unawaited(updateFuture.catchError((error, stackTrace) => error_reporting
+          .report('Transaction', error, stackTrace,
+              extra: {'updates': _updates, 'online': false})));
       return;
     }
 
     try {
       await updateFuture;
     } catch (error, stackTrace) {
-      error_reporting.report('Transaction', error, stackTrace,
-          extra: {'updates': _updates, 'online': true});
+      unawaited(error_reporting.report('Transaction', error, stackTrace,
+          extra: {'updates': _updates, 'online': true}));
       rethrow;
     }
   }

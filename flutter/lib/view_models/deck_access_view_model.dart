@@ -7,6 +7,7 @@ import 'package:delern_flutter/models/deck_model.dart';
 import 'package:delern_flutter/remote/analytics.dart';
 import 'package:delern_flutter/view_models/base/filtered_sorted_observable_list.dart';
 import 'package:meta/meta.dart';
+import 'package:pedantic/pedantic.dart';
 
 class DeckAccessesViewModel {
   final DeckModel deck;
@@ -30,7 +31,7 @@ class DeckAccessesViewModel {
   static Future<void> shareDeck(DeckAccessModel access, DeckModel deck) async {
     assert(deck.key == access.deckKey);
 
-    logShare(access.deckKey);
+    unawaited(logShare(access.deckKey));
     final tr = Transaction();
 
     if (access.access == null) {

@@ -9,5 +9,5 @@ Future<void> main() async {
   await Auth.instance.signOut();
   // Call the `main()` of your app or call `runApp` with whatever widget
   // you are interested in testing.
-  app.main();
+  await app.main();
 }

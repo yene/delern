@@ -3,6 +3,7 @@ import 'package:delern_flutter/flutter/styles.dart' as app_styles;
 import 'package:delern_flutter/flutter/user_messages.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:pedantic/pedantic.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class SupportDevelopment extends StatelessWidget {
@@ -20,8 +21,8 @@ class SupportDevelopment extends StatelessWidget {
               if (await canLaunch(href)) {
                 await launch(href, forceSafariVC: false);
               } else {
-                UserMessages.showError(
-                    () => Scaffold.of(context), 'Could not launch url $href');
+                unawaited(UserMessages.showError(
+                    () => Scaffold.of(context), 'Could not launch url $href'));
               }
             }),
       ));

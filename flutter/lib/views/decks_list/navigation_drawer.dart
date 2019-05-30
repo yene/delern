@@ -13,6 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:package_info/package_info.dart';
+import 'package:pedantic/pedantic.dart';
 
 class NavigationDrawer extends StatefulWidget {
   @override
@@ -82,11 +83,11 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
       title: Text(user.isAnonymous
           ? AppLocalizations.of(context).navigationDrawerSignIn
           : AppLocalizations.of(context).navigationDrawerSignOut),
-      onTap: () async {
+      onTap: () {
         if (user.isAnonymous) {
-          _promoteAnonymous(context);
+          unawaited(_promoteAnonymous(context));
         } else {
-          Auth.instance.signOut();
+          unawaited(Auth.instance.signOut());
           Navigator.pop(context);
         }
       },
@@ -110,31 +111,32 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
         user.displayName ?? AppLocalizations.of(context).anonymous;
 
     return Drawer(
-        child: ListView(
-      // Remove any padding from the ListView.
-      // https://flutter.io/docs/cookbook/design/drawer
-      padding: EdgeInsets.zero,
-      children: <Widget>[
-        UserAccountsDrawerHeader(
-          accountName: Text(accountName),
-          accountEmail: Text(user.humanFriendlyIdentifier),
-          currentAccountPicture: CircleAvatar(
-            backgroundImage: user.photoUrl == null
-                ? const AssetImage('images/anonymous.jpg')
-                : NetworkImage(user.photoUrl),
-          ),
-        ),
-      ]..addAll(_buildUserButtons(user)),
-    ));
+      child: ListView(
+          // Remove any padding from the ListView.
+          // https://flutter.io/docs/cookbook/design/drawer
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            UserAccountsDrawerHeader(
+              accountName: Text(accountName),
+              accountEmail: Text(user.humanFriendlyIdentifier),
+              currentAccountPicture: CircleAvatar(
+                backgroundImage: user.photoUrl == null
+                    ? const AssetImage('images/anonymous.jpg')
+                    : NetworkImage(user.photoUrl),
+              ),
+            ),
+            ..._buildUserButtons(user),
+          ]),
+    );
   }
 
   Future<void> _promoteAnonymous(BuildContext context) async {
-    logPromoteAnonymous();
+    unawaited(logPromoteAnonymous());
     try {
       await Auth.instance.signIn(SignInProvider.google);
     } on PlatformException catch (_) {
       // TODO(ksheremet): Merge data
-      logPromoteAnonymousFail();
+      unawaited(logPromoteAnonymousFail());
       final signIn = await showSaveUpdatesDialog(
           context: context,
           changesQuestion: AppLocalizations.of(context).accountExistUserWarning,
@@ -144,7 +146,8 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
         // Sign out of Firebase but retain the account that has been picked by
         // user.
         await Auth.instance.signOut();
-        Auth.instance.signIn(SignInProvider.google, forceAccountPicker: false);
+        unawaited(Auth.instance
+            .signIn(SignInProvider.google, forceAccountPicker: false));
       } else {
         Navigator.of(context).pop();
       }

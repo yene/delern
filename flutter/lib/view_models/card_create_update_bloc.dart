@@ -7,6 +7,7 @@ import 'package:delern_flutter/remote/analytics.dart';
 import 'package:delern_flutter/remote/error_reporting.dart' as error_reporting;
 import 'package:delern_flutter/view_models/base/screen_bloc.dart';
 import 'package:meta/meta.dart';
+import 'package:pedantic/pedantic.dart';
 
 class CardCreateUpdateBloc extends ScreenBloc {
   String _frontText;
@@ -128,7 +129,7 @@ class CardCreateUpdateBloc extends ScreenBloc {
       }
       _doClearInputFieldsController.add(null);
     } catch (e, stackTrace) {
-      error_reporting.report('saveCard', e, stackTrace);
+      unawaited(error_reporting.report('saveCard', e, stackTrace));
       notifyErrorOccurred(e);
     }
   }

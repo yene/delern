@@ -238,15 +238,16 @@ class _MenuItemsWidgetState extends State<_MenuItemsWidget>
 
   Widget _buildMenuItem(_DeckMenuItemType menuType, String menuItemName) =>
       RaisedButton(
-          color: app_styles.menuItemBackgroundColor,
-          padding: const EdgeInsets.all(8),
-          shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(10))),
-          child: Text(
-            menuItemName,
-            style: app_styles.menuItemText,
-          ),
-          onPressed: () {
-            Navigator.pop(context, menuType);
-          });
+        color: app_styles.menuItemBackgroundColor,
+        padding: const EdgeInsets.all(8),
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(10))),
+        onPressed: () {
+          Navigator.pop(context, menuType);
+        },
+        child: Text(
+          menuItemName,
+          style: app_styles.menuItemText,
+        ),
+      );
 }

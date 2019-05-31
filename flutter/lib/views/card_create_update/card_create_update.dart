@@ -90,15 +90,17 @@ class _CardCreateUpdateState extends State<CardCreateUpdate> {
                 ? IconButton(
                     tooltip: localizations.of(context).addCardTooltip,
                     icon: const Icon(Icons.check),
-                    onPressed: snapshot.data ? _saveCard : null)
+                    onPressed: snapshot.data ? _saveCard : null,
+                  )
                 : FlatButton(
+                    onPressed: _isChanged && snapshot.data ? _saveCard : null,
                     child: Text(
                       localizations.of(context).save.toUpperCase(),
                       style: _isChanged && snapshot.data
                           ? const TextStyle(color: Colors.white)
                           : null,
                     ),
-                    onPressed: _isChanged && snapshot.data ? _saveCard : null),
+                  ),
           )
         ],
       );

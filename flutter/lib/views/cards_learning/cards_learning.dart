@@ -143,14 +143,14 @@ class CardsLearningState extends State<CardsLearning> {
                 // heroTag - https://stackoverflow.com/questions/46509553/
                 heroTag: 'dontknow',
                 backgroundColor: Colors.red,
-                child: const Icon(Icons.clear),
                 onPressed: cb(() => _answerCard(false, context)),
+                child: const Icon(Icons.clear),
               ),
               FloatingActionButton(
                 heroTag: 'know',
                 backgroundColor: Colors.green,
-                child: const Icon(Icons.check),
                 onPressed: cb(() => _answerCard(true, context)),
+                child: const Icon(Icons.check),
               ),
             ],
           ));
@@ -158,14 +158,15 @@ class CardsLearningState extends State<CardsLearning> {
 
     return Row(mainAxisAlignment: MainAxisAlignment.center, children: [
       FloatingActionButton(
-          backgroundColor: Colors.orange,
-          heroTag: 'turn',
-          child: const Icon(Icons.cached),
-          onPressed: () {
-            setState(() {
-              _isBackShown = true;
-            });
-          })
+        backgroundColor: Colors.orange,
+        heroTag: 'turn',
+        onPressed: () {
+          setState(() {
+            _isBackShown = true;
+          });
+        },
+        child: const Icon(Icons.cached),
+      )
     ]);
   }
 

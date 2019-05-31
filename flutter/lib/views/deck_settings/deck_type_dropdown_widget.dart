@@ -24,8 +24,8 @@ class _DeckTypeDropdownWidgetState extends State<DeckTypeDropdownWidget> {
         value: widget.value,
         items: (DeckType.values)
             .map((value) => DropdownMenuItem<DeckType>(
-                  child: _buildDropdownItem(value),
                   value: value,
+                  child: _buildDropdownItem(value),
                 ))
             .toList(),
         onChanged: (newValue) {

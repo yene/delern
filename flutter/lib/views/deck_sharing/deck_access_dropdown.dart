@@ -32,8 +32,8 @@ class _DropdownState extends State<DeckAccessDropdownWidget> {
         items: (AccessType.values + [null])
             .where(widget.filter)
             .map((value) => DropdownMenuItem<AccessType>(
-                  child: buildDropdownItem(value),
                   value: value,
+                  child: buildDropdownItem(value),
                 ))
             .toList(),
         onChanged: (newValue) {

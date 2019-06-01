@@ -18,8 +18,8 @@ Future<bool> showSaveUpdatesDialog(
                   onPressed: () => Navigator.of(context).pop(false),
                   child: Text(noAnswer.toUpperCase())),
               FlatButton(
-                child: Text(yesAnswer.toUpperCase()),
                 onPressed: () => Navigator.of(context).pop(true),
+                child: Text(yesAnswer.toUpperCase()),
               )
             ],
           ),

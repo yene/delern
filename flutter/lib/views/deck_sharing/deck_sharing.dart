@@ -170,8 +170,8 @@ class _DeckUsersState extends State<DeckUsersWidget> {
             child: ObservingAnimatedListWidget<DeckAccessModel>(
               list: _deckAccessesViewModel.list,
               itemBuilder: (context, item, animation, index) => SizeTransition(
-                    child: _buildUserAccessInfo(item),
                     sizeFactor: animation,
+                    child: _buildUserAccessInfo(item),
                   ),
               emptyMessageBuilder: () => EmptyListMessageWidget(
                   localizations.of(context).emptyUserSharingList),

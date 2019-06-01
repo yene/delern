@@ -129,8 +129,8 @@ class _DecksListState extends State<DecksList> {
                 list: _bloc.decksList,
                 itemBuilder: (context, item, animation, index) =>
                     SizeTransition(
-                      child: DeckListItemWidget(item, _bloc),
                       sizeFactor: animation,
+                      child: DeckListItemWidget(item, _bloc),
                     ),
                 emptyMessageBuilder: () => ArrowToFloatingActionButtonWidget(
                     fabKey: fabKey,

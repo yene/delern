@@ -71,10 +71,10 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
       const Divider(height: 1),
       AboutListTile(
         icon: const Icon(Icons.perm_device_information),
-        child: Text(localizations.of(context).navigationDrawerAbout),
         applicationIcon: Image.asset('images/ic_launcher.png'),
         applicationVersion: versionCode,
         applicationLegalese: 'GNU General Public License v3.0',
+        child: Text(localizations.of(context).navigationDrawerAbout),
       ),
     ];
 

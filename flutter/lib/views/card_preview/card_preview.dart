@@ -77,10 +77,11 @@ class _CardPreviewState extends State<CardPreview> {
           ],
         ),
         floatingActionButton: FloatingActionButton(
-            child: const Icon(Icons.edit),
-            onPressed: () {
-              _bloc.onEditCardIntention.add(null);
-            }),
+          onPressed: () {
+            _bloc.onEditCardIntention.add(null);
+          },
+          child: const Icon(Icons.edit),
+        ),
         bloc: _bloc,
       );
 

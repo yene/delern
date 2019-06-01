@@ -14,7 +14,6 @@ class CreateDeckWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => FloatingActionButton(
-        child: const Icon(Icons.add),
         onPressed: () async {
           final newDeck = await showDialog<DeckModel>(
             context: context,
@@ -43,6 +42,7 @@ class CreateDeckWidget extends StatelessWidget {
                         deck: newDeck))));
           }
         },
+        child: const Icon(Icons.add),
       );
 }
 
@@ -57,20 +57,21 @@ class _CreateDeckDialogState extends State<_CreateDeckDialog> {
   @override
   Widget build(BuildContext context) {
     final addDeckButton = FlatButton(
-        child: Text(
-          localizations.of(context).add.toUpperCase(),
-          style: TextStyle(
-              color: _textController.text.isEmpty
-                  ? Theme.of(context).disabledColor
-                  : Theme.of(context).accentColor),
-        ),
-        onPressed: _textController.text.isEmpty
-            ? null
-            : () {
-                Navigator.of(context).pop(
-                    DeckModel(uid: CurrentUserWidget.of(context).user.uid)
-                      ..name = _textController.text);
-              });
+      onPressed: _textController.text.isEmpty
+          ? null
+          : () {
+              Navigator.of(context).pop(
+                  DeckModel(uid: CurrentUserWidget.of(context).user.uid)
+                    ..name = _textController.text);
+            },
+      child: Text(
+        localizations.of(context).add.toUpperCase(),
+        style: TextStyle(
+            color: _textController.text.isEmpty
+                ? Theme.of(context).disabledColor
+                : Theme.of(context).accentColor),
+      ),
+    );
 
     final cancelButton = FlatButton(
         onPressed: () {
@@ -161,8 +162,8 @@ class _HorizontalDialog extends StatelessWidget {
           elevation: 24,
           color: Theme.of(context).dialogBackgroundColor,
           type: MaterialType.card,
-          child: child,
           shape: dialogShape,
+          child: child,
         ),
       ),
     );

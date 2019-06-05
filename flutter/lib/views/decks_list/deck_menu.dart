@@ -35,9 +35,9 @@ class _DeckMenuState extends State<DeckMenu>
   }
 
   @override
-  Widget build(BuildContext context) => InkWell(
-        splashColor: Theme.of(context).splashColor,
-        onTap: () async {
+  Widget build(BuildContext context) => IconButton(
+        icon: Icon(Icons.more_vert),
+        onPressed: () async {
           final menuItemType = await Navigator.push(
               context,
               _MenuRoute<_DeckMenuItemType>(
@@ -48,14 +48,6 @@ class _DeckMenuState extends State<DeckMenu>
             _onDeckMenuItemSelected(context, menuItemType);
           }
         },
-        child: Padding(
-          padding: const EdgeInsets.all(10),
-          child: AnimatedIcon(
-            progress: _controller,
-            icon: AnimatedIcons.menu_close,
-            semanticLabel: MaterialLocalizations.of(context).showMenuTooltip,
-          ),
-        ),
       );
 
   void _onDeckMenuItemSelected(BuildContext context, _DeckMenuItemType item) {

@@ -21,8 +21,9 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var title = 'Delern';
-    assert((title = 'Delern DEBUG') != null);
+    // TODO(ksheremet): Localize
+    var title = 'List of decks';
+    assert((title = 'List of decks') != null);
     return MaterialApp(
       // Produce collections of localized values
       localizationsDelegates: [

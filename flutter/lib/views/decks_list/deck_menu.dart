@@ -11,13 +11,16 @@ import 'package:delern_flutter/views/deck_sharing/deck_sharing.dart';
 import 'package:delern_flutter/views/helpers/sign_in_widget.dart';
 import 'package:flutter/material.dart';
 
-const double _menuExpandedSize = 225;
-const _animationDuration = Duration(milliseconds: 250);
+const double _kMenuExpandedSize = 225;
+const _kAnimationDuration = Duration(milliseconds: 250);
 
 class DeckMenu extends StatefulWidget {
   final DeckModel deck;
+  final double buttonSize;
 
-  const DeckMenu({@required this.deck});
+  const DeckMenu({@required this.deck, @required this.buttonSize})
+      : assert(deck != null),
+        assert(buttonSize != null);
 
   @override
   State<StatefulWidget> createState() => _DeckMenuState();
@@ -31,11 +34,13 @@ class _DeckMenuState extends State<DeckMenu>
   void initState() {
     super.initState();
     _controller =
-        AnimationController(vsync: this, duration: _animationDuration);
+        AnimationController(vsync: this, duration: _kAnimationDuration);
   }
 
   @override
   Widget build(BuildContext context) => IconButton(
+        iconSize: widget.buttonSize,
+        color: app_styles.kIconColor,
         icon: Icon(Icons.more_vert),
         onPressed: () async {
           final menuItemType = await Navigator.push(
@@ -155,22 +160,22 @@ class _MenuRoute<_DeckMenuItemType> extends PopupRoute<_DeckMenuItemType> {
     final offset = renderBox.localToGlobal(Offset.zero);
     final rightOffset = renderBox.size.width * 3 / 4;
     final topOffset =
-        (MediaQuery.of(context).size.height > (_menuExpandedSize + offset.dy))
+        (MediaQuery.of(context).size.height > (_kMenuExpandedSize + offset.dy))
             ? offset.dy
-            : MediaQuery.of(context).size.height - _menuExpandedSize - 8;
+            : MediaQuery.of(context).size.height - _kMenuExpandedSize - 8;
 
     return Stack(children: <Widget>[
       Positioned(
         right: rightOffset,
         top: topOffset,
-        height: _menuExpandedSize,
+        height: _kMenuExpandedSize,
         child: _MenuItemsWidget(controller: controller),
       )
     ]);
   }
 
   @override
-  Duration get transitionDuration => _animationDuration;
+  Duration get transitionDuration => _kAnimationDuration;
 }
 
 class _MenuItemsWidget extends StatefulWidget {

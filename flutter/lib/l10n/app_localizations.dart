@@ -523,4 +523,10 @@ To see the source code for this app, please visit the [Delern GitHub repo](https
         name: 'cardAndReversedAddedUserMessage',
         desc: 'Card and reversed card were added',
       );
+
+  String get listOFDecksScreenTitle => Intl.message(
+        'List of decks',
+        name: 'listOFDecksScreenTitle',
+        desc: 'List of decks',
+      );
 }

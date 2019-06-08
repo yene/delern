@@ -1,6 +1,6 @@
 {
   "@@locale": "en",
-  "@@last_modified": "2019-05-22T11:24:00.474448",
+  "@@last_modified": "2019-06-07T10:56:39.999935",
   "navigationDrawerSignOut": "Sign Out",
   "@navigationDrawerSignOut": {
     "description": "Sign Out in Navigation Drawer",
@@ -558,6 +558,13 @@
   "cardAndReversedAddedUserMessage": "Card and reversed card were added",
   "@cardAndReversedAddedUserMessage": {
     "description": "Card and reversed card were added",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "listOFDecksScreenTitle": "List of decks",
+  "@listOFDecksScreenTitle": {
+    "description": "List of decks",
     "type": "text",
     "placeholders": {
     }

@@ -15,12 +15,12 @@ import 'package:delern_flutter/views/helpers/sign_in_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:pedantic/pedantic.dart';
 
-class DecksList extends StatefulWidget {
-  final String title;
+const double _kItemElevation = 4;
+const double _kItemPaddingRatio = _kItemHeightRatio * 0.08;
+const double _kItemHeightRatio = 0.1;
 
-  const DecksList({@required this.title, Key key})
-      : assert(title != null),
-        super(key: key);
+class DecksList extends StatefulWidget {
+  const DecksList();
 
   @override
   _DecksListState createState() => _DecksListState();
@@ -120,116 +120,183 @@ class _DecksListState extends State<DecksList> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        appBar: SearchBarWidget(title: widget.title, search: setFilter),
+        appBar: SearchBarWidget(
+            title: localizations.of(context).listOFDecksScreenTitle,
+            search: setFilter),
         drawer: NavigationDrawer(),
         body: Column(
           children: <Widget>[
             Expanded(
               child: ObservingAnimatedListWidget<DeckModel>(
                 list: _bloc.decksList,
-                itemBuilder: (context, item, animation, index) =>
-                    SizeTransition(
+                itemBuilder: (context, item, animation, index) {
+                  final itemHeight = MediaQuery.of(context).size.height *
+                              _kItemHeightRatio <
+                          app_styles.kMinItemHeight
+                      ? app_styles.kMinItemHeight
+                      : MediaQuery.of(context).size.height * _kItemHeightRatio;
+                  return SizeTransition(
                       sizeFactor: animation,
-                      child: Padding(
-                          padding: EdgeInsets.only(
-                              top: index == 0 ? _kItemsPadding * 2 : 0),
-                          child: DeckListItemWidget(item, _bloc)),
-                    ),
+                      child: Column(
+                        children: <Widget>[
+                          if (index == 0)
+                            Padding(
+                              padding: EdgeInsets.symmetric(
+                                  vertical: MediaQuery.of(context).size.height *
+                                      _kItemPaddingRatio *
+                                      2),
+                            ),
+                          DeckListItemWidget(
+                            deck: item,
+                            bloc: _bloc,
+                            height: itemHeight,
+                          ),
+                          Padding(
+                            padding: EdgeInsets.symmetric(
+                                vertical: MediaQuery.of(context).size.height *
+                                    _kItemPaddingRatio),
+                          ),
+                          if (index == (_bloc.decksList.length - 1))
+                            Padding(
+                              padding: EdgeInsets.symmetric(
+                                  vertical: MediaQuery.of(context).size.height *
+                                      _kItemPaddingRatio),
+                            ),
+                        ],
+                      ));
+                },
                 emptyMessageBuilder: () => ArrowToFloatingActionButtonWidget(
                     fabKey: fabKey,
                     child: EmptyListMessageWidget(
                         localizations.of(context).emptyDecksList)),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.only(bottom: 8, top: 4),
-              child: CreateDeckWidget(key: fabKey),
-            )
           ],
         ),
-        //floatingActionButton: CreateDeckWidget(key: fabKey),
+        floatingActionButton: CreateDeckWidget(key: fabKey),
       );
 }
-
-const double _kItemsPadding = 6;
 
 class DeckListItemWidget extends StatelessWidget {
   final DeckModel deck;
   final DecksListBloc bloc;
+  final double height;
 
-  const DeckListItemWidget(this.deck, this.bloc);
+  const DeckListItemWidget(
+      {@required this.deck, @required this.bloc, @required this.height});
 
   @override
-  Widget build(BuildContext context) => Column(
-        children: <Widget>[
-          Container(
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                _buildNumberOfCards(context),
-                Expanded(
-                  child: _buildDeckName(context),
-                ),
-                DeckMenu(deck: deck),
-              ],
-            ),
-          ),
-        ],
-      );
+  Widget build(BuildContext context) {
+    final emptyExpanded = Expanded(
+      flex: 1,
+      child: Container(
+        color: Colors.transparent,
+      ),
+    );
 
-  Widget _buildDeckName(BuildContext context) => Padding(
-        padding:
-            const EdgeInsets.only(top: _kItemsPadding, bottom: _kItemsPadding),
-        child: Material(
-          elevation: 4,
-          child: InkWell(
-            splashColor: Theme.of(context).splashColor,
-            onTap: () async {
-              final anyCardsShown = await Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    settings: const RouteSettings(name: '/decks/learn'),
-                    // TODO(dotdoom): pass scheduled cards list to
-                    //  CardsLearning.
-                    builder: (context) => CardsLearning(deck: deck),
-                  ));
-              if (anyCardsShown == false) {
-                // If deck is empty, open a screen with adding cards
-                unawaited(Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        settings: const RouteSettings(name: '/cards/new'),
-                        builder: (context) => CardCreateUpdate(
-                            card: CardModel(deckKey: deck.key), deck: deck))));
-              }
-            },
-            child: Container(
-              alignment: Alignment.centerLeft,
-              // Height of item is 10% of screen
-              height: (MediaQuery.of(context).size.height * 0.1 >
-                      app_styles.kMinimumItemHeight)
-                  ? MediaQuery.of(context).size.height * 0.1
-                  : app_styles.kMinimumItemHeight,
-              padding: EdgeInsets.only(
-                  left: MediaQuery.of(context).size.height * 0.01),
-              child: Text(
-                deck.name,
-                style: app_styles.primaryText,
+    final primaryTextStyle = app_styles.primaryText.copyWith(
+        fontSize: height * 0.25 < app_styles.kMinPrimaryTextSize
+            ? app_styles.kMinPrimaryTextSize
+            : height * 0.25);
+    final secondaryTextStyle = app_styles.secondaryText.copyWith(
+        fontSize: height * 0.1 < app_styles.kMinSecondaryTextSize
+            ? app_styles.kMinSecondaryTextSize
+            : height * 0.1);
+    final iconSize = (height * 0.5) < app_styles.kMinIconHeight
+        ? app_styles.kMinIconHeight
+        : height * 0.5;
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        emptyExpanded,
+        Expanded(
+          flex: 8,
+          child: Container(
+            height: height,
+            child: Material(
+              elevation: _kItemElevation,
+              // TODO(ksheremet): Get rid of ListTile and design custom
+              child: InkWell(
+                onTap: () async {
+                  final anyCardsShown = await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        settings: const RouteSettings(name: '/decks/learn'),
+                        // TODO(dotdoom): pass scheduled cards list to
+                        //  CardsLearning.
+                        builder: (context) => CardsLearning(deck: deck),
+                      ));
+                  if (anyCardsShown == false) {
+                    // If deck is empty, open a screen with adding cards
+                    unawaited(Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            settings: const RouteSettings(name: '/cards/new'),
+                            builder: (context) => CardCreateUpdate(
+                                card: CardModel(deckKey: deck.key),
+                                deck: deck))));
+                  }
+                },
+                child: Row(
+                  children: <Widget>[
+                    _buildLeading(iconSize),
+                    Expanded(
+                        child: _buildContent(
+                            primaryTextStyle, secondaryTextStyle)),
+                    _buildTrailing(iconSize),
+                  ],
+                ),
               ),
             ),
           ),
         ),
+        emptyExpanded,
+      ],
+    );
+  }
+
+  Widget _buildContent(
+          TextStyle primaryTextStyle, TextStyle secondaryTextStyle) =>
+      Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Text(
+            deck.name,
+            style: primaryTextStyle,
+          ),
+          Row(
+            children: <Widget>[
+              StreamBuilder<int>(
+                key: Key(deck.key),
+                initialData: bloc.numberOfCardsDue(deck.key).value,
+                stream: bloc.numberOfCardsDue(deck.key).stream,
+                builder: (context, snapshot) => Container(
+                      child: Text(
+                        snapshot.data?.toString() ?? 'N/A',
+                        style: secondaryTextStyle,
+                      ),
+                    ),
+              ),
+              // TODO(ksheremet): Localize
+              Text(
+                ' to learn',
+                style: secondaryTextStyle,
+              ),
+            ],
+          ),
+        ],
       );
 
-  Widget _buildNumberOfCards(BuildContext context) => StreamBuilder<int>(
-        key: Key(deck.key),
-        initialData: bloc.numberOfCardsDue(deck.key).value,
-        stream: bloc.numberOfCardsDue(deck.key).stream,
-        builder: (context, snapshot) => Container(
-              alignment: Alignment.center,
-              width: MediaQuery.of(context).size.width * 0.1,
-              child: Text(snapshot.data?.toString() ?? 'N/A',
-                  style: app_styles.primaryText),
-            ),
+  Widget _buildLeading(double size) => IconButton(
+        onPressed: null,
+        icon: Icon(Icons.folder),
+        iconSize: size,
+        color: app_styles.kIconColor,
+      );
+
+  Widget _buildTrailing(double size) => DeckMenu(
+        deck: deck,
+        buttonSize: size,
       );
 }

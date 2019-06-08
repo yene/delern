@@ -560,5 +560,12 @@
     "type": "text",
     "placeholders": {
     }
+  },
+  "listOFDecksScreenTitle": "Список папок",
+  "@listOFDecksScreenTitle": {
+    "description": "List of decks",
+    "type": "text",
+    "placeholders": {
+    }
   }
 }

@@ -94,6 +94,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "learnIntroDescription": MessageLookupByLibrary.simpleMessage(
             "Learn in any place and offline as well"),
         "learnIntroTitle": MessageLookupByLibrary.simpleMessage("Learn"),
+        "listOFDecksScreenTitle":
+            MessageLookupByLibrary.simpleMessage("List of decks"),
         "markdown": MessageLookupByLibrary.simpleMessage("Markdown"),
         "navigationDrawerAbout": MessageLookupByLibrary.simpleMessage("About"),
         "navigationDrawerCommunicateGroup":

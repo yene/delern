@@ -21,9 +21,8 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO(ksheremet): Localize
-    var title = 'List of decks';
-    assert((title = 'List of decks') != null);
+    var title = 'Delern';
+    assert((title = 'Delern DEBUG') != null);
     return MaterialApp(
       // Produce collections of localized values
       localizationsDelegates: [
@@ -44,9 +43,10 @@ class App extends StatelessWidget {
           afterOnboardingBuilder: () =>
               SignInWidget(afterSignInBuilder: () => child)),
       theme: ThemeData(
+          scaffoldBackgroundColor: app_styles.kScaffoldBackgroundColor,
           primarySwatch: app_styles.kPrimarySwatch,
           accentColor: app_styles.kAccentColor),
-      home: DecksList(title: title),
+      home: const DecksList(),
     );
   }
 }

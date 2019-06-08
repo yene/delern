@@ -3,7 +3,13 @@ import 'package:flutter/material.dart';
 
 const kPrimarySwatch = Colors.green;
 const kAccentColor = Colors.redAccent;
-const double kMinimumItemHeight = 48;
+final kScaffoldBackgroundColor = Colors.grey[350];
+final kIconColor = Colors.grey[600];
+
+const double kMinItemHeight = 48;
+const double kMinIconHeight = 24;
+const double kMinPrimaryTextSize = 19;
+const double kMinSecondaryTextSize = 16;
 
 final Map<Gender, Color> cardBackgroundColors = {
   Gender.noGender: Colors.greenAccent[100],

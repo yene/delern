@@ -103,6 +103,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "learnIntroDescription": MessageLookupByLibrary.simpleMessage(
             "Изучайте в любом месте, а также без сети"),
         "learnIntroTitle": MessageLookupByLibrary.simpleMessage("Изучайте"),
+        "listOFDecksScreenTitle":
+            MessageLookupByLibrary.simpleMessage("Список папок"),
         "markdown": MessageLookupByLibrary.simpleMessage("Маркдаун"),
         "navigationDrawerAbout":
             MessageLookupByLibrary.simpleMessage("О приложении"),

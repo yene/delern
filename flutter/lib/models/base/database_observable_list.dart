@@ -110,9 +110,10 @@ class DatabaseObservableList<T extends KeyedListItem> extends ObservableList<T>
     // by the time we get here. There's very little harm (performance penalty)
     // in re-subscribing, but this should happen very rarely.
     await _childEventsSubscription?.cancel();
-    _childEventsSubscription = StreamMuxer<_DatabaseEventType>(updateStreams)
-        .listen((muxerEvent) =>
-            _handleChildEvent(muxerEvent.key, muxerEvent.value));
+    _childEventsSubscription =
+        StreamMuxer<_DatabaseEventType, Event>(updateStreams).listen(
+            (muxerEvent) =>
+                _handleChildEvent(muxerEvent.key, muxerEvent.value));
   }
 
   void _handleChildEvent(_DatabaseEventType eventType, Event event) {

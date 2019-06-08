@@ -1,13 +1,13 @@
 import 'dart:async';
 
-class StreamMuxer<T> extends Stream<MapEntry<T, dynamic>> {
-  final Map<T, Stream> streams;
+class StreamMuxer<TKey, TEvent> extends Stream<MapEntry<TKey, TEvent>> {
+  final Map<TKey, Stream<TEvent>> streams;
 
-  StreamController<MapEntry<T, dynamic>> _controller;
-  Map<T, StreamSubscription> _subscriptions;
+  StreamController<MapEntry<TKey, TEvent>> _controller;
+  Map<TKey, StreamSubscription<TEvent>> _subscriptions;
 
   StreamMuxer(this.streams) {
-    _controller = StreamController<MapEntry<T, dynamic>>(
+    _controller = StreamController<MapEntry<TKey, TEvent>>(
       onCancel: _onCancel,
       onListen: _onListen,
       onPause: () => _subscriptions.values.forEach((s) => s.pause()),
@@ -16,8 +16,8 @@ class StreamMuxer<T> extends Stream<MapEntry<T, dynamic>> {
   }
 
   @override
-  StreamSubscription<MapEntry<T, dynamic>> listen(
-          void Function(MapEntry<T, dynamic> event) onData,
+  StreamSubscription<MapEntry<TKey, TEvent>> listen(
+          void Function(MapEntry<TKey, TEvent> event) onData,
           {Function onError,
           void Function() onDone,
           bool cancelOnError}) =>

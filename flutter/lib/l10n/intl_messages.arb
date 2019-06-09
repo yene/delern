@@ -1,6 +1,6 @@
 {
   "@@locale": "en",
-  "@@last_modified": "2019-05-22T11:24:00.474448",
+  "@@last_modified": "2019-06-09T12:56:37.035164",
   "navigationDrawerSignOut": "Sign Out",
   "@navigationDrawerSignOut": {
     "description": "Sign Out in Navigation Drawer",
@@ -560,6 +560,22 @@
     "description": "Card and reversed card were added",
     "type": "text",
     "placeholders": {
+    }
+  },
+  "listOFDecksScreenTitle": "List of decks",
+  "@listOFDecksScreenTitle": {
+    "description": "List of decks",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "cardsToLearnLabel": "{numberOfCards} to learn",
+  "@cardsToLearnLabel": {
+    "description": "Cards to learn label",
+    "type": "text",
+    "placeholders": {
+      "numberOfCards": {
+      }
     }
   }
 }

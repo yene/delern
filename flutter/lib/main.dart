@@ -43,9 +43,10 @@ class App extends StatelessWidget {
           afterOnboardingBuilder: () =>
               SignInWidget(afterSignInBuilder: () => child)),
       theme: ThemeData(
+          scaffoldBackgroundColor: app_styles.kScaffoldBackgroundColor,
           primarySwatch: app_styles.kPrimarySwatch,
           accentColor: app_styles.kAccentColor),
-      home: DecksList(title: title),
+      home: const DecksList(),
     );
   }
 }

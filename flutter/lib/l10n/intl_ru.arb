@@ -560,5 +560,21 @@
     "type": "text",
     "placeholders": {
     }
+  },
+  "listOFDecksScreenTitle": "Список папок",
+  "@listOFDecksScreenTitle": {
+    "description": "List of decks",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "cardsToLearnLabel": "{numberOfCards} на изучение",
+  "@cardsToLearnLabel": {
+    "description": "Cards to learn label",
+    "type": "text",
+    "placeholders": {
+      "numberOfCards": {
+      }
+    }
   }
 }

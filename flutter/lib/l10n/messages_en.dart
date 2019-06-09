@@ -20,14 +20,16 @@ typedef MessageIfAbsent(String message_str, List args);
 class MessageLookup extends MessageLookupByLibrary {
   get localeName => 'en';
 
-  static m0(date) =>
+  static m0(numberOfCards) => "${numberOfCards} to learn";
+
+  static m1(date) =>
       "Next card to learn is suggested at ${date}. Would you like to continue learning anyway?";
 
-  static m1(url) => "Could not launch url ${url}";
+  static m2(url) => "Could not launch url ${url}";
 
-  static m2(number) => "Number of cards: ${number}";
+  static m3(number) => "Number of cards: ${number}";
 
-  static m3(number) => "Watched: ${number}";
+  static m4(number) => "Watched: ${number}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function>{
@@ -52,12 +54,13 @@ class MessageLookup extends MessageLookupByLibrary {
             "Card and reversed card were added"),
         "cardDeletedUserMessage":
             MessageLookupByLibrary.simpleMessage("Card was deleted"),
+        "cardsToLearnLabel": m0,
         "continueAnonymously":
             MessageLookupByLibrary.simpleMessage("Continue Anonymously"),
         "continueEditingQuestion": MessageLookupByLibrary.simpleMessage(
             "You have unsaved changes. Would you like to continue editing?"),
-        "continueLearningQuestion": m0,
-        "couldNotLaunchUrl": m1,
+        "continueLearningQuestion": m1,
+        "couldNotLaunchUrl": m2,
         "deck": MessageLookupByLibrary.simpleMessage("Deck"),
         "deckType": MessageLookupByLibrary.simpleMessage("Deck Type"),
         "decksIntroDescription": MessageLookupByLibrary.simpleMessage(
@@ -123,7 +126,7 @@ class MessageLookup extends MessageLookupByLibrary {
                 "You cannot edit card with a read access."),
         "noSharingAccessUserMessage": MessageLookupByLibrary.simpleMessage(
             "Only owner of deck can share it."),
-        "numberOfCards": m2,
+        "numberOfCards": m3,
         "offlineUserMessage": MessageLookupByLibrary.simpleMessage(
             "You are offline, please try it later"),
         "owner": MessageLookupByLibrary.simpleMessage("Owner"),
@@ -150,7 +153,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "supportDevelopment": MessageLookupByLibrary.simpleMessage(
             "Please tell us what we can do to make your experience with Delern better!\n\nIf you have any questions or suggestions please contact us:\n[delern@dasfoo.org](mailto:delern@dasfoo.org)\n\nFollow latest news on:\n\n- [Facebook](https://fb.me/das.delern)\n- [Twitter](https://twitter.com/dasdelern)\n- [VK](https://vk.com/delern)\n\nTo see the source code for this app, please visit the [Delern GitHub repo](https://github.com/dasfoo/delern).\n      "),
         "swissDeckType": MessageLookupByLibrary.simpleMessage("Swiss"),
-        "watchedCards": m3,
+        "watchedCards": m4,
         "whoHasAccessLabel":
             MessageLookupByLibrary.simpleMessage("Who has access"),
         "yes": MessageLookupByLibrary.simpleMessage("Yes")

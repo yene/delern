@@ -1,6 +1,6 @@
 {
   "@@locale": "en",
-  "@@last_modified": "2019-06-07T10:56:39.999935",
+  "@@last_modified": "2019-06-09T12:56:37.035164",
   "navigationDrawerSignOut": "Sign Out",
   "@navigationDrawerSignOut": {
     "description": "Sign Out in Navigation Drawer",
@@ -567,6 +567,15 @@
     "description": "List of decks",
     "type": "text",
     "placeholders": {
+    }
+  },
+  "cardsToLearnLabel": "{numberOfCards} to learn",
+  "@cardsToLearnLabel": {
+    "description": "Cards to learn label",
+    "type": "text",
+    "placeholders": {
+      "numberOfCards": {
+      }
     }
   }
 }

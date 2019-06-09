@@ -20,14 +20,16 @@ typedef MessageIfAbsent(String message_str, List args);
 class MessageLookup extends MessageLookupByLibrary {
   get localeName => 'ru';
 
-  static m0(date) =>
+  static m0(numberOfCards) => "${numberOfCards} на изучение";
+
+  static m1(date) =>
       "Следующая карточка рекомендуется к повторению ${date}. Вы хотите продолжить изучение?";
 
-  static m1(url) => "Не удалось запустить ссылку ${url}";
+  static m2(url) => "Не удалось запустить ссылку ${url}";
 
-  static m2(number) => "Количество карточек: ${number}";
+  static m3(number) => "Количество карточек: ${number}";
 
-  static m3(number) => "Просмотрено: ${number}";
+  static m4(number) => "Просмотрено: ${number}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function>{
@@ -57,12 +59,13 @@ class MessageLookup extends MessageLookupByLibrary {
             "Карточка и обратная карточка были добавлены"),
         "cardDeletedUserMessage":
             MessageLookupByLibrary.simpleMessage("Карточка удалена"),
+        "cardsToLearnLabel": m0,
         "continueAnonymously":
             MessageLookupByLibrary.simpleMessage("Продолжить Анонимно"),
         "continueEditingQuestion": MessageLookupByLibrary.simpleMessage(
             "У Вас есть несохраненные изменения. Хотите продолжить редактирование?"),
-        "continueLearningQuestion": m0,
-        "couldNotLaunchUrl": m1,
+        "continueLearningQuestion": m1,
+        "couldNotLaunchUrl": m2,
         "deck": MessageLookupByLibrary.simpleMessage("Список"),
         "deckType": MessageLookupByLibrary.simpleMessage("Тип списка"),
         "decksIntroDescription": MessageLookupByLibrary.simpleMessage(
@@ -132,7 +135,7 @@ class MessageLookup extends MessageLookupByLibrary {
                 "Вы не можете редактировать карточки с доступом на чтение."),
         "noSharingAccessUserMessage": MessageLookupByLibrary.simpleMessage(
             "Только владелец может поделиться списком."),
-        "numberOfCards": m2,
+        "numberOfCards": m3,
         "offlineUserMessage": MessageLookupByLibrary.simpleMessage(
             "Нет сети, пожалуйста, попробуйте позже"),
         "owner": MessageLookupByLibrary.simpleMessage("Владелец"),
@@ -160,7 +163,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "supportDevelopment": MessageLookupByLibrary.simpleMessage(
             "Расскажите, пожалуйста, что мы можем сделать, чтобы улучшить Ваш опыт с Delern!\n\nЕсли у вас есть какие-либо вопросы или предложения, свяжитесь с нами:\n[delern@dasfoo.org](mailto:delern@dasfoo.org)\n\nCледите за последними новостями Delern:\n\n- [Facebook](https://fb.me/das.delern)\n- [Twitter](https://twitter.com/dasdelern)\n- [VK](https://vk.com/delern)\n\nЧтобы увидеть исходный код этого приложения, посетите [Delern GitHub repo](https://github.com/dasfoo/delern).\n      "),
         "swissDeckType": MessageLookupByLibrary.simpleMessage("Швейцарский"),
-        "watchedCards": m3,
+        "watchedCards": m4,
         "whoHasAccessLabel":
             MessageLookupByLibrary.simpleMessage("У кого есть доступ"),
         "yes": MessageLookupByLibrary.simpleMessage("Да")

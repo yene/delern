@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:delern_flutter/flutter/localization.dart' as localizations;
 import 'package:delern_flutter/flutter/styles.dart' as app_styles;
 import 'package:delern_flutter/models/card_model.dart';
@@ -130,11 +132,9 @@ class _DecksListState extends State<DecksList> {
               child: ObservingAnimatedListWidget<DeckModel>(
                 list: _bloc.decksList,
                 itemBuilder: (context, item, animation, index) {
-                  final itemHeight = MediaQuery.of(context).size.height *
-                              _kItemHeightRatio <
-                          app_styles.kMinItemHeight
-                      ? app_styles.kMinItemHeight
-                      : MediaQuery.of(context).size.height * _kItemHeightRatio;
+                  final itemHeight = max(
+                      MediaQuery.of(context).size.height * _kItemHeightRatio,
+                      app_styles.kMinItemHeight);
                   return SizeTransition(
                       sizeFactor: animation,
                       child: Column(
@@ -194,17 +194,7 @@ class DeckListItemWidget extends StatelessWidget {
       ),
     );
 
-    final primaryTextStyle = app_styles.primaryText.copyWith(
-        fontSize: height * 0.25 < app_styles.kMinPrimaryTextSize
-            ? app_styles.kMinPrimaryTextSize
-            : height * 0.25);
-    final secondaryTextStyle = app_styles.secondaryText.copyWith(
-        fontSize: height * 0.1 < app_styles.kMinSecondaryTextSize
-            ? app_styles.kMinSecondaryTextSize
-            : height * 0.1);
-    final iconSize = (height * 0.5) < app_styles.kMinIconHeight
-        ? app_styles.kMinIconHeight
-        : height * 0.5;
+    final iconSize = max(height * 0.5, app_styles.kMinIconHeight);
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
@@ -240,9 +230,7 @@ class DeckListItemWidget extends StatelessWidget {
                 child: Row(
                   children: <Widget>[
                     _buildLeading(iconSize),
-                    Expanded(
-                        child: _buildContent(
-                            primaryTextStyle, secondaryTextStyle)),
+                    Expanded(child: _buildContent(context)),
                     _buildTrailing(iconSize),
                   ],
                 ),
@@ -255,38 +243,35 @@ class DeckListItemWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildContent(
-          TextStyle primaryTextStyle, TextStyle secondaryTextStyle) =>
-      Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Text(
-            deck.name,
-            style: primaryTextStyle,
-          ),
-          Row(
-            children: <Widget>[
-              StreamBuilder<int>(
-                key: Key(deck.key),
-                initialData: bloc.numberOfCardsDue(deck.key).value,
-                stream: bloc.numberOfCardsDue(deck.key).stream,
-                builder: (context, snapshot) => Container(
-                      child: Text(
-                        snapshot.data?.toString() ?? 'N/A',
-                        style: secondaryTextStyle,
-                      ),
-                    ),
+  Widget _buildContent(BuildContext context) {
+    final primaryTextStyle = app_styles.primaryText
+        .copyWith(fontSize: max(height * 0.25, app_styles.kMinPrimaryTextSize));
+    final secondaryTextStyle = app_styles.secondaryText.copyWith(
+        fontSize: max(height * 0.1, app_styles.kMinSecondaryTextSize));
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        Text(
+          deck.name,
+          style: primaryTextStyle,
+        ),
+        StreamBuilder<int>(
+          key: Key(deck.key),
+          initialData: bloc.numberOfCardsDue(deck.key).value,
+          stream: bloc.numberOfCardsDue(deck.key).stream,
+          builder: (context, snapshot) => Container(
+                child: Text(
+                  localizations
+                      .of(context)
+                      .cardsToLearnLabel(snapshot.data?.toString() ?? 'N/A'),
+                  style: secondaryTextStyle,
+                ),
               ),
-              // TODO(ksheremet): Localize
-              Text(
-                ' to learn',
-                style: secondaryTextStyle,
-              ),
-            ],
-          ),
-        ],
-      );
+        ),
+      ],
+    );
+  }
 
   Widget _buildLeading(double size) => IconButton(
         onPressed: null,

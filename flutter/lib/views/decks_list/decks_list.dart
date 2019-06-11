@@ -201,32 +201,31 @@ class DeckListItemWidget extends StatelessWidget {
         emptyExpanded,
         Expanded(
           flex: 8,
-          child: Container(
-            height: height,
-            child: Material(
-              elevation: _kItemElevation,
-              // TODO(ksheremet): Get rid of ListTile and design custom
-              child: InkWell(
-                onTap: () async {
-                  final anyCardsShown = await Navigator.push(
+          child: Material(
+            elevation: _kItemElevation,
+            child: InkWell(
+              onTap: () async {
+                final anyCardsShown = await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      settings: const RouteSettings(name: '/decks/learn'),
+                      // TODO(dotdoom): pass scheduled cards list to
+                      //  CardsLearning.
+                      builder: (context) => CardsLearning(deck: deck),
+                    ));
+                if (anyCardsShown == false) {
+                  // If deck is empty, open a screen with adding cards
+                  unawaited(Navigator.push(
                       context,
                       MaterialPageRoute(
-                        settings: const RouteSettings(name: '/decks/learn'),
-                        // TODO(dotdoom): pass scheduled cards list to
-                        //  CardsLearning.
-                        builder: (context) => CardsLearning(deck: deck),
-                      ));
-                  if (anyCardsShown == false) {
-                    // If deck is empty, open a screen with adding cards
-                    unawaited(Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            settings: const RouteSettings(name: '/cards/new'),
-                            builder: (context) => CardCreateUpdate(
-                                card: CardModel(deckKey: deck.key),
-                                deck: deck))));
-                  }
-                },
+                          settings: const RouteSettings(name: '/cards/new'),
+                          builder: (context) => CardCreateUpdate(
+                              card: CardModel(deckKey: deck.key),
+                              deck: deck))));
+                }
+              },
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 10),
                 child: Row(
                   children: <Widget>[
                     _buildLeading(iconSize),

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:delern_flutter/models/base/delayed_initialization.dart';
 import 'package:delern_flutter/models/card_model.dart';
 import 'package:delern_flutter/view_models/base/filtered_sorted_observable_list.dart';
@@ -20,4 +22,12 @@ class CardListViewModel {
             (FilteredSortedObservableList(CardModel.getList(deckKey: deckKey))
               ..comparator = (c1, c2) =>
                   c1.front.toLowerCase().compareTo(c2.front.toLowerCase()));
+
+  final _onDeckNameController = StreamController<String>();
+  Sink<String> get onDeckName => _onDeckNameController.sink;
+
+  //TODO(ksheremet): Use BLoC
+  void close() {
+    _onDeckNameController.close();
+  }
 }

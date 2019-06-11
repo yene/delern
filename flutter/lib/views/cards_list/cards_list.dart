@@ -22,6 +22,7 @@ class CardsList extends StatefulWidget {
 }
 
 class _CardsListState extends State<CardsList> {
+  final TextEditingController _deckNameController = TextEditingController();
   CardListViewModel _cardListViewModel;
 
   void _searchTextChanged(String input) {
@@ -38,6 +39,7 @@ class _CardsListState extends State<CardsList> {
   @override
   void initState() {
     _cardListViewModel = CardListViewModel(deckKey: widget.deck.key);
+    _deckNameController.text = widget.deck.name;
     super.initState();
   }
 
@@ -45,18 +47,38 @@ class _CardsListState extends State<CardsList> {
   Widget build(BuildContext context) => Scaffold(
         appBar: SearchBarWidget(
             title: widget.deck.name, search: _searchTextChanged),
-        body: ObservingGridWidget<CardModel>(
-          maxCrossAxisExtent: 240,
-          items: _cardListViewModel.list,
-          itemBuilder: (item) => CardGridItem(
-            card: item,
-            deck: widget.deck,
-            allowEdit: widget.deck.access != AccessType.read,
-          ),
-          // TODO(ksheremet): Consider to remove this field
-          emptyGridUserMessage: localizations.of(context).emptyCardsList,
+        body: Column(
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.all(8),
+              child: TextField(
+                maxLines: null,
+                keyboardType: TextInputType.multiline,
+                controller: _deckNameController,
+                style: app_styles.primaryText,
+                onChanged: (text) {
+                  setState(() {
+                    _cardListViewModel.onDeckName.add(text);
+                  });
+                },
+              ),
+            ),
+            Expanded(child: _buildCardGrid()),
+          ],
         ),
         floatingActionButton: buildAddCard(),
+      );
+
+  Widget _buildCardGrid() => ObservingGridWidget<CardModel>(
+        maxCrossAxisExtent: 240,
+        items: _cardListViewModel.list,
+        itemBuilder: (item) => CardGridItem(
+          card: item,
+          deck: widget.deck,
+          allowEdit: widget.deck.access != AccessType.read,
+        ),
+        // TODO(ksheremet): Consider to remove this field
+        emptyGridUserMessage: localizations.of(context).emptyCardsList,
       );
 
   Builder buildAddCard() => Builder(

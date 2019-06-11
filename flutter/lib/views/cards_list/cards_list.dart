@@ -2,6 +2,7 @@ import 'package:delern_flutter/flutter/localization.dart' as localizations;
 import 'package:delern_flutter/flutter/styles.dart' as app_styles;
 import 'package:delern_flutter/flutter/user_messages.dart';
 import 'package:delern_flutter/models/card_model.dart';
+import 'package:delern_flutter/models/deck_access_model.dart';
 import 'package:delern_flutter/models/deck_model.dart';
 import 'package:delern_flutter/view_models/card_list_view_model.dart';
 import 'package:delern_flutter/views/card_create_update/card_create_update.dart';
@@ -13,11 +14,8 @@ import 'package:flutter/material.dart';
 
 class CardsList extends StatefulWidget {
   final DeckModel deck;
-  final bool allowEdit;
 
-  const CardsList({@required this.deck, @required this.allowEdit})
-      : assert(deck != null),
-        assert(allowEdit != null);
+  const CardsList({@required this.deck}) : assert(deck != null);
 
   @override
   _CardsListState createState() => _CardsListState();
@@ -53,7 +51,7 @@ class _CardsListState extends State<CardsList> {
           itemBuilder: (item) => CardGridItem(
             card: item,
             deck: widget.deck,
-            allowEdit: widget.allowEdit,
+            allowEdit: widget.deck.access != AccessType.read,
           ),
           // TODO(ksheremet): Consider to remove this field
           emptyGridUserMessage: localizations.of(context).emptyCardsList,
@@ -64,7 +62,7 @@ class _CardsListState extends State<CardsList> {
   Builder buildAddCard() => Builder(
         builder: (context) => FloatingActionButton(
           onPressed: () {
-            if (widget.allowEdit) {
+            if (widget.deck.access != AccessType.read) {
               Navigator.push(
                   context,
                   MaterialPageRoute(

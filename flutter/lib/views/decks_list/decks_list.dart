@@ -368,7 +368,6 @@ class EditDeleteDismissible extends StatelessWidget {
                 settings: const RouteSettings(name: '/decks/view'),
                 builder: (context) => CardsList(
                       deck: deck,
-                      allowEdit: deck.access != AccessType.read,
                     )),
           ));
           return false;

@@ -89,7 +89,6 @@ class _DeckMenuState extends State<DeckMenu>
               settings: const RouteSettings(name: '/decks/view'),
               builder: (context) => CardsList(
                     deck: widget.deck,
-                    allowEdit: allowEdit,
                   )),
         );
         break;

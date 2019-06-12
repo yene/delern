@@ -47,9 +47,7 @@ class _CardsListState extends State<CardsList> {
   @override
   Widget build(BuildContext context) => ScreenBlocView(
         appBar: SearchBarWidget(
-            // TODO(ksheremet): Localize
-            title: 'Edit',
-            search: _searchTextChanged),
+            title: localizations.of(context).edit, search: _searchTextChanged),
         body: Column(
           children: <Widget>[
             Padding(

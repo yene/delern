@@ -53,7 +53,7 @@ class _CardsListState extends State<CardsList> {
             Padding(
               padding: const EdgeInsets.all(8),
               child: TextField(
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   suffixIcon: Icon(Icons.edit),
                 ),
                 maxLines: null,

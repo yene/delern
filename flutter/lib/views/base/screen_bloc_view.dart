@@ -3,7 +3,7 @@ import 'package:delern_flutter/view_models/base/screen_bloc.dart';
 import 'package:flutter/material.dart';
 
 class ScreenBlocView extends StatefulWidget {
-  final AppBar appBar;
+  final PreferredSizeWidget appBar;
   final Widget body;
   final ScreenBloc bloc;
   final Widget floatingActionButton;

@@ -4,7 +4,8 @@ import 'package:delern_flutter/flutter/user_messages.dart';
 import 'package:delern_flutter/models/card_model.dart';
 import 'package:delern_flutter/models/deck_access_model.dart';
 import 'package:delern_flutter/models/deck_model.dart';
-import 'package:delern_flutter/view_models/card_list_view_model.dart';
+import 'package:delern_flutter/view_models/edit_bloc.dart';
+import 'package:delern_flutter/views/base/screen_bloc_view.dart';
 import 'package:delern_flutter/views/card_create_update/card_create_update.dart';
 import 'package:delern_flutter/views/card_preview/card_preview.dart';
 import 'package:delern_flutter/views/cards_list/observing_grid_widget.dart';
@@ -23,30 +24,32 @@ class CardsList extends StatefulWidget {
 
 class _CardsListState extends State<CardsList> {
   final TextEditingController _deckNameController = TextEditingController();
-  CardListViewModel _cardListViewModel;
+  EditBloc _bloc;
 
   void _searchTextChanged(String input) {
     if (input == null) {
-      _cardListViewModel.filter = null;
+      _bloc.filter = null;
       return;
     }
     input = input.toLowerCase();
-    _cardListViewModel.filter = (c) =>
+    _bloc.filter = (c) =>
         c.front.toLowerCase().contains(input) ||
         c.back.toLowerCase().contains(input);
   }
 
   @override
   void initState() {
-    _cardListViewModel = CardListViewModel(deckKey: widget.deck.key);
+    _bloc = EditBloc(deck: widget.deck);
     _deckNameController.text = widget.deck.name;
     super.initState();
   }
 
   @override
-  Widget build(BuildContext context) => Scaffold(
+  Widget build(BuildContext context) => ScreenBlocView(
         appBar: SearchBarWidget(
-            title: widget.deck.name, search: _searchTextChanged),
+            // TODO(ksheremet): Localize
+            title: 'Edit',
+            search: _searchTextChanged),
         body: Column(
           children: <Widget>[
             Padding(
@@ -58,7 +61,7 @@ class _CardsListState extends State<CardsList> {
                 style: app_styles.primaryText,
                 onChanged: (text) {
                   setState(() {
-                    _cardListViewModel.onDeckName.add(text);
+                    _bloc.onDeckName.add(text);
                   });
                 },
               ),
@@ -67,11 +70,12 @@ class _CardsListState extends State<CardsList> {
           ],
         ),
         floatingActionButton: buildAddCard(),
+        bloc: _bloc,
       );
 
   Widget _buildCardGrid() => ObservingGridWidget<CardModel>(
         maxCrossAxisExtent: 240,
-        items: _cardListViewModel.list,
+        items: _bloc.list,
         itemBuilder: (item) => CardGridItem(
           card: item,
           deck: widget.deck,
@@ -101,6 +105,12 @@ class _CardsListState extends State<CardsList> {
           child: const Icon(Icons.add),
         ),
       );
+
+  @override
+  void dispose() {
+    _bloc.dispose();
+    super.dispose();
+  }
 }
 
 class CardGridItem extends StatelessWidget {

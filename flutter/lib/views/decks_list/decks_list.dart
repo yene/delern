@@ -128,7 +128,7 @@ class _DecksListState extends State<DecksList> {
           title: localizations.of(context).listOFDecksScreenTitle,
           search: setFilter,
           leading: IconButton(
-            icon: Icon(Icons.person),
+            icon: const Icon(Icons.person),
             onPressed: () {
               _scaffoldKey.currentState.openDrawer();
             },

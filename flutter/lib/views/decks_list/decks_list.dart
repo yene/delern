@@ -149,7 +149,7 @@ class _DecksListState extends State<DecksList> {
                           DeckListItemWidget(
                             deck: item,
                             bloc: _bloc,
-                            height: itemHeight,
+                            minHeight: itemHeight,
                           ),
                           Padding(
                             padding: EdgeInsets.symmetric(
@@ -180,10 +180,10 @@ class _DecksListState extends State<DecksList> {
 class DeckListItemWidget extends StatelessWidget {
   final DeckModel deck;
   final DecksListBloc bloc;
-  final double height;
+  final double minHeight;
 
   const DeckListItemWidget(
-      {@required this.deck, @required this.bloc, @required this.height});
+      {@required this.deck, @required this.bloc, @required this.minHeight});
 
   @override
   Widget build(BuildContext context) {
@@ -194,39 +194,38 @@ class DeckListItemWidget extends StatelessWidget {
       ),
     );
 
-    final iconSize = max(height * 0.5, app_styles.kMinIconHeight);
+    final iconSize = max(minHeight * 0.5, app_styles.kMinIconHeight);
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         emptyExpanded,
         Expanded(
           flex: 8,
-          child: Container(
-            height: height,
-            child: Material(
-              elevation: _kItemElevation,
-              // TODO(ksheremet): Get rid of ListTile and design custom
-              child: InkWell(
-                onTap: () async {
-                  final anyCardsShown = await Navigator.push(
+          child: Material(
+            elevation: _kItemElevation,
+            child: InkWell(
+              onTap: () async {
+                final anyCardsShown = await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      settings: const RouteSettings(name: '/decks/learn'),
+                      // TODO(dotdoom): pass scheduled cards list to
+                      //  CardsLearning.
+                      builder: (context) => CardsLearning(deck: deck),
+                    ));
+                if (anyCardsShown == false) {
+                  // If deck is empty, open a screen with adding cards
+                  unawaited(Navigator.push(
                       context,
                       MaterialPageRoute(
-                        settings: const RouteSettings(name: '/decks/learn'),
-                        // TODO(dotdoom): pass scheduled cards list to
-                        //  CardsLearning.
-                        builder: (context) => CardsLearning(deck: deck),
-                      ));
-                  if (anyCardsShown == false) {
-                    // If deck is empty, open a screen with adding cards
-                    unawaited(Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            settings: const RouteSettings(name: '/cards/new'),
-                            builder: (context) => CardCreateUpdate(
-                                card: CardModel(deckKey: deck.key),
-                                deck: deck))));
-                  }
-                },
+                          settings: const RouteSettings(name: '/cards/new'),
+                          builder: (context) => CardCreateUpdate(
+                              card: CardModel(deckKey: deck.key),
+                              deck: deck))));
+                }
+              },
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 10),
                 child: Row(
                   children: <Widget>[
                     _buildLeading(iconSize),
@@ -244,10 +243,10 @@ class DeckListItemWidget extends StatelessWidget {
   }
 
   Widget _buildContent(BuildContext context) {
-    final primaryTextStyle = app_styles.primaryText
-        .copyWith(fontSize: max(height * 0.25, app_styles.kMinPrimaryTextSize));
+    final primaryTextStyle = app_styles.primaryText.copyWith(
+        fontSize: max(minHeight * 0.25, app_styles.kMinPrimaryTextSize));
     final secondaryTextStyle = app_styles.secondaryText.copyWith(
-        fontSize: max(height * 0.1, app_styles.kMinSecondaryTextSize));
+        fontSize: max(minHeight * 0.1, app_styles.kMinSecondaryTextSize));
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.center,

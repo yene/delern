@@ -65,10 +65,15 @@ class ObservingGridWidgetState<T extends KeyedListItem>
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
-                Text(
-                  // TODO(dotdoom): make this more abstract.
-                  localizations.of(context).numberOfCards(widget.items.length),
-                  style: app_styles.secondaryText,
+                Padding(
+                  padding: const EdgeInsets.only(right: 8),
+                  child: Text(
+                    // TODO(dotdoom): make this more abstract.
+                    localizations
+                        .of(context)
+                        .numberOfCards(widget.items.length),
+                    style: app_styles.secondaryText,
+                  ),
                 ),
               ],
             ),

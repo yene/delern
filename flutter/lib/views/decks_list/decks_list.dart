@@ -119,12 +119,21 @@ class _DecksListState extends State<DecksList> {
   }
 
   GlobalKey fabKey = GlobalKey();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) => Scaffold(
+        key: _scaffoldKey,
         appBar: SearchBarWidget(
-            title: localizations.of(context).listOFDecksScreenTitle,
-            search: setFilter),
+          title: localizations.of(context).listOFDecksScreenTitle,
+          search: setFilter,
+          leading: IconButton(
+            icon: const Icon(Icons.person),
+            onPressed: () {
+              _scaffoldKey.currentState.openDrawer();
+            },
+          ),
+        ),
         drawer: NavigationDrawer(),
         body: Column(
           children: <Widget>[

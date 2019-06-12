@@ -7,8 +7,9 @@ typedef SearchCallback = void Function(String input);
 class SearchBarWidget extends StatefulWidget implements PreferredSizeWidget {
   final String title;
   final SearchCallback search;
+  final Widget leading;
 
-  const SearchBarWidget({this.title, this.search});
+  const SearchBarWidget({this.title, this.search, this.leading});
 
   @override
   State<StatefulWidget> createState() => SearchBarWidgetState();
@@ -68,6 +69,7 @@ class SearchBarWidgetState extends State<SearchBarWidget> {
 
     return AppBar(
       title: appBarTitle,
+      leading: widget.leading,
       actions: <Widget>[
         IconButton(
           icon: actionIcon,

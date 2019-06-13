@@ -69,7 +69,7 @@ class _CreateDeckDialogState extends State<_CreateDeckDialog> {
         style: TextStyle(
             color: _textController.text.isEmpty
                 ? Theme.of(context).disabledColor
-                : Theme.of(context).accentColor),
+                : Theme.of(context).primaryColor),
       ),
     );
 
@@ -79,7 +79,7 @@ class _CreateDeckDialogState extends State<_CreateDeckDialog> {
         },
         child: Text(
           MaterialLocalizations.of(context).cancelButtonLabel.toUpperCase(),
-          style: TextStyle(color: Theme.of(context).accentColor),
+          style: TextStyle(color: Theme.of(context).primaryColor),
         ));
 
     final deckNameTextField = TextField(

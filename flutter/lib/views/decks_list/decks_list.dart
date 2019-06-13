@@ -15,6 +15,7 @@ import 'package:delern_flutter/views/helpers/observing_animated_list_widget.dart
 import 'package:delern_flutter/views/helpers/search_bar_widget.dart';
 import 'package:delern_flutter/views/helpers/sign_in_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:pedantic/pedantic.dart';
 
 const double _kItemElevation = 4;
@@ -205,50 +206,54 @@ class DeckListItemWidget extends StatelessWidget {
     );
 
     final iconSize = max(minHeight * 0.5, app_styles.kMinIconHeight);
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        emptyExpanded,
-        Expanded(
-          flex: 8,
-          child: Material(
-            elevation: _kItemElevation,
-            child: InkWell(
-              onTap: () async {
-                final anyCardsShown = await Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      settings: const RouteSettings(name: '/decks/learn'),
-                      // TODO(dotdoom): pass scheduled cards list to
-                      //  CardsLearning.
-                      builder: (context) => CardsLearning(deck: deck),
-                    ));
-                if (anyCardsShown == false) {
-                  // If deck is empty, open a screen with adding cards
-                  unawaited(Navigator.push(
+    return EditDeleteDismissible(
+      iconSize: iconSize,
+      deck: deck,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          emptyExpanded,
+          Expanded(
+            flex: 8,
+            child: Material(
+              elevation: _kItemElevation,
+              child: InkWell(
+                onTap: () async {
+                  final anyCardsShown = await Navigator.push(
                       context,
                       MaterialPageRoute(
-                          settings: const RouteSettings(name: '/cards/new'),
-                          builder: (context) => CardCreateUpdate(
-                              card: CardModel(deckKey: deck.key),
-                              deck: deck))));
-                }
-              },
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 10),
-                child: Row(
-                  children: <Widget>[
-                    _buildLeading(iconSize),
-                    Expanded(child: _buildContent(context)),
-                    _buildTrailing(iconSize),
-                  ],
+                        settings: const RouteSettings(name: '/decks/learn'),
+                        // TODO(dotdoom): pass scheduled cards list to
+                        //  CardsLearning.
+                        builder: (context) => CardsLearning(deck: deck),
+                      ));
+                  if (anyCardsShown == false) {
+                    // If deck is empty, open a screen with adding cards
+                    unawaited(Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            settings: const RouteSettings(name: '/cards/new'),
+                            builder: (context) => CardCreateUpdate(
+                                card: CardModel(deckKey: deck.key),
+                                deck: deck))));
+                  }
+                },
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  child: Row(
+                    children: <Widget>[
+                      _buildLeading(iconSize),
+                      Expanded(child: _buildContent(context)),
+                      _buildTrailing(iconSize),
+                    ],
+                  ),
                 ),
               ),
             ),
           ),
-        ),
-        emptyExpanded,
-      ],
+          emptyExpanded,
+        ],
+      ),
     );
   }
 
@@ -292,5 +297,63 @@ class DeckListItemWidget extends StatelessWidget {
   Widget _buildTrailing(double size) => DeckMenu(
         deck: deck,
         buttonSize: size,
+      );
+}
+
+class EditDeleteDismissible extends StatelessWidget {
+  final Widget child;
+  final DeckModel deck;
+  final double iconSize;
+
+  const EditDeleteDismissible(
+      {@required this.child, @required this.deck, @required this.iconSize})
+      : assert(child != null),
+        assert(deck != null),
+        assert(iconSize != null);
+
+  @override
+  Widget build(BuildContext context) => Dismissible(
+        direction: DismissDirection.horizontal,
+        resizeDuration: Duration(seconds: 1),
+        background: Container(
+          color: Colors.blue,
+          child: Padding(
+            padding: const EdgeInsets.only(left: 10),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Icon(
+                Icons.edit,
+                color: Colors.white,
+                size: iconSize,
+              ),
+            ),
+          ),
+        ),
+        secondaryBackground: Container(
+          color: Colors.red,
+          alignment: Alignment.centerRight,
+          child: Icon(
+            Icons.delete,
+            color: Colors.white,
+            size: iconSize,
+          ),
+        ),
+        onDismissed: (direction) {
+          if (direction == DismissDirection.endToStart) {
+            print('Delete');
+          }
+        },
+        confirmDismiss: (direction) {
+          if (direction == DismissDirection.startToEnd) {
+            // TODO(ksheremet): implement edit screen
+            return Future.value(false);
+          }
+          if (direction == DismissDirection.endToStart) {
+            print('End to Start');
+            return Future.value(true);
+          }
+        },
+        key: Key(deck.key),
+        child: child,
       );
 }

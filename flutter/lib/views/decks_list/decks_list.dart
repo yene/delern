@@ -3,10 +3,12 @@ import 'dart:math';
 import 'package:delern_flutter/flutter/localization.dart' as localizations;
 import 'package:delern_flutter/flutter/styles.dart' as app_styles;
 import 'package:delern_flutter/models/card_model.dart';
+import 'package:delern_flutter/models/deck_access_model.dart';
 import 'package:delern_flutter/models/deck_model.dart';
 import 'package:delern_flutter/view_models/decks_list_bloc.dart';
 import 'package:delern_flutter/views/card_create_update/card_create_update.dart';
 import 'package:delern_flutter/views/cards_learning/cards_learning.dart';
+import 'package:delern_flutter/views/cards_list/cards_list.dart';
 import 'package:delern_flutter/views/decks_list/create_deck_widget.dart';
 import 'package:delern_flutter/views/decks_list/deck_menu.dart';
 import 'package:delern_flutter/views/decks_list/navigation_drawer.dart';
@@ -345,7 +347,15 @@ class EditDeleteDismissible extends StatelessWidget {
         },
         confirmDismiss: (direction) {
           if (direction == DismissDirection.startToEnd) {
-            // TODO(ksheremet): implement edit screen
+            unawaited(Navigator.push(
+              context,
+              MaterialPageRoute(
+                  settings: const RouteSettings(name: '/decks/view'),
+                  builder: (context) => CardsList(
+                        deck: deck,
+                        allowEdit: deck.access != AccessType.read,
+                      )),
+            ));
             return Future.value(false);
           }
           if (direction == DismissDirection.endToStart) {

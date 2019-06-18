@@ -62,6 +62,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "continueLearningQuestion": m1,
         "couldNotLaunchUrl": m2,
         "deck": MessageLookupByLibrary.simpleMessage("Deck"),
+        "deckDeletedUserMessage":
+            MessageLookupByLibrary.simpleMessage("Deck was deleted"),
         "deckType": MessageLookupByLibrary.simpleMessage("Deck Type"),
         "decksIntroDescription": MessageLookupByLibrary.simpleMessage(
             "Create decks with flashcards"),

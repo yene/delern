@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:delern_flutter/flutter/localization.dart' as localizations;
 import 'package:delern_flutter/flutter/styles.dart' as app_styles;
+import 'package:delern_flutter/flutter/user_messages.dart';
 import 'package:delern_flutter/models/card_model.dart';
 import 'package:delern_flutter/models/deck_access_model.dart';
 import 'package:delern_flutter/models/deck_model.dart';
@@ -14,6 +15,7 @@ import 'package:delern_flutter/views/decks_list/deck_menu.dart';
 import 'package:delern_flutter/views/decks_list/navigation_drawer.dart';
 import 'package:delern_flutter/views/helpers/empty_list_message_widget.dart';
 import 'package:delern_flutter/views/helpers/observing_animated_list_widget.dart';
+import 'package:delern_flutter/views/helpers/save_updates_dialog.dart';
 import 'package:delern_flutter/views/helpers/search_bar_widget.dart';
 import 'package:delern_flutter/views/helpers/sign_in_widget.dart';
 import 'package:flutter/material.dart';
@@ -211,6 +213,7 @@ class DeckListItemWidget extends StatelessWidget {
     return EditDeleteDismissible(
       iconSize: iconSize,
       deck: deck,
+      bloc: bloc,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
@@ -306,17 +309,22 @@ class EditDeleteDismissible extends StatelessWidget {
   final Widget child;
   final DeckModel deck;
   final double iconSize;
+  final DecksListBloc bloc;
 
   const EditDeleteDismissible(
-      {@required this.child, @required this.deck, @required this.iconSize})
+      {@required this.child,
+      @required this.deck,
+      @required this.iconSize,
+      @required this.bloc})
       : assert(child != null),
         assert(deck != null),
-        assert(iconSize != null);
+        assert(iconSize != null),
+        assert(bloc != null);
 
   @override
   Widget build(BuildContext context) => Dismissible(
         direction: DismissDirection.horizontal,
-        resizeDuration: Duration(seconds: 1),
+        resizeDuration: const Duration(seconds: 1),
         background: Container(
           color: Colors.blue,
           child: Padding(
@@ -340,11 +348,6 @@ class EditDeleteDismissible extends StatelessWidget {
             size: iconSize,
           ),
         ),
-        onDismissed: (direction) {
-          if (direction == DismissDirection.endToStart) {
-            print('Delete');
-          }
-        },
         confirmDismiss: (direction) {
           if (direction == DismissDirection.startToEnd) {
             unawaited(Navigator.push(
@@ -359,11 +362,33 @@ class EditDeleteDismissible extends StatelessWidget {
             return Future.value(false);
           }
           if (direction == DismissDirection.endToStart) {
-            print('End to Start');
-            return Future.value(true);
+            return _deleteDeck(context);
           }
         },
         key: Key(deck.key),
         child: child,
       );
+
+  Future<bool> _deleteDeck(BuildContext context) async {
+    final locale = localizations.of(context);
+    final deleteDeck = await showSaveUpdatesDialog(
+        context: context,
+        changesQuestion: deck.access == AccessType.owner
+            ? locale.deleteDeckOwnerAccessQuestion
+            : locale.deleteDeckWriteReadAccessQuestion,
+        yesAnswer: locale.delete,
+        noAnswer: MaterialLocalizations.of(context).cancelButtonLabel);
+    if (deleteDeck) {
+      try {
+        await bloc.deleteDeck(deck);
+        UserMessages.showMessage(Scaffold.of(context),
+            localizations.of(context).deckDeletedUserMessage);
+        return Future.value(true);
+      } catch (e, stackTrace) {
+        unawaited(
+            UserMessages.showError(() => Scaffold.of(context), e, stackTrace));
+      }
+    }
+    return Future.value(false);
+  }
 }

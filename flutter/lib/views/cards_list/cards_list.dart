@@ -84,6 +84,7 @@ class _CardsListState extends State<CardsList> {
         ),
         // TODO(ksheremet): Consider to remove this field
         emptyGridUserMessage: localizations.of(context).emptyCardsList,
+        upIconVisibleRow: 6,
       );
 
   Builder buildAddCard() => Builder(

@@ -12,12 +12,17 @@ import 'package:observable/observable.dart';
 
 typedef ObservingGridItemBuilder<T> = Widget Function(T item);
 
+// TODO(ksheremet): Refactor. This class has more responsibilities that
+//  it should be. Get rid of number of cards, 'up' icon.
 class ObservingGridWidget<T extends KeyedListItem> extends StatefulWidget {
   const ObservingGridWidget({
     @required this.items,
     @required this.itemBuilder,
     @required this.maxCrossAxisExtent,
     @required this.emptyGridUserMessage,
+
+    /// From which row 'up' icon is visible.
+    @required this.upIconVisibleRow,
     Key key,
   }) : super(key: key);
 
@@ -25,6 +30,7 @@ class ObservingGridWidget<T extends KeyedListItem> extends StatefulWidget {
   final ObservingGridItemBuilder<T> itemBuilder;
   final double maxCrossAxisExtent;
   final String emptyGridUserMessage;
+  final int upIconVisibleRow;
 
   @override
   ObservingGridWidgetState<T> createState() => ObservingGridWidgetState<T>();
@@ -33,6 +39,9 @@ class ObservingGridWidget<T extends KeyedListItem> extends StatefulWidget {
 class ObservingGridWidgetState<T extends KeyedListItem>
     extends State<ObservingGridWidget<T>> {
   StreamSubscription<List<ListChangeRecord<T>>> _listSubscription;
+  final ScrollController _scrollController = ScrollController();
+  var isUpIconVisible = false;
+  var currentScrollRow = 0.0;
 
   @override
   void initState() {
@@ -60,30 +69,77 @@ class ObservingGridWidgetState<T extends KeyedListItem>
           return EmptyListMessageWidget(widget.emptyGridUserMessage);
         }
 
-        return Column(
-          children: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.only(right: 8),
-                  child: Text(
-                    // TODO(dotdoom): make this more abstract.
-                    localizations
-                        .of(context)
-                        .numberOfCards(widget.items.length),
-                    style: app_styles.secondaryText,
+        return StatefulBuilder(
+          builder: (context, contentState) => Stack(
+            children: <Widget>[
+              Column(
+                children: <Widget>[
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(right: 8),
+                        child: Text(
+                          // TODO(dotdoom): make this more abstract.
+                          localizations
+                              .of(context)
+                              .numberOfCards(widget.items.length),
+                          style: app_styles.secondaryText,
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-              ],
-            ),
-            Expanded(
-              child: GridView.extent(
-                  maxCrossAxisExtent: widget.maxCrossAxisExtent,
-                  children:
-                      widget.items.map(_buildItem).toList(growable: false)),
-            ),
-          ],
+                  Expanded(
+                    child: NotificationListener<ScrollUpdateNotification>(
+                      onNotification: (scrollNotification) {
+                        // We don't have exact height of row, we only
+                        // have max width/height. This calculation is
+                        // approximate.
+                        currentScrollRow = scrollNotification.metrics.pixels /
+                                widget.maxCrossAxisExtent +
+                            1;
+                        if (currentScrollRow > widget.upIconVisibleRow &&
+                            !isUpIconVisible) {
+                          // Call set state of parent.
+                          contentState(() {
+                            isUpIconVisible = true;
+                          });
+                        }
+                        if (currentScrollRow < widget.upIconVisibleRow &&
+                            isUpIconVisible) {
+                          contentState(() {
+                            isUpIconVisible = false;
+                          });
+                        }
+                      },
+                      child: GridView.extent(
+                          controller: _scrollController,
+                          maxCrossAxisExtent: widget.maxCrossAxisExtent,
+                          children: widget.items
+                              .map(_buildItem)
+                              .toList(growable: false)),
+                    ),
+                  ),
+                ],
+              ),
+              if (currentScrollRow > widget.upIconVisibleRow)
+                Padding(
+                  padding: const EdgeInsets.only(left: 20, bottom: 20),
+                  child: Align(
+                    alignment: Alignment.bottomLeft,
+                    child: IconButton(
+                      tooltip: localizations.of(context).scrollToStartLabel,
+                      onPressed: () {
+                        _scrollController.animateTo(0,
+                            duration: const Duration(seconds: 1),
+                            curve: Curves.easeIn);
+                      },
+                      icon: const Icon(Icons.arrow_upward),
+                    ),
+                  ),
+                )
+            ],
+          ),
         );
       });
 }

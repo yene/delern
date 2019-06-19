@@ -141,6 +141,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "save": MessageLookupByLibrary.simpleMessage("Save"),
         "saveChangesQuestion": MessageLookupByLibrary.simpleMessage(
             "Do you want to save changes?"),
+        "scrollToStartLabel":
+            MessageLookupByLibrary.simpleMessage("Scroll to the beginning"),
         "searchHint": MessageLookupByLibrary.simpleMessage("Search..."),
         "send": MessageLookupByLibrary.simpleMessage("Send"),
         "serverUnavailableUserMessage": MessageLookupByLibrary.simpleMessage(

@@ -584,7 +584,7 @@
     "placeholders": {
     }
   },
-  "deckDeletedUserMessage": "Список был удален",
+  "deckDeletedUserMessage": "Список был удалет",
   "@deckDeletedUserMessage": {
     "description": "Deck was deleted",
     "type": "text",
@@ -615,6 +615,13 @@
   "learning": "Изучение",
   "@learning": {
     "description": "Learning Type",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "scrollToStartLabel": "Прокрутить до начала",
+  "@scrollToStartLabel": {
+    "description": "Scroll to the beginning",
     "type": "text",
     "placeholders": {
     }

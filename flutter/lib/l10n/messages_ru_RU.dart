@@ -67,7 +67,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "couldNotLaunchUrl": m2,
         "deck": MessageLookupByLibrary.simpleMessage("Список"),
         "deckDeletedUserMessage":
-            MessageLookupByLibrary.simpleMessage("Список был удален"),
+            MessageLookupByLibrary.simpleMessage("Список был удалет"),
         "deckType": MessageLookupByLibrary.simpleMessage("Тип списка"),
         "decksIntroDescription": MessageLookupByLibrary.simpleMessage(
             "Создавайте списки с карточками"),
@@ -151,6 +151,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "save": MessageLookupByLibrary.simpleMessage("Сохранить"),
         "saveChangesQuestion": MessageLookupByLibrary.simpleMessage(
             "Вы хотите сохранить изменения?"),
+        "scrollToStartLabel":
+            MessageLookupByLibrary.simpleMessage("Прокрутить до начала"),
         "searchHint": MessageLookupByLibrary.simpleMessage("Поиск..."),
         "send": MessageLookupByLibrary.simpleMessage("Отправить"),
         "serverUnavailableUserMessage": MessageLookupByLibrary.simpleMessage(

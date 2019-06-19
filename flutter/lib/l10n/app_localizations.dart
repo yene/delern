@@ -572,4 +572,10 @@ To see the source code for this app, please visit the [Delern GitHub repo](https
         name: 'viewLearning',
         desc: 'View Learning Label',
       );
+
+  String get scrollToStartLabel => Intl.message(
+        'Scroll to the beginning',
+        name: 'scrollToStartLabel',
+        desc: 'Scroll to the beginning',
+      );
 }

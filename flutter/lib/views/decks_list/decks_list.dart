@@ -358,6 +358,17 @@ class EditDeleteDismissible extends StatelessWidget {
           ),
         ),
         confirmDismiss: (direction) async {
+          if (direction == DismissDirection.startToEnd) {
+            unawaited(Navigator.push(
+              context,
+              MaterialPageRoute(
+                  settings: const RouteSettings(name: '/decks/view'),
+                  builder: (context) => CardsList(
+                        deck: deck,
+                      )),
+            ));
+            return false;
+          }
           if (direction == DismissDirection.endToStart) {
             return _deleteDeck(context);
           }

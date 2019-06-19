@@ -619,5 +619,12 @@
     "type": "text",
     "placeholders": {
     }
+  },
+  "scrollToStartLabel": "Scroll to the beginning",
+  "@scrollToStartLabel": {
+    "description": "Scroll to the beginning",
+    "type": "text",
+    "placeholders": {
+    }
   }
 }

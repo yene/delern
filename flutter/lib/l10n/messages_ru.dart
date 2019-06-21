@@ -140,6 +140,7 @@ class MessageLookup extends MessageLookupByLibrary {
             "Нет сети, пожалуйста, попробуйте позже"),
         "owner": MessageLookupByLibrary.simpleMessage("Владелец"),
         "peopleLabel": MessageLookupByLibrary.simpleMessage("Люди"),
+        "profileTooltip": MessageLookupByLibrary.simpleMessage("Профиль"),
         "reversedCardLabel":
             MessageLookupByLibrary.simpleMessage("Добавить обратную карточку"),
         "save": MessageLookupByLibrary.simpleMessage("Сохранить"),

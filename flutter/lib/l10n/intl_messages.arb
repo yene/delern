@@ -1,6 +1,6 @@
 {
   "@@locale": "en",
-  "@@last_modified": "2019-06-09T12:56:37.035164",
+  "@@last_modified": "2019-06-21T08:21:21.286400",
   "navigationDrawerSignOut": "Sign Out",
   "@navigationDrawerSignOut": {
     "description": "Sign Out in Navigation Drawer",
@@ -576,6 +576,13 @@
     "placeholders": {
       "numberOfCards": {
       }
+    }
+  },
+  "profileTooltip": "Profile",
+  "@profileTooltip": {
+    "description": "Profile tooltip",
+    "type": "text",
+    "placeholders": {
     }
   }
 }

@@ -536,4 +536,10 @@ To see the source code for this app, please visit the [Delern GitHub repo](https
         name: 'cardsToLearnLabel',
         desc: 'Cards to learn label',
       );
+
+  String get profileTooltip => Intl.message(
+        'Profile',
+        name: 'profileTooltip',
+        desc: 'Profile tooltip',
+      );
 }

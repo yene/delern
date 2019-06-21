@@ -576,5 +576,12 @@
       "numberOfCards": {
       }
     }
+  },
+  "profileTooltip": "Профиль",
+  "@profileTooltip": {
+    "description": "Profile tooltip",
+    "type": "text",
+    "placeholders": {
+    }
   }
 }

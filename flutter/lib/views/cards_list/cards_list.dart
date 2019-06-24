@@ -8,6 +8,7 @@ import 'package:delern_flutter/view_models/edit_bloc.dart';
 import 'package:delern_flutter/views/base/screen_bloc_view.dart';
 import 'package:delern_flutter/views/card_create_update/card_create_update.dart';
 import 'package:delern_flutter/views/card_preview/card_preview.dart';
+import 'package:delern_flutter/views/cards_list/deck_settings_widget.dart';
 import 'package:delern_flutter/views/cards_list/observing_grid_widget.dart';
 import 'package:delern_flutter/views/helpers/card_background_specifier.dart';
 import 'package:delern_flutter/views/helpers/search_bar_widget.dart';
@@ -25,6 +26,7 @@ class CardsList extends StatefulWidget {
 class _CardsListState extends State<CardsList> {
   final TextEditingController _deckNameController = TextEditingController();
   EditBloc _bloc;
+  DeckModel _currentDeck;
 
   void _searchTextChanged(String input) {
     if (input == null) {
@@ -41,13 +43,20 @@ class _CardsListState extends State<CardsList> {
   void initState() {
     _bloc = EditBloc(deck: widget.deck);
     _deckNameController.text = widget.deck.name;
+    _currentDeck = widget.deck;
+    _bloc.doDeckChanged.listen((deck) {
+      _currentDeck = deck;
+    });
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) => ScreenBlocView(
         appBar: SearchBarWidget(
-            title: localizations.of(context).edit, search: _searchTextChanged),
+          title: localizations.of(context).edit,
+          search: _searchTextChanged,
+          actions: _buildActions(),
+        ),
         body: Column(
           children: <Widget>[
             Padding(
@@ -73,6 +82,21 @@ class _CardsListState extends State<CardsList> {
         floatingActionButton: buildAddCard(),
         bloc: _bloc,
       );
+
+  List<Widget> _buildActions() {
+    final menuAction = IconButton(
+      icon: Icon(Icons.more_vert),
+      onPressed: () {
+        showDialog<void>(
+          context: context,
+          builder: (context) => Dialog(
+              child: DeckSettingsWidget(deck: _currentDeck, bloc: _bloc)),
+        );
+      },
+    );
+
+    return <Widget>[menuAction];
+  }
 
   Widget _buildCardGrid() => ObservingGridWidget<CardModel>(
         maxCrossAxisExtent: 240,

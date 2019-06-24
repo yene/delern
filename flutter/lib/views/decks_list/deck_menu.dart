@@ -7,7 +7,6 @@ import 'package:delern_flutter/models/deck_model.dart';
 import 'package:delern_flutter/remote/analytics.dart';
 import 'package:delern_flutter/views/card_create_update/card_create_update.dart';
 import 'package:delern_flutter/views/cards_list/cards_list.dart';
-import 'package:delern_flutter/views/deck_settings/deck_settings.dart';
 import 'package:delern_flutter/views/deck_sharing/deck_sharing.dart';
 import 'package:delern_flutter/views/helpers/sign_in_widget.dart';
 import 'package:flutter/material.dart';
@@ -92,14 +91,6 @@ class _DeckMenuState extends State<DeckMenu>
                   )),
         );
         break;
-      case _DeckMenuItemType.setting:
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-              settings: const RouteSettings(name: '/decks/settings'),
-              builder: (context) => DeckSettings(widget.deck)),
-        );
-        break;
       case _DeckMenuItemType.share:
         if (widget.deck.access == AccessType.owner) {
           Navigator.push(
@@ -117,13 +108,12 @@ class _DeckMenuState extends State<DeckMenu>
   }
 }
 
-enum _DeckMenuItemType { add, edit, setting, share }
+enum _DeckMenuItemType { add, edit, share }
 
 Map<_DeckMenuItemType, String> _buildMenu(BuildContext context) {
   final deckMenu = <_DeckMenuItemType, String>{
     _DeckMenuItemType.add: localizations.of(context).addCardsDeckMenu,
     _DeckMenuItemType.edit: localizations.of(context).editCardsDeckMenu,
-    _DeckMenuItemType.setting: localizations.of(context).settingsDeckMenu
   };
 
   if (!CurrentUserWidget.of(context).user.isAnonymous) {

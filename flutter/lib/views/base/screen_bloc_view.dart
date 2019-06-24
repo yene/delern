@@ -8,13 +8,12 @@ class ScreenBlocView extends StatefulWidget {
   final ScreenBloc bloc;
   final Widget floatingActionButton;
 
-  const ScreenBlocView(
-      {@required this.appBar,
-      @required this.body,
-      @required this.bloc,
-      this.floatingActionButton})
-      : assert(appBar != null),
-        assert(body != null),
+  const ScreenBlocView({
+    @required this.body,
+    @required this.bloc,
+    this.floatingActionButton,
+    this.appBar,
+  })  : assert(body != null),
         assert(bloc != null);
 
   @override

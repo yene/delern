@@ -23,6 +23,7 @@ dependencies:
       ref: list-observed-unobserved
   built_collection: ^4.2.2
   built_value: ^6.6.0
+  rxdart: ^0.22.0
 
   firebase_auth: ^0.8.2
   firebase_analytics: ^2.0.3

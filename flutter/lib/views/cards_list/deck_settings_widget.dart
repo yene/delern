@@ -1,53 +1,51 @@
 import 'package:delern_flutter/flutter/localization.dart' as localizations;
 import 'package:delern_flutter/flutter/styles.dart' as app_styles;
 import 'package:delern_flutter/models/deck_model.dart';
-import 'package:delern_flutter/view_models/deck_settings_bloc.dart';
-import 'package:delern_flutter/views/base/screen_bloc_view.dart';
-import 'package:delern_flutter/views/deck_settings/deck_type_dropdown_widget.dart';
+import 'package:delern_flutter/view_models/edit_bloc.dart';
 import 'package:delern_flutter/views/helpers/save_updates_dialog.dart';
 import 'package:flutter/material.dart';
 
-// This view doesn't use any ui state object. For every change there is a sink.
-class DeckSettings extends StatefulWidget {
-  final DeckModel _deck;
+import 'deck_type_dropdown_widget.dart';
 
-  const DeckSettings(this._deck);
+// TODO(ksheremet): When deck is deleted, return to list of decks
+class DeckSettingsWidget extends StatefulWidget {
+  final DeckModel deck;
+  final EditBloc bloc;
+
+  const DeckSettingsWidget({@required this.deck, @required this.bloc})
+      : assert(bloc != null);
 
   @override
-  State<StatefulWidget> createState() => _DeckSettingsState();
+  State<StatefulWidget> createState() => _DeckSettingsWidgetState();
 }
 
-class _DeckSettingsState extends State<DeckSettings> {
-  final TextEditingController _deckNameController = TextEditingController();
-  DeckSettingsBloc _bloc;
-
-  // I cannot get rid of this field because it is used in 2 places: app bar
-  // and "rename deck" field.
-  String _deckName;
+class _DeckSettingsWidgetState extends State<DeckSettingsWidget> {
   DeckType _deckType;
   bool _isMarkdown;
 
   @override
   void initState() {
-    _deckName = widget._deck.name;
-    _deckType = widget._deck.type;
-    _isMarkdown = widget._deck.markdown;
-    _bloc = DeckSettingsBloc(deck: widget._deck);
-    _bloc.doShowConfirmationDialog.listen(_showDeleteDeckDialog);
-    _deckNameController.text = _deckName;
+    widget.bloc.doShowDeleteConfirmationDialog.listen(_showDeleteDeckDialog);
+    // TODO(ksheremet): Update deck with rxdart
+    _deckType = widget.deck.type;
+    _isMarkdown = widget.deck.markdown;
+    widget.bloc.doDeckChanged.listen((deck) {
+      _deckType = deck.type;
+      _isMarkdown = deck.markdown;
+    });
     super.initState();
   }
 
   @override
   void didChangeDependencies() {
-    // TODO(ksheremet): Locale must be somewhere in ScreenBlocView
     final locale = localizations.of(context);
-    if (_bloc?.locale != locale) {
-      _bloc.onLocale.add(locale);
+    if (widget.bloc?.locale != locale) {
+      widget.bloc.onLocale.add(locale);
     }
     super.didChangeDependencies();
   }
 
+  // TODO(ksheremet): Fix context = null
   Future<void> _showDeleteDeckDialog(deleteDeckQuestion) async {
     final deleteDeckDialog = await showSaveUpdatesDialog(
         context: context,
@@ -55,41 +53,17 @@ class _DeckSettingsState extends State<DeckSettings> {
         yesAnswer: localizations.of(context).delete,
         noAnswer: MaterialLocalizations.of(context).cancelButtonLabel);
     if (deleteDeckDialog) {
-      _bloc.onDeleteDeck.add(null);
+      widget.bloc.onDeleteDeck.add(null);
     }
   }
 
   @override
-  Widget build(BuildContext context) => ScreenBlocView(
-        appBar: AppBar(title: Text(_deckName), actions: <Widget>[
-          IconButton(
-            icon: const Icon(Icons.delete),
-            onPressed: () async {
-              _bloc.onDeleteDeckIntention.add(null);
-            },
-          ),
-        ]),
-        body: _buildBody(),
-        bloc: _bloc,
-      );
-
-  Widget _buildBody() => Padding(
+  Widget build(BuildContext context) => Padding(
         padding: const EdgeInsets.all(8),
         child: SingleChildScrollView(
           child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              TextField(
-                maxLines: null,
-                keyboardType: TextInputType.multiline,
-                controller: _deckNameController,
-                style: app_styles.primaryText,
-                onChanged: (text) {
-                  setState(() {
-                    _deckName = text;
-                    _bloc.onDeckName.add(text);
-                  });
-                },
-              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
@@ -109,7 +83,7 @@ class _DeckSettingsState extends State<DeckSettings> {
                     value: _deckType,
                     valueChanged: (newDeckType) => setState(() {
                       _deckType = newDeckType;
-                      _bloc.onDeckType.add(newDeckType);
+                      widget.bloc.onDeckType.add(newDeckType);
                     }),
                   ),
                 ],
@@ -126,20 +100,25 @@ class _DeckSettingsState extends State<DeckSettings> {
                     onChanged: (newValue) {
                       setState(() {
                         _isMarkdown = newValue;
-                        _bloc.onMarkdown.add(newValue);
+                        widget.bloc.onMarkdown.add(newValue);
                       });
                     },
                   )
                 ],
               ),
+              Align(
+                alignment: Alignment.topLeft,
+                child: RaisedButton(
+                  color: Theme.of(context).accentColor,
+                  onPressed: () async {
+                    widget.bloc.onDeleteDeckIntention.add(null);
+                  },
+                  // TODO(ksheremet): Localize
+                  child: const Text('Delete Deck'),
+                ),
+              ),
             ],
           ),
         ),
       );
-
-  @override
-  void dispose() {
-    _bloc.dispose();
-    super.dispose();
-  }
 }

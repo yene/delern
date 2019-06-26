@@ -584,7 +584,7 @@
     "placeholders": {
     }
   },
-  "deckDeletedUserMessage": "Список был удалет",
+  "deckDeletedUserMessage": "Список был удален",
   "@deckDeletedUserMessage": {
     "description": "Deck was deleted",
     "type": "text",

@@ -67,7 +67,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "couldNotLaunchUrl": m2,
         "deck": MessageLookupByLibrary.simpleMessage("Список"),
         "deckDeletedUserMessage":
-            MessageLookupByLibrary.simpleMessage("Список был удалет"),
+            MessageLookupByLibrary.simpleMessage("Список был удален"),
         "deckType": MessageLookupByLibrary.simpleMessage("Тип списка"),
         "decksIntroDescription": MessageLookupByLibrary.simpleMessage(
             "Создавайте списки с карточками"),

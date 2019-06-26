@@ -58,6 +58,9 @@ class EditBloc extends ScreenBloc {
   final _onMarkdownController = StreamController<bool>();
   Sink<bool> get onMarkdown => _onMarkdownController.sink;
 
+  final _doCloseDialogController = BehaviorSubject<void>();
+  Stream<void> get doCloseDialog => _doCloseDialogController.stream;
+
   void _initListeners() {
     _onDeckNameController.stream.listen((name) {
       _deck.name = name;
@@ -68,6 +71,7 @@ class EditBloc extends ScreenBloc {
     _onDeleteDeckController.stream.listen((_) async {
       try {
         await _delete();
+        _doCloseDialogController.add(null);
         notifyPop();
       } catch (e, stackTrace) {
         unawaited(error_reporting.report('deleteDeck', e, stackTrace));
@@ -146,6 +150,7 @@ class EditBloc extends ScreenBloc {
     _onDeckTypeController.close();
     _onMarkdownController.close();
     _doDeckChangedController.close();
+    _doCloseDialogController.close();
     super.dispose();
   }
 }

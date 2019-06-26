@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 
 import 'deck_type_dropdown_widget.dart';
 
-// TODO(ksheremet): When deck is deleted, return to list of decks
 class DeckSettingsWidget extends StatefulWidget {
   final DeckModel deck;
   final EditBloc bloc;
@@ -33,6 +32,9 @@ class _DeckSettingsWidgetState extends State<DeckSettingsWidget> {
       _deckType = deck.type;
       _isMarkdown = deck.markdown;
     });
+    widget.bloc.doCloseDialog.listen((_) {
+      Navigator.pop(context);
+    });
     super.initState();
   }
 
@@ -45,7 +47,6 @@ class _DeckSettingsWidgetState extends State<DeckSettingsWidget> {
     super.didChangeDependencies();
   }
 
-  // TODO(ksheremet): Fix context = null
   Future<void> _showDeleteDeckDialog(deleteDeckQuestion) async {
     final deleteDeckDialog = await showSaveUpdatesDialog(
         context: context,

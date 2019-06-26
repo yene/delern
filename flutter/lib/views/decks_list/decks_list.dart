@@ -10,11 +10,11 @@ import 'package:delern_flutter/remote/analytics.dart';
 import 'package:delern_flutter/view_models/decks_list_bloc.dart';
 import 'package:delern_flutter/views/card_create_update/card_create_update.dart';
 import 'package:delern_flutter/views/cards_interval_learning/cards_interval_learning.dart';
-import 'package:delern_flutter/views/cards_list/cards_list.dart';
 import 'package:delern_flutter/views/cards_view_learning/cards_view_learning.dart';
 import 'package:delern_flutter/views/decks_list/create_deck_widget.dart';
 import 'package:delern_flutter/views/decks_list/deck_menu.dart';
 import 'package:delern_flutter/views/decks_list/navigation_drawer.dart';
+import 'package:delern_flutter/views/edit/edit_screen.dart';
 import 'package:delern_flutter/views/helpers/arrow_to_fab_widget.dart';
 import 'package:delern_flutter/views/helpers/empty_list_message_widget.dart';
 import 'package:delern_flutter/views/helpers/learning_method_widget.dart';
@@ -358,17 +358,6 @@ class EditDeleteDismissible extends StatelessWidget {
           ),
         ),
         confirmDismiss: (direction) async {
-          if (direction == DismissDirection.startToEnd) {
-            unawaited(Navigator.push(
-              context,
-              MaterialPageRoute(
-                  settings: const RouteSettings(name: '/decks/view'),
-                  builder: (context) => CardsList(
-                        deck: deck,
-                      )),
-            ));
-            return false;
-          }
           if (direction == DismissDirection.endToStart) {
             return _deleteDeck(context);
           }
@@ -377,7 +366,7 @@ class EditDeleteDismissible extends StatelessWidget {
             context,
             MaterialPageRoute(
                 settings: const RouteSettings(name: '/decks/view'),
-                builder: (context) => CardsList(
+                builder: (context) => EditScreen(
                       deck: deck,
                     )),
           ));

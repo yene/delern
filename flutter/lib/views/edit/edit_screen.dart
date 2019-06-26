@@ -8,22 +8,22 @@ import 'package:delern_flutter/view_models/edit_bloc.dart';
 import 'package:delern_flutter/views/base/screen_bloc_view.dart';
 import 'package:delern_flutter/views/card_create_update/card_create_update.dart';
 import 'package:delern_flutter/views/card_preview/card_preview.dart';
-import 'package:delern_flutter/views/cards_list/deck_settings_widget.dart';
-import 'package:delern_flutter/views/cards_list/observing_grid_widget.dart';
+import 'package:delern_flutter/views/edit/deck_settings_widget.dart';
+import 'package:delern_flutter/views/edit/observing_grid_widget.dart';
 import 'package:delern_flutter/views/helpers/card_background_specifier.dart';
 import 'package:delern_flutter/views/helpers/search_bar_widget.dart';
 import 'package:flutter/material.dart';
 
-class CardsList extends StatefulWidget {
+class EditScreen extends StatefulWidget {
   final DeckModel deck;
 
-  const CardsList({@required this.deck}) : assert(deck != null);
+  const EditScreen({@required this.deck}) : assert(deck != null);
 
   @override
-  _CardsListState createState() => _CardsListState();
+  _EditScreenState createState() => _EditScreenState();
 }
 
-class _CardsListState extends State<CardsList> {
+class _EditScreenState extends State<EditScreen> {
   final TextEditingController _deckNameController = TextEditingController();
   EditBloc _bloc;
   DeckModel _currentDeck;

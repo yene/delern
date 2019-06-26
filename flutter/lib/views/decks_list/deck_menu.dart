@@ -6,8 +6,8 @@ import 'package:delern_flutter/models/deck_access_model.dart';
 import 'package:delern_flutter/models/deck_model.dart';
 import 'package:delern_flutter/remote/analytics.dart';
 import 'package:delern_flutter/views/card_create_update/card_create_update.dart';
-import 'package:delern_flutter/views/cards_list/cards_list.dart';
 import 'package:delern_flutter/views/deck_sharing/deck_sharing.dart';
+import 'package:delern_flutter/views/edit/edit_screen.dart';
 import 'package:delern_flutter/views/helpers/sign_in_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:pedantic/pedantic.dart';
@@ -86,7 +86,7 @@ class _DeckMenuState extends State<DeckMenu>
           context,
           MaterialPageRoute(
               settings: const RouteSettings(name: '/decks/view'),
-              builder: (context) => CardsList(
+              builder: (context) => EditScreen(
                     deck: widget.deck,
                   )),
         );

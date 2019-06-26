@@ -578,4 +578,10 @@ To see the source code for this app, please visit the [Delern GitHub repo](https
         name: 'scrollToStartLabel',
         desc: 'Scroll to the beginning',
       );
+
+  String get deleteDeckButton => Intl.message(
+        'Delete Deck',
+        name: 'deleteDeckButton',
+        desc: 'Delete deck button',
+      );
 }

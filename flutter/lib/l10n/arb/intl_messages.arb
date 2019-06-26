@@ -626,5 +626,12 @@
     "type": "text",
     "placeholders": {
     }
+  },
+  "deleteDeckButton": "Delete Deck",
+  "@deleteDeckButton": {
+    "description": "Delete deck button",
+    "type": "text",
+    "placeholders": {
+    }
   }
 }

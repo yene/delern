@@ -113,8 +113,7 @@ class _DeckSettingsWidgetState extends State<DeckSettingsWidget> {
                   onPressed: () async {
                     widget.bloc.onDeleteDeckIntention.add(null);
                   },
-                  // TODO(ksheremet): Localize
-                  child: const Text('Delete Deck'),
+                  child: Text(localizations.of(context).deleteDeckButton),
                 ),
               ),
             ],

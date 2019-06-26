@@ -210,16 +210,16 @@ class DeckListItemWidget extends StatelessWidget {
     );
 
     final iconSize = max(minHeight * 0.5, app_styles.kMinIconHeight);
-    return EditDeleteDismissible(
-      iconSize: iconSize,
-      deck: deck,
-      bloc: bloc,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          emptyExpanded,
-          Expanded(
-            flex: 8,
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        emptyExpanded,
+        Expanded(
+          flex: 8,
+          child: EditDeleteDismissible(
+            iconSize: iconSize,
+            deck: deck,
+            bloc: bloc,
             child: Material(
               elevation: _kItemElevation,
               child: InkWell(
@@ -256,9 +256,9 @@ class DeckListItemWidget extends StatelessWidget {
               ),
             ),
           ),
-          emptyExpanded,
-        ],
-      ),
+        ),
+        emptyExpanded,
+      ],
     );
   }
 

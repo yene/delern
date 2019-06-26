@@ -2,12 +2,15 @@ import 'dart:async';
 
 import 'package:delern_flutter/models/base/delayed_initialization.dart';
 import 'package:delern_flutter/models/base/transaction.dart';
+import 'package:delern_flutter/models/card_model.dart';
+import 'package:delern_flutter/models/card_reply_model.dart';
 import 'package:delern_flutter/models/deck_access_model.dart';
 import 'package:delern_flutter/models/deck_model.dart';
 import 'package:delern_flutter/models/scheduled_card_model.dart';
 import 'package:delern_flutter/remote/analytics.dart';
 import 'package:delern_flutter/view_models/base/filtered_sorted_observable_list.dart';
 import 'package:meta/meta.dart';
+import 'package:pedantic/pedantic.dart';
 
 class NumberOfCardsDue {
   int get value => _value;
@@ -137,5 +140,24 @@ class DecksListBloc {
   // TODO(dotdoom): consider self-disposing map elements for onCancel of stream.
   void dispose() {
     _numberOfCardsDue.values.forEach((c) => c._dispose());
+  }
+
+  Future<void> deleteDeck(DeckModel deck) async {
+    unawaited(logDeckDelete(deck.key));
+    final t = Transaction()..delete(deck);
+    final card = CardModel(deckKey: deck.key);
+    if (deck.access == AccessType.owner) {
+      final accessList = DeckAccessModel.getList(deckKey: deck.key);
+      await accessList.fetchFullValue();
+      accessList
+          .forEach((a) => t.delete(DeckModel(uid: a.key)..key = deck.key));
+      t..deleteAll(DeckAccessModel(deckKey: deck.key))..deleteAll(card);
+      // TODO(dotdoom): delete other users' ScheduledCard and Views?
+    }
+    t
+      ..deleteAll(ScheduledCardModel(deckKey: deck.key, uid: deck.uid))
+      ..deleteAll(
+          CardReplyModel(uid: deck.uid, deckKey: deck.key, cardKey: null));
+    await t.commit();
   }
 }

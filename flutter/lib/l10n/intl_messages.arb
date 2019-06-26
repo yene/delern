@@ -1,6 +1,6 @@
 {
   "@@locale": "en",
-  "@@last_modified": "2019-06-21T08:21:21.286400",
+  "@@last_modified": "2019-06-25T17:13:52.106005",
   "navigationDrawerSignOut": "Sign Out",
   "@navigationDrawerSignOut": {
     "description": "Sign Out in Navigation Drawer",
@@ -581,6 +581,13 @@
   "profileTooltip": "Profile",
   "@profileTooltip": {
     "description": "Profile tooltip",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "deckDeletedUserMessage": "Deck was deleted",
+  "@deckDeletedUserMessage": {
+    "description": "Deck was deleted",
     "type": "text",
     "placeholders": {
     }

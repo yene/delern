@@ -542,4 +542,10 @@ To see the source code for this app, please visit the [Delern GitHub repo](https
         name: 'profileTooltip',
         desc: 'Profile tooltip',
       );
+
+  String get deckDeletedUserMessage => Intl.message(
+        'Deck was deleted',
+        name: 'deckDeletedUserMessage',
+        desc: 'Deck was deleted',
+      );
 }

@@ -2,19 +2,24 @@ import 'dart:math';
 
 import 'package:delern_flutter/flutter/localization.dart' as localizations;
 import 'package:delern_flutter/flutter/styles.dart' as app_styles;
+import 'package:delern_flutter/flutter/user_messages.dart';
 import 'package:delern_flutter/models/card_model.dart';
+import 'package:delern_flutter/models/deck_access_model.dart';
 import 'package:delern_flutter/models/deck_model.dart';
 import 'package:delern_flutter/view_models/decks_list_bloc.dart';
 import 'package:delern_flutter/views/card_create_update/card_create_update.dart';
 import 'package:delern_flutter/views/cards_learning/cards_learning.dart';
+import 'package:delern_flutter/views/cards_list/cards_list.dart';
 import 'package:delern_flutter/views/decks_list/create_deck_widget.dart';
 import 'package:delern_flutter/views/decks_list/deck_menu.dart';
 import 'package:delern_flutter/views/decks_list/navigation_drawer.dart';
 import 'package:delern_flutter/views/helpers/empty_list_message_widget.dart';
 import 'package:delern_flutter/views/helpers/observing_animated_list_widget.dart';
+import 'package:delern_flutter/views/helpers/save_updates_dialog.dart';
 import 'package:delern_flutter/views/helpers/search_bar_widget.dart';
 import 'package:delern_flutter/views/helpers/sign_in_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:pedantic/pedantic.dart';
 
 const double _kItemElevation = 4;
@@ -211,37 +216,42 @@ class DeckListItemWidget extends StatelessWidget {
         emptyExpanded,
         Expanded(
           flex: 8,
-          child: Material(
-            elevation: _kItemElevation,
-            child: InkWell(
-              onTap: () async {
-                final anyCardsShown = await Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      settings: const RouteSettings(name: '/decks/learn'),
-                      // TODO(dotdoom): pass scheduled cards list to
-                      //  CardsLearning.
-                      builder: (context) => CardsLearning(deck: deck),
-                    ));
-                if (anyCardsShown == false) {
-                  // If deck is empty, open a screen with adding cards
-                  unawaited(Navigator.push(
+          child: EditDeleteDismissible(
+            iconSize: iconSize,
+            deck: deck,
+            bloc: bloc,
+            child: Material(
+              elevation: _kItemElevation,
+              child: InkWell(
+                onTap: () async {
+                  final anyCardsShown = await Navigator.push(
                       context,
                       MaterialPageRoute(
-                          settings: const RouteSettings(name: '/cards/new'),
-                          builder: (context) => CardCreateUpdate(
-                              card: CardModel(deckKey: deck.key),
-                              deck: deck))));
-                }
-              },
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 10),
-                child: Row(
-                  children: <Widget>[
-                    _buildLeading(iconSize),
-                    Expanded(child: _buildContent(context)),
-                    _buildTrailing(iconSize),
-                  ],
+                        settings: const RouteSettings(name: '/decks/learn'),
+                        // TODO(dotdoom): pass scheduled cards list to
+                        //  CardsLearning.
+                        builder: (context) => CardsLearning(deck: deck),
+                      ));
+                  if (anyCardsShown == false) {
+                    // If deck is empty, open a screen with adding cards
+                    unawaited(Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            settings: const RouteSettings(name: '/cards/new'),
+                            builder: (context) => CardCreateUpdate(
+                                card: CardModel(deckKey: deck.key),
+                                deck: deck))));
+                  }
+                },
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  child: Row(
+                    children: <Widget>[
+                      _buildLeading(iconSize),
+                      Expanded(child: _buildContent(context)),
+                      _buildTrailing(iconSize),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -293,4 +303,92 @@ class DeckListItemWidget extends StatelessWidget {
         deck: deck,
         buttonSize: size,
       );
+}
+
+class EditDeleteDismissible extends StatelessWidget {
+  final Widget child;
+  final DeckModel deck;
+  final double iconSize;
+  final DecksListBloc bloc;
+
+  const EditDeleteDismissible(
+      {@required this.child,
+      @required this.deck,
+      @required this.iconSize,
+      @required this.bloc})
+      : assert(child != null),
+        assert(deck != null),
+        assert(iconSize != null),
+        assert(bloc != null);
+
+  @override
+  Widget build(BuildContext context) => Dismissible(
+        direction: DismissDirection.horizontal,
+        resizeDuration: const Duration(seconds: 1),
+        background: Container(
+          color: Colors.blue,
+          child: Padding(
+            padding: const EdgeInsets.only(left: 10),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Icon(
+                Icons.edit,
+                color: Colors.white,
+                size: iconSize,
+              ),
+            ),
+          ),
+        ),
+        secondaryBackground: Container(
+          color: Colors.red,
+          alignment: Alignment.centerRight,
+          child: Icon(
+            Icons.delete,
+            color: Colors.white,
+            size: iconSize,
+          ),
+        ),
+        confirmDismiss: (direction) {
+          if (direction == DismissDirection.startToEnd) {
+            unawaited(Navigator.push(
+              context,
+              MaterialPageRoute(
+                  settings: const RouteSettings(name: '/decks/view'),
+                  builder: (context) => CardsList(
+                        deck: deck,
+                        allowEdit: deck.access != AccessType.read,
+                      )),
+            ));
+            return Future.value(false);
+          }
+          if (direction == DismissDirection.endToStart) {
+            return _deleteDeck(context);
+          }
+        },
+        key: Key(deck.key),
+        child: child,
+      );
+
+  Future<bool> _deleteDeck(BuildContext context) async {
+    final locale = localizations.of(context);
+    final deleteDeck = await showSaveUpdatesDialog(
+        context: context,
+        changesQuestion: deck.access == AccessType.owner
+            ? locale.deleteDeckOwnerAccessQuestion
+            : locale.deleteDeckWriteReadAccessQuestion,
+        yesAnswer: locale.delete,
+        noAnswer: MaterialLocalizations.of(context).cancelButtonLabel);
+    if (deleteDeck) {
+      try {
+        await bloc.deleteDeck(deck);
+        UserMessages.showMessage(Scaffold.of(context),
+            localizations.of(context).deckDeletedUserMessage);
+        return Future.value(true);
+      } catch (e, stackTrace) {
+        unawaited(
+            UserMessages.showError(() => Scaffold.of(context), e, stackTrace));
+      }
+    }
+    return Future.value(false);
+  }
 }

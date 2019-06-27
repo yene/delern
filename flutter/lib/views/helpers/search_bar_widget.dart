@@ -72,19 +72,23 @@ class SearchBarWidgetState extends State<SearchBarWidget> {
       title: appBarTitle,
       leading: widget.leading,
       actions: <Widget>[
-        IconButton(
-          icon: actionIcon,
-          onPressed: () {
-            setState(() {
-              if (_isSearchMode) {
-                // TODO(ksheremet): would the user always want to clear it?
-                _searchController.clear();
-                _isSearchMode = false;
-              } else {
-                _isSearchMode = true;
-              }
-            });
-          },
+        AspectRatio(
+          aspectRatio: 1,
+          child: IconButton(
+            icon: actionIcon,
+            tooltip: MaterialLocalizations.of(context).searchFieldLabel,
+            onPressed: () {
+              setState(() {
+                if (_isSearchMode) {
+                  // TODO(ksheremet): would the user always want to clear it?
+                  _searchController.clear();
+                  _isSearchMode = false;
+                } else {
+                  _isSearchMode = true;
+                }
+              });
+            },
+          ),
         )
       ],
     );

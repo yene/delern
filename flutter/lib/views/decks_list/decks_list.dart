@@ -329,7 +329,7 @@ class EditDeleteDismissible extends StatelessWidget {
         direction: DismissDirection.horizontal,
         resizeDuration: const Duration(seconds: 1),
         background: Container(
-          color: Colors.blue,
+          color: app_styles.kEditDismissibleColor,
           child: Padding(
             padding: const EdgeInsets.only(left: 10),
             child: Align(
@@ -343,7 +343,7 @@ class EditDeleteDismissible extends StatelessWidget {
           ),
         ),
         secondaryBackground: Container(
-          color: Colors.red,
+          color: app_styles.kDeleteDismissibleColor,
           alignment: Alignment.centerRight,
           child: Icon(
             Icons.delete,

@@ -6,6 +6,8 @@ const kAccentColor = Colors.redAccent;
 final kScaffoldBackgroundColor = Colors.grey[350];
 final kIconColor = Colors.grey[600];
 const kSecondaryTextDeckItemColor = Color(0xff757575);
+const kEditDismissibleColor = Color(0xFF2196F3);
+const kDeleteDismissibleColor = Color(0xFFFF5252);
 
 const double kMinItemHeight = 48;
 const double kMinIconHeight = 24;

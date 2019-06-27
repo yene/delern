@@ -68,6 +68,7 @@ class SearchBarWidgetState extends State<SearchBarWidget> {
     }
 
     return AppBar(
+      centerTitle: true,
       title: appBarTitle,
       leading: widget.leading,
       actions: <Widget>[

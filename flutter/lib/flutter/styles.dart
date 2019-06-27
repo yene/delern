@@ -23,7 +23,7 @@ final Color signInBackgroundColor = Colors.greenAccent[100];
 const TextStyle primaryText = TextStyle(
   fontSize: 19,
   fontWeight: FontWeight.w400,
-  color: Colors.black,
+  color: Color(0xFF212121),
 );
 
 const TextStyle secondaryText = TextStyle(

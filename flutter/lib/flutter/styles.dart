@@ -13,6 +13,7 @@ const double kMinItemHeight = 48;
 const double kMinIconHeight = 24;
 const double kMinPrimaryTextSize = 19;
 const double kMinSecondaryTextSize = 16;
+const double kIconDeckPadding = 15;
 
 final Map<Gender, Color> cardBackgroundColors = {
   Gender.noGender: Colors.greenAccent[100],

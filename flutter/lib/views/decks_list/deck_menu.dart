@@ -39,6 +39,7 @@ class _DeckMenuState extends State<DeckMenu>
 
   @override
   Widget build(BuildContext context) => IconButton(
+        padding: const EdgeInsets.all(app_styles.kIconDeckPadding),
         iconSize: widget.buttonSize,
         color: app_styles.kIconColor,
         icon: Icon(Icons.more_vert),

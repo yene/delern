@@ -24,7 +24,7 @@ import 'package:pedantic/pedantic.dart';
 
 const double _kItemElevation = 4;
 const double _kItemPaddingRatio = _kItemHeightRatio * 0.08;
-const double _kItemHeightRatio = 0.09;
+const double _kItemHeightRatio = 0.1;
 
 class DecksList extends StatefulWidget {
   const DecksList();
@@ -243,15 +243,12 @@ class DeckListItemWidget extends StatelessWidget {
                                 deck: deck))));
                   }
                 },
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 10),
-                  child: Row(
-                    children: <Widget>[
-                      _buildLeading(iconSize),
-                      Expanded(child: _buildContent(context)),
-                      _buildTrailing(iconSize),
-                    ],
-                  ),
+                child: Row(
+                  children: <Widget>[
+                    _buildLeading(iconSize),
+                    Expanded(child: _buildContent(context)),
+                    _buildTrailing(iconSize),
+                  ],
                 ),
               ),
             ),
@@ -296,6 +293,7 @@ class DeckListItemWidget extends StatelessWidget {
   }
 
   Widget _buildLeading(double size) => IconButton(
+        padding: const EdgeInsets.all(app_styles.kIconDeckPadding),
         onPressed: null,
         icon: Icon(Icons.folder),
         iconSize: size,

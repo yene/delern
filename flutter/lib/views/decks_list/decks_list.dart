@@ -24,7 +24,7 @@ import 'package:pedantic/pedantic.dart';
 
 const double _kItemElevation = 4;
 const double _kItemPaddingRatio = _kItemHeightRatio * 0.08;
-const double _kItemHeightRatio = 0.1;
+const double _kItemHeightRatio = 0.09;
 
 class DecksList extends StatefulWidget {
   const DecksList();

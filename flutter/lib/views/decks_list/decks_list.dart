@@ -267,8 +267,9 @@ class DeckListItemWidget extends StatelessWidget {
         max(minHeight * 0.25, app_styles.kMinPrimaryTextSize);
     final primaryTextStyle =
         app_styles.primaryText.copyWith(fontSize: primaryFontSize);
-    final secondaryTextStyle =
-        app_styles.secondaryText.copyWith(fontSize: primaryFontSize / 1.5);
+    final secondaryTextStyle = app_styles.secondaryText.copyWith(
+        fontSize: primaryFontSize / 1.5,
+        color: app_styles.kSecondaryTextDeckItemColor);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.center,

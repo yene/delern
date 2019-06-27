@@ -5,6 +5,7 @@ const kPrimarySwatch = Colors.green;
 const kAccentColor = Colors.redAccent;
 final kScaffoldBackgroundColor = Colors.grey[350];
 final kIconColor = Colors.grey[600];
+const kSecondaryTextDeckItemColor = Color(0xff757575);
 
 const double kMinItemHeight = 48;
 const double kMinIconHeight = 24;

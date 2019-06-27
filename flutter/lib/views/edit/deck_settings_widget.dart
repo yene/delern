@@ -25,16 +25,8 @@ class _DeckSettingsWidgetState extends State<DeckSettingsWidget> {
   @override
   void initState() {
     widget.bloc.doShowDeleteConfirmationDialog.listen(_showDeleteDeckDialog);
-    // TODO(ksheremet): Update deck with rxdart
     _deckType = widget.deck.type;
     _isMarkdown = widget.deck.markdown;
-    widget.bloc.doDeckChanged.listen((deck) {
-      _deckType = deck.type;
-      _isMarkdown = deck.markdown;
-    });
-    widget.bloc.doCloseDialog.listen((_) {
-      Navigator.pop(context);
-    });
     super.initState();
   }
 
@@ -54,6 +46,8 @@ class _DeckSettingsWidgetState extends State<DeckSettingsWidget> {
         yesAnswer: localizations.of(context).delete,
         noAnswer: MaterialLocalizations.of(context).cancelButtonLabel);
     if (deleteDeckDialog) {
+      // Close settings dialog
+      Navigator.of(context).pop();
       widget.bloc.onDeleteDeck.add(null);
     }
   }

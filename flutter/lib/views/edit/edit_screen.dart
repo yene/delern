@@ -26,7 +26,7 @@ class EditScreen extends StatefulWidget {
 class _EditScreenState extends State<EditScreen> {
   final TextEditingController _deckNameController = TextEditingController();
   EditBloc _bloc;
-  DeckModel _currentDeck;
+  DeckModel _currentDeckState;
 
   void _searchTextChanged(String input) {
     if (input == null) {
@@ -43,9 +43,9 @@ class _EditScreenState extends State<EditScreen> {
   void initState() {
     _bloc = EditBloc(deck: widget.deck);
     _deckNameController.text = widget.deck.name;
-    _currentDeck = widget.deck;
+    _currentDeckState = widget.deck;
     _bloc.doDeckChanged.listen((deck) {
-      _currentDeck = deck;
+      _currentDeckState = deck;
     });
     super.initState();
   }
@@ -90,7 +90,7 @@ class _EditScreenState extends State<EditScreen> {
         showDialog<void>(
           context: context,
           builder: (context) => Dialog(
-              child: DeckSettingsWidget(deck: _currentDeck, bloc: _bloc)),
+              child: DeckSettingsWidget(deck: _currentDeckState, bloc: _bloc)),
         );
       },
     );

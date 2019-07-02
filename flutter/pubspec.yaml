@@ -26,8 +26,8 @@ dependencies:
   firebase_analytics: ^2.0.3
   firebase_database: ^2.0.2
   firebase_messaging: ^4.0.0
+  firebase_crashlytics: ^0.0.4
   google_sign_in: ^4.0.1
-  flutter_crashlytics: ^1.0.0
 
   flutter:
     sdk: flutter

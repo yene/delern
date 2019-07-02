@@ -1,9 +1,9 @@
 PODS:
-  - Crashlytics (3.13.1):
-    - Fabric (~> 1.10.1)
+  - Crashlytics (3.13.2):
+    - Fabric (~> 1.10.2)
   - device_info (0.0.1):
     - Flutter
-  - Fabric (1.10.1)
+  - Fabric (1.10.2)
   - Firebase/Auth (5.20.2):
     - Firebase/CoreOnly
     - FirebaseAuth (= 5.4.2)
@@ -26,6 +26,11 @@ PODS:
     - Firebase/Core
     - Flutter
   - firebase_core (0.0.1):
+    - Firebase/Core
+    - Flutter
+  - firebase_crashlytics (0.0.1):
+    - Crashlytics
+    - Fabric
     - Firebase/Core
     - Flutter
   - firebase_database (0.0.1):
@@ -71,10 +76,6 @@ PODS:
     - GoogleUtilities/UserDefaults (~> 5.3)
     - Protobuf (~> 3.1)
   - Flutter (1.0.0)
-  - flutter_crashlytics (0.0.1):
-    - Crashlytics
-    - Fabric
-    - Flutter
   - google_sign_in (0.0.1):
     - Flutter
     - GoogleSignIn (~> 4.0)
@@ -136,10 +137,10 @@ DEPENDENCIES:
   - firebase_analytics (from `.symlinks/plugins/firebase_analytics/ios`)
   - firebase_auth (from `.symlinks/plugins/firebase_auth/ios`)
   - firebase_core (from `.symlinks/plugins/firebase_core/ios`)
+  - firebase_crashlytics (from `.symlinks/plugins/firebase_crashlytics/ios`)
   - firebase_database (from `.symlinks/plugins/firebase_database/ios`)
   - firebase_messaging (from `.symlinks/plugins/firebase_messaging/ios`)
   - Flutter (from `.symlinks/flutter/ios`)
-  - flutter_crashlytics (from `.symlinks/plugins/flutter_crashlytics/ios`)
   - google_sign_in (from `.symlinks/plugins/google_sign_in/ios`)
   - package_info (from `.symlinks/plugins/package_info/ios`)
   - share (from `.symlinks/plugins/share/ios`)
@@ -177,14 +178,14 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/firebase_auth/ios"
   firebase_core:
     :path: ".symlinks/plugins/firebase_core/ios"
+  firebase_crashlytics:
+    :path: ".symlinks/plugins/firebase_crashlytics/ios"
   firebase_database:
     :path: ".symlinks/plugins/firebase_database/ios"
   firebase_messaging:
     :path: ".symlinks/plugins/firebase_messaging/ios"
   Flutter:
     :path: ".symlinks/flutter/ios"
-  flutter_crashlytics:
-    :path: ".symlinks/plugins/flutter_crashlytics/ios"
   google_sign_in:
     :path: ".symlinks/plugins/google_sign_in/ios"
   package_info:
@@ -197,13 +198,14 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/url_launcher/ios"
 
 SPEC CHECKSUMS:
-  Crashlytics: 5aa8e90dcbf2f34898b4f5a0037787531246cca0
+  Crashlytics: 611738c7847f8291a1a51084e35987b86ba6b3ee
   device_info: 3ebad48f726348f69abd802f3334a8d1ed795fbd
-  Fabric: f6f21452846788bb44595d73e9909d79d328e617
+  Fabric: 706c8b8098fff96c33c0db69cbf81f9c551d0d74
   Firebase: 0c8cf33f266410c61ab3e2265cfa412200351d9c
   firebase_analytics: bd50d8f5d3f42dcab6da67944a849062470b0a19
   firebase_auth: e32ab45c234bdf847b7777f5b097ce4f7d26879f
   firebase_core: ce5006bb48508ee4e71e0f429a3f519bb8ee2961
+  firebase_crashlytics: a5c8f2810635eed8490144ba1e5cde0ec2b2c9ee
   firebase_database: 99b15d6a0536ee969200b6eaf69bcd0b15b7b114
   firebase_messaging: b25b2fa94e685146bcf9d706ed87b4e95cd2a17d
   FirebaseAnalytics: ece1aa57a4f43c64d53a648b5a5e05151aae947b
@@ -215,7 +217,6 @@ SPEC CHECKSUMS:
   FirebaseInstanceID: a122b0c258720cf250551bb2bedf48c699f80d90
   FirebaseMessaging: 4235f949ce1c4e827aeb19705ba5c53f9b85aa10
   Flutter: 58dd7d1b27887414a370fcccb9e645c08ffd7a6a
-  flutter_crashlytics: 7b5bba7233066381c8e18343435342ba05f3053c
   google_sign_in: 27e70a98b529f0b076d4b19f231b81da28b1750b
   GoogleAppMeasurement: ffe513e90551844a739e7bcbb1d2aca1c28a4338
   GoogleSignIn: 7ff245e1a7b26d379099d3243a562f5747e23d39

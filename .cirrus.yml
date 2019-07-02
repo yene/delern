@@ -127,6 +127,10 @@ task:
     - mv flutter/build/ios/iphoneos/Runner.app "${CIRRUS_REPO_NAME}.app"
     app_artifacts:
       path: ${CIRRUS_REPO_NAME}.app/**/*
+      # When updating pubspec.yaml on non-OSX, remember that dependencies may
+      # change in Podfile.lock. In such case, OSX build will fail, but you can
+      # grab a ready-made Podfile.lock from artifacts and push.
+      path: flutter/ios/Podfile.lock
 
 deploy_task_template: &DEPLOY_TASK_TEMPLATE
   only_if: $CIRRUS_BRANCH == 'master' || $CIRRUS_TAG =~ '^[0-9]+[.][0-9]+$'

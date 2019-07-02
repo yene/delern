@@ -5,11 +5,15 @@ const kPrimarySwatch = Colors.green;
 const kAccentColor = Colors.redAccent;
 final kScaffoldBackgroundColor = Colors.grey[350];
 final kIconColor = Colors.grey[600];
+const kSecondaryTextDeckItemColor = Color(0xff757575);
+const kEditDismissibleColor = Color(0xFF2196F3);
+const kDeleteDismissibleColor = Color(0xFFFF5252);
 
 const double kMinItemHeight = 48;
 const double kMinIconHeight = 24;
 const double kMinPrimaryTextSize = 19;
 const double kMinSecondaryTextSize = 16;
+const double kIconDeckPadding = 15;
 
 final Map<Gender, Color> cardBackgroundColors = {
   Gender.noGender: Colors.greenAccent[100],
@@ -23,7 +27,7 @@ final Color signInBackgroundColor = Colors.greenAccent[100];
 const TextStyle primaryText = TextStyle(
   fontSize: 19,
   fontWeight: FontWeight.w400,
-  color: Colors.black,
+  color: Color(0xFF212121),
 );
 
 const TextStyle secondaryText = TextStyle(

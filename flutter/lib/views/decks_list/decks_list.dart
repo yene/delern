@@ -243,15 +243,12 @@ class DeckListItemWidget extends StatelessWidget {
                                 deck: deck))));
                   }
                 },
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 10),
-                  child: Row(
-                    children: <Widget>[
-                      _buildLeading(iconSize),
-                      Expanded(child: _buildContent(context)),
-                      _buildTrailing(iconSize),
-                    ],
-                  ),
+                child: Row(
+                  children: <Widget>[
+                    _buildLeading(iconSize),
+                    Expanded(child: _buildContent(context)),
+                    _buildTrailing(iconSize),
+                  ],
                 ),
               ),
             ),
@@ -263,10 +260,13 @@ class DeckListItemWidget extends StatelessWidget {
   }
 
   Widget _buildContent(BuildContext context) {
-    final primaryTextStyle = app_styles.primaryText.copyWith(
-        fontSize: max(minHeight * 0.25, app_styles.kMinPrimaryTextSize));
+    final primaryFontSize =
+        max(minHeight * 0.25, app_styles.kMinPrimaryTextSize);
+    final primaryTextStyle =
+        app_styles.primaryText.copyWith(fontSize: primaryFontSize);
     final secondaryTextStyle = app_styles.secondaryText.copyWith(
-        fontSize: max(minHeight * 0.1, app_styles.kMinSecondaryTextSize));
+        fontSize: primaryFontSize / 1.5,
+        color: app_styles.kSecondaryTextDeckItemColor);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.center,
@@ -293,6 +293,7 @@ class DeckListItemWidget extends StatelessWidget {
   }
 
   Widget _buildLeading(double size) => IconButton(
+        padding: const EdgeInsets.all(app_styles.kIconDeckPadding),
         onPressed: null,
         icon: Icon(Icons.folder),
         iconSize: size,
@@ -326,11 +327,11 @@ class EditDeleteDismissible extends StatelessWidget {
         direction: DismissDirection.horizontal,
         resizeDuration: const Duration(seconds: 1),
         background: Container(
-          color: Colors.blue,
-          child: Padding(
-            padding: const EdgeInsets.only(left: 10),
-            child: Align(
-              alignment: Alignment.centerLeft,
+          color: app_styles.kEditDismissibleColor,
+          child: Align(
+            alignment: Alignment.centerLeft,
+            child: AspectRatio(
+              aspectRatio: 1,
               child: Icon(
                 Icons.edit,
                 color: Colors.white,
@@ -340,12 +341,15 @@ class EditDeleteDismissible extends StatelessWidget {
           ),
         ),
         secondaryBackground: Container(
-          color: Colors.red,
+          color: app_styles.kDeleteDismissibleColor,
           alignment: Alignment.centerRight,
-          child: Icon(
-            Icons.delete,
-            color: Colors.white,
-            size: iconSize,
+          child: AspectRatio(
+            aspectRatio: 1,
+            child: Icon(
+              Icons.delete,
+              color: Colors.white,
+              size: iconSize,
+            ),
           ),
         ),
         confirmDismiss: (direction) {

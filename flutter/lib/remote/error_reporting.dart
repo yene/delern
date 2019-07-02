@@ -1,11 +1,9 @@
 import 'dart:async';
 
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter_crashlytics/flutter_crashlytics.dart';
 
-set uid(String uid) => FlutterCrashlytics().setUserInfo(uid, '', '');
-
-Future<void> initialize() => FlutterCrashlytics().initialize();
+set uid(String uid) => Crashlytics.instance.setUserIdentifier(uid);
 
 Future<void> report(String src, error, StackTrace stackTrace,
     {Map<String, dynamic> extra, bool printErrorInfo = true}) async {
@@ -24,12 +22,14 @@ Future<void> report(String src, error, StackTrace stackTrace,
   }
 
   print('Sending error report...');
-  final client = FlutterCrashlytics();
   if (extra != null) {
     for (final entry in extra.entries) {
-      await client.setInfo(entry.key, entry.value.toString());
+      Crashlytics.instance.setString(entry.key, entry.value.toString());
     }
   }
-  await client.setInfo('source', src);
-  return client.reportCrash(error, stackTrace);
+
+  // We report under a different project in dev mode.
+  Crashlytics.instance.enableInDevMode = true;
+  return Crashlytics.instance.onError(
+      FlutterErrorDetails(exception: error, stack: stackTrace, library: src));
 }

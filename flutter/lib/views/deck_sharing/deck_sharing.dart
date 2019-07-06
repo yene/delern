@@ -39,12 +39,12 @@ class _DeckSharingState extends State<DeckSharing> {
           actions: <Widget>[
             Builder(
               builder: (context) => SlowOperationWidget(
-                    (cb) => IconButton(
-                        icon: const Icon(Icons.send),
-                        onPressed: _isEmailCorrect()
-                            ? cb(() => _shareDeck(_accessValue, context))
-                            : null),
-                  ),
+                (cb) => IconButton(
+                    icon: const Icon(Icons.send),
+                    onPressed: _isEmailCorrect()
+                        ? cb(() => _shareDeck(_accessValue, context))
+                        : null),
+              ),
             )
           ],
         ),
@@ -82,8 +82,8 @@ class _DeckSharingState extends State<DeckSharing> {
           value: _accessValue,
           filter: (access) => access != AccessType.owner && access != null,
           valueChanged: (access) => setState(() {
-                _accessValue = access;
-              }),
+            _accessValue = access;
+          }),
         ),
       );
 
@@ -170,9 +170,9 @@ class _DeckUsersState extends State<DeckUsersWidget> {
             child: ObservingAnimatedListWidget<DeckAccessModel>(
               list: _deckAccessesViewModel.list,
               itemBuilder: (context, item, animation, index) => SizeTransition(
-                    sizeFactor: animation,
-                    child: _buildUserAccessInfo(item),
-                  ),
+                sizeFactor: animation,
+                child: _buildUserAccessInfo(item),
+              ),
               emptyMessageBuilder: () => EmptyListMessageWidget(
                   localizations.of(context).emptyUserSharingList),
             ),
@@ -206,13 +206,13 @@ class _DeckUsersState extends State<DeckUsersWidget> {
         value: accessViewModel.access,
         filter: filter,
         valueChanged: (access) => setState(() {
-              DeckAccessesViewModel.shareDeck(
-                  DeckAccessModel(deckKey: _deckAccessesViewModel.deck.key)
-                    ..key = accessViewModel.key
-                    ..email = accessViewModel.email
-                    ..access = access,
-                  _deckAccessesViewModel.deck);
-            }),
+          DeckAccessesViewModel.shareDeck(
+              DeckAccessModel(deckKey: _deckAccessesViewModel.deck.key)
+                ..key = accessViewModel.key
+                ..email = accessViewModel.email
+                ..access = access,
+              _deckAccessesViewModel.deck);
+        }),
       ),
     );
   }

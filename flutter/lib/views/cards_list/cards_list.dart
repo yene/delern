@@ -51,10 +51,10 @@ class _CardsListState extends State<CardsList> {
           maxCrossAxisExtent: 240,
           items: _cardListViewModel.list,
           itemBuilder: (item) => CardGridItem(
-                card: item,
-                deck: widget.deck,
-                allowEdit: widget.allowEdit,
-              ),
+            card: item,
+            deck: widget.deck,
+            allowEdit: widget.allowEdit,
+          ),
           // TODO(ksheremet): Consider to remove this field
           emptyGridUserMessage: localizations.of(context).emptyCardsList,
         ),
@@ -63,26 +63,23 @@ class _CardsListState extends State<CardsList> {
 
   Builder buildAddCard() => Builder(
         builder: (context) => FloatingActionButton(
-              onPressed: () {
-                if (widget.allowEdit) {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          settings: const RouteSettings(name: '/cards/new'),
-                          builder: (context) => CardCreateUpdate(
-                                card: CardModel(deckKey: widget.deck.key),
-                                deck: widget.deck,
-                              )));
-                } else {
-                  UserMessages.showMessage(
-                      Scaffold.of(context),
-                      localizations
-                          .of(context)
-                          .noAddingWithReadAccessUserMessage);
-                }
-              },
-              child: const Icon(Icons.add),
-            ),
+          onPressed: () {
+            if (widget.allowEdit) {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      settings: const RouteSettings(name: '/cards/new'),
+                      builder: (context) => CardCreateUpdate(
+                            card: CardModel(deckKey: widget.deck.key),
+                            deck: widget.deck,
+                          )));
+            } else {
+              UserMessages.showMessage(Scaffold.of(context),
+                  localizations.of(context).noAddingWithReadAccessUserMessage);
+            }
+          },
+          child: const Icon(Icons.add),
+        ),
       );
 }
 

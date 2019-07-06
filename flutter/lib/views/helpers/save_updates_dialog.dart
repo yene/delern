@@ -12,15 +12,15 @@ Future<bool> showSaveUpdatesDialog(
       // user must tap button!
       barrierDismissible: false,
       builder: (context) => AlertDialog(
-            title: Text(changesQuestion),
-            actions: <Widget>[
-              FlatButton(
-                  onPressed: () => Navigator.of(context).pop(false),
-                  child: Text(noAnswer.toUpperCase())),
-              FlatButton(
-                onPressed: () => Navigator.of(context).pop(true),
-                child: Text(yesAnswer.toUpperCase()),
-              )
-            ],
-          ),
+        title: Text(changesQuestion),
+        actions: <Widget>[
+          FlatButton(
+              onPressed: () => Navigator.of(context).pop(false),
+              child: Text(noAnswer.toUpperCase())),
+          FlatButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: Text(yesAnswer.toUpperCase()),
+          )
+        ],
+      ),
     );

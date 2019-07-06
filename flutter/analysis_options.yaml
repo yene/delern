@@ -1,3 +1,5 @@
+include: package:flutter/analysis_options_user.yaml
+
 analyzer:
   errors:
     # 'flutter analyze' exits with 1 even on 'info':
@@ -11,6 +13,15 @@ analyzer:
   #strong-mode:
     # implicit-casts: false
     # implicit-dynamic: false
+  # TODO(dotdoom): Enable this option once it becomes mature enough.
+  # Right now:
+  # - complains about android.hardware.touchscreen even though the default does
+  #   not require it:
+  #   https://developer.android.com/guide/topics/manifest/uses-feature-element#touchscreen-hw-features
+  # - analyses Android manifests in "build" directory even when excluded via
+  #   "exclude" option above.
+  #optional-checks:
+    #chrome-os-manifest-checks
 
 # Rules are disabled by default unless listed explicitly.
 linter:

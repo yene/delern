@@ -280,13 +280,13 @@ class DeckListItemWidget extends StatelessWidget {
           initialData: bloc.numberOfCardsDue(deck.key).value,
           stream: bloc.numberOfCardsDue(deck.key).stream,
           builder: (context, snapshot) => Container(
-                child: Text(
-                  localizations
-                      .of(context)
-                      .cardsToLearnLabel(snapshot.data?.toString() ?? 'N/A'),
-                  style: secondaryTextStyle,
-                ),
-              ),
+            child: Text(
+              localizations
+                  .of(context)
+                  .cardsToLearnLabel(snapshot.data?.toString() ?? 'N/A'),
+              style: secondaryTextStyle,
+            ),
+          ),
         ),
       ],
     );
@@ -352,22 +352,20 @@ class EditDeleteDismissible extends StatelessWidget {
             ),
           ),
         ),
-        confirmDismiss: (direction) {
-          if (direction == DismissDirection.startToEnd) {
-            unawaited(Navigator.push(
-              context,
-              MaterialPageRoute(
-                  settings: const RouteSettings(name: '/decks/view'),
-                  builder: (context) => CardsList(
-                        deck: deck,
-                        allowEdit: deck.access != AccessType.read,
-                      )),
-            ));
-            return Future.value(false);
-          }
+        confirmDismiss: (direction) async {
           if (direction == DismissDirection.endToStart) {
             return _deleteDeck(context);
           }
+          unawaited(Navigator.push(
+            context,
+            MaterialPageRoute(
+                settings: const RouteSettings(name: '/decks/view'),
+                builder: (context) => CardsList(
+                      deck: deck,
+                      allowEdit: deck.access != AccessType.read,
+                    )),
+          ));
+          return false;
         },
         key: Key(deck.key),
         child: child,

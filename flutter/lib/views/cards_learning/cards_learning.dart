@@ -84,54 +84,51 @@ class CardsLearningState extends State<CardsLearning> {
           ? ProgressIndicatorWidget()
           : Builder(
               builder: (context) => Column(
-                    children: <Widget>[
-                      Expanded(
-                          child: CardDisplayWidget(
-                        front: _viewModel.card.front,
-                        back: _viewModel.card.back ?? '',
-                        showBack: _isBackShown,
-                        backgroundColor: specifyCardBackground(
-                            _viewModel.deck.type, _viewModel.card.back),
-                        isMarkdown: _viewModel.deck.markdown,
-                      )),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 25, bottom: 20),
-                        child: _buildButtons(context),
-                      ),
-                      Row(
-                        children: <Widget>[
-                          // Use SafeArea to indent the child by the amount
-                          // necessary to avoid The Notch on the iPhone X,
-                          // or other similar creative physical features of
-                          // the display.
-                          SafeArea(
-                            child: Text(
-                              localizations
-                                  .of(context)
-                                  .watchedCards(_watchedCount),
-                              style: app_styles.secondaryText,
-                            ),
-                          ),
-                        ],
-                      )
-                    ],
+                children: <Widget>[
+                  Expanded(
+                      child: CardDisplayWidget(
+                    front: _viewModel.card.front,
+                    back: _viewModel.card.back ?? '',
+                    showBack: _isBackShown,
+                    backgroundColor: specifyCardBackground(
+                        _viewModel.deck.type, _viewModel.card.back),
+                    isMarkdown: _viewModel.deck.markdown,
+                  )),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 25, bottom: 20),
+                    child: _buildButtons(context),
                   ),
+                  Row(
+                    children: <Widget>[
+                      // Use SafeArea to indent the child by the amount
+                      // necessary to avoid The Notch on the iPhone X,
+                      // or other similar creative physical features of
+                      // the display.
+                      SafeArea(
+                        child: Text(
+                          localizations.of(context).watchedCards(_watchedCount),
+                          style: app_styles.secondaryText,
+                        ),
+                      ),
+                    ],
+                  )
+                ],
+              ),
             ),
     );
   }
 
   Widget _buildPopupMenu() => Builder(
         builder: (context) => PopupMenuButton<_CardMenuItemType>(
-              onSelected: (itemType) =>
-                  _onCardMenuItemSelected(context, itemType),
-              itemBuilder: (context) => _buildMenu(context)
-                  .entries
-                  .map((entry) => PopupMenuItem<_CardMenuItemType>(
-                        value: entry.key,
-                        child: Text(entry.value),
-                      ))
-                  .toList(),
-            ),
+          onSelected: (itemType) => _onCardMenuItemSelected(context, itemType),
+          itemBuilder: (context) => _buildMenu(context)
+              .entries
+              .map((entry) => PopupMenuItem<_CardMenuItemType>(
+                    value: entry.key,
+                    child: Text(entry.value),
+                  ))
+              .toList(),
+        ),
       );
 
   Widget _buildButtons(BuildContext context) {

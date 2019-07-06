@@ -108,9 +108,9 @@ class _DeckSettingsState extends State<DeckSettings> {
                   DeckTypeDropdownWidget(
                     value: _deckType,
                     valueChanged: (newDeckType) => setState(() {
-                          _deckType = newDeckType;
-                          _bloc.onDeckType.add(newDeckType);
-                        }),
+                      _deckType = newDeckType;
+                      _bloc.onDeckType.add(newDeckType);
+                    }),
                   ),
                 ],
               ),

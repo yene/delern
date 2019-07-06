@@ -213,20 +213,20 @@ class _MenuItemsWidgetState extends State<_MenuItemsWidget>
     return AnimatedBuilder(
       animation: _controller,
       builder: (context, child) => Stack(
-            alignment: AlignmentDirectional.topEnd,
-            children: menu.entries
-                .map((entry) => FadeTransition(
-                      opacity: _opacityAnimation,
-                      child: Align(
-                          alignment: _moveAnimation.value,
-                          child: Container(
-                              padding: EdgeInsets.only(
-                                  bottom: (menu.length - 1 - entry.key.index) *
-                                      45.0),
-                              child: _buildMenuItem(entry.key, entry.value))),
-                    ))
-                .toList(),
-          ),
+        alignment: AlignmentDirectional.topEnd,
+        children: menu.entries
+            .map((entry) => FadeTransition(
+                  opacity: _opacityAnimation,
+                  child: Align(
+                      alignment: _moveAnimation.value,
+                      child: Container(
+                          padding: EdgeInsets.only(
+                              bottom:
+                                  (menu.length - 1 - entry.key.index) * 45.0),
+                          child: _buildMenuItem(entry.key, entry.value))),
+                ))
+            .toList(),
+      ),
     );
   }
 

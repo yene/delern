@@ -62,6 +62,7 @@ linter:
     avoid_js_rounded_ints: true
     avoid_null_checks_in_equality_operators: true
     avoid_positional_boolean_parameters: true
+    avoid_print: true
     avoid_private_typedef_functions: true
     avoid_relative_lib_imports: true
     avoid_renaming_method_parameters: true

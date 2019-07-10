@@ -6,6 +6,7 @@ import 'package:delern_flutter/flutter/user_messages.dart';
 import 'package:delern_flutter/models/card_model.dart';
 import 'package:delern_flutter/models/deck_access_model.dart';
 import 'package:delern_flutter/models/deck_model.dart';
+import 'package:delern_flutter/remote/analytics.dart';
 import 'package:delern_flutter/view_models/decks_list_bloc.dart';
 import 'package:delern_flutter/views/card_create_update/card_create_update.dart';
 import 'package:delern_flutter/views/cards_learning/cards_learning.dart';
@@ -356,6 +357,7 @@ class EditDeleteDismissible extends StatelessWidget {
           if (direction == DismissDirection.endToStart) {
             return _deleteDeck(context);
           }
+          unawaited(logDeckEditSwipe(deck.key));
           unawaited(Navigator.push(
             context,
             MaterialPageRoute(

@@ -143,7 +143,7 @@ class DecksListBloc {
   }
 
   Future<void> deleteDeck(DeckModel deck) async {
-    unawaited(logDeckDelete(deck.key));
+    unawaited(logDeckDeleteSwipe(deck.key));
     final t = Transaction()..delete(deck);
     final card = CardModel(deckKey: deck.key);
     if (deck.access == AccessType.owner) {

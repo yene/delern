@@ -5,6 +5,21 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 Future<void> logDeckCreate() =>
     FirebaseAnalytics().logEvent(name: 'deck_create');
 
+Future<void> logDeckEditMenu(String deckId) =>
+    FirebaseAnalytics().logEvent(name: 'deck_edit_menu', parameters: {
+      'item_id': deckId,
+    });
+
+Future<void> logDeckEditSwipe(String deckId) =>
+    FirebaseAnalytics().logEvent(name: 'deck_edit_swipe', parameters: {
+      'item_id': deckId,
+    });
+
+Future<void> logDeckDeleteSwipe(String deckId) =>
+    FirebaseAnalytics().logEvent(name: 'deck_delete_swipe', parameters: {
+      'item_id': deckId,
+    });
+
 Future<void> logDeckDelete(String deckId) =>
     FirebaseAnalytics().logEvent(name: 'deck_delete', parameters: {
       'item_id': deckId,

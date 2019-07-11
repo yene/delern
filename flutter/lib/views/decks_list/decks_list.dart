@@ -6,6 +6,7 @@ import 'package:delern_flutter/flutter/user_messages.dart';
 import 'package:delern_flutter/models/card_model.dart';
 import 'package:delern_flutter/models/deck_access_model.dart';
 import 'package:delern_flutter/models/deck_model.dart';
+import 'package:delern_flutter/remote/analytics.dart';
 import 'package:delern_flutter/view_models/decks_list_bloc.dart';
 import 'package:delern_flutter/views/card_create_update/card_create_update.dart';
 import 'package:delern_flutter/views/cards_interval_learning/cards_interval_learning.dart';
@@ -162,7 +163,13 @@ class DeckListItemWidget extends StatelessWidget {
           child: EditDeleteDismissible(
             iconSize: iconSize,
             deck: deck,
-            bloc: bloc,
+            onDeleteCallback: () async {
+              if (await _showDeleteDeckDialog(context)) {
+                unawaited(logDeckDeleteSwipe(deck.key));
+                return _deleteDeck(context);
+              }
+              return false;
+            },
             child: Material(
               elevation: _kItemElevation,
               child: InkWell(
@@ -173,7 +180,7 @@ class DeckListItemWidget extends StatelessWidget {
                   children: <Widget>[
                     _buildLeading(iconSize),
                     Expanded(child: _buildContent(context)),
-                    _buildTrailing(iconSize),
+                    _buildTrailing(context, iconSize),
                   ],
                 ),
               ),
@@ -304,27 +311,59 @@ class DeckListItemWidget extends StatelessWidget {
         color: app_styles.kIconColor,
       );
 
-  Widget _buildTrailing(double size) => DeckMenu(
+  Widget _buildTrailing(BuildContext context, double size) => DeckMenu(
         deck: deck,
         buttonSize: size,
+        onDeleteDeckCallback: () async {
+          if (await _showDeleteDeckDialog(context)) {
+            unawaited(logDeckDelete(deck.key));
+            await _deleteDeck(context);
+          }
+        },
       );
+
+  Future<bool> _showDeleteDeckDialog(BuildContext context) {
+    final locale = localizations.of(context);
+    return showSaveUpdatesDialog(
+        context: context,
+        changesQuestion: deck.access == AccessType.owner
+            ? locale.deleteDeckOwnerAccessQuestion
+            : locale.deleteDeckWriteReadAccessQuestion,
+        yesAnswer: locale.delete,
+        noAnswer: MaterialLocalizations.of(context).cancelButtonLabel);
+  }
+
+  Future<bool> _deleteDeck(BuildContext context) async {
+    try {
+      await bloc.deleteDeck(deck);
+      UserMessages.showMessage(Scaffold.of(context),
+          localizations.of(context).deckDeletedUserMessage);
+      return true;
+    } catch (e, stackTrace) {
+      unawaited(
+          UserMessages.showError(() => Scaffold.of(context), e, stackTrace));
+    }
+    return false;
+  }
 }
+
+typedef DeleteDismissibleCallback = Future<bool> Function();
 
 class EditDeleteDismissible extends StatelessWidget {
   final Widget child;
   final DeckModel deck;
   final double iconSize;
-  final DecksListBloc bloc;
+  final DeleteDismissibleCallback onDeleteCallback;
 
-  const EditDeleteDismissible(
-      {@required this.child,
-      @required this.deck,
-      @required this.iconSize,
-      @required this.bloc})
-      : assert(child != null),
+  const EditDeleteDismissible({
+    @required this.child,
+    @required this.deck,
+    @required this.iconSize,
+    @required this.onDeleteCallback,
+  })  : assert(child != null),
         assert(deck != null),
         assert(iconSize != null),
-        assert(bloc != null);
+        assert(onDeleteCallback != null);
 
   @override
   Widget build(BuildContext context) => Dismissible(
@@ -358,7 +397,7 @@ class EditDeleteDismissible extends StatelessWidget {
         ),
         confirmDismiss: (direction) async {
           if (direction == DismissDirection.endToStart) {
-            return _deleteDeck(context);
+            return onDeleteCallback();
           }
           unawaited(logDeckEditSwipe(deck.key));
           unawaited(Navigator.push(
@@ -374,27 +413,4 @@ class EditDeleteDismissible extends StatelessWidget {
         key: Key(deck.key),
         child: child,
       );
-
-  Future<bool> _deleteDeck(BuildContext context) async {
-    final locale = localizations.of(context);
-    final deleteDeck = await showSaveUpdatesDialog(
-        context: context,
-        changesQuestion: deck.access == AccessType.owner
-            ? locale.deleteDeckOwnerAccessQuestion
-            : locale.deleteDeckWriteReadAccessQuestion,
-        yesAnswer: locale.delete,
-        noAnswer: MaterialLocalizations.of(context).cancelButtonLabel);
-    if (deleteDeck) {
-      try {
-        await bloc.deleteDeck(deck);
-        UserMessages.showMessage(Scaffold.of(context),
-            localizations.of(context).deckDeletedUserMessage);
-        return Future.value(true);
-      } catch (e, stackTrace) {
-        unawaited(
-            UserMessages.showError(() => Scaffold.of(context), e, stackTrace));
-      }
-    }
-    return Future.value(false);
-  }
 }

@@ -15,11 +15,17 @@ import 'package:pedantic/pedantic.dart';
 const double _kMenuExpandedSize = 225;
 const _kAnimationDuration = Duration(milliseconds: 250);
 
+typedef DeleteCallbackMenu = Future<void> Function();
+
 class DeckMenu extends StatefulWidget {
   final DeckModel deck;
   final double buttonSize;
+  final DeleteCallbackMenu onDeleteDeckCallback;
 
-  const DeckMenu({@required this.deck, @required this.buttonSize})
+  const DeckMenu(
+      {@required this.deck,
+      @required this.buttonSize,
+      @required this.onDeleteDeckCallback})
       : assert(deck != null),
         assert(buttonSize != null);
 
@@ -104,16 +110,20 @@ class _DeckMenuState extends State<DeckMenu>
               localizations.of(context).noSharingAccessUserMessage);
         }
         break;
+      case _DeckMenuItemType.delete:
+        widget.onDeleteDeckCallback();
+        break;
     }
   }
 }
 
-enum _DeckMenuItemType { add, edit, share }
+enum _DeckMenuItemType { add, edit, share, delete }
 
 Map<_DeckMenuItemType, String> _buildMenu(BuildContext context) {
   final deckMenu = <_DeckMenuItemType, String>{
     _DeckMenuItemType.add: localizations.of(context).addCardsDeckMenu,
     _DeckMenuItemType.edit: localizations.of(context).editCardsDeckMenu,
+    _DeckMenuItemType.delete: localizations.of(context).delete,
   };
 
   if (!CurrentUserWidget.of(context).user.isAnonymous) {

@@ -77,73 +77,70 @@ class ObservingGridWidgetState<T extends KeyedListItem>
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: <Widget>[
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.only(right: 8),
-                            child: Text(
-                              // TODO(dotdoom): make this more abstract.
-                              localizations
-                                  .of(context)
-                                  .numberOfCards(widget.items.length),
-                              style: app_styles.secondaryText,
-                            ),
-                          ),
-                        ],
-                      ),
-                      Expanded(
-                        child: NotificationListener<ScrollUpdateNotification>(
-                          onNotification: (scrollNotification) {
-                            // We don't have exact height of row, we only
-                            // have max width/height. This calculation is
-                            // approximate.
-                            _currentScrollRow =
-                                scrollNotification.metrics.pixels /
-                                        widget.maxCrossAxisExtent +
-                                    1;
-                            if (_currentScrollRow > widget.upIconVisibleRow &&
-                                !_isUpIconVisible) {
-                              // Call set state of parent.
-                              contentState(() {
-                                _isUpIconVisible = true;
-                              });
-                            }
-                            if (_currentScrollRow < widget.upIconVisibleRow &&
-                                _isUpIconVisible) {
-                              contentState(() {
-                                _isUpIconVisible = false;
-                              });
-                            }
-                          },
-                          child: GridView.extent(
-                              controller: _scrollController,
-                              maxCrossAxisExtent: widget.maxCrossAxisExtent,
-                              children: widget.items
-                                  .map(_buildItem)
-                                  .toList(growable: false)),
+                      Padding(
+                        padding: const EdgeInsets.only(right: 8),
+                        child: Text(
+                          // TODO(dotdoom): make this more abstract.
+                          localizations
+                              .of(context)
+                              .numberOfCards(widget.items.length),
+                          style: app_styles.secondaryText,
                         ),
                       ),
                     ],
                   ),
-                  if (_currentScrollRow > widget.upIconVisibleRow)
-                    Padding(
-                      padding: const EdgeInsets.only(left: 20, bottom: 20),
-                      child: Align(
-                        alignment: Alignment.bottomLeft,
-                        child: IconButton(
-                          tooltip: localizations.of(context).scrollToStartLabel,
-                          onPressed: () {
-                            _scrollController.animateTo(0,
-                                duration: const Duration(seconds: 1),
-                                curve: Curves.easeIn);
-                          },
-                          icon: const Icon(Icons.arrow_upward),
-                        ),
-                      ),
-                    )
+                  Expanded(
+                    child: NotificationListener<ScrollUpdateNotification>(
+                      onNotification: (scrollNotification) {
+                        // We don't have exact height of row, we only
+                        // have max width/height. This calculation is
+                        // approximate.
+                        _currentScrollRow = scrollNotification.metrics.pixels /
+                                widget.maxCrossAxisExtent +
+                            1;
+                        if (_currentScrollRow > widget.upIconVisibleRow &&
+                            !_isUpIconVisible) {
+                          // Call set state of parent.
+                          contentState(() {
+                            _isUpIconVisible = true;
+                          });
+                        }
+                        if (_currentScrollRow < widget.upIconVisibleRow &&
+                            _isUpIconVisible) {
+                          contentState(() {
+                            _isUpIconVisible = false;
+                          });
+                        }
+                        // Do not dispatch notification to further ancestors
+                        return true;
+                      },
+                      child: GridView.extent(
+                          controller: _scrollController,
+                          maxCrossAxisExtent: widget.maxCrossAxisExtent,
+                          children: widget.items
+                              .map(_buildItem)
+                              .toList(growable: false)),
+                    ),
+                  ),
                 ],
               ),
+              if (_currentScrollRow > widget.upIconVisibleRow)
+                Padding(
+                  padding: const EdgeInsets.only(left: 20, bottom: 16),
+                  child: Align(
+                    alignment: Alignment.bottomLeft,
+                    child: FloatingActionButton(
+                      backgroundColor: Colors.blueGrey,
+                      tooltip: localizations.of(context).scrollToStartLabel,
+                      onPressed: () {
+                        _scrollController.animateTo(0,
+                            duration: const Duration(seconds: 1),
+                            curve: Curves.easeIn);
+                      },
+                      child: const Icon(Icons.arrow_upward),
+                    ),
+                  ),
+                )
             ],
           ),
         );

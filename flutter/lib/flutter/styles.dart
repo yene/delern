@@ -34,7 +34,7 @@ const TextStyle primaryText = TextStyle(
 const TextStyle secondaryText = TextStyle(
   fontSize: 16,
   fontWeight: FontWeight.w400,
-  color: Colors.black87,
+  color: Color(0xff757575),
 );
 
 final TextStyle navigationDrawerGroupText = TextStyle(

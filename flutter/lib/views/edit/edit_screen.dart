@@ -59,22 +59,21 @@ class _EditScreenState extends State<EditScreen> {
         ),
         body: Column(
           children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.all(8),
-              child: TextField(
-                decoration: const InputDecoration(
-                  suffixIcon: Icon(Icons.edit),
-                ),
-                maxLines: null,
-                keyboardType: TextInputType.multiline,
-                controller: _deckNameController,
-                style: app_styles.primaryText,
-                onChanged: (text) {
-                  setState(() {
-                    _bloc.onDeckName.add(text);
-                  });
-                },
+            TextField(
+              textAlign: TextAlign.center,
+              decoration: const InputDecoration(
+                border: InputBorder.none,
+                suffixIcon: Icon(Icons.edit),
               ),
+              maxLines: null,
+              keyboardType: TextInputType.multiline,
+              controller: _deckNameController,
+              style: app_styles.primaryText,
+              onChanged: (text) {
+                setState(() {
+                  _bloc.onDeckName.add(text);
+                });
+              },
             ),
             Expanded(child: _buildCardGrid()),
           ],

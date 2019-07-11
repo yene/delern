@@ -75,19 +75,19 @@ class ObservingGridWidgetState<T extends KeyedListItem>
               Column(
                 children: <Widget>[
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.only(right: 8),
-                        child: Text(
-                          // TODO(dotdoom): make this more abstract.
-                          localizations
-                              .of(context)
-                              .numberOfCards(widget.items.length),
-                          style: app_styles.secondaryText,
-                        ),
+                      Text(
+                        // TODO(dotdoom): make this more abstract.
+                        localizations
+                            .of(context)
+                            .numberOfCards(widget.items.length),
+                        style: app_styles.secondaryText,
                       ),
                     ],
+                  ),
+                  const Divider(
+                    height: 24,
                   ),
                   Expanded(
                     child: NotificationListener<ScrollUpdateNotification>(

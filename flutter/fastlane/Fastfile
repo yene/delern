@@ -81,7 +81,9 @@ def android_build(options={})
 end
 
 lane :build do
-  sh('cd .. && flutter packages get')
+  sh('cd .. && flutter packages get && ' +
+     # Force re-generate .g.dart files to make sure they are up-to-date.
+     'flutter packages run build_runner build --delete-conflicting-outputs')
   flutter(
     action: 'l10n',
     l10n_strings_file: 'lib/l10n/app_localizations.dart',

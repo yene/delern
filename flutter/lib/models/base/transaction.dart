@@ -21,9 +21,14 @@ class Transaction {
     });
   }
 
-  void save(Model m) {
+  void save(ReadonlyModel m) {
     if (m.key == null) {
-      m.key = _root.child(m.rootPath).push().key;
+      if (m is Model) {
+        m.key = _root.child(m.rootPath).push().key;
+      } else {
+        throw ArgumentError(
+            'Trying to save read-only value $m, but cannot assign a key!');
+      }
       _updates.addAll(m.toMap(isNew: true));
     } else {
       _updates.addAll(m.toMap(isNew: false));
@@ -35,7 +40,7 @@ class Transaction {
     _updates['${m.rootPath}/${m.key}'] = null;
   }
 
-  void deleteAll(Model m) {
+  void deleteAll(ReadonlyModel m) {
     assert(
         m.key == null,
         'Attempt to delete all models with the same root, but the key is '

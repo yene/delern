@@ -1,16 +1,19 @@
 import 'dart:core';
 
-import 'package:delern_flutter/models/base/keyed_list_item.dart';
+import 'package:built_value/built_value.dart';
 import 'package:delern_flutter/models/base/model.dart';
 import 'package:meta/meta.dart';
 
-class FCM implements KeyedListItem, Model {
-  String key;
-  String uid;
-  String name;
-  String language;
+part 'fcm.g.dart';
 
-  FCM({@required this.uid}) : assert(uid != null);
+abstract class FCM implements Built<FCM, FCMBuilder>, ReadonlyModel {
+  String get key;
+  String get uid;
+  String get name;
+  String get language;
+
+  factory FCM([void Function(FCMBuilder) updates]) = _$FCM;
+  FCM._();
 
   Map<String, dynamic> toMap({@required bool isNew}) => {
         'fcm/$uid/$key': {

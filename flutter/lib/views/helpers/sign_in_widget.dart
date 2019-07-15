@@ -41,10 +41,12 @@ class _SignInWidgetState extends State<SignInWidget> {
         unawaited(FirebaseAnalytics().logLogin());
 
         _firebaseMessaging.onTokenRefresh.listen((token) async {
-          final fcm = FCM(uid: Auth.instance.currentUser.uid)
-            ..language = Localizations.localeOf(context).toString()
-            ..name = (await DeviceInfo.getDeviceInfo()).userFriendlyName
-            ..key = token;
+          final fcm = (FCMBuilder()
+                ..uid = Auth.instance.currentUser.uid
+                ..language = Localizations.localeOf(context).toString()
+                ..name = (await DeviceInfo.getDeviceInfo()).userFriendlyName
+                ..key = token)
+              .build();
 
           print('Registering for FCM as ${fcm.name} in ${fcm.language}');
           unawaited((Transaction()..save(fcm)).commit());

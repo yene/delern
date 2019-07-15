@@ -156,8 +156,11 @@ class DecksListBloc {
     }
     t
       ..deleteAll(ScheduledCardModel(deckKey: deck.key, uid: deck.uid))
-      ..deleteAll(
-          CardReplyModel(uid: deck.uid, deckKey: deck.key, cardKey: null));
+      ..deleteAll((CardReplyModelBuilder()
+            ..uid = deck.uid
+            ..deckKey = deck.key
+            ..cardKey = null)
+          .build());
     await t.commit();
   }
 }

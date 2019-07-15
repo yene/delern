@@ -26,9 +26,6 @@ class CardsLearning extends StatefulWidget {
 }
 
 class CardsLearningState extends State<CardsLearning> {
-  /// Whether or not back side of the card is visible.
-  bool _isBackShown = false;
-
   /// Whether the card on the display is scheduled for the time in future.
   /// Implies that the user has been asked to learn cards beyond current date,
   /// and replied positively.
@@ -85,14 +82,16 @@ class CardsLearningState extends State<CardsLearning> {
           : Builder(
               builder: (context) => Column(
                 children: <Widget>[
+                  const Padding(
+                    padding: EdgeInsets.only(top: 16),
+                  ),
                   Expanded(
-                      child: CardDisplayWidget(
+                      child: FlipCardWidget(
                     front: _viewModel.card.front,
-                    back: _viewModel.card.back ?? '',
-                    showBack: _isBackShown,
+                    back: _viewModel.card.back,
+                    isMarkdown: _viewModel.deck.markdown,
                     backgroundColor: specifyCardBackground(
                         _viewModel.deck.type, _viewModel.card.back),
-                    isMarkdown: _viewModel.deck.markdown,
                   )),
                   Padding(
                     padding: const EdgeInsets.only(top: 25, bottom: 20),
@@ -131,41 +130,24 @@ class CardsLearningState extends State<CardsLearning> {
         ),
       );
 
-  Widget _buildButtons(BuildContext context) {
-    if (_isBackShown) {
-      return SlowOperationWidget((cb) => Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              FloatingActionButton(
-                // heroTag - https://stackoverflow.com/questions/46509553/
-                heroTag: 'dontknow',
-                backgroundColor: Colors.red,
-                onPressed: cb(() => _answerCard(false, context)),
-                child: const Icon(Icons.clear),
-              ),
-              FloatingActionButton(
-                heroTag: 'know',
-                backgroundColor: Colors.green,
-                onPressed: cb(() => _answerCard(true, context)),
-                child: const Icon(Icons.check),
-              ),
-            ],
-          ));
-    }
-
-    return Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-      FloatingActionButton(
-        backgroundColor: Colors.orange,
-        heroTag: 'turn',
-        onPressed: () {
-          setState(() {
-            _isBackShown = true;
-          });
-        },
-        child: const Icon(Icons.cached),
-      )
-    ]);
-  }
+  Widget _buildButtons(BuildContext context) => SlowOperationWidget((cb) => Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          FloatingActionButton(
+            // heroTag - https://stackoverflow.com/questions/46509553/
+            heroTag: 'dontknow',
+            backgroundColor: Colors.red,
+            onPressed: cb(() => _answerCard(false, context)),
+            child: const Icon(Icons.clear),
+          ),
+          FloatingActionButton(
+            heroTag: 'know',
+            backgroundColor: Colors.green,
+            onPressed: cb(() => _answerCard(true, context)),
+            child: const Icon(Icons.check),
+          ),
+        ],
+      ));
 
   Future<void> _answerCard(bool answer, BuildContext context) async {
     try {
@@ -232,10 +214,7 @@ class CardsLearningState extends State<CardsLearning> {
   }
 
   Future<void> _nextCardArrived() async {
-    setState(() {
-      // For a new card we show, hide the back side.
-      _isBackShown = false;
-    });
+    setState(() {});
 
     if (!_learnBeyondHorizon &&
         _viewModel.scheduledCard.repeatAt.isAfter(DateTime.now().toUtc())) {

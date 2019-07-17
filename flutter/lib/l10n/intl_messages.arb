@@ -1,6 +1,6 @@
 {
   "@@locale": "en",
-  "@@last_modified": "2019-06-25T17:13:52.106005",
+  "@@last_modified": "2019-07-15T19:49:26.494912",
   "navigationDrawerSignOut": "Sign Out",
   "@navigationDrawerSignOut": {
     "description": "Sign Out in Navigation Drawer",
@@ -588,6 +588,13 @@
   "deckDeletedUserMessage": "Deck was deleted",
   "@deckDeletedUserMessage": {
     "description": "Deck was deleted",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "flip": "flip",
+  "@flip": {
+    "description": "flip",
     "type": "text",
     "placeholders": {
     }

@@ -98,6 +98,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Поделитесь списком"),
         "errorUserMessage":
             MessageLookupByLibrary.simpleMessage("Произошла ошибка: "),
+        "flip": MessageLookupByLibrary.simpleMessage("перевернуть"),
         "frontSideHint":
             MessageLookupByLibrary.simpleMessage("Передняя сторона"),
         "germanDeckType": MessageLookupByLibrary.simpleMessage("Немецкий"),

@@ -16,6 +16,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:pedantic/pedantic.dart';
 
+const _kCardPaddingRatio = 0.07;
+
 class CardsLearning extends StatefulWidget {
   final DeckModel deck;
 
@@ -82,19 +84,28 @@ class CardsLearningState extends State<CardsLearning> {
           : Builder(
               builder: (context) => Column(
                 children: <Widget>[
-                  const Padding(
-                    padding: EdgeInsets.only(top: 16),
-                  ),
                   Expanded(
-                      child: FlipCardWidget(
-                    front: _viewModel.card.front,
-                    back: _viewModel.card.back,
-                    isMarkdown: _viewModel.deck.markdown,
-                    backgroundColor: specifyCardBackground(
-                        _viewModel.deck.type, _viewModel.card.back),
+                      child: Padding(
+                    padding: MediaQuery.of(context).orientation ==
+                            Orientation.portrait
+                        ? EdgeInsets.all(MediaQuery.of(context).size.width *
+                            _kCardPaddingRatio)
+                        : EdgeInsets.only(
+                            top: 10,
+                            left: MediaQuery.of(context).size.width *
+                                _kCardPaddingRatio,
+                            right: MediaQuery.of(context).size.width *
+                                _kCardPaddingRatio),
+                    child: FlipCardWidget(
+                      front: _viewModel.card.front,
+                      back: _viewModel.card.back,
+                      isMarkdown: _viewModel.deck.markdown,
+                      backgroundColor: specifyCardBackground(
+                          _viewModel.deck.type, _viewModel.card.back),
+                    ),
                   )),
                   Padding(
-                    padding: const EdgeInsets.only(top: 25, bottom: 20),
+                    padding: const EdgeInsets.symmetric(vertical: 20),
                     child: _buildButtons(context),
                   ),
                   Row(

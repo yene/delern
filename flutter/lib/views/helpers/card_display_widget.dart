@@ -58,8 +58,8 @@ class CardDisplayWidget extends StatelessWidget {
   }
 }
 
-const _kFlipCardDuration = Duration(seconds: 1);
-const double _kCardBorderPadding = 16;
+const _kFlipCardDuration = Duration(milliseconds: 700);
+const double _kCardBorderPadding = 24;
 
 class FlipCardWidget extends StatefulWidget {
   final String front;
@@ -84,6 +84,7 @@ class _FlipCardWidgetState extends State<FlipCardWidget>
   AnimationController _controller;
   // We always see the front side of the card
   bool _isFront = true;
+  bool _isRepainted = false;
 
   @override
   void initState() {
@@ -98,9 +99,20 @@ class _FlipCardWidgetState extends State<FlipCardWidget>
     ]).animate(_controller)
       ..addListener(() {
         // When card is 50% turned, change the content of card (front to back,
-        // back to front)
-        if (_controller.value > 0.45 && _controller.value < 0.5) {
-          setState(() {});
+        // back to front). Repaint card only once.
+        if (_isFront && _controller.value < 0.5 && !_isRepainted) {
+          setState(() {
+            _isRepainted = true;
+          });
+        }
+        if (!_isFront && _controller.value > 0.5 && !_isRepainted) {
+          setState(() {
+            _isRepainted = true;
+          });
+        }
+        // When animation is completed, set param to false.
+        if (_controller.isCompleted || _controller.value == 0) {
+          _isRepainted = false;
         }
       });
   }
@@ -118,6 +130,7 @@ class _FlipCardWidgetState extends State<FlipCardWidget>
   void _reset() {
     _controller.reset();
     _isFront = true;
+    _isRepainted = false;
   }
 
   void _startAnimation() {

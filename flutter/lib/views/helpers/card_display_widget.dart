@@ -80,7 +80,8 @@ class FlipCardWidget extends StatefulWidget {
 
 class _FlipCardWidgetState extends State<FlipCardWidget>
     with SingleTickerProviderStateMixin {
-  Animation<double> _animation;
+  Animation<double> _flipAnimation;
+  Animation<double> _sizeAnimation;
   AnimationController _controller;
   // We always see the front side of the card
   bool _isFront = true;
@@ -91,7 +92,12 @@ class _FlipCardWidgetState extends State<FlipCardWidget>
     super.initState();
     _controller =
         AnimationController(vsync: this, duration: _kFlipCardDuration);
-    _animation = TweenSequence([
+    _sizeAnimation = TweenSequence([
+      TweenSequenceItem(tween: Tween<double>(begin: 1, end: 0.7), weight: 0.5),
+      TweenSequenceItem(tween: Tween<double>(begin: 0.7, end: 1), weight: 0.5)
+    ]).animate(_controller);
+
+    _flipAnimation = TweenSequence([
       TweenSequenceItem(
           tween: Tween<double>(begin: 0, end: -pi / 2), weight: 0.5),
       TweenSequenceItem(
@@ -166,13 +172,16 @@ class _FlipCardWidgetState extends State<FlipCardWidget>
 
   @override
   Widget build(BuildContext context) => AnimatedBuilder(
-      animation: _animation,
-      builder: (context, child) => Transform(
-            alignment: Alignment.center,
-            transform: Matrix4.identity()
-              ..setEntry(3, 2, 0.001)
-              ..rotateY(_animation.value),
-            child: child,
+      animation: _flipAnimation,
+      builder: (context, child) => Transform.scale(
+            scale: _sizeAnimation.value,
+            child: Transform(
+              alignment: Alignment.center,
+              transform: Matrix4.identity()
+                ..setEntry(3, 2, 0.001)
+                ..rotateY(_flipAnimation.value),
+              child: child,
+            ),
           ),
       child: GestureDetector(
         onTap: () {

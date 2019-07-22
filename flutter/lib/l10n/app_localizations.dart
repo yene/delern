@@ -548,4 +548,10 @@ To see the source code for this app, please visit the [Delern GitHub repo](https
         name: 'deckDeletedUserMessage',
         desc: 'Deck was deleted',
       );
+
+  String get flip => Intl.message(
+        'flip',
+        name: 'flip',
+        desc: 'flip',
+      );
 }

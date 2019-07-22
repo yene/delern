@@ -58,7 +58,7 @@ class CardDisplayWidget extends StatelessWidget {
   }
 }
 
-const _kFlipCardDuration = Duration(milliseconds: 700);
+const _kFlipCardDuration = Duration(milliseconds: 300);
 const double _kCardBorderPadding = 24;
 
 class FlipCardWidget extends StatefulWidget {
@@ -85,7 +85,6 @@ class _FlipCardWidgetState extends State<FlipCardWidget>
   AnimationController _controller;
   // We always see the front side of the card
   bool _isFront = true;
-  bool _isRepainted = false;
 
   @override
   void initState() {
@@ -104,21 +103,11 @@ class _FlipCardWidgetState extends State<FlipCardWidget>
           tween: Tween<double>(begin: pi / 2, end: 0), weight: 0.5)
     ]).animate(_controller)
       ..addListener(() {
-        // When card is 50% turned, change the content of card (front to back,
-        // back to front). Repaint card only once.
-        if (_isFront && _controller.value < 0.5 && !_isRepainted) {
+        final shouldBeFront = _controller.value <= 0.5;
+        if (_isFront != shouldBeFront) {
           setState(() {
-            _isRepainted = true;
+            _isFront = shouldBeFront;
           });
-        }
-        if (!_isFront && _controller.value > 0.5 && !_isRepainted) {
-          setState(() {
-            _isRepainted = true;
-          });
-        }
-        // When animation is completed, set param to false.
-        if (_controller.isCompleted || _controller.value == 0) {
-          _isRepainted = false;
         }
       });
   }
@@ -127,16 +116,15 @@ class _FlipCardWidgetState extends State<FlipCardWidget>
   void didUpdateWidget(FlipCardWidget oldWidget) {
     if (oldWidget != widget) {
       // If new widget, reset all values
-      _reset();
+      _resetToFront();
     }
     super.didUpdateWidget(oldWidget);
   }
 
   /// Resets animation and show the front side of card
-  void _reset() {
+  void _resetToFront() {
     _controller.reset();
     _isFront = true;
-    _isRepainted = false;
   }
 
   void _startAnimation() {
@@ -187,7 +175,6 @@ class _FlipCardWidgetState extends State<FlipCardWidget>
         onTap: () {
           // If card is not turning now, turn card
           if (!_controller.isAnimating) {
-            _isFront = !_isFront;
             _startAnimation();
           }
         },
@@ -203,13 +190,11 @@ class _FlipCardWidgetState extends State<FlipCardWidget>
                   builder: (context, viewportConstraints) =>
                       SingleChildScrollView(
                     child: ConstrainedBox(
-                      constraints: BoxConstraints(
-                        minHeight: viewportConstraints.maxHeight,
-                      ),
-                      child: _isFront == true
-                          ? _sideText(widget.front, context)
-                          : _sideText(widget.back, context),
-                    ),
+                        constraints: BoxConstraints(
+                          minHeight: viewportConstraints.maxHeight,
+                        ),
+                        child: _sideText(
+                            _isFront ? widget.front : widget.back, context)),
                   ),
                 ),
               ),

@@ -62,7 +62,7 @@ class _FlipCardWidgetState extends State<FlipCardWidget>
   @override
   void didUpdateWidget(FlipCardWidget oldWidget) {
     if (oldWidget != widget) {
-      // If new widget, reset all values
+      // Reset animation when new card arrived
       _controller.reset();
     }
     super.didUpdateWidget(oldWidget);

@@ -116,15 +116,9 @@ class _FlipCardWidgetState extends State<FlipCardWidget>
   void didUpdateWidget(FlipCardWidget oldWidget) {
     if (oldWidget != widget) {
       // If new widget, reset all values
-      _resetToFront();
+      _controller.reset();
     }
     super.didUpdateWidget(oldWidget);
-  }
-
-  /// Resets animation and show the front side of card
-  void _resetToFront() {
-    _controller.reset();
-    _isFront = true;
   }
 
   void _startAnimation() {

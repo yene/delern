@@ -17,6 +17,10 @@ import 'package:intl/intl.dart';
 import 'package:pedantic/pedantic.dart';
 
 const _kCardPaddingRatio = 0.07;
+// Take floating button height from doc: https://bit.ly/2y9aIM6
+const BoxConstraints _kFloatingButtonHeightConstraint = BoxConstraints.tightFor(
+  height: 56,
+);
 
 class CardsLearning extends StatefulWidget {
   final DeckModel deck;
@@ -44,6 +48,8 @@ class CardsLearningState extends State<CardsLearning> {
 
   LearningViewModel _viewModel;
   StreamSubscription<void> _updates;
+
+  final _showReplyButtons = ValueNotifier(false);
 
   @override
   void initState() {
@@ -102,11 +108,25 @@ class CardsLearningState extends State<CardsLearning> {
                       isMarkdown: _viewModel.deck.markdown,
                       backgroundColor: specifyCardBackground(
                           _viewModel.deck.type, _viewModel.card.back),
+                      onFlipCallback: (flipped) {
+                        _showReplyButtons.value = flipped;
+                      },
                     ),
                   )),
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 20),
-                    child: _buildButtons(context),
+                    child: ValueListenableBuilder<bool>(
+                      valueListenable: _showReplyButtons,
+                      builder: (context, showReplyButtons, child) {
+                        if (showReplyButtons) {
+                          return _buildButtons(context);
+                        } else {
+                          return ConstrainedBox(
+                            constraints: _kFloatingButtonHeightConstraint,
+                          );
+                        }
+                      },
+                    ),
                   ),
                   Row(
                     children: <Widget>[
@@ -225,7 +245,10 @@ class CardsLearningState extends State<CardsLearning> {
   }
 
   Future<void> _nextCardArrived() async {
-    setState(() {});
+    setState(() {
+      // New card arrived, do not show reply buttons
+      _showReplyButtons.value = false;
+    });
 
     if (!_learnBeyondHorizon &&
         _viewModel.scheduledCard.repeatAt.isAfter(DateTime.now().toUtc())) {

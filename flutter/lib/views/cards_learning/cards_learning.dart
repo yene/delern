@@ -117,15 +117,12 @@ class CardsLearningState extends State<CardsLearning> {
                     padding: const EdgeInsets.symmetric(vertical: 20),
                     child: ValueListenableBuilder<bool>(
                       valueListenable: _showReplyButtons,
-                      builder: (context, showReplyButtons, child) {
-                        if (showReplyButtons) {
-                          return _buildButtons(context);
-                        } else {
-                          return ConstrainedBox(
-                            constraints: _kFloatingButtonHeightConstraint,
-                          );
-                        }
-                      },
+                      builder: (context, showReplyButtons, child) =>
+                          showReplyButtons
+                              ? _buildButtons(context)
+                              : ConstrainedBox(
+                                  constraints: _kFloatingButtonHeightConstraint,
+                                ),
                     ),
                   ),
                   Row(

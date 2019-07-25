@@ -69,6 +69,7 @@ class _DeckSharingState extends State<DeckSharing> {
 
   Widget _sharingEmail() => ListTile(
         title: TextField(
+          keyboardType: TextInputType.emailAddress,
           controller: _textController,
           onChanged: (text) {
             setState(() {});

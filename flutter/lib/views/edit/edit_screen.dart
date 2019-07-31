@@ -62,6 +62,10 @@ class _EditScreenState extends State<EditScreen> {
         body: Column(
           children: <Widget>[
             _buildEditDeck(),
+            _buildCardsInDeck(),
+            const Divider(
+              height: 24,
+            ),
             Expanded(child: _buildCardList()),
           ],
         ),
@@ -100,6 +104,20 @@ class _EditScreenState extends State<EditScreen> {
           });
         },
       );
+
+  Widget _buildCardsInDeck() => FutureBuilder<Object>(
+      future: _bloc.list.initializationComplete,
+      builder: (context, snapshot) => Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Text(
+                localizations
+                    .of(context)
+                    .numberOfCards(_bloc.list.isEmpty ? 0 : _bloc.list.length),
+                style: app_styles.secondaryText,
+              ),
+            ],
+          ));
 
   Widget _buildCardList() => ObservingGridWidget<CardModel>(
         maxCrossAxisExtent: 240,

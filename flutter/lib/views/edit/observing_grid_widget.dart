@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:delern_flutter/flutter/localization.dart' as localizations;
-import 'package:delern_flutter/flutter/styles.dart' as app_styles;
 import 'package:delern_flutter/models/base/delayed_initialization.dart';
 import 'package:delern_flutter/models/base/keyed_list_item.dart';
 import 'package:delern_flutter/views/helpers/empty_list_message_widget.dart';
@@ -13,7 +12,7 @@ import 'package:observable/observable.dart';
 typedef ObservingGridItemBuilder<T> = Widget Function(T item);
 
 // TODO(ksheremet): Refactor. This class has more responsibilities that
-//  it should be. Get rid of number of cards, 'up' icon.
+//  it should be. Get rid of 'up' icon.
 class ObservingGridWidget<T extends KeyedListItem> extends StatefulWidget {
   const ObservingGridWidget({
     @required this.items,
@@ -74,21 +73,6 @@ class ObservingGridWidgetState<T extends KeyedListItem>
             children: <Widget>[
               Column(
                 children: <Widget>[
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Text(
-                        // TODO(dotdoom): make this more abstract.
-                        localizations
-                            .of(context)
-                            .numberOfCards(widget.items.length),
-                        style: app_styles.secondaryText,
-                      ),
-                    ],
-                  ),
-                  const Divider(
-                    height: 24,
-                  ),
                   Expanded(
                     child: NotificationListener<ScrollUpdateNotification>(
                       onNotification: (scrollNotification) {

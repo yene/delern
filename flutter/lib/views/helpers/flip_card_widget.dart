@@ -36,7 +36,7 @@ class _FlipCardWidgetState extends State<FlipCardWidget>
   AnimationController _controller;
   // We always see the front side of the card
   bool _isFront = true;
-  bool _isBackShowed = false;
+  bool _isFlipped = false;
 
   @override
   void initState() {
@@ -60,7 +60,8 @@ class _FlipCardWidgetState extends State<FlipCardWidget>
           setState(() {
             _isFront = shouldBeFront;
           });
-          if (!_isBackShowed && !_isFront) {
+          if (!_isFlipped && !_isFront) {
+            _isFlipped = true;
             widget.onFlipCallback(true);
           }
         }
@@ -72,7 +73,7 @@ class _FlipCardWidgetState extends State<FlipCardWidget>
     if (oldWidget != widget) {
       // Reset animation when new card arrived
       _controller.reset();
-      _isBackShowed = false;
+      _isFlipped = false;
     }
     super.didUpdateWidget(oldWidget);
   }

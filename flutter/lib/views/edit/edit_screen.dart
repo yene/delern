@@ -120,7 +120,7 @@ class _EditScreenState extends State<EditScreen> {
           ));
 
   Widget _buildCardList() => ObservingGridWidget<CardModel>(
-        maxCrossAxisExtent: 240,
+        maxCrossAxisExtent: app_styles.kMinItemHeight,
         items: _bloc.list,
         itemBuilder: (item) => Column(
           children: <Widget>[
@@ -137,7 +137,7 @@ class _EditScreenState extends State<EditScreen> {
         ),
         // TODO(ksheremet): Consider to remove this field
         emptyGridUserMessage: localizations.of(context).emptyCardsList,
-        upIconVisibleRow: 6,
+        upIconVisibleRow: 20,
       );
 
   Builder buildAddCard() => Builder(

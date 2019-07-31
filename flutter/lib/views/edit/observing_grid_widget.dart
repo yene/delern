@@ -114,12 +114,12 @@ class ObservingGridWidgetState<T extends KeyedListItem>
                         // Do not dispatch notification to further ancestors
                         return true;
                       },
-                      child: GridView.extent(
-                          controller: _scrollController,
-                          maxCrossAxisExtent: widget.maxCrossAxisExtent,
-                          children: widget.items
-                              .map(_buildItem)
-                              .toList(growable: false)),
+                      child: ListView.builder(
+                        itemCount: widget.items.length,
+                        controller: _scrollController,
+                        itemBuilder: (context, index) =>
+                            _buildItem(widget.items[index]),
+                      ),
                     ),
                   ),
                 ],
@@ -130,6 +130,11 @@ class ObservingGridWidgetState<T extends KeyedListItem>
                   child: Align(
                     alignment: Alignment.bottomLeft,
                     child: FloatingActionButton(
+                      // Because of 2 FAB button (add_card and up_button),
+                      // it tries to do hero animation in Preview screen.
+                      // The app doesn't know for what button to do.
+                      // It crashes. User hero for add card on default.
+                      heroTag: 'up_button',
                       backgroundColor: Colors.blueGrey,
                       tooltip: localizations.of(context).scrollToStartLabel,
                       onPressed: () {

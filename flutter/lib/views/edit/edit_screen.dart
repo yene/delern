@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:delern_flutter/flutter/localization.dart' as localizations;
 import 'package:delern_flutter/flutter/styles.dart' as app_styles;
 import 'package:delern_flutter/flutter/user_messages.dart';
@@ -59,23 +61,8 @@ class _EditScreenState extends State<EditScreen> {
         ),
         body: Column(
           children: <Widget>[
-            TextField(
-              textAlign: TextAlign.center,
-              decoration: const InputDecoration(
-                border: InputBorder.none,
-                suffixIcon: Icon(Icons.edit),
-              ),
-              maxLines: null,
-              keyboardType: TextInputType.multiline,
-              controller: _deckNameController,
-              style: app_styles.primaryText,
-              onChanged: (text) {
-                setState(() {
-                  _bloc.onDeckName.add(text);
-                });
-              },
-            ),
-            Expanded(child: _buildCardGrid()),
+            _buildEditDeck(),
+            Expanded(child: _buildCardList()),
           ],
         ),
         floatingActionButton: buildAddCard(),
@@ -97,13 +84,38 @@ class _EditScreenState extends State<EditScreen> {
     return <Widget>[menuAction];
   }
 
-  Widget _buildCardGrid() => ObservingGridWidget<CardModel>(
+  Widget _buildEditDeck() => TextField(
+        textAlign: TextAlign.center,
+        decoration: const InputDecoration(
+          border: InputBorder.none,
+          suffixIcon: Icon(Icons.edit),
+        ),
+        maxLines: null,
+        keyboardType: TextInputType.multiline,
+        controller: _deckNameController,
+        style: app_styles.primaryText,
+        onChanged: (text) {
+          setState(() {
+            _bloc.onDeckName.add(text);
+          });
+        },
+      );
+
+  Widget _buildCardList() => ObservingGridWidget<CardModel>(
         maxCrossAxisExtent: 240,
         items: _bloc.list,
-        itemBuilder: (item) => CardGridItem(
-          card: item,
-          deck: widget.deck,
-          allowEdit: widget.deck.access != AccessType.read,
+        itemBuilder: (item) => Column(
+          children: <Widget>[
+            CardItemWidget(
+              card: item,
+              deck: widget.deck,
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(
+                  vertical: MediaQuery.of(context).size.height *
+                      app_styles.kItemListPaddingRatio),
+            ),
+          ],
         ),
         // TODO(ksheremet): Consider to remove this field
         emptyGridUserMessage: localizations.of(context).emptyCardsList,
@@ -138,58 +150,84 @@ class _EditScreenState extends State<EditScreen> {
   }
 }
 
-class CardGridItem extends StatelessWidget {
+const double _kCardBorderPadding = 16;
+const double _kFrontBackTextPadding = 5;
+
+class CardItemWidget extends StatelessWidget {
   final CardModel card;
   final DeckModel deck;
-  final bool allowEdit;
 
-  const CardGridItem(
-      {@required this.card, @required this.deck, @required this.allowEdit})
+  const CardItemWidget({@required this.card, @required this.deck})
       : assert(card != null),
-        assert(deck != null),
-        assert(allowEdit != null);
+        assert(deck != null);
 
   @override
-  Widget build(BuildContext context) => Card(
+  Widget build(BuildContext context) {
+    final emptyExpanded = Expanded(
+      flex: 1,
+      child: Container(
         color: Colors.transparent,
-        child: Material(
-          color: specifyCardBackground(deck.type, card.back),
-          child: InkWell(
-            splashColor: Theme.of(context).splashColor,
-            onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                    settings: const RouteSettings(name: '/cards/preview'),
-                    builder: (context) => CardPreview(
-                          card: card,
-                          deck: deck,
-                        ))),
-            child: Container(
-              padding: const EdgeInsets.all(5),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Text(
-                    card.front,
-                    maxLines: 3,
-                    softWrap: true,
-                    textAlign: TextAlign.center,
-                    style: app_styles.primaryText,
-                  ),
-                  Container(
-                    padding: const EdgeInsets.only(top: 10),
-                    child: Text(
-                      card.back ?? '',
-                      maxLines: 3,
+      ),
+    );
+
+    final minHeight = max(
+        MediaQuery.of(context).size.height * app_styles.kItemListHeightRatio,
+        app_styles.kMinItemHeight);
+    final primaryFontSize =
+        max(minHeight * 0.25, app_styles.kMinPrimaryTextSize);
+    final primaryTextStyle =
+        app_styles.primaryText.copyWith(fontSize: primaryFontSize);
+    final secondaryTextStyle = app_styles.secondaryText.copyWith(
+        fontSize: primaryFontSize / 1.5,
+        color: app_styles.kSecondaryTextDeckItemColor);
+    return Row(
+      children: <Widget>[
+        emptyExpanded,
+        Expanded(
+          flex: 8,
+          child: Material(
+            elevation: app_styles.kItemElevation,
+            color: specifyCardBackground(deck.type, card.back),
+            child: InkWell(
+              splashColor: Theme.of(context).splashColor,
+              onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      settings: const RouteSettings(name: '/cards/preview'),
+                      builder: (context) => CardPreview(
+                            card: card,
+                            deck: deck,
+                          ))),
+              child: Padding(
+                padding: const EdgeInsets.all(_kCardBorderPadding),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text(
+                      card.front,
+                      maxLines: 1,
                       softWrap: true,
-                      textAlign: TextAlign.center,
-                      style: app_styles.secondaryText,
+                      style: primaryTextStyle,
                     ),
-                  ),
-                ],
+                    Container(
+                      padding:
+                          const EdgeInsets.only(top: _kFrontBackTextPadding),
+                      child: Text(
+                        card.back ?? '',
+                        maxLines: 1,
+                        softWrap: true,
+                        style: secondaryTextStyle,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
         ),
-      );
+        emptyExpanded,
+      ],
+    );
+  }
 }

@@ -26,10 +26,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:pedantic/pedantic.dart';
 
-const double _kItemElevation = 4;
-const double _kItemPaddingRatio = _kItemHeightRatio * 0.08;
-const double _kItemHeightRatio = 0.1;
-
 class DecksList extends StatefulWidget {
   const DecksList();
 
@@ -92,7 +88,8 @@ class _DecksListState extends State<DecksList> {
                 list: _bloc.decksList,
                 itemBuilder: (context, item, animation, index) {
                   final itemHeight = max(
-                      MediaQuery.of(context).size.height * _kItemHeightRatio,
+                      MediaQuery.of(context).size.height *
+                          app_styles.kItemListHeightRatio,
                       app_styles.kMinItemHeight);
                   return SizeTransition(
                       sizeFactor: animation,
@@ -102,7 +99,7 @@ class _DecksListState extends State<DecksList> {
                             Padding(
                               padding: EdgeInsets.symmetric(
                                   vertical: MediaQuery.of(context).size.height *
-                                      _kItemPaddingRatio *
+                                      app_styles.kItemListPaddingRatio *
                                       2),
                             ),
                           DeckListItemWidget(
@@ -113,13 +110,13 @@ class _DecksListState extends State<DecksList> {
                           Padding(
                             padding: EdgeInsets.symmetric(
                                 vertical: MediaQuery.of(context).size.height *
-                                    _kItemPaddingRatio),
+                                    app_styles.kItemListPaddingRatio),
                           ),
                           if (index == (_bloc.decksList.length - 1))
                             Padding(
                               padding: EdgeInsets.symmetric(
                                   vertical: MediaQuery.of(context).size.height *
-                                      _kItemPaddingRatio),
+                                      app_styles.kItemListPaddingRatio),
                             ),
                         ],
                       ));
@@ -171,7 +168,7 @@ class DeckListItemWidget extends StatelessWidget {
               return false;
             },
             child: Material(
-              elevation: _kItemElevation,
+              elevation: app_styles.kItemElevation,
               child: InkWell(
                 onTap: () async {
                   await _showLearningDialog(context);

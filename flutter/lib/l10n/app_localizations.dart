@@ -74,10 +74,10 @@ class AppLocalizations {
       );
 
   String numberOfCards(int number) => Intl.message(
-        'Number of cards: $number',
+        'Cards in the deck: $number',
         name: 'numberOfCards',
         args: [number],
-        desc: 'Number of cards',
+        desc: 'Card in the deck',
       );
 
   String get canEdit => Intl.message(

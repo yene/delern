@@ -26,7 +26,7 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static m2(url) => "Не удалось запустить ссылку ${url}";
 
-  static m3(number) => "Количество карточек: ${number}";
+  static m3(number) => "Карточек в списке: ${number}";
 
   static m4(number) => "Просмотрено: ${number}";
 

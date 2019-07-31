@@ -71,9 +71,9 @@
     "placeholders": {
     }
   },
-  "numberOfCards": "Number of cards: {number}",
+  "numberOfCards": "Cards in the deck: {number}",
   "@numberOfCards": {
-    "description": "Number of cards",
+    "description": "Card in the deck",
     "type": "text",
     "placeholders": {
       "number": {

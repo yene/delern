@@ -26,7 +26,7 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static m2(url) => "Could not launch url ${url}";
 
-  static m3(number) => "Number of cards: ${number}";
+  static m3(number) => "Cards in the deck: ${number}";
 
   static m4(number) => "Watched: ${number}";
 

@@ -1,8 +1,7 @@
 import 'dart:async';
 
-import 'package:delern_flutter/models/base/transaction.dart';
+import 'package:delern_flutter/models/base/data_writer.dart';
 import 'package:delern_flutter/models/card_model.dart';
-import 'package:delern_flutter/models/scheduled_card_model.dart';
 import 'package:delern_flutter/remote/analytics.dart';
 import 'package:delern_flutter/remote/error_reporting.dart' as error_reporting;
 import 'package:delern_flutter/view_models/base/screen_bloc.dart';
@@ -81,23 +80,8 @@ class CardCreateUpdateBloc extends ScreenBloc {
 
   Future<void> _saveCard() {
     logCardCreate(_cardModel.deckKey);
-    final t = Transaction()..save(_cardModel);
-    final sCard = ScheduledCardModel(deckKey: _cardModel.deckKey, uid: uid)
-      ..key = _cardModel.key;
-    t.save(sCard);
-
-    if (_addReversedCard) {
-      final reverse = CardModel.copyFrom(_cardModel)
-        ..key = null
-        ..front = _cardModel.back
-        ..back = _cardModel.front;
-      t.save(reverse);
-      final reverseScCard =
-          ScheduledCardModel(deckKey: reverse.deckKey, uid: uid)
-            ..key = reverse.key;
-      t.save(reverseScCard);
-    }
-    return t.commit();
+    return DataWriter(uid: uid)
+        .createOrUpdateCard(card: _cardModel, addReversed: _addReversedCard);
   }
 
   Future<void> _disableUI(Future<void> Function() f) async {

@@ -1,10 +1,9 @@
 import 'dart:async';
 
-import 'package:delern_flutter/models/base/transaction.dart';
+import 'package:delern_flutter/models/base/data_writer.dart';
 import 'package:delern_flutter/models/card_model.dart';
 import 'package:delern_flutter/models/deck_access_model.dart';
 import 'package:delern_flutter/models/deck_model.dart';
-import 'package:delern_flutter/models/scheduled_card_model.dart';
 import 'package:delern_flutter/remote/error_reporting.dart' as error_reporting;
 import 'package:delern_flutter/view_models/base/screen_bloc.dart';
 import 'package:meta/meta.dart';
@@ -34,7 +33,7 @@ class CardPreviewBloc extends ScreenBloc {
   void _initListeners() {
     _onDeleteCardController.stream.listen((uid) async {
       try {
-        await _deleteCard(uid);
+        await DataWriter(uid: uid).deleteCard(card: _cardValue.card);
         notifyPop();
       } catch (e, stackTrace) {
         unawaited(error_reporting.report('deleteCard', e, stackTrace));
@@ -95,12 +94,6 @@ class CardPreviewBloc extends ScreenBloc {
               CardViewModel(card: cardModel, deck: _cardValue.deck)));
         }
       }));
-
-  Future<void> _deleteCard(String uid) => (Transaction()
-        ..delete(_cardValue.card)
-        ..delete(ScheduledCardModel(deckKey: _cardValue.deck.key, uid: uid)
-          ..key = _cardValue.card.key))
-      .commit();
 
   bool _isEditAllowed() => cardValue.deck.access != AccessType.read;
 

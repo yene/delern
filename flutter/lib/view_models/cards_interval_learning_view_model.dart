@@ -1,7 +1,7 @@
 import 'dart:async';
 
+import 'package:delern_flutter/models/base/data_writer.dart';
 import 'package:delern_flutter/models/base/stream_muxer.dart';
-import 'package:delern_flutter/models/base/transaction.dart';
 import 'package:delern_flutter/models/card_model.dart';
 import 'package:delern_flutter/models/deck_model.dart';
 import 'package:delern_flutter/models/scheduled_card_model.dart';
@@ -44,12 +44,13 @@ class LearningViewModel {
   }
 
   Future<void> answer(
-      {@required bool knows, @required bool learnBeyondHorizon}) {
-    final cv = _scheduledCard.answer(
-        knows: knows, learnBeyondHorizon: learnBeyondHorizon);
-    return (Transaction()..save(_scheduledCard)..save(cv)).commit();
-  }
+          {@required bool knows, @required bool learnBeyondHorizon}) =>
+      DataWriter(uid: _deck.uid).learnCard(
+          card: _card,
+          scheduledCard: _scheduledCard,
+          knows: knows,
+          learnBeyondHorizon: learnBeyondHorizon);
 
   Future<void> deleteCard() =>
-      (Transaction()..delete(card)..delete(_scheduledCard)).commit();
+      DataWriter(uid: _deck.uid).deleteCard(card: card);
 }

@@ -72,7 +72,11 @@ task:
     # For Gradle plugin <3.4: https://issuetracker.google.com/issues/125138969.
     ANDROID_HOME: "${ANDROID_SDK_ROOT}"
   << : *FLUTTER_AND_FASTLANE_TASK_TEMPLATE
-  generate_and_lint_script: ( cd flutter && bundle exec fastlane build )
+  generate_and_lint_script:
+  - cd flutter
+  - bundle exec fastlane install_dependencies
+  - bundle exec fastlane generate
+  - bundle exec fastlane lint
   test_script:
   - ( cd flutter && flutter test --coverage )
   # Broken until https://github.com/codecov/codecov-bash/pull/127 is merged.
@@ -113,8 +117,10 @@ task:
   osx_instance: &OSX_INSTANCE
     image: mojave-xcode-10.2
   << : *FLUTTER_AND_FASTLANE_TASK_TEMPLATE
-  # TODO(dotdoom): do not lint on OSX, it is already done on Linux.
-  generate_and_lint_script: ( cd flutter && bundle exec fastlane build )
+  generate_script:
+  - cd flutter
+  - bundle exec fastlane install_dependencies
+  - bundle exec fastlane generate
   install_debug_keys_script: tools/ci.sh install_debug_keys
   # Keep repo up-to-date: https://github.com/CocoaPods/CocoaPods/issues/8761.
   pod_specs_repo_update_script: pod repo update
@@ -196,10 +202,10 @@ task:
   - ( cd flutter && bundle exec fastlane android publish )
   always:
     move_artifacts_script:
-    - mv flutter/build/app/outputs/apk/release/app-release.apk
-      "${CIRRUS_REPO_NAME}.apk"
-    apk_artifacts:
-      path: "${CIRRUS_REPO_NAME}.apk"
+    - mv flutter/build/app/outputs/bundle/release/app.aab
+      "${CIRRUS_REPO_NAME}.aab"
+    aab_artifacts:
+      path: "${CIRRUS_REPO_NAME}.aab"
 
 task:
   << : *DEPLOY_TASK_TEMPLATE

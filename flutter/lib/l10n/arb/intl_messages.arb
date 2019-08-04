@@ -1,6 +1,6 @@
 {
-  "@@locale": "en",
-  "@@last_modified": "2019-07-15T19:49:26.494912",
+  "@@locale": "en_US",
+  "@@last_modified": "2019-08-03T11:59:26.594938",
   "navigationDrawerSignOut": "Sign Out",
   "@navigationDrawerSignOut": {
     "description": "Sign Out in Navigation Drawer",

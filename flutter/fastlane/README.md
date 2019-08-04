@@ -15,11 +15,21 @@ Install _fastlane_ using
 or alternatively using `brew cask install fastlane`
 
 # Available Actions
-### build
+### install_dependencies
 ```
-fastlane build
+fastlane install_dependencies
 ```
-
+Install or upgrade Flutter and Android SDK licenses
+### generate
+```
+fastlane generate
+```
+Generate files for Intl and built_value and format all files
+### lint
+```
+fastlane lint
+```
+Run static analysis on Flutter files
 
 ----
 
@@ -28,12 +38,12 @@ fastlane build
 ```
 fastlane android build
 ```
-
+Build a debug APK
 ### android publish
 ```
 fastlane android publish
 ```
-
+Build a release AAB and publish it (including Store artifacts)
 
 ----
 
@@ -42,12 +52,12 @@ fastlane android publish
 ```
 fastlane ios build
 ```
-
+Build a debug iOS package
 ### ios publish
 ```
 fastlane ios publish
 ```
-
+Build a release iOS package and publish it (including Store artifacts)
 
 ----
 

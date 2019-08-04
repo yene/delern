@@ -17,7 +17,7 @@ import 'package:intl/intl.dart';
 import 'package:pedantic/pedantic.dart';
 
 const _kCardPaddingRatio = 0.07;
-// Take floating button height from doc: https://bit.ly/2y9aIM6
+// Take floating button height from source code: https://bit.ly/2y9aIM6
 const BoxConstraints _kFloatingButtonHeightConstraint = BoxConstraints.tightFor(
   height: 56,
 );
@@ -38,7 +38,7 @@ class CardsLearningState extends State<CardsLearning> {
   bool _learnBeyondHorizon = false;
 
   /// Whether we have shown at least one side of one card to the user (does not
-  /// necessarily mean that they anwered it).
+  /// necessarily mean that they answered it).
   bool _atLeastOneCardShown = false;
 
   /// Number of cards the user has answered (either positively or negatively) to
@@ -108,8 +108,8 @@ class CardsLearningState extends State<CardsLearning> {
                       isMarkdown: _viewModel.deck.markdown,
                       backgroundColor: specifyCardBackground(
                           _viewModel.deck.type, _viewModel.card.back),
-                      onFlipCallback: (flipped) {
-                        _showReplyButtons.value = flipped;
+                      onFlip: () {
+                        _showReplyButtons.value = true;
                       },
                     ),
                   )),
@@ -242,8 +242,10 @@ class CardsLearningState extends State<CardsLearning> {
   }
 
   Future<void> _nextCardArrived() async {
+    // We call setState because the next card has arrived and we have to
+    // display it.
     setState(() {
-      // New card arrived, do not show reply buttons
+      // New card arrived, do not show reply buttons.
       _showReplyButtons.value = false;
     });
 

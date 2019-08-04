@@ -44,6 +44,7 @@ class _ScreenBlocViewState extends State<ScreenBlocView> {
         appBar: widget.appBar,
         body: widget.body,
         floatingActionButton: widget.floatingActionButton,
+        resizeToAvoidBottomInset: false,
       ));
 
   void _showUserMessage(String message) {

@@ -9,6 +9,7 @@ void main() {
   testWidgets('Flip card', (tester) async {
     const frontSide = 'der Vater';
     const backSide = 'father';
+    var _wasFlipped = false;
 
     // Widget must be wrapped in MaterialApp widget because it uses material
     // related classes.
@@ -21,14 +22,21 @@ void main() {
         back: backSide,
         backgroundColor: app_styles.cardBackgroundColors[Gender.masculine],
         isMarkdown: false,
+        onFlip: () {
+          _wasFlipped = true;
+        },
       ),
     ));
     await tester.pumpAndSettle();
     final frontFinder = find.text(frontSide);
     expect(frontFinder, findsOneWidget);
+    // Back side wasn't showed
+    assert(!_wasFlipped);
     await tester.tap(find.byType(Card));
     await tester.pumpAndSettle();
     final backFinder = find.text(backSide);
     expect(backFinder, findsOneWidget);
+    // Back side was showed
+    assert(_wasFlipped);
   });
 }

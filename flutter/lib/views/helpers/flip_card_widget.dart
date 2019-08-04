@@ -8,17 +8,21 @@ import 'package:flutter/material.dart';
 const _kFlipCardDuration = Duration(milliseconds: 300);
 const double _kCardBorderPadding = 24;
 
+typedef CardFlipCallback = void Function();
+
 class FlipCardWidget extends StatefulWidget {
   final String front;
   final String back;
   final Color backgroundColor;
   final bool isMarkdown;
+  final CardFlipCallback onFlip;
 
   const FlipCardWidget({
     @required this.front,
     @required this.back,
     @required this.isMarkdown,
     @required this.backgroundColor,
+    @required this.onFlip,
   });
 
   @override
@@ -32,6 +36,8 @@ class _FlipCardWidgetState extends State<FlipCardWidget>
   AnimationController _controller;
   // We always see the front side of the card
   bool _isFront = true;
+  // the card was flipped at least once
+  bool _wasFlipped = false;
 
   @override
   void initState() {
@@ -55,6 +61,10 @@ class _FlipCardWidgetState extends State<FlipCardWidget>
           setState(() {
             _isFront = shouldBeFront;
           });
+          if (!_wasFlipped && !_isFront) {
+            _wasFlipped = true;
+            widget.onFlip();
+          }
         }
       });
   }
@@ -64,6 +74,7 @@ class _FlipCardWidgetState extends State<FlipCardWidget>
     if (oldWidget != widget) {
       // Reset animation when new card arrived
       _controller.reset();
+      _wasFlipped = false;
     }
     super.didUpdateWidget(oldWidget);
   }

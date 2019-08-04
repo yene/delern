@@ -10,11 +10,17 @@ import 'package:delern_flutter/view_models/edit_bloc.dart';
 import 'package:delern_flutter/views/base/screen_bloc_view.dart';
 import 'package:delern_flutter/views/card_create_update/card_create_update.dart';
 import 'package:delern_flutter/views/card_preview/card_preview.dart';
+import 'package:delern_flutter/views/decks_list/decks_list.dart';
 import 'package:delern_flutter/views/edit/deck_settings_widget.dart';
-import 'package:delern_flutter/views/edit/observing_grid_widget.dart';
+import 'package:delern_flutter/views/edit/scroll_to_beginning_list_widget.dart';
 import 'package:delern_flutter/views/helpers/card_background_specifier.dart';
+import 'package:delern_flutter/views/helpers/empty_list_message_widget.dart';
+import 'package:delern_flutter/views/helpers/observing_animated_list_widget.dart';
 import 'package:delern_flutter/views/helpers/search_bar_widget.dart';
 import 'package:flutter/material.dart';
+
+const int _kUpButtonVisibleRow = 20;
+const double _kDividerPadding = 24;
 
 class EditScreen extends StatefulWidget {
   final DeckModel deck;
@@ -29,6 +35,7 @@ class _EditScreenState extends State<EditScreen> {
   final TextEditingController _deckNameController = TextEditingController();
   EditBloc _bloc;
   DeckModel _currentDeckState;
+  GlobalKey fabKey = GlobalKey();
 
   void _searchTextChanged(String input) {
     if (input == null) {
@@ -64,12 +71,12 @@ class _EditScreenState extends State<EditScreen> {
             _buildEditDeck(),
             _buildCardsInDeck(),
             const Divider(
-              height: 24,
+              height: _kDividerPadding,
             ),
             Expanded(child: _buildCardList()),
           ],
         ),
-        floatingActionButton: buildAddCard(),
+        floatingActionButton: _buildAddCard(),
         bloc: _bloc,
       );
 
@@ -119,29 +126,40 @@ class _EditScreenState extends State<EditScreen> {
             ],
           ));
 
-  Widget _buildCardList() => ObservingGridWidget<CardModel>(
-        maxCrossAxisExtent: app_styles.kMinItemHeight,
-        items: _bloc.list,
-        itemBuilder: (item) => Column(
-          children: <Widget>[
-            CardItemWidget(
+  Widget _buildCardList() {
+    final cardVerticalPadding =
+        MediaQuery.of(context).size.height * app_styles.kItemListPaddingRatio;
+    return ScrollToBeginningListWidget(
+      builder: (controller) => ObservingAnimatedListWidget<CardModel>(
+        list: _bloc.list,
+        itemBuilder: (context, item, animation, index) =>
+            _buildCardItem(item, cardVerticalPadding),
+        emptyMessageBuilder: () => ArrowToFloatingActionButtonWidget(
+            fabKey: fabKey,
+            child: EmptyListMessageWidget(
+                localizations.of(context).emptyCardsList)),
+        controller: controller,
+      ),
+      minItemHeight: app_styles.kMinItemHeight + 2 * cardVerticalPadding,
+      upButtonVisibleRow: _kUpButtonVisibleRow,
+    );
+  }
+
+  Column _buildCardItem(CardModel item, double verticalPadding) => Column(
+        children: <Widget>[
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: verticalPadding),
+            child: CardItemWidget(
               card: item,
               deck: widget.deck,
             ),
-            Padding(
-              padding: EdgeInsets.symmetric(
-                  vertical: MediaQuery.of(context).size.height *
-                      app_styles.kItemListPaddingRatio),
-            ),
-          ],
-        ),
-        // TODO(ksheremet): Consider to remove this field
-        emptyGridUserMessage: localizations.of(context).emptyCardsList,
-        upIconVisibleRow: 20,
+          ),
+        ],
       );
 
-  Builder buildAddCard() => Builder(
+  Builder _buildAddCard() => Builder(
         builder: (context) => FloatingActionButton(
+          key: fabKey,
           onPressed: () {
             if (widget.deck.access != AccessType.read) {
               Navigator.push(

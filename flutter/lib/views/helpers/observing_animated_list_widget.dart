@@ -21,6 +21,7 @@ class ObservingAnimatedListWidget<T> extends StatefulWidget {
     @required this.list,
     @required this.itemBuilder,
     @required this.emptyMessageBuilder,
+    this.controller,
     Key key,
   })  : assert(itemBuilder != null),
         super(key: key);
@@ -28,6 +29,7 @@ class ObservingAnimatedListWidget<T> extends StatefulWidget {
   final DelayedInitializationObservableList<T> list;
   final ObservingAnimatedListItemBuilder<T> itemBuilder;
   final WidgetBuilder emptyMessageBuilder;
+  final ScrollController controller;
 
   @override
   ObservingAnimatedListWidgetState<T> createState() =>
@@ -98,6 +100,7 @@ class ObservingAnimatedListWidgetState<T>
           key: _animatedListKey,
           itemBuilder: _buildItem,
           initialItemCount: widget.list.length,
+          controller: widget.controller,
         );
       });
 }

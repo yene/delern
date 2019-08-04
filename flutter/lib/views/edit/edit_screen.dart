@@ -97,9 +97,16 @@ class _EditScreenState extends State<EditScreen> {
 
   Widget _buildEditDeck() => TextField(
         textAlign: TextAlign.center,
-        decoration: const InputDecoration(
+        decoration: InputDecoration(
           border: InputBorder.none,
           suffixIcon: Icon(Icons.edit),
+          // We'd like to center text. Because of suffixIcon, the text
+          // is placed a little bit to the left. To fix this problem, we
+          // add an empty Container with size of Icon to the left.
+          prefixIcon: Container(
+            height: IconTheme.of(context).size,
+            width: IconTheme.of(context).size,
+          ),
         ),
         maxLines: null,
         keyboardType: TextInputType.multiline,

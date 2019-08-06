@@ -257,6 +257,13 @@
     "placeholders": {
     }
   },
+  "unknownDeckType": "Unknown",
+  "@unknownDeckType": {
+    "description": "unknown decktype name",
+    "type": "text",
+    "placeholders": {
+    }
+  },
   "deckType": "Deck Type",
   "@deckType": {
     "description": "Deck Type",

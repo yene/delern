@@ -632,5 +632,12 @@
     "type": "text",
     "placeholders": {
     }
+  },
+  "unknownDeckType": "Неизвестный",
+  "@unknownDeckType": {
+    "description": "unknown decktype name",
+    "type": "text",
+    "placeholders": {
+    }
   }
 }

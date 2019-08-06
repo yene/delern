@@ -189,6 +189,7 @@ class _DeckSettingsWidgetState extends State<DeckSettingsWidget> {
       case DeckType.swiss:
         return localizations.of(context).swissDeckType;
     }
+    return localizations.of(context).unknownDeckType;
   }
 
   Widget _buildRule(String text, Color color) => ConstrainedBox(

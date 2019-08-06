@@ -241,6 +241,12 @@ Twitter: https://twitter.com/dasdelern''',
         desc: 'swiss decktype name',
       );
 
+  String get unknownDeckType => Intl.message(
+        'Unknown',
+        name: 'unknownDeckType',
+        desc: 'unknown decktype name',
+      );
+
   String get deckType => Intl.message(
         'Deck Type',
         name: 'deckType',

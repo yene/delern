@@ -161,6 +161,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "supportDevelopment": MessageLookupByLibrary.simpleMessage(
             "Please tell us what we can do to make your experience with Delern better!\n\nIf you have any questions or suggestions please contact us:\n[delern@dasfoo.org](mailto:delern@dasfoo.org)\n\nFollow latest news on:\n\n- [Facebook](https://fb.me/das.delern)\n- [Twitter](https://twitter.com/dasdelern)\n- [VK](https://vk.com/delern)\n\nTo see the source code for this app, please visit the [Delern GitHub repo](https://github.com/dasfoo/delern).\n      "),
         "swissDeckType": MessageLookupByLibrary.simpleMessage("Swiss"),
+        "unknownDeckType": MessageLookupByLibrary.simpleMessage("Unknown"),
         "viewLearning": MessageLookupByLibrary.simpleMessage("View"),
         "watchedCards": m4,
         "whoHasAccessLabel":

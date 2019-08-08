@@ -597,5 +597,26 @@
     "type": "text",
     "placeholders": {
     }
+  },
+  "intervalLearning": "Интервальное",
+  "@intervalLearning": {
+    "description": "Interval Learning Label",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "reviewLearning": "Просмотр",
+  "@reviewLearning": {
+    "description": "Review Learning Label",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "learning": "Изучение",
+  "@learning": {
+    "description": "Learning Type",
+    "type": "text",
+    "placeholders": {
+    }
   }
 }

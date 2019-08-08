@@ -554,4 +554,22 @@ To see the source code for this app, please visit the [Delern GitHub repo](https
         name: 'flip',
         desc: 'flip',
       );
+
+  String get learning => Intl.message(
+        'Learning',
+        name: 'learning',
+        desc: 'Learning Type',
+      );
+
+  String get intervalLearning => Intl.message(
+        'Interval',
+        name: 'intervalLearning',
+        desc: 'Interval Learning Label',
+      );
+
+  String get reviewLearning => Intl.message(
+        'Review',
+        name: 'reviewLearning',
+        desc: 'Review Learning Label',
+      );
 }

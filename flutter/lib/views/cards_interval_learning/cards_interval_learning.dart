@@ -22,16 +22,16 @@ const BoxConstraints _kFloatingButtonHeightConstraint = BoxConstraints.tightFor(
   height: 56,
 );
 
-class CardsLearning extends StatefulWidget {
+class CardsIntervalLearning extends StatefulWidget {
   final DeckModel deck;
 
-  const CardsLearning({@required this.deck}) : assert(deck != null);
+  const CardsIntervalLearning({@required this.deck}) : assert(deck != null);
 
   @override
-  State<StatefulWidget> createState() => CardsLearningState();
+  State<StatefulWidget> createState() => CardsIntervalLearningState();
 }
 
-class CardsLearningState extends State<CardsLearning> {
+class CardsIntervalLearningState extends State<CardsIntervalLearning> {
   /// Whether the card on the display is scheduled for the time in future.
   /// Implies that the user has been asked to learn cards beyond current date,
   /// and replied positively.

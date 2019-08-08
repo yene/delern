@@ -111,11 +111,13 @@ class _DeckSettingsWidgetState extends State<DeckSettingsWidget> {
                   ],
                 ),
                 RaisedButton(
-                  color: Theme.of(context).accentColor,
                   onPressed: () async {
                     widget.bloc.onDeleteDeckIntention.add(null);
                   },
-                  child: Text(localizations.of(context).deleteDeckButton),
+                  child: Text(
+                    localizations.of(context).deleteDeckButton,
+                    style: TextStyle(color: Theme.of(context).accentColor),
+                  ),
                 ),
               ],
             ),

@@ -99,7 +99,7 @@ class _EditScreenState extends State<EditScreen> {
         textAlign: TextAlign.center,
         decoration: InputDecoration(
           border: InputBorder.none,
-          suffixIcon: Icon(Icons.edit),
+          suffixIcon: const Icon(Icons.edit),
           // We'd like to center text. Because of suffixIcon, the text
           // is placed a little bit to the left. To fix this problem, we
           // add an empty Container with size of Icon to the left.

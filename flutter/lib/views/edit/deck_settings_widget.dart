@@ -203,7 +203,7 @@ class _DeckSettingsWidgetState extends State<DeckSettingsWidget> {
           child: Text(
             text,
             textAlign: TextAlign.center,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: app_styles.kMinSecondaryTextSize,
             ),
           ),

@@ -10,7 +10,7 @@ class FilteredSortedObservableList<T extends KeyedListItem>
     extends ObservableList<T>
     with KeyedListMixin<T>
     implements DelayedInitializationObservableList<T> {
-  DelayedInitializationObservableList<T> _source;
+  final DelayedInitializationObservableList<T> _source;
   StreamSubscription<List<ListChangeRecord<T>>> _sourceChangesSubscription;
 
   FilteredSortedObservableList(this._source) : super.from(_source);

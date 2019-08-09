@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:meta/meta.dart';
 import 'package:quiver/strings.dart';
@@ -210,12 +211,14 @@ class Auth {
     for (final providerData in user.providerData) {
       if (isBlank(user.displayName) && !isBlank(providerData.displayName)) {
         update.displayName = providerData.displayName;
-        print('Updating displayName from provider ${providerData.providerId}');
+        debugPrint(
+            'Updating displayName from provider ${providerData.providerId}');
         anyUpdates = true;
       }
       if (isBlank(user.photoUrl) && !isBlank(providerData.photoUrl)) {
         update.photoUrl = providerData.photoUrl;
-        print('Updating photoUrl from provider ${providerData.providerId}');
+        debugPrint(
+            'Updating photoUrl from provider ${providerData.providerId}');
         anyUpdates = true;
       }
     }

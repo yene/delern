@@ -21,7 +21,7 @@ Future<void> report(String src, error, StackTrace stackTrace,
         'Stack trace follows on the next line:\n$stackTrace\n${'-' * 80}');
   }
 
-  print('Sending error report...');
+  debugPrint('Sending error report...');
   if (extra != null) {
     for (final entry in extra.entries) {
       Crashlytics.instance.setString(entry.key, entry.value.toString());

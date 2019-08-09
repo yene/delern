@@ -14,6 +14,7 @@ import 'package:delern_flutter/views/cards_list/cards_list.dart';
 import 'package:delern_flutter/views/decks_list/create_deck_widget.dart';
 import 'package:delern_flutter/views/decks_list/deck_menu.dart';
 import 'package:delern_flutter/views/decks_list/navigation_drawer.dart';
+import 'package:delern_flutter/views/helpers/arrow_to_fab_widget.dart';
 import 'package:delern_flutter/views/helpers/empty_list_message_widget.dart';
 import 'package:delern_flutter/views/helpers/observing_animated_list_widget.dart';
 import 'package:delern_flutter/views/helpers/save_updates_dialog.dart';
@@ -32,66 +33,6 @@ class DecksList extends StatefulWidget {
 
   @override
   _DecksListState createState() => _DecksListState();
-}
-
-class _ArrowToFloatingActionButton extends CustomPainter {
-  final BuildContext scaffoldContext;
-  final GlobalKey fabKey;
-
-  _ArrowToFloatingActionButton(this.scaffoldContext, this.fabKey);
-
-  static const _margin = 20.0;
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final RenderBox scaffoldBox = scaffoldContext.findRenderObject();
-    final RenderBox fabBox = fabKey.currentContext.findRenderObject();
-    final fabRect =
-        scaffoldBox.globalToLocal(fabBox.localToGlobal(Offset.zero)) &
-            fabBox.size;
-    final center = size.center(Offset.zero);
-
-    final curve = Path()
-      ..moveTo(center.dx, center.dy + _margin)
-      ..cubicTo(
-          center.dx - _margin,
-          center.dy + _margin * 2,
-          _margin - center.dx,
-          (fabRect.center.dy - center.dy) * 2 / 3 + center.dy,
-          fabRect.centerLeft.dx - _margin,
-          fabRect.center.dy)
-      ..moveTo(fabRect.centerLeft.dx - _margin, fabRect.center.dy)
-      ..lineTo(
-          fabRect.centerLeft.dx - _margin * 2.5, fabRect.center.dy - _margin)
-      ..moveTo(fabRect.centerLeft.dx - _margin, fabRect.center.dy)
-      ..lineTo(fabRect.centerLeft.dx - _margin * 2.5,
-          fabRect.center.dy + _margin / 2);
-
-    canvas.drawPath(
-        curve,
-        Paint()
-          ..style = PaintingStyle.stroke
-          ..strokeWidth = 3.0
-          ..strokeCap = StrokeCap.round);
-  }
-
-  @override
-  bool shouldRepaint(_ArrowToFloatingActionButton oldDelegate) =>
-      scaffoldContext != oldDelegate.scaffoldContext ||
-      fabKey != oldDelegate.fabKey;
-}
-
-class ArrowToFloatingActionButtonWidget extends StatelessWidget {
-  final Widget child;
-  final GlobalKey fabKey;
-
-  const ArrowToFloatingActionButtonWidget({@required this.fabKey, this.child});
-
-  @override
-  Widget build(BuildContext context) => Container(
-      child: CustomPaint(
-          painter: _ArrowToFloatingActionButton(context, fabKey),
-          child: child));
 }
 
 class _DecksListState extends State<DecksList> {

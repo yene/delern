@@ -11,6 +11,7 @@ import 'package:delern_flutter/models/card_reply_model.dart';
 import 'package:delern_flutter/models/deck_model.dart';
 import 'package:delern_flutter/remote/error_reporting.dart' as error_reporting;
 import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/foundation.dart';
 import 'package:meta/meta.dart';
 import 'package:pedantic/pedantic.dart';
 
@@ -140,7 +141,7 @@ class ScheduledCardModel implements Model {
 
           // card.key is used within ScheduledCard and must be set.
           card.key = latestScheduledCard.key;
-          print('Removing dangling ScheduledCard ${scheduledCard.key}');
+          debugPrint('Removing dangling ScheduledCard ${scheduledCard.key}');
           unawaited((Transaction()..delete(scheduledCard)).commit());
           return;
         }

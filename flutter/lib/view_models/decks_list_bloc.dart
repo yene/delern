@@ -9,6 +9,7 @@ import 'package:delern_flutter/models/deck_model.dart';
 import 'package:delern_flutter/models/scheduled_card_model.dart';
 import 'package:delern_flutter/remote/analytics.dart';
 import 'package:delern_flutter/view_models/base/filtered_sorted_observable_list.dart';
+import 'package:flutter/foundation.dart';
 import 'package:meta/meta.dart';
 import 'package:pedantic/pedantic.dart';
 
@@ -117,7 +118,8 @@ class DecksListBloc {
           .reduce((m1, m2) => m1.repeatAt.isBefore(m2.repeatAt) ? m1 : m2)
           .repeatAt;
       final refreshTimerInterval = nextRepeatAt.difference(now) + _timerDelay;
-      print('Setting deck $deckKey refresh timer for $refreshTimerInterval');
+      debugPrint(
+          'Setting deck $deckKey refresh timer for $refreshTimerInterval');
       // Set timer to re-run this method when next repeatAt is due.
       cardsDue._refreshTimer = Timer(
           refreshTimerInterval, () => _scheduledCardsChanged(deckKey, value));

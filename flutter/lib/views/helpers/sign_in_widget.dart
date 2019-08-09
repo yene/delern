@@ -48,7 +48,7 @@ class _SignInWidgetState extends State<SignInWidget> {
                 ..key = token)
               .build();
 
-          print('Registering for FCM as ${fcm.name} in ${fcm.language}');
+          debugPrint('Registering for FCM as ${fcm.name} in ${fcm.language}');
           unawaited((Transaction()..save(fcm)).commit());
         });
 

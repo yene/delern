@@ -54,11 +54,6 @@ install:
   - ps: popd
   - 'echo [timing: %time%] Firebase dependencies installed'
 
-  - 'flutter --version || git clone --quiet --branch
-    %FLUTTER_CHANNEL% %FLUTTER_REPO_URL% %FLUTTER_SDK_ROOT%'
-  - flutter precache
-  - 'echo [timing: %time%] Flutter installed'
-
   - copy tools\ci\google-services.json flutter\android\app\google-services.json
   - copy tools\ci\debug.keystore %USERPROFILE%\.android\debug.keystore
 
@@ -80,6 +75,7 @@ build_script:
 
   - ps: pushd flutter
   - bundle exec fastlane install_dependencies
+  - 'echo [timing: %time%] Dependencies installed'
   # TODO(dotdoom): test generate and lint.
   - bundle exec fastlane android build
   - ps: popd

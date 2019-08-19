@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:delern_flutter/models/base/model.dart';
+import 'package:delern_flutter/models/card_reply_model.dart';
 import 'package:delern_flutter/remote/error_reporting.dart' as error_reporting;
 import 'package:firebase_database/firebase_database.dart';
 import 'package:pedantic/pedantic.dart';
@@ -41,8 +42,9 @@ class Transaction {
   }
 
   void deleteAll(ReadonlyModel m) {
+    // CardReplyModel assigns key from the beginning.
     assert(
-        m.key == null,
+        m.key == null || m is CardReplyModel,
         'Attempt to delete all models with the same root, but the key is '
         'specified!');
     _updates[m.rootPath] = null;

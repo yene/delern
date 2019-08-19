@@ -11,6 +11,7 @@ import 'package:delern_flutter/view_models/decks_list_bloc.dart';
 import 'package:delern_flutter/views/card_create_update/card_create_update.dart';
 import 'package:delern_flutter/views/cards_interval_learning/cards_interval_learning.dart';
 import 'package:delern_flutter/views/cards_list/cards_list.dart';
+import 'package:delern_flutter/views/cards_review_learning/cards_review_learning.dart';
 import 'package:delern_flutter/views/decks_list/create_deck_widget.dart';
 import 'package:delern_flutter/views/decks_list/deck_menu.dart';
 import 'package:delern_flutter/views/decks_list/navigation_drawer.dart';
@@ -254,7 +255,21 @@ class DeckListItemWidget extends StatelessWidget {
   }
 
   Future<void> _learnCardsReview(BuildContext context) async {
-    // TODO(ksheremet): Open Review screen
+    final anyCardsShown = await Navigator.push(
+        context,
+        MaterialPageRoute(
+          settings: const RouteSettings(name: '/decks/learn-review'),
+          builder: (context) => CardsReviewLearning(deck: deck),
+        ));
+    if (anyCardsShown == false) {
+      // If deck is empty, open a screen with adding cards
+      unawaited(Navigator.push(
+          context,
+          MaterialPageRoute(
+              settings: const RouteSettings(name: '/cards/new'),
+              builder: (context) => CardCreateUpdate(
+                  card: CardModel(deckKey: deck.key), deck: deck))));
+    }
   }
 
   Widget _buildContent(BuildContext context) {

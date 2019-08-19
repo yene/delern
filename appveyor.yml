@@ -54,9 +54,8 @@ install:
   - ps: popd
   - 'echo [timing: %time%] Firebase dependencies installed'
 
-  - 'flutter upgrade ||
-    git clone --quiet --branch %FLUTTER_CHANNEL% %FLUTTER_REPO_URL%
-    %FLUTTER_SDK_ROOT%'
+  - 'flutter --version || git clone --quiet --branch
+    %FLUTTER_CHANNEL% %FLUTTER_REPO_URL% %FLUTTER_SDK_ROOT%'
   - flutter precache
   - 'echo [timing: %time%] Flutter installed'
 

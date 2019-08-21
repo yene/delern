@@ -25,6 +25,7 @@ void main() {
         onFlip: () {
           _wasFlipped = true;
         },
+        key: UniqueKey(),
       ),
     ));
     await tester.pumpAndSettle();

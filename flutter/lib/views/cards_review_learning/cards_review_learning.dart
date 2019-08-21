@@ -78,13 +78,14 @@ class _CardsReviewLearningState extends State<CardsReviewLearning>
                             });
                             return Container();
                           }
-                          var value = _controller.page - index;
-                          value = (1 - (value.abs() * 0.3)).clamp(0.0, 1.0);
-                          final distortionValue =
+                          final value =
+                              (1 - ((_controller.page - index).abs() * 0.3))
+                                  .clamp(0.0, 1.0);
+                          final transformValue =
                               Curves.easeOut.transform(value);
                           return Center(
                               child: SizedBox(
-                                  width: distortionValue *
+                                  width: transformValue *
                                       MediaQuery.of(context).size.width *
                                       _kCardPageRation,
                                   child: child));

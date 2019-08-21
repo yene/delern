@@ -111,6 +111,7 @@ class CardsIntervalLearningState extends State<CardsIntervalLearning> {
                       onFlip: () {
                         _showReplyButtons.value = true;
                       },
+                      key: ValueKey(_viewModel.card.key),
                     ),
                   )),
                   Padding(

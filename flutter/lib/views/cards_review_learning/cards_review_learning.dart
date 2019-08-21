@@ -98,6 +98,7 @@ class _CardsReviewLearningState extends State<CardsReviewLearning>
                             backgroundColor: specifyCardBackground(
                                 widget.deck.type, snapshot.data[index].back),
                             onFlip: () {},
+                            key: ValueKey(snapshot.data[index].key),
                           ),
                         ),
                       ));

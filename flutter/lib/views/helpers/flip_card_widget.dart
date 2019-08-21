@@ -23,7 +23,9 @@ class FlipCardWidget extends StatefulWidget {
     @required this.isMarkdown,
     @required this.backgroundColor,
     @required this.onFlip,
-  });
+    @required Key key,
+  })  : assert(key != null),
+        super(key: key);
 
   @override
   _FlipCardWidgetState createState() => _FlipCardWidgetState();
@@ -71,7 +73,10 @@ class _FlipCardWidgetState extends State<FlipCardWidget>
 
   @override
   void didUpdateWidget(FlipCardWidget oldWidget) {
-    if (oldWidget != widget) {
+    // In PageView, oldWidget and widget with the same fields somehow are
+    // different widgets. Therefore we compare keys of the cards
+    // to make sure that they are different before resetting animation.
+    if (oldWidget != widget && oldWidget.key != widget.key) {
       // Reset animation when new card arrived
       _controller.reset();
       _wasFlipped = false;

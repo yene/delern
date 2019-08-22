@@ -567,9 +567,9 @@ To see the source code for this app, please visit the [Delern GitHub repo](https
         desc: 'Interval Learning Label',
       );
 
-  String get reviewLearning => Intl.message(
-        'Review',
-        name: 'reviewLearning',
-        desc: 'Review Learning Label',
+  String get viewLearning => Intl.message(
+        'View',
+        name: 'viewLearning',
+        desc: 'View Learning Label',
       );
 }

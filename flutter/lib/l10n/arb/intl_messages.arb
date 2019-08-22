@@ -613,9 +613,9 @@
     "placeholders": {
     }
   },
-  "reviewLearning": "Review",
-  "@reviewLearning": {
-    "description": "Review Learning Label",
+  "viewLearning": "View",
+  "@viewLearning": {
+    "description": "View Learning Label",
     "type": "text",
     "placeholders": {
     }

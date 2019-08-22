@@ -149,7 +149,6 @@ class MessageLookup extends MessageLookupByLibrary {
         "profileTooltip": MessageLookupByLibrary.simpleMessage("Профиль"),
         "reversedCardLabel":
             MessageLookupByLibrary.simpleMessage("Добавить обратную карточку"),
-        "reviewLearning": MessageLookupByLibrary.simpleMessage("Просмотр"),
         "save": MessageLookupByLibrary.simpleMessage("Сохранить"),
         "saveChangesQuestion": MessageLookupByLibrary.simpleMessage(
             "Вы хотите сохранить изменения?"),
@@ -171,6 +170,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "supportDevelopment": MessageLookupByLibrary.simpleMessage(
             "Расскажите, пожалуйста, что мы можем сделать, чтобы улучшить Ваш опыт с Delern!\n\nЕсли у вас есть какие-либо вопросы или предложения, свяжитесь с нами:\n[delern@dasfoo.org](mailto:delern@dasfoo.org)\n\nCледите за последними новостями Delern:\n\n- [Facebook](https://fb.me/das.delern)\n- [Twitter](https://twitter.com/dasdelern)\n- [VK](https://vk.com/delern)\n\nЧтобы увидеть исходный код этого приложения, посетите [Delern GitHub repo](https://github.com/dasfoo/delern).\n      "),
         "swissDeckType": MessageLookupByLibrary.simpleMessage("Швейцарский"),
+        "viewLearning": MessageLookupByLibrary.simpleMessage("Просмотр"),
         "watchedCards": m4,
         "whoHasAccessLabel":
             MessageLookupByLibrary.simpleMessage("У кого есть доступ"),

@@ -68,9 +68,12 @@ task:
   container:
     image: dasfoo/dev:latest
   env: &LINUX_ENV
-    ANDROID_SDK_ROOT: "${HOME}/android"
+    # https://github.com/flutter/flutter/pull/37581
+    ANDROID_SDK_ROOT: "${ANDROID_HOME}"
+
+    #ANDROID_SDK_ROOT: "${HOME}/android"
     # For Gradle plugin <3.4: https://issuetracker.google.com/issues/125138969.
-    ANDROID_HOME: "${ANDROID_SDK_ROOT}"
+    #ANDROID_HOME: "${ANDROID_SDK_ROOT}"
   << : *FLUTTER_AND_FASTLANE_TASK_TEMPLATE
   generate_and_lint_script:
   - cd flutter

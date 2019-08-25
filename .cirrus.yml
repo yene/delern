@@ -2,7 +2,6 @@
 # Validation: ruby -ryaml -e 'puts (YAML.load_file ".cirrus.yml")'
 
 env:
-  FLUTTER_CHANNEL: beta
   FLUTTER_SDK_ROOT: "${HOME}/flutter"
   PATH: "${HOME}/bin:${FLUTTER_SDK_ROOT}/bin:${PATH}"
 
@@ -41,7 +40,6 @@ flutter_and_fastlane_task_template: &FLUTTER_AND_FASTLANE_TASK_TEMPLATE
     folder: $FLUTTER_SDK_ROOT
     fingerprint_script:
     - uname -ms
-    - git ls-remote https://github.com/flutter/flutter.git "${FLUTTER_CHANNEL?}"
     # Rely on fastlane to download and install Flutter.
   bundler_cache:
     folder: vendor/bundle

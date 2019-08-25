@@ -1,9 +1,9 @@
-[![Cirrus CI](https://api.cirrus-ci.com/github/dasfoo/delern.svg)](https://cirrus-ci.com/github/dasfoo/delern)
-[![Appveyor](https://ci.appveyor.com/api/projects/status/689esuw57tfyjbkd/branch/master?svg=true)](https://ci.appveyor.com/project/dotdoom/delern/branch/master)
-[![codecov](https://codecov.io/gh/dasfoo/delern/branch/master/graph/badge.svg)](https://codecov.io/gh/dasfoo/delern)
-[![Codemagic](https://api.codemagic.io/apps/5c7687c8989e5e000c102345/5c7687c8989e5e000c102344/status_badge.svg)](https://codemagic.io/apps/5c7687c8989e5e000c102345/5c7687c8989e5e000c102344/latest_build)
-
-
+| CI                                         | Status |
+| ------------------------------------------ | ------ |
+| Deploy to Firebase, AppStore and PlayStore | [![Cirrus CI](https://api.cirrus-ci.com/github/dasfoo/delern.svg)](https://cirrus-ci.com/github/dasfoo/delern) |
+| Build on Windows                           | [![Appveyor](https://ci.appveyor.com/api/projects/status/689esuw57tfyjbkd/branch/master?svg=true)](https://ci.appveyor.com/project/dotdoom/delern/branch/master) |
+| Code coverage by tests                     | [![codecov](https://codecov.io/gh/dasfoo/delern/branch/master/graph/badge.svg)](https://codecov.io/gh/dasfoo/delern) |
+| Tests (including Flutter Driver)           | [![Codemagic](https://api.codemagic.io/apps/5c7687c8989e5e000c102345/5c7687c8989e5e000c102344/status_badge.svg)](https://codemagic.io/apps/5c7687c8989e5e000c102345/5c7687c8989e5e000c102344/latest_build) |
 
 <table><tr><td>
 <a href='https://play.google.com/store/apps/details?id=org.dasfoo.delern&utm_source=github&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png' height='64px'/></a>

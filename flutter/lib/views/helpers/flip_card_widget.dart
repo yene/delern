@@ -22,6 +22,12 @@ class FlipCardWidget extends StatefulWidget {
     @required this.back,
     @required this.isMarkdown,
     @required this.backgroundColor,
+    // Key is needed to compare widgets. One example:
+    // In ViewLearning PageView, oldWidget and widget with the same fields
+    // somehow are different widgets. Therefore we compare keys of the cards
+    // to make sure that they are different before resetting animation.
+    // In IntervalLearning if we omit key, it compares widgets by key (which is
+    // null), therefore answer buttons work incorectly.
     @required Key key,
     this.onFlip,
   })  : assert(key != null),

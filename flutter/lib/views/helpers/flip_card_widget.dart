@@ -63,7 +63,7 @@ class _FlipCardWidgetState extends State<FlipCardWidget>
           setState(() {
             _isFront = shouldBeFront;
           });
-          if (widget.onFlip != null && !_wasFlipped && !_isFront) {
+          if (!_wasFlipped && !_isFront) {
             _wasFlipped = true;
             if (widget.onFlip != null) {
               widget.onFlip();

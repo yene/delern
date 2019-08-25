@@ -25,7 +25,6 @@ class _CardsReviewLearningState extends State<CardsReviewLearning>
   CardsViewLearningBloc _bloc;
   final PageController _controller = PageController(viewportFraction: 0.7);
   int _currentCard = 0;
-  int _allCards = 0;
 
   @override
   void initState() {
@@ -52,15 +51,21 @@ class _CardsReviewLearningState extends State<CardsReviewLearning>
   @override
   Widget build(BuildContext context) => ScreenBlocView(
         appBar: AppBar(
-            title:
-                Text('(${_currentCard + 1}/$_allCards) ${widget.deck.name}')),
+            title: StreamBuilder<int>(
+                stream: _bloc.doGetNumberOfCards,
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    return Text(
+                        '(${_currentCard + 1}/${snapshot.data}) ${widget.deck.name}');
+                  }
+                  return Text(widget.deck.name);
+                })),
         body: StreamBuilder<List<CardModel>>(
           stream: _bloc.doGetCardList,
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
               return ProgressIndicatorWidget();
             } else {
-              _allCards = snapshot.data.length;
               return PageView.builder(
                   controller: _controller,
                   scrollDirection: Axis.vertical,

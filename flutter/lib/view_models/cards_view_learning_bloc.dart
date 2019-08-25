@@ -13,4 +13,7 @@ class CardsViewLearningBloc extends ScreenBloc {
 
   Stream<List<CardModel>> get doGetCardList =>
       _cardList.listChanges.map((_) => _cardList);
+
+  Stream<int> get doGetNumberOfCards =>
+      _cardList.listChanges.map((_) => _cardList.length);
 }

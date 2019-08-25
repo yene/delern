@@ -1,14 +1,14 @@
 import 'package:delern_flutter/flutter/localization.dart' as localizations;
 import 'package:delern_flutter/models/card_model.dart';
 import 'package:delern_flutter/models/deck_model.dart';
-import 'package:delern_flutter/view_models/cards_review_learning_bloc.dart';
+import 'package:delern_flutter/view_models/cards_view_learning_bloc.dart';
 import 'package:delern_flutter/views/base/screen_bloc_view.dart';
 import 'package:delern_flutter/views/helpers/card_background_specifier.dart';
 import 'package:delern_flutter/views/helpers/flip_card_widget.dart';
 import 'package:delern_flutter/views/helpers/progress_indicator_widget.dart';
 import 'package:flutter/material.dart';
 
-const _kCardPageRation = 0.9;
+const _kCardPageRatio = 0.9;
 const double _kCardPadding = 8;
 
 class CardsReviewLearning extends StatefulWidget {
@@ -22,14 +22,14 @@ class CardsReviewLearning extends StatefulWidget {
 
 class _CardsReviewLearningState extends State<CardsReviewLearning>
     with TickerProviderStateMixin {
-  CardsReviewLearningBloc _bloc;
+  CardsViewLearningBloc _bloc;
   final PageController _controller = PageController(viewportFraction: 0.7);
   int _currentCard = 0;
   int _allCards = 0;
 
   @override
   void initState() {
-    _bloc = CardsReviewLearningBloc(deck: widget.deck);
+    _bloc = CardsViewLearningBloc(deck: widget.deck);
     _controller.addListener(() {
       if (_controller.page.floor() != _currentCard) {
         setState(() {
@@ -57,8 +57,7 @@ class _CardsReviewLearningState extends State<CardsReviewLearning>
         body: StreamBuilder<List<CardModel>>(
           stream: _bloc.doGetCardList,
           builder: (context, snapshot) {
-            if (snapshot.connectionState != ConnectionState.done &&
-                !snapshot.hasData) {
+            if (!snapshot.hasData) {
               return ProgressIndicatorWidget();
             } else {
               _allCards = snapshot.data.length;
@@ -69,25 +68,23 @@ class _CardsReviewLearningState extends State<CardsReviewLearning>
                   itemBuilder: (context, index) => AnimatedBuilder(
                         animation: _controller,
                         builder: (context, child) {
-                          // On the first render, the _controller.page
-                          // is null, this is a dirty hack
-                          if (_controller.position.minScrollExtent == null ||
-                              _controller.position.maxScrollExtent == null) {
-                            Future.delayed(const Duration(microseconds: 1), () {
-                              setState(() {});
-                            });
-                            return Container();
+                          // Workaround for:
+                          // https://github.com/flutter/flutter/issues/35198.
+                          var page = index.toDouble();
+                          if (_controller.position.minScrollExtent != null &&
+                              _controller.position.maxScrollExtent != null) {
+                            page = _controller.page;
                           }
-                          final value =
-                              (1 - ((_controller.page - index).abs() * 0.3))
-                                  .clamp(0.0, 1.0);
+
+                          final value = (1 - ((page - index).abs() * 0.3))
+                              .clamp(0.0, 1.0);
                           final transformValue =
                               Curves.easeOut.transform(value);
                           return Center(
                               child: SizedBox(
                                   width: transformValue *
                                       MediaQuery.of(context).size.width *
-                                      _kCardPageRation,
+                                      _kCardPageRatio,
                                   child: child));
                         },
                         child: Padding(
@@ -98,7 +95,6 @@ class _CardsReviewLearningState extends State<CardsReviewLearning>
                             isMarkdown: widget.deck.markdown,
                             backgroundColor: specifyCardBackground(
                                 widget.deck.type, snapshot.data[index].back),
-                            onFlip: () {},
                             key: ValueKey(snapshot.data[index].key),
                           ),
                         ),
@@ -108,10 +104,4 @@ class _CardsReviewLearningState extends State<CardsReviewLearning>
         ),
         bloc: _bloc,
       );
-
-  @override
-  void dispose() {
-    _bloc.dispose();
-    super.dispose();
-  }
 }

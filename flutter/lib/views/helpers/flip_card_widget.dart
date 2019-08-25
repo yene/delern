@@ -22,8 +22,8 @@ class FlipCardWidget extends StatefulWidget {
     @required this.back,
     @required this.isMarkdown,
     @required this.backgroundColor,
-    @required this.onFlip,
     @required Key key,
+    this.onFlip,
   })  : assert(key != null),
         super(key: key);
 
@@ -63,9 +63,11 @@ class _FlipCardWidgetState extends State<FlipCardWidget>
           setState(() {
             _isFront = shouldBeFront;
           });
-          if (!_wasFlipped && !_isFront) {
+          if (widget.onFlip != null && !_wasFlipped && !_isFront) {
             _wasFlipped = true;
-            widget.onFlip();
+            if (widget.onFlip != null) {
+              widget.onFlip();
+            }
           }
         }
       });

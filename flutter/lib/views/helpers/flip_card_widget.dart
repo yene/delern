@@ -22,8 +22,16 @@ class FlipCardWidget extends StatefulWidget {
     @required this.back,
     @required this.isMarkdown,
     @required this.backgroundColor,
-    @required this.onFlip,
-  });
+    // Key is needed to compare widgets. One example:
+    // In ViewLearning PageView, oldWidget and widget with the same fields
+    // somehow are different widgets. Therefore we compare keys of the cards
+    // to make sure that they are different before resetting animation.
+    // In IntervalLearning if we omit key, it compares widgets by key (which is
+    // null), therefore answer buttons work incorectly.
+    @required Key key,
+    this.onFlip,
+  })  : assert(key != null),
+        super(key: key);
 
   @override
   _FlipCardWidgetState createState() => _FlipCardWidgetState();
@@ -63,7 +71,9 @@ class _FlipCardWidgetState extends State<FlipCardWidget>
           });
           if (!_wasFlipped && !_isFront) {
             _wasFlipped = true;
-            widget.onFlip();
+            if (widget.onFlip != null) {
+              widget.onFlip();
+            }
           }
         }
       });
@@ -71,7 +81,10 @@ class _FlipCardWidgetState extends State<FlipCardWidget>
 
   @override
   void didUpdateWidget(FlipCardWidget oldWidget) {
-    if (oldWidget != widget) {
+    // In PageView, oldWidget and widget with the same fields somehow are
+    // different widgets. Therefore we compare keys of the cards
+    // to make sure that they are different before resetting animation.
+    if (oldWidget != widget && oldWidget.key != widget.key) {
       // Reset animation when new card arrived
       _controller.reset();
       _wasFlipped = false;

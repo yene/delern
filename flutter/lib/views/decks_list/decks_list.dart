@@ -9,13 +9,15 @@ import 'package:delern_flutter/models/deck_model.dart';
 import 'package:delern_flutter/remote/analytics.dart';
 import 'package:delern_flutter/view_models/decks_list_bloc.dart';
 import 'package:delern_flutter/views/card_create_update/card_create_update.dart';
-import 'package:delern_flutter/views/cards_learning/cards_learning.dart';
+import 'package:delern_flutter/views/cards_interval_learning/cards_interval_learning.dart';
 import 'package:delern_flutter/views/cards_list/cards_list.dart';
+import 'package:delern_flutter/views/cards_view_learning/cards_view_learning.dart';
 import 'package:delern_flutter/views/decks_list/create_deck_widget.dart';
 import 'package:delern_flutter/views/decks_list/deck_menu.dart';
 import 'package:delern_flutter/views/decks_list/navigation_drawer.dart';
 import 'package:delern_flutter/views/helpers/arrow_to_fab_widget.dart';
 import 'package:delern_flutter/views/helpers/empty_list_message_widget.dart';
+import 'package:delern_flutter/views/helpers/learning_method_widget.dart';
 import 'package:delern_flutter/views/helpers/observing_animated_list_widget.dart';
 import 'package:delern_flutter/views/helpers/save_updates_dialog.dart';
 import 'package:delern_flutter/views/helpers/search_bar_widget.dart';
@@ -166,24 +168,7 @@ class DeckListItemWidget extends StatelessWidget {
               elevation: _kItemElevation,
               child: InkWell(
                 onTap: () async {
-                  final anyCardsShown = await Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        settings: const RouteSettings(name: '/decks/learn'),
-                        // TODO(dotdoom): pass scheduled cards list to
-                        //  CardsLearning.
-                        builder: (context) => CardsLearning(deck: deck),
-                      ));
-                  if (anyCardsShown == false) {
-                    // If deck is empty, open a screen with adding cards
-                    unawaited(Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            settings: const RouteSettings(name: '/cards/new'),
-                            builder: (context) => CardCreateUpdate(
-                                card: CardModel(deckKey: deck.key),
-                                deck: deck))));
-                  }
+                  await _showLearningDialog(context);
                 },
                 child: Row(
                   children: <Widget>[
@@ -199,6 +184,84 @@ class DeckListItemWidget extends StatelessWidget {
         emptyExpanded,
       ],
     );
+  }
+
+  Future _showLearningDialog(BuildContext context) async {
+    await showDialog(
+        context: context,
+        barrierDismissible: true,
+        builder: (context) => Dialog(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.all(8),
+                    child: Text(
+                      localizations.of(context).learning,
+                      style: Theme.of(context).textTheme.title,
+                    ),
+                  ),
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        LearningMethodWidget(
+                          name: localizations.of(context).intervalLearning,
+                          icon: Icons.autorenew,
+                          onTap: () async {
+                            // Close dialog
+                            Navigator.pop(context);
+                            await _learnCards(
+                                context,
+                                MaterialPageRoute(
+                                  settings:
+                                      const RouteSettings(name: '/decks/learn'),
+                                  // TODO(dotdoom): pass scheduled cards list to
+                                  //  CardsLearning.
+                                  builder: (context) =>
+                                      CardsIntervalLearning(deck: deck),
+                                ));
+                          },
+                        ),
+                        LearningMethodWidget(
+                          name: localizations.of(context).viewLearning,
+                          icon: Icons.remove_red_eye,
+                          onTap: () async {
+                            // Close dialog
+                            Navigator.pop(context);
+                            await _learnCards(
+                                context,
+                                MaterialPageRoute(
+                                  settings: const RouteSettings(
+                                      name: '/decks/learn-view'),
+                                  builder: (context) =>
+                                      CardsReviewLearning(deck: deck),
+                                ));
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ));
+  }
+
+  Future<void> _learnCards(
+      BuildContext context, MaterialPageRoute route) async {
+    final anyCardsShown = await Navigator.push(context, route);
+    if (anyCardsShown == false) {
+      // If deck is empty, open a screen with adding cards
+      unawaited(Navigator.push(
+          context,
+          MaterialPageRoute(
+              settings: const RouteSettings(name: '/cards/new'),
+              builder: (context) => CardCreateUpdate(
+                  card: CardModel(deckKey: deck.key), deck: deck))));
+    }
   }
 
   Widget _buildContent(BuildContext context) {

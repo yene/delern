@@ -104,11 +104,14 @@ class MessageLookup extends MessageLookupByLibrary {
         "germanDeckType": MessageLookupByLibrary.simpleMessage("Немецкий"),
         "installEmailApp": MessageLookupByLibrary.simpleMessage(
             "Пожалуйста установите приложение Электронной Почты"),
+        "intervalLearning":
+            MessageLookupByLibrary.simpleMessage("Интервальное"),
         "inviteToAppMessage": MessageLookupByLibrary.simpleMessage(
             "Я приглашаю Вас установить Delern, систему интервального изучения, которая позволяет изучать быстро и легко!\n\nПройдите по ссылке чтобы установить из\nGoogle Play: https://play.google.com/store/apps/details?id=org.dasfoo.delern\nApp Store: https://itunes.apple.com/us/app/delern/id1435734822?ls=1&mt=8\n\nПосле установки, следите за последними новостями Delern:\nFacebook: https://fb.me/das.delern\nVK: https://vk.com/delern\nTwitter: https://twitter.com/dasdelern"),
         "learnIntroDescription": MessageLookupByLibrary.simpleMessage(
             "Изучайте в любом месте, а также без сети"),
         "learnIntroTitle": MessageLookupByLibrary.simpleMessage("Изучайте"),
+        "learning": MessageLookupByLibrary.simpleMessage("Изучение"),
         "listOFDecksScreenTitle":
             MessageLookupByLibrary.simpleMessage("Список папок"),
         "markdown": MessageLookupByLibrary.simpleMessage("Маркдаун"),
@@ -167,6 +170,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "supportDevelopment": MessageLookupByLibrary.simpleMessage(
             "Расскажите, пожалуйста, что мы можем сделать, чтобы улучшить Ваш опыт с Delern!\n\nЕсли у вас есть какие-либо вопросы или предложения, свяжитесь с нами:\n[delern@dasfoo.org](mailto:delern@dasfoo.org)\n\nCледите за последними новостями Delern:\n\n- [Facebook](https://fb.me/das.delern)\n- [Twitter](https://twitter.com/dasdelern)\n- [VK](https://vk.com/delern)\n\nЧтобы увидеть исходный код этого приложения, посетите [Delern GitHub repo](https://github.com/dasfoo/delern).\n      "),
         "swissDeckType": MessageLookupByLibrary.simpleMessage("Швейцарский"),
+        "viewLearning": MessageLookupByLibrary.simpleMessage("Просмотр"),
         "watchedCards": m4,
         "whoHasAccessLabel":
             MessageLookupByLibrary.simpleMessage("У кого есть доступ"),

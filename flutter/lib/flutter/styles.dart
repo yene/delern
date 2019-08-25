@@ -2,6 +2,7 @@ import 'package:delern_flutter/views/helpers/card_background_specifier.dart';
 import 'package:flutter/material.dart';
 
 const kPrimarySwatch = Colors.green;
+const kLightPrimaryColor = Color(0xFFC8E6C9);
 const kAccentColor = Colors.redAccent;
 final kScaffoldBackgroundColor = Colors.grey[350];
 final kIconColor = Colors.grey[600];

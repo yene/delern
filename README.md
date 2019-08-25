@@ -1,10 +1,3 @@
-| CI                                         | Status |
-| ------------------------------------------ | ------ |
-| Deploy to Firebase, AppStore and PlayStore | [![Cirrus CI](https://api.cirrus-ci.com/github/dasfoo/delern.svg)](https://cirrus-ci.com/github/dasfoo/delern) |
-| Build on Windows                           | [![Appveyor](https://ci.appveyor.com/api/projects/status/689esuw57tfyjbkd/branch/master?svg=true)](https://ci.appveyor.com/project/dotdoom/delern/branch/master) |
-| Code coverage by tests                     | [![codecov](https://codecov.io/gh/dasfoo/delern/branch/master/graph/badge.svg)](https://codecov.io/gh/dasfoo/delern) |
-| Tests (including Flutter Driver)           | [![Codemagic](https://api.codemagic.io/apps/5c7687c8989e5e000c102345/5c7687c8989e5e000c102344/status_badge.svg)](https://codemagic.io/apps/5c7687c8989e5e000c102345/5c7687c8989e5e000c102344/latest_build) |
-
 <table><tr><td>
 <a href='https://play.google.com/store/apps/details?id=org.dasfoo.delern&utm_source=github&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png' height='64px'/></a>
 </td><td>
@@ -22,6 +15,33 @@ Features:
 - Background colors for german cards;
 - Available learning in offline;
 - Markdown support.
+
+[badge/build/firebase]:            https://api.cirrus-ci.com/github/dasfoo/delern.svg?branch=master&task=firebase
+[badge/build/flutter/linux]:       https://api.cirrus-ci.com/github/dasfoo/delern.svg?branch=master&task=flutter+(linux)
+[badge/build/flutter/osx]:         https://api.cirrus-ci.com/github/dasfoo/delern.svg?branch=master&task=flutter+(osx)
+[badge/deploy/firebase]:           https://api.cirrus-ci.com/github/dasfoo/delern.svg?branch=master&task=deploy+(firebase)
+[badge/deploy/flutter/play-store]: https://api.cirrus-ci.com/github/dasfoo/delern.svg?branch=master&task=deploy+(Play+Store)
+[badge/deploy/flutter/app-store]:  https://api.cirrus-ci.com/github/dasfoo/delern.svg?branch=master&task=deploy+(App+Store)
+[badge/build/windows]:             https://ci.appveyor.com/api/projects/status/689esuw57tfyjbkd/branch/master?svg=true
+[badge/test/flutter/osx]:          https://api.codemagic.io/apps/5c7687c8989e5e000c102345/5c7687c8989e5e000c102344/status_badge.svg
+[badge/test/flutter/coverage]:     https://codecov.io/gh/dasfoo/delern/branch/master/graph/badge.svg
+
+[link/build/cirrus-ci]:            https://cirrus-ci.com/github/dasfoo/delern
+[link/build/appveyor]:             https://ci.appveyor.com/project/dotdoom/delern/branch/master
+[link/test/codemagic]:             https://codemagic.io/apps/5c7687c8989e5e000c102345/5c7687c8989e5e000c102344/latest_build
+[link/test/codecov]:               https://codecov.io/gh/dasfoo/delern
+
+| CI/CD                                         | Status (on master)                                                 |
+| --------------------------------------------- | ------------------------------------------------------------------ |
+| Build Flutter/Android on Linux                | [![build][badge/build/flutter/linux]][link/build/cirrus-ci]        |
+| Build Flutter/iOS on MacOS                    | [![build][badge/build/flutter/osx]][link/build/cirrus-ci]          |
+| Build Flutter/Android and Firebase on Windows | [![build][badge/build/windows]][link/build/appveyor]               |
+| Build Firebase on Linux                       | [![build][badge/build/firebase]][link/build/cirrus-ci]             |
+| Deploy Flutter/Android to Play Store          | [![deploy][badge/deploy/flutter/play-store]][link/build/cirrus-ci] |
+| Deploy Flutter/iOS to App Store               | [![deploy][badge/deploy/flutter/app-store]][link/build/cirrus-ci]  |
+| Deploy Firebase                               | [![deploy][badge/deploy/firebase]][link/build/cirrus-ci]           |
+| Code coverage by unit tests                   | [![coverage][badge/test/flutter/coverage]][link/test/codecov]      |
+| Flutter Driver integration tests              | [![driver][badge/test/flutter/osx]][link/test/codemagic]           |
 
 ## Create your Decks with Cards
 

@@ -62,3 +62,15 @@ const Color menuItemBackgroundColor = Colors.redAccent;
 const TextStyle menuItemText = TextStyle(
   color: Colors.white,
 );
+
+const TextStyle editCardPrimaryText = TextStyle(
+  fontSize: 19,
+  fontWeight: FontWeight.bold,
+  color: Colors.white,
+);
+
+const TextStyle editCardSecondaryText = TextStyle(
+  fontSize: 16,
+  fontWeight: FontWeight.w400,
+  color: Colors.white,
+);

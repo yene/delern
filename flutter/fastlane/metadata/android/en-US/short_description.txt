@@ -1,1 +1,1 @@
-Spaced repetition learning system
+Use flashcards to learn everything. The app uses a spaced repetition system.

@@ -15,7 +15,7 @@ void main() {
       home: CardDisplayWidget(
         front: frontSide,
         back: backSide,
-        backgroundColor: app_styles.cardBackgroundColors[Gender.feminine],
+        backgroundColor: app_styles.cardDarkBackgroundColors[Gender.feminine],
         isMarkdown: false,
         showBack: true,
       ),

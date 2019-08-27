@@ -20,7 +20,7 @@ void main() {
       home: FlipCardWidget(
         front: frontSide,
         back: backSide,
-        backgroundColor: app_styles.cardBackgroundColors[Gender.masculine],
+        backgroundColor: app_styles.cardDarkBackgroundColors[Gender.masculine],
         isMarkdown: false,
         onFlip: () {
           _wasFlipped = true;

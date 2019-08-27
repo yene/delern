@@ -11,7 +11,7 @@ enum Gender {
 
 Color specifyCardBackground(DeckType deckType, String text) {
   if (deckType == DeckType.basic) {
-    return app_styles.cardBackgroundColors[Gender.noGender];
+    return app_styles.cardDarkBackgroundColors[Gender.noGender];
   }
   var textGender = Gender.noGender;
   text = text.toLowerCase();
@@ -20,7 +20,35 @@ Color specifyCardBackground(DeckType deckType, String text) {
   } else {
     textGender = _germanCardGender(text);
   }
-  return app_styles.cardBackgroundColors[textGender];
+  return app_styles.cardDarkBackgroundColors[textGender];
+}
+
+LinearGradient specifyLinearGradientCardBackground(
+    DeckType deckType, String text) {
+  if (deckType == DeckType.basic) {
+    return LinearGradient(
+      begin: Alignment.topCenter,
+      end: Alignment.bottomCenter,
+      colors: [
+        app_styles.cardDarkBackgroundColors[Gender.noGender],
+        app_styles.cardLightBackgroundColors[Gender.noGender]
+      ],
+    );
+  }
+  var textGender = Gender.noGender;
+  text = text.toLowerCase();
+  if (deckType == DeckType.swiss) {
+    textGender = _swissCardGender(text);
+  } else {
+    textGender = _germanCardGender(text);
+  }
+  return LinearGradient(
+      begin: Alignment.topCenter,
+      end: Alignment.bottomCenter,
+      colors: [
+        app_styles.cardDarkBackgroundColors[textGender],
+        app_styles.cardLightBackgroundColors[textGender]
+      ]);
 }
 
 Gender _swissCardGender(String text) {

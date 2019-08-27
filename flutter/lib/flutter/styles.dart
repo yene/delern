@@ -19,11 +19,18 @@ const double kItemElevation = 4;
 const double kItemListHeightRatio = 0.1;
 const double kItemListPaddingRatio = kItemListHeightRatio * 0.08;
 
-final Map<Gender, Color> cardBackgroundColors = {
-  Gender.noGender: Colors.greenAccent[100],
-  Gender.masculine: Colors.lightBlue[200],
-  Gender.feminine: Colors.pink[300],
-  Gender.neuter: Colors.amberAccent[100],
+final Map<Gender, Color> cardDarkBackgroundColors = {
+  Gender.noGender: const Color(0xFF4CAF50),
+  Gender.masculine: const Color(0xFF44B4E3),
+  Gender.feminine: const Color(0xFFF97A5A),
+  Gender.neuter: const Color(0xFFFFAB00),
+};
+
+final Map<Gender, Color> cardLightBackgroundColors = {
+  Gender.noGender: const Color(0xFFA9DB3C),
+  Gender.masculine: const Color(0xFF82DAF9),
+  Gender.feminine: const Color(0xFFFCBDB8),
+  Gender.neuter: const Color(0xFFFFD740),
 };
 
 final Color signInBackgroundColor = Colors.greenAccent[100];

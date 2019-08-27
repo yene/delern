@@ -148,18 +148,19 @@ class _DeckSettingsWidgetState extends State<DeckSettingsWidget> {
 
   Widget _buildSwissDeckType() {
     final ruleList = [
-      _buildRule('de, en', app_styles.cardBackgroundColors[Gender.masculine]),
-      _buildRule('d, e', app_styles.cardBackgroundColors[Gender.feminine]),
-      _buildRule('s, es', app_styles.cardBackgroundColors[Gender.neuter]),
+      _buildRule(
+          'de, en', app_styles.cardDarkBackgroundColors[Gender.masculine]),
+      _buildRule('d, e', app_styles.cardDarkBackgroundColors[Gender.feminine]),
+      _buildRule('s, es', app_styles.cardDarkBackgroundColors[Gender.neuter]),
     ];
     return _buildDeckType(DeckType.swiss, ruleList);
   }
 
   Widget _buildBasicDeckType() {
     final ruleList = [
-      _buildRule('', app_styles.cardBackgroundColors[Gender.noGender]),
-      _buildRule('', app_styles.cardBackgroundColors[Gender.noGender]),
-      _buildRule('', app_styles.cardBackgroundColors[Gender.noGender]),
+      _buildRule('', app_styles.cardDarkBackgroundColors[Gender.noGender]),
+      _buildRule('', app_styles.cardDarkBackgroundColors[Gender.noGender]),
+      _buildRule('', app_styles.cardDarkBackgroundColors[Gender.noGender]),
     ];
     return _buildDeckType(DeckType.basic, ruleList);
   }

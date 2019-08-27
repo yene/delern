@@ -9,31 +9,31 @@ void main() {
 
     test('feminine', () {
       expect(specifyCardBackground(swissDeckType, 'd Muetter'),
-          app_styles.cardBackgroundColors[Gender.feminine]);
+          app_styles.cardDarkBackgroundColors[Gender.feminine]);
 
       expect(specifyCardBackground(swissDeckType, 'e Mappe'),
-          app_styles.cardBackgroundColors[Gender.feminine]);
+          app_styles.cardDarkBackgroundColors[Gender.feminine]);
     });
 
     test('masculine', () {
       expect(specifyCardBackground(swissDeckType, 'de Vater'),
-          app_styles.cardBackgroundColors[Gender.masculine]);
+          app_styles.cardDarkBackgroundColors[Gender.masculine]);
 
       expect(specifyCardBackground(swissDeckType, 'en Vater'),
-          app_styles.cardBackgroundColors[Gender.masculine]);
+          app_styles.cardDarkBackgroundColors[Gender.masculine]);
     });
 
     test('neuter', () {
       expect(specifyCardBackground(swissDeckType, 's Madchen'),
-          app_styles.cardBackgroundColors[Gender.neuter]);
+          app_styles.cardDarkBackgroundColors[Gender.neuter]);
 
       expect(specifyCardBackground(swissDeckType, 'es Madchen'),
-          app_styles.cardBackgroundColors[Gender.neuter]);
+          app_styles.cardDarkBackgroundColors[Gender.neuter]);
     });
 
     test('noGender', () {
       expect(specifyCardBackground(swissDeckType, 'laufen'),
-          app_styles.cardBackgroundColors[Gender.noGender]);
+          app_styles.cardDarkBackgroundColors[Gender.noGender]);
     });
   });
 
@@ -42,25 +42,25 @@ void main() {
 
     test('feminine', () {
       expect(specifyCardBackground(germanDeckType, 'die Mutter'),
-          app_styles.cardBackgroundColors[Gender.feminine]);
+          app_styles.cardDarkBackgroundColors[Gender.feminine]);
 
       expect(specifyCardBackground(germanDeckType, 'eine Lampe'),
-          app_styles.cardBackgroundColors[Gender.feminine]);
+          app_styles.cardDarkBackgroundColors[Gender.feminine]);
     });
 
     test('masculine', () {
       expect(specifyCardBackground(germanDeckType, 'der Vater'),
-          app_styles.cardBackgroundColors[Gender.masculine]);
+          app_styles.cardDarkBackgroundColors[Gender.masculine]);
     });
 
     test('neuter', () {
       expect(specifyCardBackground(germanDeckType, 'das Madchen'),
-          app_styles.cardBackgroundColors[Gender.neuter]);
+          app_styles.cardDarkBackgroundColors[Gender.neuter]);
     });
 
     test('noGender', () {
       expect(specifyCardBackground(germanDeckType, 'laufen'),
-          app_styles.cardBackgroundColors[Gender.noGender]);
+          app_styles.cardDarkBackgroundColors[Gender.noGender]);
     });
   });
 
@@ -69,7 +69,7 @@ void main() {
 
     test('noColor', () {
       expect(specifyCardBackground(basicDeckType, 'die Mutter'),
-          app_styles.cardBackgroundColors[Gender.noGender]);
+          app_styles.cardDarkBackgroundColors[Gender.noGender]);
     });
   });
 }

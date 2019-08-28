@@ -602,4 +602,10 @@ To see the source code for this app, please visit the [Delern GitHub repo](https
         name: 'deleteDeckButton',
         desc: 'Delete deck button',
       );
+
+  String get other => Intl.message(
+        'other',
+        name: 'other',
+        desc: 'Other',
+      );
 }

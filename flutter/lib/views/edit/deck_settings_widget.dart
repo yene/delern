@@ -134,6 +134,7 @@ class _DeckSettingsWidgetState extends State<DeckSettingsWidget> {
                     ),
                   ),
                 ),
+                Divider(),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   mainAxisSize: MainAxisSize.min,
@@ -183,12 +184,14 @@ class _DeckSettingsWidgetState extends State<DeckSettingsWidget> {
       _buildRule('de, en', _kMasculineGradient),
       _buildRule('d, e', _kFeminineGradient),
       _buildRule('s, es', _kNeuterGradient),
+      _buildRule(localizations.of(context).other, _kNoGenderGradient),
     ];
     return _buildDeckType(DeckType.swiss, ruleList);
   }
 
   Widget _buildBasicDeckType() {
     final ruleList = [
+      _buildRule('', _kNoGenderGradient),
       _buildRule('', _kNoGenderGradient),
       _buildRule('', _kNoGenderGradient),
       _buildRule('', _kNoGenderGradient),

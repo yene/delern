@@ -12,6 +12,38 @@ const double _kBorderPadding = 8;
 const double _kMinDeckTypeWidgetWidth = 90;
 final _kItemListPadding = Container(width: _kBorderPadding * 2);
 
+final _kMasculineGradient = LinearGradient(
+    begin: Alignment.topCenter,
+    end: Alignment.bottomCenter,
+    colors: [
+      app_styles.cardDarkBackgroundColors[Gender.masculine],
+      app_styles.cardLightBackgroundColors[Gender.masculine]
+    ]);
+
+final _kFeminineGradient = LinearGradient(
+    begin: Alignment.topCenter,
+    end: Alignment.bottomCenter,
+    colors: [
+      app_styles.cardDarkBackgroundColors[Gender.feminine],
+      app_styles.cardLightBackgroundColors[Gender.feminine]
+    ]);
+
+final _kNeuterGradient = LinearGradient(
+    begin: Alignment.topCenter,
+    end: Alignment.bottomCenter,
+    colors: [
+      app_styles.cardDarkBackgroundColors[Gender.neuter],
+      app_styles.cardLightBackgroundColors[Gender.neuter]
+    ]);
+
+final _kNoGenderGradient = LinearGradient(
+    begin: Alignment.topCenter,
+    end: Alignment.bottomCenter,
+    colors: [
+      app_styles.cardDarkBackgroundColors[Gender.noGender],
+      app_styles.cardLightBackgroundColors[Gender.noGender]
+    ]);
+
 class DeckSettingsWidget extends StatefulWidget {
   final DeckModel deck;
   final EditBloc bloc;
@@ -148,19 +180,18 @@ class _DeckSettingsWidgetState extends State<DeckSettingsWidget> {
 
   Widget _buildSwissDeckType() {
     final ruleList = [
-      _buildRule(
-          'de, en', app_styles.cardDarkBackgroundColors[Gender.masculine]),
-      _buildRule('d, e', app_styles.cardDarkBackgroundColors[Gender.feminine]),
-      _buildRule('s, es', app_styles.cardDarkBackgroundColors[Gender.neuter]),
+      _buildRule('de, en', _kMasculineGradient),
+      _buildRule('d, e', _kFeminineGradient),
+      _buildRule('s, es', _kNeuterGradient),
     ];
     return _buildDeckType(DeckType.swiss, ruleList);
   }
 
   Widget _buildBasicDeckType() {
     final ruleList = [
-      _buildRule('', app_styles.cardDarkBackgroundColors[Gender.noGender]),
-      _buildRule('', app_styles.cardDarkBackgroundColors[Gender.noGender]),
-      _buildRule('', app_styles.cardDarkBackgroundColors[Gender.noGender]),
+      _buildRule('', _kNoGenderGradient),
+      _buildRule('', _kNoGenderGradient),
+      _buildRule('', _kNoGenderGradient),
     ];
     return _buildDeckType(DeckType.basic, ruleList);
   }
@@ -207,14 +238,14 @@ class _DeckSettingsWidgetState extends State<DeckSettingsWidget> {
     return localizations.of(context).unknownDeckType;
   }
 
-  Widget _buildRule(String text, Color color) => ConstrainedBox(
+  Widget _buildRule(String text, Gradient gradient) => ConstrainedBox(
         constraints: const BoxConstraints(
           minWidth: _kMinDeckTypeWidgetWidth,
           minHeight: app_styles.kMinSecondaryTextSize + _kBorderPadding,
         ),
         child: Container(
+          decoration: BoxDecoration(gradient: gradient),
           padding: const EdgeInsets.all(_kBorderPadding),
-          color: color,
           child: Text(
             text,
             textAlign: TextAlign.center,

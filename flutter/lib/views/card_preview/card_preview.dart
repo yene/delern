@@ -55,7 +55,7 @@ class _CardPreviewState extends State<CardPreview> {
                         front: snapshot.requireData.card.front,
                         back: snapshot.requireData.card.back,
                         showBack: true,
-                        backgroundColor: specifyCardBackground(
+                        backgroundColors: specifyCardBackgroundColors(
                             snapshot.requireData.deck.type,
                             snapshot.requireData.card.back),
                         isMarkdown: snapshot.requireData.deck.markdown))),

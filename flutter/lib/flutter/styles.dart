@@ -19,26 +19,19 @@ const double kItemElevation = 4;
 const double kItemListHeightRatio = 0.1;
 const double kItemListPaddingRatio = kItemListHeightRatio * 0.08;
 
-final Map<Gender, Color> cardDarkBackgroundColors = {
-  Gender.noGender: const Color(0xFF4CAF50),
-  Gender.masculine: const Color(0xFF44B4E3),
-  Gender.feminine: const Color(0xFFF97A5A),
-  Gender.neuter: const Color(0xFFFFAB00),
-};
-
-final Map<Gender, Color> cardLightBackgroundColors = {
-  Gender.noGender: const Color(0xFFA9DB3C),
-  Gender.masculine: const Color(0xFF82DAF9),
-  Gender.feminine: const Color(0xFFFCBDB8),
-  Gender.neuter: const Color(0xFFFFD740),
+final Map<Gender, List<Color>> cardBackgroundColors = {
+  Gender.noGender: [Colors.green[400], Colors.green[200]],
+  Gender.masculine: [Colors.blue[400], Colors.lightBlue[200]],
+  Gender.feminine: [Colors.red[400], Colors.red[200]],
+  Gender.neuter: [Colors.amber[400], Colors.yellow[200]],
 };
 
 final Color signInBackgroundColor = Colors.greenAccent[100];
 
-const TextStyle primaryText = TextStyle(
+final TextStyle primaryText = TextStyle(
   fontSize: 19,
   fontWeight: FontWeight.w400,
-  color: Color(0xFF212121),
+  color: Colors.grey[900],
 );
 
 const TextStyle secondaryText = TextStyle(
@@ -65,12 +58,12 @@ const TextStyle menuItemText = TextStyle(
 
 const TextStyle editCardPrimaryText = TextStyle(
   fontSize: 19,
-  fontWeight: FontWeight.bold,
-  color: Colors.white,
+  fontWeight: FontWeight.w400,
+  color: Colors.black,
 );
 
 const TextStyle editCardSecondaryText = TextStyle(
   fontSize: 16,
   fontWeight: FontWeight.w400,
-  color: Colors.white,
+  color: Colors.black,
 );

@@ -12,38 +12,6 @@ const double _kBorderPadding = 8;
 const double _kMinDeckTypeWidgetWidth = 90;
 final _kItemListPadding = Container(width: _kBorderPadding * 2);
 
-final _kMasculineGradient = LinearGradient(
-    begin: Alignment.topCenter,
-    end: Alignment.bottomCenter,
-    colors: [
-      app_styles.cardDarkBackgroundColors[Gender.masculine],
-      app_styles.cardLightBackgroundColors[Gender.masculine]
-    ]);
-
-final _kFeminineGradient = LinearGradient(
-    begin: Alignment.topCenter,
-    end: Alignment.bottomCenter,
-    colors: [
-      app_styles.cardDarkBackgroundColors[Gender.feminine],
-      app_styles.cardLightBackgroundColors[Gender.feminine]
-    ]);
-
-final _kNeuterGradient = LinearGradient(
-    begin: Alignment.topCenter,
-    end: Alignment.bottomCenter,
-    colors: [
-      app_styles.cardDarkBackgroundColors[Gender.neuter],
-      app_styles.cardLightBackgroundColors[Gender.neuter]
-    ]);
-
-final _kNoGenderGradient = LinearGradient(
-    begin: Alignment.topCenter,
-    end: Alignment.bottomCenter,
-    colors: [
-      app_styles.cardDarkBackgroundColors[Gender.noGender],
-      app_styles.cardLightBackgroundColors[Gender.noGender]
-    ]);
-
 class DeckSettingsWidget extends StatefulWidget {
   final DeckModel deck;
   final EditBloc bloc;
@@ -134,7 +102,7 @@ class _DeckSettingsWidgetState extends State<DeckSettingsWidget> {
                     ),
                   ),
                 ),
-                Divider(),
+                const Divider(),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   mainAxisSize: MainAxisSize.min,
@@ -172,29 +140,32 @@ class _DeckSettingsWidgetState extends State<DeckSettingsWidget> {
   Widget _buildGermanDeckType() {
     final ruleList = [
       // TODO(dotdoom): Refactor: move logic to card_background_specifier
-      _buildRule('der', app_styles.cardBackgroundColors[Gender.masculine]),
-      _buildRule('die, eine', app_styles.cardBackgroundColors[Gender.feminine]),
-      _buildRule('das', app_styles.cardBackgroundColors[Gender.neuter]),
+      _buildRule('der', getEditCardGradientFromGender(Gender.masculine)),
+      _buildRule('die, eine', getEditCardGradientFromGender(Gender.feminine)),
+      _buildRule('das', getEditCardGradientFromGender(Gender.neuter)),
+      _buildRule(localizations.of(context).other,
+          getEditCardGradientFromGender(Gender.noGender)),
     ];
     return _buildDeckType(DeckType.german, ruleList);
   }
 
   Widget _buildSwissDeckType() {
     final ruleList = [
-      _buildRule('de, en', _kMasculineGradient),
-      _buildRule('d, e', _kFeminineGradient),
-      _buildRule('s, es', _kNeuterGradient),
-      _buildRule(localizations.of(context).other, _kNoGenderGradient),
+      _buildRule('de, en', getEditCardGradientFromGender(Gender.masculine)),
+      _buildRule('d, e', getEditCardGradientFromGender(Gender.feminine)),
+      _buildRule('s, es', getEditCardGradientFromGender(Gender.neuter)),
+      _buildRule(localizations.of(context).other,
+          getEditCardGradientFromGender(Gender.noGender)),
     ];
     return _buildDeckType(DeckType.swiss, ruleList);
   }
 
   Widget _buildBasicDeckType() {
     final ruleList = [
-      _buildRule('', _kNoGenderGradient),
-      _buildRule('', _kNoGenderGradient),
-      _buildRule('', _kNoGenderGradient),
-      _buildRule('', _kNoGenderGradient),
+      _buildRule('', getEditCardGradientFromGender(Gender.noGender)),
+      _buildRule('', getEditCardGradientFromGender(Gender.noGender)),
+      _buildRule('', getEditCardGradientFromGender(Gender.noGender)),
+      _buildRule('', getEditCardGradientFromGender(Gender.noGender)),
     ];
     return _buildDeckType(DeckType.basic, ruleList);
   }

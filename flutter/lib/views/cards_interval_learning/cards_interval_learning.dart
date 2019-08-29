@@ -110,7 +110,7 @@ class CardsIntervalLearningState extends State<CardsIntervalLearning> {
                       front: _viewModel.card.front,
                       back: _viewModel.card.back,
                       isMarkdown: _viewModel.deck.markdown,
-                      backgroundColor: specifyCardBackground(
+                      backgroundColors: specifyCardBackgroundColors(
                           _viewModel.deck.type, _viewModel.card.back),
                       onFlip: () {
                         _showReplyButtons.value = true;

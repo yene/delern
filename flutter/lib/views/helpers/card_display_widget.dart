@@ -1,4 +1,5 @@
 import 'package:delern_flutter/flutter/styles.dart' as app_styles;
+import 'package:delern_flutter/views/helpers/card_decoration_widget.dart';
 import 'package:delern_flutter/views/helpers/non_scrolling_markdown.dart';
 import 'package:flutter/material.dart';
 
@@ -6,23 +7,25 @@ class CardDisplayWidget extends StatelessWidget {
   final String front;
   final String back;
   final bool showBack;
-  final Color backgroundColor;
+  final List<Color> backgroundColors;
   final bool isMarkdown;
 
   const CardDisplayWidget(
       {@required this.front,
       @required this.back,
       @required this.showBack,
-      @required this.backgroundColor,
+      @required this.backgroundColors,
       @required this.isMarkdown});
 
   @override
-  Widget build(BuildContext context) => Card(
-        color: backgroundColor,
-        margin: const EdgeInsets.all(8),
-        child: ListView(
-          padding: const EdgeInsets.all(20),
-          children: _buildCardBody(context),
+  Widget build(BuildContext context) => Padding(
+        padding: const EdgeInsets.all(8),
+        child: CardDecorationWidget(
+          colors: backgroundColors,
+          child: ListView(
+            padding: const EdgeInsets.all(20),
+            children: _buildCardBody(context),
+          ),
         ),
       );
 

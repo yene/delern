@@ -56,6 +56,7 @@ linter:
     avoid_classes_with_only_static_members: true
     avoid_double_and_int_checks: true
     avoid_empty_else: true
+    avoid_equals_and_hash_code_on_mutable_classes: true
     avoid_field_initializers_in_const_classes: true
     avoid_implementing_value_types: true
     avoid_init_to_null: true
@@ -80,6 +81,7 @@ linter:
     avoid_unused_constructor_parameters: true
     avoid_void_async: true
     await_only_futures: true
+    camel_case_extensions: true
     camel_case_types: true
     cancel_subscriptions: true
     cascade_invocations: true

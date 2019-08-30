@@ -85,11 +85,12 @@ task:
     - cat pubspec.lock
     - cat android/build.gradle
     - cat android/app/build.gradle
-  android_sdk_cache:
-    folder: $ANDROID_SDK_ROOT
-    fingerprint_script:
-    - uname -ms
-    - cat flutter/android/app/build.gradle
+  # https://github.com/flutter/flutter/pull/37581
+  #android_sdk_cache:
+  #  folder: $ANDROID_SDK_ROOT
+  #  fingerprint_script:
+  #  - uname -ms
+  #  - cat flutter/android/app/build.gradle
   install_debug_keys_script: tools/ci.sh install_debug_keys
   build_script:
   - ( cd flutter && bundle exec fastlane android build )

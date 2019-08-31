@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:delern_flutter/flutter/localization.dart' as localizations;
 import 'package:delern_flutter/flutter/styles.dart' as app_styles;
 import 'package:delern_flutter/models/deck_model.dart';
@@ -25,12 +27,21 @@ class _DeckSettingsWidgetState extends State<DeckSettingsWidget> {
   DeckType _currentDeckType;
   bool _isMarkdown;
 
+  StreamSubscription _deleteDeckListener;
+
   @override
   void initState() {
-    widget.bloc.doShowDeleteConfirmationDialog.listen(_showDeleteDeckDialog);
+    _deleteDeckListener = widget.bloc.doShowDeleteConfirmationDialog
+        .listen(_showDeleteDeckDialog);
     _currentDeckType = widget.deck.type;
     _isMarkdown = widget.deck.markdown;
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _deleteDeckListener.cancel();
+    super.dispose();
   }
 
   @override

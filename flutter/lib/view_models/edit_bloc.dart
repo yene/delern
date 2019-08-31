@@ -13,7 +13,6 @@ import 'package:delern_flutter/view_models/base/filtered_sorted_observable_list.
 import 'package:delern_flutter/view_models/base/screen_bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:pedantic/pedantic.dart';
-import 'package:rxdart/rxdart.dart';
 
 class EditBloc extends ScreenBloc {
   final DeckModel _deck;
@@ -33,6 +32,7 @@ class EditBloc extends ScreenBloc {
             (FilteredSortedObservableList(CardModel.getList(deckKey: deck.key))
               ..comparator = (c1, c2) =>
                   c1.front.toLowerCase().compareTo(c2.front.toLowerCase())) {
+    _doDeckChangedController.add(_deck);
     _initListeners();
   }
 
@@ -45,11 +45,14 @@ class EditBloc extends ScreenBloc {
   final _onDeleteDeckIntention = StreamController<void>();
   Sink<void> get onDeleteDeckIntention => _onDeleteDeckIntention.sink;
 
-  final _doShowConfirmationDialogController = BehaviorSubject<String>();
+  // This stream is used in deck settings (popup menu). To open deck settings
+  // more than one time, we need a broadcast.
+  final _doShowConfirmationDialogController =
+      StreamController<String>.broadcast();
   Stream<String> get doShowDeleteConfirmationDialog =>
       _doShowConfirmationDialogController.stream;
 
-  final _doDeckChangedController = BehaviorSubject<DeckModel>();
+  final _doDeckChangedController = StreamController<DeckModel>();
   Stream<DeckModel> get doDeckChanged => _doDeckChangedController.stream;
 
   final _onDeckTypeController = StreamController<DeckType>();
@@ -64,7 +67,6 @@ class EditBloc extends ScreenBloc {
       _doDeckChangedController.add(_deck);
     });
 
-    _doDeckChangedController.add(_deck);
     _onDeleteDeckController.stream.listen((_) async {
       try {
         await _delete();

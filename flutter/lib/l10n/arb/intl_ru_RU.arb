@@ -619,6 +619,20 @@
     "placeholders": {
     }
   },
+  "intervalLearningTooltip": "Начать изучение карточек в порядке интервального обучения",
+  "@intervalLearningTooltip": {
+    "description": "Tooltip for Interval Learning Label",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "viewLearningTooltip": "Начать изучение всех карточек в любом порядке",
+  "@viewLearningTooltip": {
+    "description": "Tooltip for View Learning Label",
+    "type": "text",
+    "placeholders": {
+    }
+  },
   "scrollToStartLabel": "Прокрутить до начала",
   "@scrollToStartLabel": {
     "description": "Scroll to the beginning",

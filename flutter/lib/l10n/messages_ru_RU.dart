@@ -107,6 +107,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "Пожалуйста установите приложение Электронной Почты"),
         "intervalLearning":
             MessageLookupByLibrary.simpleMessage("Интервальное"),
+        "intervalLearningTooltip": MessageLookupByLibrary.simpleMessage(
+            "Начать изучение карточек в порядке интервального обучения"),
         "inviteToAppMessage": MessageLookupByLibrary.simpleMessage(
             "Я приглашаю Вас установить Delern, систему интервального изучения, которая позволяет изучать быстро и легко!\n\nПройдите по ссылке чтобы установить из\nGoogle Play: https://play.google.com/store/apps/details?id=org.dasfoo.delern\nApp Store: https://itunes.apple.com/us/app/delern/id1435734822?ls=1&mt=8\n\nПосле установки, следите за последними новостями Delern:\nFacebook: https://fb.me/das.delern\nVK: https://vk.com/delern\nTwitter: https://twitter.com/dasdelern"),
         "learnIntroDescription": MessageLookupByLibrary.simpleMessage(
@@ -175,6 +177,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "swissDeckType": MessageLookupByLibrary.simpleMessage("Швейцарский"),
         "unknownDeckType": MessageLookupByLibrary.simpleMessage("Неизвестный"),
         "viewLearning": MessageLookupByLibrary.simpleMessage("Просмотр"),
+        "viewLearningTooltip": MessageLookupByLibrary.simpleMessage(
+            "Начать изучение всех карточек в любом порядке"),
         "watchedCards": m4,
         "whoHasAccessLabel":
             MessageLookupByLibrary.simpleMessage("У кого есть доступ"),

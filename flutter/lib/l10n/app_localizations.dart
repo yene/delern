@@ -573,10 +573,22 @@ To see the source code for this app, please visit the [Delern GitHub repo](https
         desc: 'Interval Learning Label',
       );
 
+  String get intervalLearningTooltip => Intl.message(
+        'Start learning cards ordered for interval learning',
+        name: 'intervalLearningTooltip',
+        desc: 'Tooltip for Interval Learning Label',
+      );
+
   String get viewLearning => Intl.message(
         'View',
         name: 'viewLearning',
         desc: 'View Learning Label',
+      );
+
+  String get viewLearningTooltip => Intl.message(
+        'Start learning all cards in any order',
+        name: 'viewLearningTooltip',
+        desc: 'Tooltip for View Learning Label',
       );
 
   String get scrollToStartLabel => Intl.message(

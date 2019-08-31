@@ -1,3 +1,4 @@
+import 'package:delern_flutter/l10n/app_localizations.dart';
 import 'package:flutter_driver/flutter_driver.dart';
 import 'package:pedantic/pedantic.dart';
 import 'package:test/test.dart';
@@ -7,9 +8,11 @@ void main() {
 
   group('main test', () {
     FlutterDriver driver;
+    AppLocalizations localizations;
 
     setUpAll(() async {
       driver = await FlutterDriver.connect();
+      localizations = AppLocalizations();
     });
 
     tearDownAll(() async {
@@ -54,10 +57,18 @@ void main() {
       await driver.tap(find.byValueKey('backCardInput'),
           timeout: timeoutDuration);
       await driver.enterText('back1');
-      await driver.tap(find.byTooltip('Add Card'), timeout: timeoutDuration);
+      await driver.tap(find.byTooltip(localizations.addCardTooltip),
+          timeout: timeoutDuration);
 
       await driver.waitFor(find.text('Card was added'),
           timeout: timeoutDuration);
+      await driver.tap(find.byTooltip('Back'));
+    });
+
+    test('learn_card', () async {
+      await driver.tap(find.byType('DeckListItemWidget'));
+      await driver.tap(find.byTooltip(localizations.intervalLearningTooltip));
+      await driver.tap(find.byTooltip('Back'));
     });
   });
 }

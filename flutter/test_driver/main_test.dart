@@ -60,7 +60,7 @@ void main() {
       await driver.tap(find.byTooltip(localizations.addCardTooltip),
           timeout: timeoutDuration);
 
-      await driver.waitFor(find.text('Card was added'),
+      await driver.waitFor(find.text(localizations.cardAddedUserMessage),
           timeout: timeoutDuration);
       await driver.tap(find.byTooltip('Back'));
     });

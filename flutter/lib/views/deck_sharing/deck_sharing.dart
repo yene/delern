@@ -207,12 +207,17 @@ class _DeckUsersState extends State<DeckUsersWidget> {
         value: accessViewModel.access,
         filter: filter,
         valueChanged: (access) => setState(() {
-          DeckAccessesViewModel.shareDeck(
-              DeckAccessModel(deckKey: _deckAccessesViewModel.deck.key)
-                ..key = accessViewModel.key
-                ..email = accessViewModel.email
-                ..access = access,
-              _deckAccessesViewModel.deck);
+          if (access == null) {
+            DeckAccessesViewModel.unshareDeck(
+                accessViewModel.key, _deckAccessesViewModel.deck);
+          } else {
+            DeckAccessesViewModel.shareDeck(
+                DeckAccessModel(deckKey: _deckAccessesViewModel.deck.key)
+                  ..key = accessViewModel.key
+                  ..email = accessViewModel.email
+                  ..access = access,
+                _deckAccessesViewModel.deck);
+          }
         }),
       ),
     );

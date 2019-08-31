@@ -1,7 +1,7 @@
 import 'dart:async';
 
+import 'package:delern_flutter/models/base/data_writer.dart';
 import 'package:delern_flutter/models/base/delayed_initialization.dart';
-import 'package:delern_flutter/models/base/transaction.dart';
 import 'package:delern_flutter/models/deck_access_model.dart';
 import 'package:delern_flutter/models/deck_model.dart';
 import 'package:delern_flutter/remote/analytics.dart';
@@ -28,28 +28,20 @@ class DeckAccessesViewModel {
               ..comparator =
                   (c1, c2) => c1.access.index.compareTo(c2.access.index));
 
-  static Future<void> shareDeck(DeckAccessModel access, DeckModel deck) async {
+  static Future<void> shareDeck(DeckAccessModel access, DeckModel deck) {
     assert(deck.key == access.deckKey);
 
     unawaited(logShare(access.deckKey));
-    final tr = Transaction();
+    return DataWriter(uid: deck.uid).shareDeck(
+        deck: deck,
+        access: access.access,
+        shareWithUid: access.key,
+        shareWithUserEmail: access.email);
+  }
 
-    if (access.access == null) {
-      return (tr..delete(access)).commit();
-    }
-
-    tr.save(access);
-    if ((await DeckAccessModel.get(deckKey: access.deckKey, key: access.key)
-                .first)
-            .key ==
-        null) {
-      // If there's no DeckAccess, assume the deck hasn't been shared yet.
-      tr.save(DeckModel.copyFrom(deck)
-        ..uid = access.key
-        ..accepted = false
-        ..access = access.access);
-    }
-
-    return tr.commit();
+  static Future<void> unshareDeck(String shareWithUid, DeckModel deck) {
+    unawaited(logUnshare(deck.key));
+    return DataWriter(uid: deck.uid)
+        .unshareDeck(deck: deck, shareWithUid: shareWithUid);
   }
 }

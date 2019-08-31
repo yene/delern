@@ -1,10 +1,7 @@
 import 'dart:async';
 
+import 'package:delern_flutter/models/base/data_writer.dart';
 import 'package:delern_flutter/models/base/delayed_initialization.dart';
-import 'package:delern_flutter/models/base/transaction.dart';
-import 'package:delern_flutter/models/card_model.dart';
-import 'package:delern_flutter/models/card_reply_model.dart';
-import 'package:delern_flutter/models/deck_access_model.dart';
 import 'package:delern_flutter/models/deck_model.dart';
 import 'package:delern_flutter/models/scheduled_card_model.dart';
 import 'package:delern_flutter/remote/analytics.dart';
@@ -57,15 +54,9 @@ class DecksListBloc {
     Future.delayed(const Duration(milliseconds: 100), _loadScheduledCards);
   }
 
-  static Future<void> createDeck(DeckModel deck, String email) {
+  static Future<DeckModel> createDeck(DeckModel deck, String email) {
     logDeckCreate();
-    return (Transaction()
-          ..save(deck..access = AccessType.owner)
-          ..save(DeckAccessModel(deckKey: deck.key)
-            ..key = deck.uid
-            ..access = AccessType.owner
-            ..email = email))
-        .commit();
+    return DataWriter(uid: deck.uid).createDeck(deck: deck, email: email);
   }
 
   void _loadScheduledCards() {
@@ -143,24 +134,6 @@ class DecksListBloc {
     _numberOfCardsDue.values.forEach((c) => c._dispose());
   }
 
-  Future<void> deleteDeck(DeckModel deck) async {
-    final t = Transaction()..delete(deck);
-    final card = CardModel(deckKey: deck.key);
-    if (deck.access == AccessType.owner) {
-      final accessList = DeckAccessModel.getList(deckKey: deck.key);
-      await accessList.fetchFullValue();
-      accessList
-          .forEach((a) => t.delete(DeckModel(uid: a.key)..key = deck.key));
-      t..deleteAll(DeckAccessModel(deckKey: deck.key))..deleteAll(card);
-      // TODO(dotdoom): delete other users' ScheduledCard and Views?
-    }
-    t
-      ..deleteAll(ScheduledCardModel(deckKey: deck.key, uid: deck.uid))
-      ..deleteAll((CardReplyModelBuilder()
-            ..uid = deck.uid
-            ..deckKey = deck.key
-            ..cardKey = null)
-          .build());
-    await t.commit();
-  }
+  Future<void> deleteDeck(DeckModel deck) =>
+      DataWriter(uid: deck.uid).deleteDeck(deck: deck);
 }

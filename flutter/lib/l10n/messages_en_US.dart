@@ -96,6 +96,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "installEmailApp":
             MessageLookupByLibrary.simpleMessage("Please install Email App"),
         "intervalLearning": MessageLookupByLibrary.simpleMessage("Interval"),
+        "intervalLearningTooltip": MessageLookupByLibrary.simpleMessage(
+            "Start learning cards ordered for interval learning"),
         "inviteToAppMessage": MessageLookupByLibrary.simpleMessage(
             "I invite you to install Delern, a spaced repetition learning app, which will allow you to learn quickly and easily!\n\nProceed to install it from:\nGoogle Play: https://play.google.com/store/apps/details?id=org.dasfoo.delern\nApp Store: https://itunes.apple.com/us/app/delern/id1435734822?ls=1&mt=8\n\nAfter install, follow Delern latest news on:\nFacebook: https://fb.me/das.delern\nVK: https://vk.com/delern\nTwitter: https://twitter.com/dasdelern"),
         "learnIntroDescription": MessageLookupByLibrary.simpleMessage(
@@ -163,6 +165,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "swissDeckType": MessageLookupByLibrary.simpleMessage("Swiss"),
         "unknownDeckType": MessageLookupByLibrary.simpleMessage("Unknown"),
         "viewLearning": MessageLookupByLibrary.simpleMessage("View"),
+        "viewLearningTooltip": MessageLookupByLibrary.simpleMessage(
+            "Start learning all cards in any order"),
         "watchedCards": m4,
         "whoHasAccessLabel":
             MessageLookupByLibrary.simpleMessage("Who has access"),

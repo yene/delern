@@ -213,6 +213,8 @@ class DeckListItemWidget extends StatelessWidget {
                       children: <Widget>[
                         LearningMethodWidget(
                           name: localizations.of(context).intervalLearning,
+                          tooltip:
+                              localizations.of(context).intervalLearningTooltip,
                           icon: Icons.autorenew,
                           onTap: () async {
                             // Close dialog
@@ -231,6 +233,8 @@ class DeckListItemWidget extends StatelessWidget {
                         ),
                         LearningMethodWidget(
                           name: localizations.of(context).viewLearning,
+                          tooltip:
+                              localizations.of(context).viewLearningTooltip,
                           icon: Icons.remove_red_eye,
                           onTap: () async {
                             // Close dialog

@@ -33,6 +33,9 @@ Future<void> logStartLearning(String deckId) =>
 Future<void> logShare(String deckId) => FirebaseAnalytics()
     .logShare(contentType: 'application/flashcards-deck', itemId: deckId);
 
+Future<void> logUnshare(String deckId) => FirebaseAnalytics().logShare(
+    contentType: 'application/flashcards-deck', itemId: '[unshared] $deckId');
+
 Future<void> logCardCreate(String deckId) =>
     FirebaseAnalytics().logEvent(name: 'card_create', parameters: {
       'item_id': deckId,

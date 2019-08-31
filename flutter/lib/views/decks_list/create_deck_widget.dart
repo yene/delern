@@ -15,7 +15,7 @@ class CreateDeckWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) => FloatingActionButton(
         onPressed: () async {
-          final newDeck = await showDialog<DeckModel>(
+          var newDeck = await showDialog<DeckModel>(
             context: context,
             // User must tap a button to dismiss dialog
             barrierDismissible: false,
@@ -26,7 +26,7 @@ class CreateDeckWidget extends StatelessWidget {
             try {
               // TODO(dotdoom): pass DeckAccess as a second parameter, with
               // email, displayName and photoUrl filled in.
-              await DecksListBloc.createDeck(
+              newDeck = await DecksListBloc.createDeck(
                   newDeck, currentUser.humanFriendlyIdentifier);
             } catch (e, stackTrace) {
               unawaited(UserMessages.showError(

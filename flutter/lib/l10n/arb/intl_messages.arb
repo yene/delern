@@ -1,6 +1,6 @@
 {
   "@@locale": "en_US",
-  "@@last_modified": "2019-08-08T17:49:40.788776",
+  "@@last_modified": "2019-08-31T14:55:28.047972",
   "navigationDrawerSignOut": "Sign Out",
   "@navigationDrawerSignOut": {
     "description": "Sign Out in Navigation Drawer",
@@ -620,9 +620,23 @@
     "placeholders": {
     }
   },
+  "intervalLearningTooltip": "Start learning cards ordered for interval learning",
+  "@intervalLearningTooltip": {
+    "description": "Tooltip for Interval Learning Label",
+    "type": "text",
+    "placeholders": {
+    }
+  },
   "viewLearning": "View",
   "@viewLearning": {
     "description": "View Learning Label",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "viewLearningTooltip": "Start learning all cards in any order",
+  "@viewLearningTooltip": {
+    "description": "Tooltip for View Learning Label",
     "type": "text",
     "placeholders": {
     }

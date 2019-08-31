@@ -38,4 +38,10 @@ class DeckAccessesViewModel {
         shareWithUid: access.key,
         shareWithUserEmail: access.email);
   }
+
+  static Future<void> unshareDeck(String shareWithUid, DeckModel deck) {
+    unawaited(logUnshare(deck.key));
+    return DataWriter(uid: deck.uid)
+        .unshareDeck(deck: deck, shareWithUid: shareWithUid);
+  }
 }

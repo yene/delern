@@ -91,6 +91,16 @@ class DataWriter {
     return (Transaction()..save(scheduledCard)..save(cv)).commit();
   }
 
+  Future<void> unshareDeck({
+    @required DeckModel deck,
+    @required String shareWithUid,
+  }) =>
+      (Transaction()
+            ..delete(DeckAccessModel(
+              deckKey: deck.key,
+            )..key = shareWithUid))
+          .commit();
+
   Future<void> shareDeck({
     @required DeckModel deck,
     @required String shareWithUid,
@@ -98,21 +108,12 @@ class DataWriter {
     String sharedDeckName,
     String shareWithUserEmail,
   }) async {
-    final tr = Transaction();
-
-    if (access == null) {
-      return (tr
-            ..delete(DeckAccessModel(
-              deckKey: deck.key,
-            )..key = shareWithUid))
-          .commit();
-    }
-
     final accessModel = DeckAccessModel(deckKey: deck.key)
       ..key = shareWithUid
       ..access = access
       ..email = shareWithUserEmail;
-    tr.save(accessModel);
+
+    final tr = Transaction()..save(accessModel);
     if ((await DeckAccessModel.get(deckKey: deck.key, key: shareWithUid).first)
             .key ==
         null) {

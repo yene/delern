@@ -8,8 +8,9 @@ class SearchBarWidget extends StatefulWidget implements PreferredSizeWidget {
   final String title;
   final SearchCallback search;
   final Widget leading;
+  final List<Widget> actions;
 
-  const SearchBarWidget({this.title, this.search, this.leading});
+  const SearchBarWidget({this.title, this.search, this.leading, this.actions});
 
   @override
   State<StatefulWidget> createState() => SearchBarWidgetState();
@@ -67,30 +68,36 @@ class SearchBarWidgetState extends State<SearchBarWidget> {
       actionIcon = const Icon(Icons.search);
     }
 
+    final actions = <Widget>[
+      AspectRatio(
+        aspectRatio: 1,
+        child: IconButton(
+          icon: actionIcon,
+          tooltip: MaterialLocalizations.of(context).searchFieldLabel,
+          onPressed: () {
+            setState(() {
+              if (_isSearchMode) {
+                // TODO(ksheremet): would the user always want to clear it?
+                _searchController.clear();
+                _isSearchMode = false;
+              } else {
+                _isSearchMode = true;
+              }
+            });
+          },
+        ),
+      )
+    ];
+
+    if (widget.actions != null && widget.actions.isNotEmpty) {
+      actions.addAll(widget.actions);
+    }
+
     return AppBar(
       centerTitle: true,
       title: appBarTitle,
       leading: widget.leading,
-      actions: <Widget>[
-        AspectRatio(
-          aspectRatio: 1,
-          child: IconButton(
-            icon: actionIcon,
-            tooltip: MaterialLocalizations.of(context).searchFieldLabel,
-            onPressed: () {
-              setState(() {
-                if (_isSearchMode) {
-                  // TODO(ksheremet): would the user always want to clear it?
-                  _searchController.clear();
-                  _isSearchMode = false;
-                } else {
-                  _isSearchMode = true;
-                }
-              });
-            },
-          ),
-        )
-      ],
+      actions: actions,
     );
   }
 }

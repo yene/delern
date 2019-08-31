@@ -71,9 +71,9 @@
     "placeholders": {
     }
   },
-  "numberOfCards": "Number of cards: {number}",
+  "numberOfCards": "Cards in the deck: {number}",
   "@numberOfCards": {
-    "description": "Number of cards",
+    "description": "Card in the deck",
     "type": "text",
     "placeholders": {
       "number": {
@@ -253,6 +253,13 @@
   "swissDeckType": "Swiss",
   "@swissDeckType": {
     "description": "swiss decktype name",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "unknownDeckType": "Unknown",
+  "@unknownDeckType": {
+    "description": "unknown decktype name",
     "type": "text",
     "placeholders": {
     }
@@ -616,6 +623,20 @@
   "viewLearning": "View",
   "@viewLearning": {
     "description": "View Learning Label",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "scrollToStartLabel": "Scroll to the beginning",
+  "@scrollToStartLabel": {
+    "description": "Scroll to the beginning",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "deleteDeckButton": "Delete Deck",
+  "@deleteDeckButton": {
+    "description": "Delete deck button",
     "type": "text",
     "placeholders": {
     }

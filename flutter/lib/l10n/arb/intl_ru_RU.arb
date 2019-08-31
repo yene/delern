@@ -70,7 +70,7 @@
     "placeholders": {
     }
   },
-  "numberOfCards": "Количество карточек: {number}",
+  "numberOfCards": "Карточек в списке: {number}",
   "@numberOfCards": {
     "description": "Number of cards",
     "type": "text",
@@ -615,6 +615,27 @@
   "learning": "Изучение",
   "@learning": {
     "description": "Learning Type",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "scrollToStartLabel": "Прокрутить до начала",
+  "@scrollToStartLabel": {
+    "description": "Scroll to the beginning",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "deleteDeckButton": "Удалить список",
+  "@deleteDeckButton": {
+    "description": "Delete deck button",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "unknownDeckType": "Неизвестный",
+  "@unknownDeckType": {
+    "description": "unknown decktype name",
     "type": "text",
     "placeholders": {
     }

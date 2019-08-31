@@ -74,10 +74,10 @@ class AppLocalizations {
       );
 
   String numberOfCards(int number) => Intl.message(
-        'Number of cards: $number',
+        'Cards in the deck: $number',
         name: 'numberOfCards',
         args: [number],
-        desc: 'Number of cards',
+        desc: 'Card in the deck',
       );
 
   String get canEdit => Intl.message(
@@ -239,6 +239,12 @@ Twitter: https://twitter.com/dasdelern''',
         'Swiss',
         name: 'swissDeckType',
         desc: 'swiss decktype name',
+      );
+
+  String get unknownDeckType => Intl.message(
+        'Unknown',
+        name: 'unknownDeckType',
+        desc: 'unknown decktype name',
       );
 
   String get deckType => Intl.message(
@@ -571,5 +577,17 @@ To see the source code for this app, please visit the [Delern GitHub repo](https
         'View',
         name: 'viewLearning',
         desc: 'View Learning Label',
+      );
+
+  String get scrollToStartLabel => Intl.message(
+        'Scroll to the beginning',
+        name: 'scrollToStartLabel',
+        desc: 'Scroll to the beginning',
+      );
+
+  String get deleteDeckButton => Intl.message(
+        'Delete Deck',
+        name: 'deleteDeckButton',
+        desc: 'Delete deck button',
       );
 }

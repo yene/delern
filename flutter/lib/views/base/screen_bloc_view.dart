@@ -3,17 +3,17 @@ import 'package:delern_flutter/view_models/base/screen_bloc.dart';
 import 'package:flutter/material.dart';
 
 class ScreenBlocView extends StatefulWidget {
-  final AppBar appBar;
+  final PreferredSizeWidget appBar;
   final Widget body;
   final ScreenBloc bloc;
   final Widget floatingActionButton;
 
-  const ScreenBlocView(
-      {@required this.appBar,
-      @required this.body,
-      @required this.bloc,
-      this.floatingActionButton})
-      : assert(appBar != null),
+  const ScreenBlocView({
+    @required this.appBar,
+    @required this.body,
+    @required this.bloc,
+    this.floatingActionButton,
+  })  : assert(appBar != null),
         assert(body != null),
         assert(bloc != null);
 
@@ -44,16 +44,10 @@ class _ScreenBlocViewState extends State<ScreenBlocView> {
         appBar: widget.appBar,
         body: widget.body,
         floatingActionButton: widget.floatingActionButton,
+        resizeToAvoidBottomInset: false,
       ));
 
   void _showUserMessage(String message) {
     UserMessages.showMessage(_scaffoldKey.currentState, message);
-  }
-
-  @mustCallSuper
-  @override
-  void dispose() {
-    widget.bloc.dispose();
-    super.dispose();
   }
 }

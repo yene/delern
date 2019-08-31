@@ -26,7 +26,7 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static m2(url) => "Не удалось запустить ссылку ${url}";
 
-  static m3(number) => "Количество карточек: ${number}";
+  static m3(number) => "Карточек в списке: ${number}";
 
   static m4(number) => "Просмотрено: ${number}";
 
@@ -76,6 +76,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "delete": MessageLookupByLibrary.simpleMessage("Удалить"),
         "deleteCardQuestion": MessageLookupByLibrary.simpleMessage(
             "Вы хотите удалить эту карточку?"),
+        "deleteDeckButton":
+            MessageLookupByLibrary.simpleMessage("Удалить список"),
         "deleteDeckOwnerAccessQuestion": MessageLookupByLibrary.simpleMessage(
             "Список, все карточки и история изучения будут удалены.\n\nЕсли вы поделились списком с другими пользователями, он также будет удален у них. Вы хотите удалить список?"),
         "deleteDeckWriteReadAccessQuestion": MessageLookupByLibrary.simpleMessage(
@@ -151,6 +153,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "save": MessageLookupByLibrary.simpleMessage("Сохранить"),
         "saveChangesQuestion": MessageLookupByLibrary.simpleMessage(
             "Вы хотите сохранить изменения?"),
+        "scrollToStartLabel":
+            MessageLookupByLibrary.simpleMessage("Прокрутить до начала"),
         "searchHint": MessageLookupByLibrary.simpleMessage("Поиск..."),
         "send": MessageLookupByLibrary.simpleMessage("Отправить"),
         "serverUnavailableUserMessage": MessageLookupByLibrary.simpleMessage(
@@ -169,6 +173,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "supportDevelopment": MessageLookupByLibrary.simpleMessage(
             "Расскажите, пожалуйста, что мы можем сделать, чтобы улучшить Ваш опыт с Delern!\n\nЕсли у вас есть какие-либо вопросы или предложения, свяжитесь с нами:\n[delern@dasfoo.org](mailto:delern@dasfoo.org)\n\nCледите за последними новостями Delern:\n\n- [Facebook](https://fb.me/das.delern)\n- [Twitter](https://twitter.com/dasdelern)\n- [VK](https://vk.com/delern)\n\nЧтобы увидеть исходный код этого приложения, посетите [Delern GitHub repo](https://github.com/dasfoo/delern).\n      "),
         "swissDeckType": MessageLookupByLibrary.simpleMessage("Швейцарский"),
+        "unknownDeckType": MessageLookupByLibrary.simpleMessage("Неизвестный"),
         "viewLearning": MessageLookupByLibrary.simpleMessage("Просмотр"),
         "watchedCards": m4,
         "whoHasAccessLabel":

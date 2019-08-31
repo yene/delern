@@ -15,6 +15,9 @@ const double kMinIconHeight = 24;
 const double kMinPrimaryTextSize = 19;
 const double kMinSecondaryTextSize = 16;
 const double kIconDeckPadding = 15;
+const double kItemElevation = 4;
+const double kItemListHeightRatio = 0.1;
+const double kItemListPaddingRatio = kItemListHeightRatio * 0.08;
 
 final Map<Gender, Color> cardBackgroundColors = {
   Gender.noGender: Colors.greenAccent[100],
@@ -34,7 +37,7 @@ const TextStyle primaryText = TextStyle(
 const TextStyle secondaryText = TextStyle(
   fontSize: 16,
   fontWeight: FontWeight.w400,
-  color: Colors.black87,
+  color: Color(0xff757575),
 );
 
 final TextStyle navigationDrawerGroupText = TextStyle(

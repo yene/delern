@@ -10,11 +10,11 @@ import 'package:delern_flutter/remote/analytics.dart';
 import 'package:delern_flutter/view_models/decks_list_bloc.dart';
 import 'package:delern_flutter/views/card_create_update/card_create_update.dart';
 import 'package:delern_flutter/views/cards_interval_learning/cards_interval_learning.dart';
-import 'package:delern_flutter/views/cards_list/cards_list.dart';
 import 'package:delern_flutter/views/cards_view_learning/cards_view_learning.dart';
 import 'package:delern_flutter/views/decks_list/create_deck_widget.dart';
 import 'package:delern_flutter/views/decks_list/deck_menu.dart';
 import 'package:delern_flutter/views/decks_list/navigation_drawer.dart';
+import 'package:delern_flutter/views/edit/edit_screen.dart';
 import 'package:delern_flutter/views/helpers/arrow_to_fab_widget.dart';
 import 'package:delern_flutter/views/helpers/empty_list_message_widget.dart';
 import 'package:delern_flutter/views/helpers/learning_method_widget.dart';
@@ -25,10 +25,6 @@ import 'package:delern_flutter/views/helpers/sign_in_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:pedantic/pedantic.dart';
-
-const double _kItemElevation = 4;
-const double _kItemPaddingRatio = _kItemHeightRatio * 0.08;
-const double _kItemHeightRatio = 0.1;
 
 class DecksList extends StatefulWidget {
   const DecksList();
@@ -92,7 +88,8 @@ class _DecksListState extends State<DecksList> {
                 list: _bloc.decksList,
                 itemBuilder: (context, item, animation, index) {
                   final itemHeight = max(
-                      MediaQuery.of(context).size.height * _kItemHeightRatio,
+                      MediaQuery.of(context).size.height *
+                          app_styles.kItemListHeightRatio,
                       app_styles.kMinItemHeight);
                   return SizeTransition(
                       sizeFactor: animation,
@@ -102,7 +99,7 @@ class _DecksListState extends State<DecksList> {
                             Padding(
                               padding: EdgeInsets.symmetric(
                                   vertical: MediaQuery.of(context).size.height *
-                                      _kItemPaddingRatio *
+                                      app_styles.kItemListPaddingRatio *
                                       2),
                             ),
                           DeckListItemWidget(
@@ -113,13 +110,13 @@ class _DecksListState extends State<DecksList> {
                           Padding(
                             padding: EdgeInsets.symmetric(
                                 vertical: MediaQuery.of(context).size.height *
-                                    _kItemPaddingRatio),
+                                    app_styles.kItemListPaddingRatio),
                           ),
                           if (index == (_bloc.decksList.length - 1))
                             Padding(
                               padding: EdgeInsets.symmetric(
                                   vertical: MediaQuery.of(context).size.height *
-                                      _kItemPaddingRatio),
+                                      app_styles.kItemListPaddingRatio),
                             ),
                         ],
                       ));
@@ -163,9 +160,15 @@ class DeckListItemWidget extends StatelessWidget {
           child: EditDeleteDismissible(
             iconSize: iconSize,
             deck: deck,
-            bloc: bloc,
+            onDeleteDismiss: () async {
+              if (await _showDeleteDeckDialog(context)) {
+                unawaited(logDeckDeleteSwipe(deck.key));
+                return _deleteDeck(context);
+              }
+              return false;
+            },
             child: Material(
-              elevation: _kItemElevation,
+              elevation: app_styles.kItemElevation,
               child: InkWell(
                 onTap: () async {
                   await _showLearningDialog(context);
@@ -174,7 +177,7 @@ class DeckListItemWidget extends StatelessWidget {
                   children: <Widget>[
                     _buildLeading(iconSize),
                     Expanded(child: _buildContent(context)),
-                    _buildTrailing(iconSize),
+                    _buildTrailing(context, iconSize),
                   ],
                 ),
               ),
@@ -305,27 +308,59 @@ class DeckListItemWidget extends StatelessWidget {
         color: app_styles.kIconColor,
       );
 
-  Widget _buildTrailing(double size) => DeckMenu(
+  Widget _buildTrailing(BuildContext context, double size) => DeckMenu(
         deck: deck,
         buttonSize: size,
+        onDeleteDeck: () async {
+          if (await _showDeleteDeckDialog(context)) {
+            unawaited(logDeckDelete(deck.key));
+            await _deleteDeck(context);
+          }
+        },
       );
+
+  Future<bool> _showDeleteDeckDialog(BuildContext context) {
+    final locale = localizations.of(context);
+    return showSaveUpdatesDialog(
+        context: context,
+        changesQuestion: deck.access == AccessType.owner
+            ? locale.deleteDeckOwnerAccessQuestion
+            : locale.deleteDeckWriteReadAccessQuestion,
+        yesAnswer: locale.delete,
+        noAnswer: MaterialLocalizations.of(context).cancelButtonLabel);
+  }
+
+  Future<bool> _deleteDeck(BuildContext context) async {
+    try {
+      await bloc.deleteDeck(deck);
+      UserMessages.showMessage(Scaffold.of(context),
+          localizations.of(context).deckDeletedUserMessage);
+      return true;
+    } catch (e, stackTrace) {
+      unawaited(
+          UserMessages.showError(() => Scaffold.of(context), e, stackTrace));
+    }
+    return false;
+  }
 }
+
+typedef DeleteDismissibleCallback = Future<bool> Function();
 
 class EditDeleteDismissible extends StatelessWidget {
   final Widget child;
   final DeckModel deck;
   final double iconSize;
-  final DecksListBloc bloc;
+  final DeleteDismissibleCallback onDeleteDismiss;
 
-  const EditDeleteDismissible(
-      {@required this.child,
-      @required this.deck,
-      @required this.iconSize,
-      @required this.bloc})
-      : assert(child != null),
+  const EditDeleteDismissible({
+    @required this.child,
+    @required this.deck,
+    @required this.iconSize,
+    @required this.onDeleteDismiss,
+  })  : assert(child != null),
         assert(deck != null),
         assert(iconSize != null),
-        assert(bloc != null);
+        assert(onDeleteDismiss != null);
 
   @override
   Widget build(BuildContext context) => Dismissible(
@@ -359,16 +394,15 @@ class EditDeleteDismissible extends StatelessWidget {
         ),
         confirmDismiss: (direction) async {
           if (direction == DismissDirection.endToStart) {
-            return _deleteDeck(context);
+            return onDeleteDismiss();
           }
           unawaited(logDeckEditSwipe(deck.key));
           unawaited(Navigator.push(
             context,
             MaterialPageRoute(
                 settings: const RouteSettings(name: '/decks/view'),
-                builder: (context) => CardsList(
+                builder: (context) => EditScreen(
                       deck: deck,
-                      allowEdit: deck.access != AccessType.read,
                     )),
           ));
           return false;
@@ -376,27 +410,4 @@ class EditDeleteDismissible extends StatelessWidget {
         key: Key(deck.key),
         child: child,
       );
-
-  Future<bool> _deleteDeck(BuildContext context) async {
-    final locale = localizations.of(context);
-    final deleteDeck = await showSaveUpdatesDialog(
-        context: context,
-        changesQuestion: deck.access == AccessType.owner
-            ? locale.deleteDeckOwnerAccessQuestion
-            : locale.deleteDeckWriteReadAccessQuestion,
-        yesAnswer: locale.delete,
-        noAnswer: MaterialLocalizations.of(context).cancelButtonLabel);
-    if (deleteDeck) {
-      try {
-        await bloc.deleteDeck(deck);
-        UserMessages.showMessage(Scaffold.of(context),
-            localizations.of(context).deckDeletedUserMessage);
-        return Future.value(true);
-      } catch (e, stackTrace) {
-        unawaited(
-            UserMessages.showError(() => Scaffold.of(context), e, stackTrace));
-      }
-    }
-    return Future.value(false);
-  }
 }

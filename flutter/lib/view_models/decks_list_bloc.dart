@@ -11,7 +11,6 @@ import 'package:delern_flutter/remote/analytics.dart';
 import 'package:delern_flutter/view_models/base/filtered_sorted_observable_list.dart';
 import 'package:flutter/foundation.dart';
 import 'package:meta/meta.dart';
-import 'package:pedantic/pedantic.dart';
 
 class NumberOfCardsDue {
   int get value => _value;
@@ -145,7 +144,6 @@ class DecksListBloc {
   }
 
   Future<void> deleteDeck(DeckModel deck) async {
-    unawaited(logDeckDeleteSwipe(deck.key));
     final t = Transaction()..delete(deck);
     final card = CardModel(deckKey: deck.key);
     if (deck.access == AccessType.owner) {

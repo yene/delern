@@ -24,6 +24,7 @@ Future<void> report(String src, error, StackTrace stackTrace,
   debugPrint('Sending error report...');
   if (extra != null) {
     for (final entry in extra.entries) {
+      debugPrint('[extra] ${entry.key}: ${entry.value}');
       Crashlytics.instance.setString(entry.key, entry.value.toString());
     }
   }

@@ -52,6 +52,10 @@ class App extends StatelessWidget {
 }
 
 Future<void> main() async {
+  // This is necessary to initialize Flutter method channels so that Crashlytics
+  // can call into the native code.
+  WidgetsFlutterBinding.ensureInitialized();
+
   FlutterError.onError = (details) async {
     FlutterError.dumpErrorToConsole(details);
     await error_reporting.report(

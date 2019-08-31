@@ -183,12 +183,6 @@ class _EditScreenState extends State<EditScreen> {
           child: const Icon(Icons.add),
         ),
       );
-
-  @override
-  void dispose() {
-    _bloc.dispose();
-    super.dispose();
-  }
 }
 
 const double _kCardBorderPadding = 16;

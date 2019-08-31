@@ -50,11 +50,4 @@ class _ScreenBlocViewState extends State<ScreenBlocView> {
   void _showUserMessage(String message) {
     UserMessages.showMessage(_scaffoldKey.currentState, message);
   }
-
-  @mustCallSuper
-  @override
-  void dispose() {
-    widget.bloc.dispose();
-    super.dispose();
-  }
 }

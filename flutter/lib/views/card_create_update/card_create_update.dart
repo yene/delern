@@ -54,7 +54,6 @@ class _CardCreateUpdateState extends State<CardCreateUpdate> {
   @override
   void dispose() {
     _frontSideFocus.dispose();
-    _bloc?.dispose();
     super.dispose();
   }
 

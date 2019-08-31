@@ -35,44 +35,42 @@ class ScrollToBeginningListWidgetState<T extends KeyedListItem>
   var _currentScrollRow = 0.0;
 
   @override
-  Widget build(BuildContext context) => StatefulBuilder(
-        builder: (context, contentState) => Stack(
-          children: <Widget>[
-            Column(
-              children: <Widget>[
-                Expanded(
-                  child: NotificationListener<ScrollUpdateNotification>(
-                      onNotification: (scrollNotification) {
-                        // We don't have exact height of row, we only
-                        // have min width/height. This calculation is
-                        // approximate.
-                        _currentScrollRow = scrollNotification.metrics.pixels /
-                                widget.minItemHeight +
-                            1;
-                        if (_currentScrollRow > widget.upButtonVisibleRow &&
-                            !_isUpIconVisible) {
-                          // Call set state of parent.
-                          contentState(() {
-                            _isUpIconVisible = true;
-                          });
-                        }
-                        if (_currentScrollRow < widget.upButtonVisibleRow &&
-                            _isUpIconVisible) {
-                          contentState(() {
-                            _isUpIconVisible = false;
-                          });
-                        }
-                        // Do not dispatch notification to further ancestors
-                        return true;
-                      },
-                      child: widget.builder(_scrollController)),
-                ),
-              ],
-            ),
-            if (_currentScrollRow > widget.upButtonVisibleRow)
-              _buildUpButton(context)
-          ],
-        ),
+  Widget build(BuildContext context) => Stack(
+        children: <Widget>[
+          Column(
+            children: <Widget>[
+              Expanded(
+                child: NotificationListener<ScrollUpdateNotification>(
+                    onNotification: (scrollNotification) {
+                      // We don't have exact height of row, we only
+                      // have min width/height. This calculation is
+                      // approximate.
+                      _currentScrollRow = scrollNotification.metrics.pixels /
+                              widget.minItemHeight +
+                          1;
+                      if (_currentScrollRow > widget.upButtonVisibleRow &&
+                          !_isUpIconVisible) {
+                        // Call set state of parent.
+                        setState(() {
+                          _isUpIconVisible = true;
+                        });
+                      }
+                      if (_currentScrollRow < widget.upButtonVisibleRow &&
+                          _isUpIconVisible) {
+                        setState(() {
+                          _isUpIconVisible = false;
+                        });
+                      }
+                      // Do not dispatch notification to further ancestors
+                      return true;
+                    },
+                    child: widget.builder(_scrollController)),
+              ),
+            ],
+          ),
+          if (_currentScrollRow > widget.upButtonVisibleRow)
+            _buildUpButton(context)
+        ],
       );
 
   Padding _buildUpButton(BuildContext context) => Padding(

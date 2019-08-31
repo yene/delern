@@ -138,6 +138,7 @@ class _DeckSettingsWidgetState extends State<DeckSettingsWidget> {
 
   Widget _buildGermanDeckType() {
     final ruleList = [
+      // TODO(dotdoom): Refactor: move logic to card_background_specifier
       _buildRule('der', app_styles.cardBackgroundColors[Gender.masculine]),
       _buildRule('die, eine', app_styles.cardBackgroundColors[Gender.feminine]),
       _buildRule('das', app_styles.cardBackgroundColors[Gender.neuter]),

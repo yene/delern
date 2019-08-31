@@ -15,17 +15,17 @@ import 'package:pedantic/pedantic.dart';
 const double _kMenuExpandedSize = 225;
 const _kAnimationDuration = Duration(milliseconds: 250);
 
-typedef DeleteCallbackMenu = Future<void> Function();
+typedef DeleteMenuCallback = Future<void> Function();
 
 class DeckMenu extends StatefulWidget {
   final DeckModel deck;
   final double buttonSize;
-  final DeleteCallbackMenu onDeleteDeckCallback;
+  final DeleteMenuCallback onDeleteDeck;
 
   const DeckMenu(
       {@required this.deck,
       @required this.buttonSize,
-      @required this.onDeleteDeckCallback})
+      @required this.onDeleteDeck})
       : assert(deck != null),
         assert(buttonSize != null);
 
@@ -111,7 +111,7 @@ class _DeckMenuState extends State<DeckMenu>
         }
         break;
       case _DeckMenuItemType.delete:
-        widget.onDeleteDeckCallback();
+        widget.onDeleteDeck();
         break;
     }
   }

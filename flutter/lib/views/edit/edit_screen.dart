@@ -119,15 +119,13 @@ class _EditScreenState extends State<EditScreen> {
         },
       );
 
-  Widget _buildCardsInDeck() => FutureBuilder<Object>(
-      future: _bloc.list.initializationComplete,
+  Widget _buildCardsInDeck() => StreamBuilder<List>(
+      stream: _bloc.list.listChanges,
       builder: (context, snapshot) => Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Text(
-                localizations
-                    .of(context)
-                    .numberOfCards(_bloc.list.isEmpty ? 0 : _bloc.list.length),
+                localizations.of(context).numberOfCards(_bloc.list.length),
                 style: app_styles.secondaryText,
               ),
             ],

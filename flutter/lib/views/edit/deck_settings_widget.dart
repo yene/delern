@@ -27,11 +27,11 @@ class _DeckSettingsWidgetState extends State<DeckSettingsWidget> {
   DeckType _currentDeckType;
   bool _isMarkdown;
 
-  StreamSubscription _deleteDeckListener;
+  StreamSubscription _deleteDeckSubscription;
 
   @override
   void initState() {
-    _deleteDeckListener = widget.bloc.doShowDeleteConfirmationDialog
+    _deleteDeckSubscription = widget.bloc.doShowDeleteConfirmationDialog
         .listen(_showDeleteDeckDialog);
     _currentDeckType = widget.deck.type;
     _isMarkdown = widget.deck.markdown;
@@ -40,7 +40,7 @@ class _DeckSettingsWidgetState extends State<DeckSettingsWidget> {
 
   @override
   void dispose() {
-    _deleteDeckListener.cancel();
+    _deleteDeckSubscription.cancel();
     super.dispose();
   }
 

@@ -160,7 +160,7 @@ class DeckListItemWidget extends StatelessWidget {
           child: EditDeleteDismissible(
             iconSize: iconSize,
             deck: deck,
-            onDeleteCallback: () async {
+            onDeleteDismiss: () async {
               if (await _showDeleteDeckDialog(context)) {
                 unawaited(logDeckDeleteSwipe(deck.key));
                 return _deleteDeck(context);
@@ -311,7 +311,7 @@ class DeckListItemWidget extends StatelessWidget {
   Widget _buildTrailing(BuildContext context, double size) => DeckMenu(
         deck: deck,
         buttonSize: size,
-        onDeleteDeckCallback: () async {
+        onDeleteDeck: () async {
           if (await _showDeleteDeckDialog(context)) {
             unawaited(logDeckDelete(deck.key));
             await _deleteDeck(context);
@@ -350,17 +350,17 @@ class EditDeleteDismissible extends StatelessWidget {
   final Widget child;
   final DeckModel deck;
   final double iconSize;
-  final DeleteDismissibleCallback onDeleteCallback;
+  final DeleteDismissibleCallback onDeleteDismiss;
 
   const EditDeleteDismissible({
     @required this.child,
     @required this.deck,
     @required this.iconSize,
-    @required this.onDeleteCallback,
+    @required this.onDeleteDismiss,
   })  : assert(child != null),
         assert(deck != null),
         assert(iconSize != null),
-        assert(onDeleteCallback != null);
+        assert(onDeleteDismiss != null);
 
   @override
   Widget build(BuildContext context) => Dismissible(
@@ -394,7 +394,7 @@ class EditDeleteDismissible extends StatelessWidget {
         ),
         confirmDismiss: (direction) async {
           if (direction == DismissDirection.endToStart) {
-            return onDeleteCallback();
+            return onDeleteDismiss();
           }
           unawaited(logDeckEditSwipe(deck.key));
           unawaited(Navigator.push(

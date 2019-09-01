@@ -213,10 +213,9 @@ class CardItemWidget extends StatelessWidget {
     final primaryFontSize =
         max(minHeight * 0.25, app_styles.kMinPrimaryTextSize);
     final primaryTextStyle =
-        app_styles.primaryText.copyWith(fontSize: primaryFontSize);
-    final secondaryTextStyle = app_styles.secondaryText.copyWith(
-        fontSize: primaryFontSize / 1.5,
-        color: app_styles.kSecondaryTextDeckItemColor);
+        app_styles.editCardPrimaryText.copyWith(fontSize: primaryFontSize);
+    final secondaryTextStyle = app_styles.editCardSecondaryText
+        .copyWith(fontSize: primaryFontSize / 1.5);
     return Row(
       children: <Widget>[
         emptyExpanded,
@@ -224,7 +223,6 @@ class CardItemWidget extends StatelessWidget {
           flex: 8,
           child: Material(
             elevation: app_styles.kItemElevation,
-            color: specifyCardBackground(deck.type, card.back),
             child: InkWell(
               splashColor: Theme.of(context).splashColor,
               onTap: () => Navigator.push(
@@ -235,29 +233,34 @@ class CardItemWidget extends StatelessWidget {
                             card: card,
                             deck: deck,
                           ))),
-              child: Padding(
-                padding: const EdgeInsets.all(_kCardBorderPadding),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Text(
-                      card.front,
-                      maxLines: 1,
-                      softWrap: true,
-                      style: primaryTextStyle,
-                    ),
-                    Container(
-                      padding:
-                          const EdgeInsets.only(top: _kFrontBackTextPadding),
-                      child: Text(
-                        card.back ?? '',
+              child: Container(
+                decoration: BoxDecoration(
+                    gradient: specifyEditCardBackgroundGradient(
+                        deck.type, card.back)),
+                child: Padding(
+                  padding: const EdgeInsets.all(_kCardBorderPadding),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Text(
+                        card.front,
                         maxLines: 1,
                         softWrap: true,
-                        style: secondaryTextStyle,
+                        style: primaryTextStyle,
                       ),
-                    ),
-                  ],
+                      Container(
+                        padding:
+                            const EdgeInsets.only(top: _kFrontBackTextPadding),
+                        child: Text(
+                          card.back ?? '',
+                          maxLines: 1,
+                          softWrap: true,
+                          style: secondaryTextStyle,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),

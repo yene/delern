@@ -654,5 +654,12 @@
     "type": "text",
     "placeholders": {
     }
+  },
+  "other": "other",
+  "@other": {
+    "description": "Other",
+    "type": "text",
+    "placeholders": {
+    }
   }
 }

@@ -653,5 +653,12 @@
     "type": "text",
     "placeholders": {
     }
+  },
+  "other": "другие",
+  "@other": {
+    "description": "Other",
+    "type": "text",
+    "placeholders": {
+    }
   }
 }

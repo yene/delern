@@ -88,7 +88,7 @@ class _CardsReviewLearningState extends State<CardsReviewLearning>
                             front: snapshot.data[index].front,
                             back: snapshot.data[index].back,
                             isMarkdown: widget.deck.markdown,
-                            backgroundColor: specifyCardBackground(
+                            gradient: specifyLearnCardBackgroundGradient(
                                 widget.deck.type, snapshot.data[index].back),
                             key: ValueKey(snapshot.data[index].key),
                           ),

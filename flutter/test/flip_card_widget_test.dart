@@ -1,6 +1,7 @@
 import 'package:delern_flutter/flutter/localization.dart';
 import 'package:delern_flutter/flutter/styles.dart' as app_styles;
 import 'package:delern_flutter/views/helpers/card_background_specifier.dart';
+import 'package:delern_flutter/views/helpers/card_decoration_widget.dart';
 import 'package:delern_flutter/views/helpers/flip_card_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -33,7 +34,7 @@ void main() {
     expect(frontFinder, findsOneWidget);
     // Back side wasn't showed
     assert(!_wasFlipped);
-    await tester.tap(find.byType(Card));
+    await tester.tap(find.byType(CardDecorationWidget));
     await tester.pumpAndSettle();
     final backFinder = find.text(backSide);
     expect(backFinder, findsOneWidget);

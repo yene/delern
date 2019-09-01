@@ -147,6 +147,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "numberOfCards": m3,
         "offlineUserMessage": MessageLookupByLibrary.simpleMessage(
             "Нет сети, пожалуйста, попробуйте позже"),
+        "other": MessageLookupByLibrary.simpleMessage("другие"),
         "owner": MessageLookupByLibrary.simpleMessage("Владелец"),
         "peopleLabel": MessageLookupByLibrary.simpleMessage("Люди"),
         "profileTooltip": MessageLookupByLibrary.simpleMessage("Профиль"),

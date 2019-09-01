@@ -34,6 +34,7 @@ class DecksList extends StatefulWidget {
 }
 
 class _DecksListState extends State<DecksList> {
+  // TODO(ksheremet): use ScreenBlocView to handle this bloc.
   DecksListBloc _bloc;
 
   @override

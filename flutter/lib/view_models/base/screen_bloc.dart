@@ -2,12 +2,16 @@ import 'dart:async';
 
 import 'package:delern_flutter/flutter/user_messages.dart';
 import 'package:delern_flutter/l10n/app_localizations.dart';
+import 'package:delern_flutter/remote/auth.dart';
 import 'package:meta/meta.dart';
 
 abstract class ScreenBloc {
+  final User user;
   AppLocalizations _locale;
 
-  ScreenBloc() {
+  // Not using @required named parameters because they are easily missed due to
+  // dartanalyzer bug: https://github.com/dart-lang/linter/issues/1708.
+  ScreenBloc(this.user) : assert(user != null) {
     _onLocaleController.stream.listen((locale) {
       _locale = locale;
     });

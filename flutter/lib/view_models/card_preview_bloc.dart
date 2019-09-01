@@ -4,6 +4,7 @@ import 'package:delern_flutter/models/base/data_writer.dart';
 import 'package:delern_flutter/models/card_model.dart';
 import 'package:delern_flutter/models/deck_access_model.dart';
 import 'package:delern_flutter/models/deck_model.dart';
+import 'package:delern_flutter/remote/auth.dart';
 import 'package:delern_flutter/remote/error_reporting.dart' as error_reporting;
 import 'package:delern_flutter/view_models/base/screen_bloc.dart';
 import 'package:meta/meta.dart';
@@ -23,17 +24,19 @@ class CardViewModel {
 }
 
 class CardPreviewBloc extends ScreenBloc {
-  CardPreviewBloc({@required CardModel card, @required DeckModel deck})
+  CardPreviewBloc(
+      {@required User user, @required CardModel card, @required DeckModel deck})
       : assert(card != null),
-        assert(deck != null) {
+        assert(deck != null),
+        super(user) {
     _cardValue = CardViewModel(card: card, deck: deck);
     _initListeners();
   }
 
   void _initListeners() {
-    _onDeleteCardController.stream.listen((uid) async {
+    _onDeleteCardController.stream.listen((_) async {
       try {
-        await DataWriter(uid: uid).deleteCard(card: _cardValue.card);
+        await DataWriter(uid: user.uid).deleteCard(card: _cardValue.card);
         notifyPop();
       } catch (e, stackTrace) {
         unawaited(error_reporting.report('deleteCard', e, stackTrace));

@@ -1,13 +1,12 @@
 import 'dart:async';
 
+import 'package:delern_flutter/models/base/data_writer.dart';
 import 'package:delern_flutter/models/base/delayed_initialization.dart';
-import 'package:delern_flutter/models/base/transaction.dart';
 import 'package:delern_flutter/models/card_model.dart';
-import 'package:delern_flutter/models/card_reply_model.dart';
 import 'package:delern_flutter/models/deck_access_model.dart';
 import 'package:delern_flutter/models/deck_model.dart';
-import 'package:delern_flutter/models/scheduled_card_model.dart';
 import 'package:delern_flutter/remote/analytics.dart';
+import 'package:delern_flutter/remote/auth.dart';
 import 'package:delern_flutter/remote/error_reporting.dart' as error_reporting;
 import 'package:delern_flutter/view_models/base/filtered_sorted_observable_list.dart';
 import 'package:delern_flutter/view_models/base/screen_bloc.dart';
@@ -23,7 +22,7 @@ class EditBloc extends ScreenBloc {
   set filter(Filter<CardModel> newValue) => _list.filter = newValue;
   Filter<CardModel> get filter => _list.filter;
 
-  EditBloc({@required DeckModel deck})
+  EditBloc({@required User user, @required DeckModel deck})
       : assert(deck != null),
         _deck = deck,
         _list =
@@ -31,7 +30,8 @@ class EditBloc extends ScreenBloc {
             // ignore: unnecessary_parenthesis
             (FilteredSortedObservableList(CardModel.getList(deckKey: deck.key))
               ..comparator = (c1, c2) =>
-                  c1.front.toLowerCase().compareTo(c2.front.toLowerCase())) {
+                  c1.front.toLowerCase().compareTo(c2.front.toLowerCase())),
+        super(user) {
     _doDeckChangedController.add(_deck);
     _initListeners();
   }
@@ -102,26 +102,9 @@ class EditBloc extends ScreenBloc {
     });
   }
 
-  Future<void> _delete() async {
+  Future<void> _delete() {
     unawaited(logDeckDelete(_deck.key));
-    final t = Transaction()..delete(_deck);
-    final card = CardModel(deckKey: _deck.key);
-    if (_deck.access == AccessType.owner) {
-      final accessList = DeckAccessModel.getList(deckKey: _deck.key);
-      await accessList.fetchFullValue();
-      accessList
-          .forEach((a) => t.delete(DeckModel(uid: a.key)..key = _deck.key));
-      t..deleteAll(DeckAccessModel(deckKey: _deck.key))..deleteAll(card);
-      // TODO(dotdoom): delete other users' ScheduledCard and Views?
-    }
-    t
-      ..deleteAll(ScheduledCardModel(deckKey: _deck.key, uid: _deck.uid))
-      ..deleteAll((CardReplyModelBuilder()
-            ..uid = _deck.uid
-            ..deckKey = _deck.key
-            ..cardKey = null)
-          .build());
-    await t.commit();
+    return DataWriter(uid: _deck.uid).deleteDeck(deck: _deck);
   }
 
   @override
@@ -130,7 +113,7 @@ class EditBloc extends ScreenBloc {
 
   Future<bool> _saveDeckSettings() async {
     try {
-      await (Transaction()..save(_deck)).commit();
+      await DataWriter(uid: _deck.uid).updateDeck(deck: _deck);
       return true;
     } catch (e, stackTrace) {
       unawaited(error_reporting.report('updateDeck', e, stackTrace));

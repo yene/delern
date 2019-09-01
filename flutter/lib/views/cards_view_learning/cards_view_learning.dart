@@ -1,4 +1,3 @@
-import 'package:delern_flutter/flutter/localization.dart' as localizations;
 import 'package:delern_flutter/models/card_model.dart';
 import 'package:delern_flutter/models/deck_model.dart';
 import 'package:delern_flutter/view_models/cards_view_learning_bloc.dart';
@@ -22,13 +21,11 @@ class CardsReviewLearning extends StatefulWidget {
 
 class _CardsReviewLearningState extends State<CardsReviewLearning>
     with TickerProviderStateMixin {
-  CardsViewLearningBloc _bloc;
   final PageController _controller = PageController(viewportFraction: 0.7);
   int _currentCard = 0;
 
   @override
   void initState() {
-    _bloc = CardsViewLearningBloc(deck: widget.deck);
     _controller.addListener(() {
       if (_controller.page.floor() != _currentCard) {
         setState(() {
@@ -40,19 +37,12 @@ class _CardsReviewLearningState extends State<CardsReviewLearning>
   }
 
   @override
-  void didChangeDependencies() {
-    final locale = localizations.of(context);
-    if (_bloc?.locale != locale) {
-      _bloc.onLocale.add(locale);
-    }
-    super.didChangeDependencies();
-  }
-
-  @override
   Widget build(BuildContext context) => ScreenBlocView(
-        appBar: AppBar(
+        blocBuilder: (user) =>
+            CardsViewLearningBloc(deck: widget.deck, user: user),
+        appBarBuilder: (bloc) => AppBar(
             title: StreamBuilder<int>(
-                stream: _bloc.doGetNumberOfCards,
+                stream: bloc.doGetNumberOfCards,
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
                     return Text(
@@ -60,8 +50,8 @@ class _CardsReviewLearningState extends State<CardsReviewLearning>
                   }
                   return Text(widget.deck.name);
                 })),
-        body: StreamBuilder<List<CardModel>>(
-          stream: _bloc.doGetCardList,
+        bodyBuilder: (bloc) => StreamBuilder<List<CardModel>>(
+          stream: bloc.doGetCardList,
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
               return ProgressIndicatorWidget();
@@ -107,6 +97,5 @@ class _CardsReviewLearningState extends State<CardsReviewLearning>
             }
           },
         ),
-        bloc: _bloc,
       );
 }

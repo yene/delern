@@ -33,61 +33,63 @@ class EditScreen extends StatefulWidget {
 
 class _EditScreenState extends State<EditScreen> {
   final TextEditingController _deckNameController = TextEditingController();
-  EditBloc _bloc;
   DeckModel _currentDeckState;
   GlobalKey fabKey = GlobalKey();
 
-  void _searchTextChanged(String input) {
+  void _searchTextChanged(EditBloc bloc, String input) {
     if (input == null) {
-      _bloc.filter = null;
+      bloc.filter = null;
       return;
     }
     input = input.toLowerCase();
-    _bloc.filter = (c) =>
+    bloc.filter = (c) =>
         c.front.toLowerCase().contains(input) ||
         c.back.toLowerCase().contains(input);
   }
 
   @override
   void initState() {
-    _bloc = EditBloc(deck: widget.deck);
     _deckNameController.text = widget.deck.name;
     _currentDeckState = widget.deck;
-    _bloc.doDeckChanged.listen((deck) {
-      _currentDeckState = deck;
-    });
+
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) => ScreenBlocView(
-        appBar: SearchBarWidget(
+        blocBuilder: (user) {
+          final bloc = EditBloc(deck: widget.deck, user: user);
+          bloc.doDeckChanged.listen((deck) {
+            _currentDeckState = deck;
+          });
+          return bloc;
+        },
+        appBarBuilder: (bloc) => SearchBarWidget(
           title: localizations.of(context).edit,
-          search: _searchTextChanged,
-          actions: _buildActions(),
+          search: (input) => _searchTextChanged(bloc, input),
+          actions: _buildActions(bloc),
         ),
-        body: Column(
+        bodyBuilder: (bloc) => Column(
           children: <Widget>[
-            _buildEditDeck(),
-            _buildCardsInDeck(),
+            _buildEditDeck(bloc),
+            _buildCardsInDeck(bloc),
             const Divider(
               height: _kDividerPadding,
             ),
-            Expanded(child: _buildCardList()),
+            Expanded(child: _buildCardList(bloc)),
           ],
         ),
-        floatingActionButton: _buildAddCard(),
-        bloc: _bloc,
+        floatingActionButtonBuilder: _buildAddCard,
       );
 
-  List<Widget> _buildActions() {
+  List<Widget> _buildActions(EditBloc bloc) {
     final menuAction = IconButton(
       icon: Icon(Icons.more_vert),
       onPressed: () {
         showDialog<void>(
           context: context,
           builder: (context) => Dialog(
-              child: DeckSettingsWidget(deck: _currentDeckState, bloc: _bloc)),
+              child: DeckSettingsWidget(deck: _currentDeckState, bloc: bloc)),
         );
       },
     );
@@ -95,7 +97,7 @@ class _EditScreenState extends State<EditScreen> {
     return <Widget>[menuAction];
   }
 
-  Widget _buildEditDeck() => TextField(
+  Widget _buildEditDeck(EditBloc bloc) => TextField(
         textAlign: TextAlign.center,
         decoration: InputDecoration(
           border: InputBorder.none,
@@ -114,29 +116,29 @@ class _EditScreenState extends State<EditScreen> {
         style: app_styles.primaryText,
         onChanged: (text) {
           setState(() {
-            _bloc.onDeckName.add(text);
+            bloc.onDeckName.add(text);
           });
         },
       );
 
-  Widget _buildCardsInDeck() => StreamBuilder<List>(
-      stream: _bloc.list.listChanges,
+  Widget _buildCardsInDeck(EditBloc bloc) => StreamBuilder<List>(
+      stream: bloc.list.listChanges,
       builder: (context, snapshot) => Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Text(
-                localizations.of(context).numberOfCards(_bloc.list.length),
+                localizations.of(context).numberOfCards(bloc.list.length),
                 style: app_styles.secondaryText,
               ),
             ],
           ));
 
-  Widget _buildCardList() {
+  Widget _buildCardList(EditBloc bloc) {
     final cardVerticalPadding =
         MediaQuery.of(context).size.height * app_styles.kItemListPaddingRatio;
     return ScrollToBeginningListWidget(
       builder: (controller) => ObservingAnimatedListWidget<CardModel>(
-        list: _bloc.list,
+        list: bloc.list,
         itemBuilder: (context, item, animation, index) =>
             _buildCardItem(item, cardVerticalPadding),
         emptyMessageBuilder: () => ArrowToFloatingActionButtonWidget(
@@ -162,7 +164,7 @@ class _EditScreenState extends State<EditScreen> {
         ],
       );
 
-  Builder _buildAddCard() => Builder(
+  Widget _buildAddCard(EditBloc bloc) => Builder(
         builder: (context) => FloatingActionButton(
           key: fabKey,
           onPressed: () {

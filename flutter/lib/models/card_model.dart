@@ -1,42 +1,47 @@
 import 'dart:async';
 import 'dart:core';
 
+import 'package:built_value/built_value.dart';
+import 'package:built_value/serializer.dart';
 import 'package:delern_flutter/models/base/database_observable_list.dart';
 import 'package:delern_flutter/models/base/model.dart';
+import 'package:delern_flutter/models/serializers.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:meta/meta.dart';
 
-class CardModel implements Model {
-  String deckKey;
-  String key;
-  String front;
-  String back;
-  DateTime createdAt;
+part 'card_model.g.dart';
 
-  CardModel({@required this.deckKey}) : assert(deckKey != null);
+abstract class CardModel
+    implements Built<CardModel, CardModelBuilder>, ReadonlyModel {
+  @nullable
+  String get deckKey;
+  @nullable
+  String get key;
+  @nullable
+  String get front;
+  @nullable
+  String get back;
+  @nullable
+  DateTime get createdAt;
 
-  // We expect this to be called often and optimize for performance.
-  CardModel.copyFrom(CardModel other)
-      : deckKey = other.deckKey,
-        key = other.key,
-        front = other.front,
-        back = other.back,
-        createdAt = other.createdAt;
+  static Serializer<CardModel> get serializer => _$cardModelSerializer;
 
-  CardModel._fromSnapshot({
-    @required this.deckKey,
-    @required this.key,
+  factory CardModel([void Function(CardModelBuilder) updates]) = _$CardModel;
+  CardModel._();
+
+  static CardModel fromSnapshot({
+    @required String deckKey,
+    @required String key,
     @required Map value,
   }) {
     if (value == null) {
-      key = null;
-      return;
+      return (CardModelBuilder()..deckKey = deckKey).build();
     }
-    front = value['front'];
-    back = value['back'];
-    createdAt = value['createdAt'] == null
-        ? null
-        : DateTime.fromMillisecondsSinceEpoch(value['createdAt']);
+    return serializers
+        .deserializeWith(CardModel.serializer, value)
+        .rebuild((b) => b
+          ..deckKey = deckKey
+          ..key = key);
   }
 
   static Stream<CardModel> get(
@@ -47,7 +52,7 @@ class CardModel implements Model {
           .child(deckKey)
           .child(key)
           .onValue
-          .map((evt) => CardModel._fromSnapshot(
+          .map((evt) => CardModel.fromSnapshot(
               deckKey: deckKey, key: key, value: evt.snapshot.value));
 
   static DatabaseObservableList<CardModel> getList(
@@ -58,7 +63,7 @@ class CardModel implements Model {
               .child('cards')
               .child(deckKey)
               .orderByKey(),
-          snapshotParser: (key, value) => CardModel._fromSnapshot(
+          snapshotParser: (key, value) => CardModel.fromSnapshot(
                 deckKey: deckKey,
                 key: key,
                 value: value,

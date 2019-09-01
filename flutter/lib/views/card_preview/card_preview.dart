@@ -7,7 +7,6 @@ import 'package:delern_flutter/views/card_create_update/card_create_update.dart'
 import 'package:delern_flutter/views/helpers/card_background_specifier.dart';
 import 'package:delern_flutter/views/helpers/card_display_widget.dart';
 import 'package:delern_flutter/views/helpers/save_updates_dialog.dart';
-import 'package:delern_flutter/views/helpers/sign_in_widget.dart';
 import 'package:flutter/material.dart';
 
 class CardPreview extends StatefulWidget {
@@ -23,48 +22,35 @@ class CardPreview extends StatefulWidget {
 }
 
 class _CardPreviewState extends State<CardPreview> {
-  CardPreviewBloc _bloc;
-
-  @override
-  void initState() {
-    super.initState();
-    // TODO(dotdoom): replace with a simple assignment.
-    _bloc = CardPreviewBloc(card: widget.card, deck: widget.deck);
-    _bloc.doShowDeleteDialog.listen(_showDeleteCardDialog);
-    _bloc.doEditCard.listen((_) => _editCard());
-  }
-
-  @override
-  void didChangeDependencies() {
-    // TODO(ksheremet): Locale must be somewhere in ScreenBlocView
-    final locale = localizations.of(context);
-    if (_bloc?.locale != locale) {
-      _bloc.onLocale.add(locale);
-    }
-    super.didChangeDependencies();
-  }
-
   @override
   Widget build(BuildContext context) => ScreenBlocView(
-        appBar: AppBar(
+        blocBuilder: (user) {
+          final bloc =
+              CardPreviewBloc(user: user, card: widget.card, deck: widget.deck);
+          bloc.doShowDeleteDialog
+              .listen((message) => _showDeleteCardDialog(bloc, message));
+          bloc.doEditCard.listen((_) => _editCard());
+          return bloc;
+        },
+        appBarBuilder: (bloc) => AppBar(
           title: StreamBuilder<String>(
               initialData: widget.deck.name,
-              stream: _bloc.doDeckNameChanged,
+              stream: bloc.doDeckNameChanged,
               builder: (context, snapshot) => Text(snapshot.data)),
           actions: <Widget>[
             IconButton(
                 icon: const Icon(Icons.delete),
                 onPressed: () async {
-                  _bloc.onDeleteDeckIntention.add(null);
+                  bloc.onDeleteDeckIntention.add(null);
                 }),
           ],
         ),
-        body: Column(
+        bodyBuilder: (bloc) => Column(
           children: <Widget>[
             Expanded(
                 child: StreamBuilder<CardViewModel>(
-                    stream: _bloc.cardStream,
-                    initialData: _bloc.cardValue,
+                    stream: bloc.cardStream,
+                    initialData: bloc.cardValue,
                     builder: (context, snapshot) => CardDisplayWidget(
                         front: snapshot.requireData.card.front,
                         back: snapshot.requireData.card.back,
@@ -76,23 +62,23 @@ class _CardPreviewState extends State<CardPreview> {
             const Padding(padding: EdgeInsets.only(bottom: 100))
           ],
         ),
-        floatingActionButton: FloatingActionButton(
+        floatingActionButtonBuilder: (bloc) => FloatingActionButton(
           onPressed: () {
-            _bloc.onEditCardIntention.add(null);
+            bloc.onEditCardIntention.add(null);
           },
           child: const Icon(Icons.edit),
         ),
-        bloc: _bloc,
       );
 
-  Future<void> _showDeleteCardDialog(deleteCardQuestion) async {
+  Future<void> _showDeleteCardDialog(
+      CardPreviewBloc bloc, String deleteCardQuestion) async {
     final deleteCardDialog = await showSaveUpdatesDialog(
         context: context,
         changesQuestion: deleteCardQuestion,
         yesAnswer: localizations.of(context).delete,
         noAnswer: MaterialLocalizations.of(context).cancelButtonLabel);
     if (deleteCardDialog) {
-      _bloc.onDeleteCard.add(CurrentUserWidget.of(context).user.uid);
+      bloc.onDeleteCard.add(null);
     }
   }
 

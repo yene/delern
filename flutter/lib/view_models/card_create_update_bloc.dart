@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:delern_flutter/models/base/data_writer.dart';
 import 'package:delern_flutter/models/card_model.dart';
 import 'package:delern_flutter/remote/analytics.dart';
+import 'package:delern_flutter/remote/auth.dart';
 import 'package:delern_flutter/remote/error_reporting.dart' as error_reporting;
 import 'package:delern_flutter/view_models/base/screen_bloc.dart';
 import 'package:meta/meta.dart';
@@ -12,21 +13,18 @@ class CardCreateUpdateBloc extends ScreenBloc {
   String _frontText;
   String _backText;
   bool _addReversedCard = false;
-  String uid;
   CardModel _cardModel;
   final bool isAddOperation;
   bool _isOperationEnabled = true;
 
-  CardCreateUpdateBloc({@required cardModel})
+  CardCreateUpdateBloc({@required User user, @required cardModel})
       : assert(cardModel != null),
-        isAddOperation = cardModel.key == null {
+        isAddOperation = cardModel.key == null,
+        super(user) {
     _cardModel = cardModel;
     _initFields();
     _initListeners();
   }
-
-  Sink<String> get onUid => _onUidController.sink;
-  final _onUidController = StreamController<String>();
 
   final _onSaveCardController = StreamController<void>();
   Sink<void> get onSaveCard => _onSaveCardController.sink;
@@ -72,7 +70,6 @@ class CardCreateUpdateBloc extends ScreenBloc {
       _addReversedCard = addReversed;
       _checkOperationAvailability();
     });
-    _onUidController.stream.listen((uid) => this.uid = uid);
     _onDiscardChangesController.stream.listen((_) {
       notifyPop();
     });
@@ -80,7 +77,7 @@ class CardCreateUpdateBloc extends ScreenBloc {
 
   Future<void> _saveCard() {
     logCardCreate(_cardModel.deckKey);
-    return DataWriter(uid: uid)
+    return DataWriter(uid: user.uid)
         .createOrUpdateCard(card: _cardModel, addReversed: _addReversedCard);
   }
 
@@ -146,7 +143,6 @@ class CardCreateUpdateBloc extends ScreenBloc {
     _isOperationEnabledController.close();
     _addReversedCardController.close();
     _doShowConfirmationDialogController.close();
-    _onUidController.close();
     _onDiscardChangesController.close();
     super.dispose();
   }

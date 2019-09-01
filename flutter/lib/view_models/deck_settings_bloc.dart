@@ -4,6 +4,7 @@ import 'package:delern_flutter/models/base/data_writer.dart';
 import 'package:delern_flutter/models/deck_access_model.dart';
 import 'package:delern_flutter/models/deck_model.dart';
 import 'package:delern_flutter/remote/analytics.dart';
+import 'package:delern_flutter/remote/auth.dart';
 import 'package:delern_flutter/remote/error_reporting.dart' as error_reporting;
 import 'package:delern_flutter/view_models/base/screen_bloc.dart';
 import 'package:meta/meta.dart';
@@ -15,9 +16,10 @@ class DeckSettingsBloc extends ScreenBloc {
   DeckType _deckType;
   bool _markdown;
 
-  DeckSettingsBloc({@required DeckModel deck})
+  DeckSettingsBloc({@required User user, @required DeckModel deck})
       : assert(deck != null),
-        _deck = deck {
+        _deck = deck,
+        super(user) {
     _deckName = deck.name;
     _deckType = deck.type;
     _markdown = deck.markdown;

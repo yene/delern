@@ -6,6 +6,7 @@ import 'package:delern_flutter/models/card_model.dart';
 import 'package:delern_flutter/models/deck_access_model.dart';
 import 'package:delern_flutter/models/deck_model.dart';
 import 'package:delern_flutter/remote/analytics.dart';
+import 'package:delern_flutter/remote/auth.dart';
 import 'package:delern_flutter/remote/error_reporting.dart' as error_reporting;
 import 'package:delern_flutter/view_models/base/filtered_sorted_observable_list.dart';
 import 'package:delern_flutter/view_models/base/screen_bloc.dart';
@@ -21,7 +22,7 @@ class EditBloc extends ScreenBloc {
   set filter(Filter<CardModel> newValue) => _list.filter = newValue;
   Filter<CardModel> get filter => _list.filter;
 
-  EditBloc({@required DeckModel deck})
+  EditBloc({@required User user, @required DeckModel deck})
       : assert(deck != null),
         _deck = deck,
         _list =
@@ -29,7 +30,8 @@ class EditBloc extends ScreenBloc {
             // ignore: unnecessary_parenthesis
             (FilteredSortedObservableList(CardModel.getList(deckKey: deck.key))
               ..comparator = (c1, c2) =>
-                  c1.front.toLowerCase().compareTo(c2.front.toLowerCase())) {
+                  c1.front.toLowerCase().compareTo(c2.front.toLowerCase())),
+        super(user) {
     _doDeckChangedController.add(_deck);
     _initListeners();
   }

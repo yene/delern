@@ -5,7 +5,6 @@ import 'package:delern_flutter/models/deck_model.dart';
 import 'package:delern_flutter/view_models/card_create_update_bloc.dart';
 import 'package:delern_flutter/views/base/screen_bloc_view.dart';
 import 'package:delern_flutter/views/helpers/save_updates_dialog.dart';
-import 'package:delern_flutter/views/helpers/sign_in_widget.dart';
 import 'package:flutter/material.dart';
 
 class CardCreateUpdate extends StatefulWidget {
@@ -26,29 +25,12 @@ class _CardCreateUpdateState extends State<CardCreateUpdate> {
   final TextEditingController _frontTextController = TextEditingController();
   final TextEditingController _backTextController = TextEditingController();
   final FocusNode _frontSideFocus = FocusNode();
-  CardCreateUpdateBloc _bloc;
 
   @override
   void initState() {
-    _bloc = CardCreateUpdateBloc(cardModel: widget.card);
-    _bloc.doClearInputFields.listen((_) => _clearInputFields());
-    _bloc.doShowConfirmationDialog.listen((_) => showCardSaveUpdateDialog());
     _frontTextController.text = widget.card.front;
     _backTextController.text = widget.card.back;
     super.initState();
-  }
-
-  @override
-  void didChangeDependencies() {
-    final locale = localizations.of(context);
-    if (_bloc.locale != locale) {
-      _bloc.onLocale.add(locale);
-    }
-    final uid = CurrentUserWidget.of(context).user.uid;
-    if (_bloc.uid != uid) {
-      _bloc.onUid.add(uid);
-    }
-    super.didChangeDependencies();
   }
 
   @override
@@ -57,7 +39,7 @@ class _CardCreateUpdateState extends State<CardCreateUpdate> {
     super.dispose();
   }
 
-  Future<void> showCardSaveUpdateDialog() async {
+  Future<void> showCardSaveUpdateDialog(CardCreateUpdateBloc bloc) async {
     if (_isChanged) {
       final locale = localizations.of(context);
       final continueEditingDialog = await showSaveUpdatesDialog(
@@ -69,46 +51,51 @@ class _CardCreateUpdateState extends State<CardCreateUpdate> {
         return false;
       }
     }
-    _bloc.onDiscardChanges.add(null);
+    bloc.onDiscardChanges.add(null);
   }
 
   @override
   Widget build(BuildContext context) => ScreenBlocView(
-        appBar: _buildAppBar(),
-        body: _buildUserInput(),
-        bloc: _bloc,
+        blocBuilder: (user) {
+          final bloc = CardCreateUpdateBloc(cardModel: widget.card, user: user);
+          bloc.doClearInputFields.listen((_) => _clearInputFields(bloc));
+          bloc.doShowConfirmationDialog
+              .listen((_) => showCardSaveUpdateDialog(bloc));
+          return bloc;
+        },
+        appBarBuilder: _buildAppBar,
+        bodyBuilder: _buildUserInput,
       );
 
-  AppBar _buildAppBar() => AppBar(
-        title: Text(widget.deck.name),
-        actions: <Widget>[
-          StreamBuilder<bool>(
-            initialData: false,
-            stream: _bloc.isOperationEnabled,
-            builder: (context, snapshot) => _bloc.isAddOperation
-                ? IconButton(
-                    tooltip: localizations.of(context).addCardTooltip,
-                    icon: const Icon(Icons.check),
-                    onPressed: snapshot.data ? _saveCard : null,
-                  )
-                : FlatButton(
-                    onPressed: _isChanged && snapshot.data ? _saveCard : null,
-                    child: Text(
-                      localizations.of(context).save.toUpperCase(),
-                      style: _isChanged && snapshot.data
-                          ? const TextStyle(color: Colors.white)
-                          : null,
-                    ),
+  AppBar _buildAppBar(CardCreateUpdateBloc bloc) {
+    void saveCard() => bloc.onSaveCard.add(null);
+    return AppBar(
+      title: Text(widget.deck.name),
+      actions: <Widget>[
+        StreamBuilder<bool>(
+          initialData: false,
+          stream: bloc.isOperationEnabled,
+          builder: (context, snapshot) => bloc.isAddOperation
+              ? IconButton(
+                  tooltip: localizations.of(context).addCardTooltip,
+                  icon: const Icon(Icons.check),
+                  onPressed: snapshot.data ? saveCard : null,
+                )
+              : FlatButton(
+                  onPressed: _isChanged && snapshot.data ? saveCard : null,
+                  child: Text(
+                    localizations.of(context).save.toUpperCase(),
+                    style: _isChanged && snapshot.data
+                        ? const TextStyle(color: Colors.white)
+                        : null,
                   ),
-          )
-        ],
-      );
-
-  void _saveCard() {
-    _bloc.onSaveCard.add(null);
+                ),
+        )
+      ],
+    );
   }
 
-  Widget _buildUserInput() {
+  Widget _buildUserInput(CardCreateUpdateBloc bloc) {
     final widgetsList = <Widget>[
       // TODO(ksheremet): limit lines in TextField
       TextField(
@@ -120,7 +107,7 @@ class _CardCreateUpdateState extends State<CardCreateUpdate> {
         controller: _frontTextController,
         onChanged: (text) {
           setState(() {
-            _bloc.onFrontSideText.add(text);
+            bloc.onFrontSideText.add(text);
             _isChanged = true;
           });
         },
@@ -135,7 +122,7 @@ class _CardCreateUpdateState extends State<CardCreateUpdate> {
         controller: _backTextController,
         onChanged: (text) {
           setState(() {
-            _bloc.onBackSideText.add(text);
+            bloc.onBackSideText.add(text);
             _isChanged = true;
           });
         },
@@ -147,7 +134,7 @@ class _CardCreateUpdateState extends State<CardCreateUpdate> {
     ];
 
     // Add reversed card widget it it is adding cards
-    if (_bloc.isAddOperation) {
+    if (bloc.isAddOperation) {
       // https://github.com/flutter/flutter/issues/254 suggests using
       // CheckboxListTile to have a clickable checkbox label.
       widgetsList.add(CheckboxListTile(
@@ -157,7 +144,7 @@ class _CardCreateUpdateState extends State<CardCreateUpdate> {
         ),
         value: _addReversedCard,
         onChanged: (newValue) {
-          _bloc.onAddReversedCard.add(newValue);
+          bloc.onAddReversedCard.add(newValue);
           setState(() {
             _addReversedCard = newValue;
           });
@@ -173,13 +160,13 @@ class _CardCreateUpdateState extends State<CardCreateUpdate> {
     );
   }
 
-  void _clearInputFields() {
+  void _clearInputFields(CardCreateUpdateBloc bloc) {
     setState(() {
       _isChanged = false;
       _frontTextController.clear();
       _backTextController.clear();
-      _bloc.onFrontSideText.add('');
-      _bloc.onBackSideText.add('');
+      bloc.onFrontSideText.add('');
+      bloc.onBackSideText.add('');
       FocusScope.of(context).requestFocus(_frontSideFocus);
     });
   }

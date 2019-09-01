@@ -164,7 +164,7 @@ class _EditScreenState extends State<EditScreen> {
         ],
       );
 
-  Builder _buildAddCard(EditBloc bloc) => Builder(
+  Widget _buildAddCard(EditBloc bloc) => Builder(
         builder: (context) => FloatingActionButton(
           key: fabKey,
           onPressed: () {

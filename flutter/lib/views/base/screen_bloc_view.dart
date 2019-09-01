@@ -25,7 +25,7 @@ class ScreenBlocView<T extends ScreenBloc> extends StatefulWidget {
         assert(blocBuilder != null);
 
   @override
-  _ScreenBlocViewState createState() => _ScreenBlocViewState();
+  _ScreenBlocViewState<T> createState() => _ScreenBlocViewState<T>();
 }
 
 class _ScreenBlocViewState<T extends ScreenBloc>

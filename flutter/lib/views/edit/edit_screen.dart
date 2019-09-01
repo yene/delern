@@ -235,8 +235,8 @@ class CardItemWidget extends StatelessWidget {
                           ))),
               child: Container(
                 decoration: BoxDecoration(
-                    gradient:
-                        specifyCardBackgroundGradient(deck.type, card.back)),
+                    gradient: specifyEditCardBackgroundGradient(
+                        deck.type, card.back)),
                 child: Padding(
                   padding: const EdgeInsets.all(_kCardBorderPadding),
                   child: Column(

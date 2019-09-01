@@ -7,21 +7,21 @@ class CardDisplayWidget extends StatelessWidget {
   final String front;
   final String back;
   final bool showBack;
-  final List<Color> backgroundColors;
+  final Gradient gradient;
   final bool isMarkdown;
 
   const CardDisplayWidget(
       {@required this.front,
       @required this.back,
       @required this.showBack,
-      @required this.backgroundColors,
+      @required this.gradient,
       @required this.isMarkdown});
 
   @override
   Widget build(BuildContext context) => Padding(
         padding: const EdgeInsets.all(8),
         child: CardDecorationWidget(
-          colors: backgroundColors,
+          gradient: gradient,
           child: ListView(
             padding: const EdgeInsets.all(20),
             children: _buildCardBody(context),

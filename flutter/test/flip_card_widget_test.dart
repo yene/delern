@@ -1,5 +1,4 @@
 import 'package:delern_flutter/flutter/localization.dart';
-import 'package:delern_flutter/flutter/styles.dart' as app_styles;
 import 'package:delern_flutter/views/helpers/card_background_specifier.dart';
 import 'package:delern_flutter/views/helpers/card_decoration_widget.dart';
 import 'package:delern_flutter/views/helpers/flip_card_widget.dart';
@@ -21,7 +20,7 @@ void main() {
       home: FlipCardWidget(
         front: frontSide,
         back: backSide,
-        backgroundColors: app_styles.cardBackgroundColors[Gender.masculine],
+        gradient: getLearnCardGradientFromGender(Gender.masculine),
         isMarkdown: false,
         onFlip: () {
           _wasFlipped = true;

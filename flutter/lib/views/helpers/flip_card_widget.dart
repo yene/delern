@@ -14,7 +14,7 @@ typedef CardFlipCallback = void Function();
 class FlipCardWidget extends StatefulWidget {
   final String front;
   final String back;
-  final List<Color> backgroundColors;
+  final Gradient gradient;
   final bool isMarkdown;
   final CardFlipCallback onFlip;
 
@@ -22,7 +22,7 @@ class FlipCardWidget extends StatefulWidget {
     @required this.front,
     @required this.back,
     @required this.isMarkdown,
-    @required this.backgroundColors,
+    @required this.gradient,
     // Key is needed to compare widgets. One example:
     // In ViewLearning PageView, oldWidget and widget with the same fields
     // somehow are different widgets. Therefore we compare keys of the cards
@@ -147,7 +147,7 @@ class _FlipCardWidgetState extends State<FlipCardWidget>
         child: Stack(
           children: <Widget>[
             CardDecorationWidget(
-              colors: widget.backgroundColors,
+              gradient: widget.gradient,
               child: Padding(
                 padding: const EdgeInsets.all(_kCardBorderPadding),
                 child: LayoutBuilder(

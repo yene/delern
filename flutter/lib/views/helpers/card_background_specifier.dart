@@ -9,27 +9,21 @@ enum Gender {
   noGender,
 }
 
-List<Color> specifyCardBackgroundColors(DeckType deckType, String text) {
-  if (deckType == DeckType.basic) {
-    return app_styles.cardBackgroundColors[Gender.noGender];
-  }
-  var textGender = Gender.noGender;
-  text = text.toLowerCase();
-  if (deckType == DeckType.swiss) {
-    textGender = _swissCardGender(text);
-  } else {
-    textGender = _germanCardGender(text);
-  }
-  return app_styles.cardBackgroundColors[textGender];
+LinearGradient specifyLearnCardBackgroundGradient(
+    DeckType deckType, String text) {
+  final textGender = _specifyCardGender(deckType, text);
+  return getLearnCardGradientFromGender(textGender);
 }
 
-LinearGradient specifyCardBackgroundGradient(DeckType deckType, String text) {
+LinearGradient specifyEditCardBackgroundGradient(
+    DeckType deckType, String text) {
+  final textGender = _specifyCardGender(deckType, text);
+  return getEditCardGradientFromGender(textGender);
+}
+
+Gender _specifyCardGender(DeckType deckType, String text) {
   if (deckType == DeckType.basic) {
-    return LinearGradient(
-      begin: Alignment.topCenter,
-      end: Alignment.bottomCenter,
-      colors: app_styles.cardBackgroundColors[Gender.noGender],
-    );
+    return Gender.noGender;
   }
   var textGender = Gender.noGender;
   text = text.toLowerCase();
@@ -38,15 +32,17 @@ LinearGradient specifyCardBackgroundGradient(DeckType deckType, String text) {
   } else {
     textGender = _germanCardGender(text);
   }
-  return LinearGradient(
-      begin: Alignment.topCenter,
-      end: Alignment.bottomCenter,
-      colors: app_styles.cardBackgroundColors[textGender]);
+  return textGender;
 }
 
 LinearGradient getEditCardGradientFromGender(Gender gender) => LinearGradient(
     begin: Alignment.topCenter,
     end: Alignment.bottomCenter,
+    colors: app_styles.cardBackgroundColors[gender]);
+
+LinearGradient getLearnCardGradientFromGender(Gender gender) => LinearGradient(
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
     colors: app_styles.cardBackgroundColors[gender]);
 
 Gender _swissCardGender(String text) {

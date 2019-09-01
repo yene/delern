@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:delern_flutter/models/base/data_writer.dart';
 import 'package:delern_flutter/models/deck_access_model.dart';
 import 'package:delern_flutter/models/deck_model.dart';
 import 'package:delern_flutter/remote/analytics.dart';
@@ -47,10 +46,10 @@ class DeckSettingsBloc extends ScreenBloc {
 
   Future<void> _delete() {
     unawaited(logDeckDelete(_deck.key));
-    return DataWriter(uid: _deck.uid).deleteDeck(deck: _deck);
+    return user.deleteDeck(deck: _deck);
   }
 
-  Future<void> _save() => DataWriter(uid: _deck.uid).updateDeck(deck: _deck);
+  Future<void> _save() => user.updateDeck(deck: _deck);
 
   @override
   void dispose() {

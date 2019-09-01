@@ -15,6 +15,7 @@ import 'package:delern_flutter/views/helpers/observing_animated_list_widget.dart
 import 'package:delern_flutter/views/helpers/progress_indicator_widget.dart';
 import 'package:delern_flutter/views/helpers/save_updates_dialog.dart';
 import 'package:delern_flutter/views/helpers/send_invite.dart';
+import 'package:delern_flutter/views/helpers/sign_in_widget.dart';
 import 'package:delern_flutter/views/helpers/slow_operation_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:pedantic/pedantic.dart';
@@ -31,6 +32,17 @@ class DeckSharing extends StatefulWidget {
 class _DeckSharingState extends State<DeckSharing> {
   final TextEditingController _textController = TextEditingController();
   AccessType _accessValue = AccessType.write;
+  DeckAccessesViewModel _deckAccessesViewModel;
+
+  @override
+  void didChangeDependencies() {
+    final user = CurrentUserWidget.of(context).user;
+    if (_deckAccessesViewModel?.user != user) {
+      _deckAccessesViewModel =
+          DeckAccessesViewModel(user: user, deck: widget._deck);
+    }
+    super.didChangeDependencies();
+  }
 
   @override
   Widget build(BuildContext context) => Scaffold(
@@ -62,7 +74,7 @@ class _DeckSharingState extends State<DeckSharing> {
               ),
             ),
             _sharingEmail(),
-            Expanded(child: DeckUsersWidget(widget._deck)),
+            Expanded(child: DeckUsersWidget(_deckAccessesViewModel)),
           ],
         ),
       );
@@ -100,12 +112,11 @@ class _DeckSharingState extends State<DeckSharing> {
         // Do not clear the field if user didn't send an invite.
         // Maybe user made a typo in email address and needs to correct it.
       } else {
-        await DeckAccessesViewModel.shareDeck(
-            DeckAccessModel(deckKey: widget._deck.key)
+        await _deckAccessesViewModel
+            .shareDeck(DeckAccessModel(deckKey: widget._deck.key)
               ..key = uid
               ..access = deckAccess
-              ..email = _textController.text.toString(),
-            widget._deck);
+              ..email = _textController.text.toString());
       }
     } on SocketException catch (_) {
       UserMessages.showMessage(
@@ -136,23 +147,15 @@ class _DeckSharingState extends State<DeckSharing> {
 }
 
 class DeckUsersWidget extends StatefulWidget {
-  final DeckModel _deck;
+  final DeckAccessesViewModel viewModel;
 
-  const DeckUsersWidget(this._deck);
+  const DeckUsersWidget(this.viewModel);
 
   @override
   State<StatefulWidget> createState() => _DeckUsersState();
 }
 
 class _DeckUsersState extends State<DeckUsersWidget> {
-  DeckAccessesViewModel _deckAccessesViewModel;
-
-  @override
-  void initState() {
-    _deckAccessesViewModel = DeckAccessesViewModel(deck: widget._deck);
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) => Column(
         children: <Widget>[
@@ -169,7 +172,7 @@ class _DeckUsersState extends State<DeckUsersWidget> {
           ),
           Expanded(
             child: ObservingAnimatedListWidget<DeckAccessModel>(
-              list: _deckAccessesViewModel.list,
+              list: widget.viewModel.list,
               itemBuilder: (context, item, animation, index) => SizeTransition(
                 sizeFactor: animation,
                 child: _buildUserAccessInfo(item),
@@ -208,15 +211,13 @@ class _DeckUsersState extends State<DeckUsersWidget> {
         filter: filter,
         valueChanged: (access) => setState(() {
           if (access == null) {
-            DeckAccessesViewModel.unshareDeck(
-                accessViewModel.key, _deckAccessesViewModel.deck);
+            widget.viewModel.unshareDeck(accessViewModel.key);
           } else {
-            DeckAccessesViewModel.shareDeck(
-                DeckAccessModel(deckKey: _deckAccessesViewModel.deck.key)
+            widget.viewModel
+                .shareDeck(DeckAccessModel(deckKey: widget.viewModel.deck.key)
                   ..key = accessViewModel.key
                   ..email = accessViewModel.email
-                  ..access = access,
-                _deckAccessesViewModel.deck);
+                  ..access = access);
           }
         }),
       ),

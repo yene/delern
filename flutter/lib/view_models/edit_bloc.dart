@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:delern_flutter/models/base/data_writer.dart';
 import 'package:delern_flutter/models/base/delayed_initialization.dart';
 import 'package:delern_flutter/models/card_model.dart';
 import 'package:delern_flutter/models/deck_access_model.dart';
@@ -104,7 +103,7 @@ class EditBloc extends ScreenBloc {
 
   Future<void> _delete() {
     unawaited(logDeckDelete(_deck.key));
-    return DataWriter(uid: _deck.uid).deleteDeck(deck: _deck);
+    return user.deleteDeck(deck: _deck);
   }
 
   @override
@@ -113,7 +112,7 @@ class EditBloc extends ScreenBloc {
 
   Future<bool> _saveDeckSettings() async {
     try {
-      await DataWriter(uid: _deck.uid).updateDeck(deck: _deck);
+      await user.updateDeck(deck: _deck);
       return true;
     } catch (e, stackTrace) {
       unawaited(error_reporting.report('updateDeck', e, stackTrace));

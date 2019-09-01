@@ -1,10 +1,10 @@
 import 'dart:async';
 
-import 'package:delern_flutter/models/base/data_writer.dart';
 import 'package:delern_flutter/models/base/delayed_initialization.dart';
 import 'package:delern_flutter/models/deck_model.dart';
 import 'package:delern_flutter/models/scheduled_card_model.dart';
 import 'package:delern_flutter/remote/analytics.dart';
+import 'package:delern_flutter/remote/auth.dart';
 import 'package:delern_flutter/view_models/base/filtered_sorted_observable_list.dart';
 import 'package:flutter/foundation.dart';
 import 'package:meta/meta.dart';
@@ -32,7 +32,7 @@ class NumberOfCardsDue {
 }
 
 class DecksListBloc {
-  final String uid;
+  final User user;
 
   DelayedInitializationObservableList<DeckModel> get decksList => _decksList;
   final FilteredSortedObservableList<DeckModel> _decksList;
@@ -41,12 +41,12 @@ class DecksListBloc {
       _decksList.filter = newValue;
   Filter<DeckModel> get decksListFilter => _decksList.filter;
 
-  DecksListBloc({@required this.uid})
-      : assert(uid != null),
+  DecksListBloc({@required this.user})
+      : assert(user != null),
         _decksList =
             // Analyzer bug: https://github.com/dart-lang/sdk/issues/35577.
             // ignore: unnecessary_parenthesis
-            (FilteredSortedObservableList(DeckModel.getList(uid: uid))
+            (FilteredSortedObservableList(DeckModel.getList(uid: user.uid))
               ..comparator = (c1, c2) => c1.key.compareTo(c2.key)) {
     // Delay initial data load. In case we have a significant amount of
     // ScheduledCards, loading them slows down decks list, because of the
@@ -54,13 +54,13 @@ class DecksListBloc {
     Future.delayed(const Duration(milliseconds: 100), _loadScheduledCards);
   }
 
-  static Future<DeckModel> createDeck(DeckModel deck, String email) {
+  Future<DeckModel> createDeck(DeckModel deck, String email) {
     logDeckCreate();
-    return DataWriter(uid: deck.uid).createDeck(deck: deck, email: email);
+    return user.createDeck(deck: deck, email: email);
   }
 
   void _loadScheduledCards() {
-    final list = ScheduledCardModel.listsForUser(uid);
+    final list = ScheduledCardModel.listsForUser(user.uid);
     list.listChanges.listen((changes) {
       changes.forEach((change) {
         // TODO(dotdoom): detect changes rather than plain add/remove!
@@ -134,6 +134,5 @@ class DecksListBloc {
     _numberOfCardsDue.values.forEach((c) => c._dispose());
   }
 
-  Future<void> deleteDeck(DeckModel deck) =>
-      DataWriter(uid: deck.uid).deleteDeck(deck: deck);
+  Future<void> deleteDeck(DeckModel deck) => user.deleteDeck(deck: deck);
 }

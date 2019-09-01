@@ -10,7 +10,13 @@ import 'package:flutter/material.dart';
 import 'package:pedantic/pedantic.dart';
 
 class CreateDeckWidget extends StatelessWidget {
-  const CreateDeckWidget({Key key}) : super(key: key);
+  final DecksListBloc bloc;
+
+  const CreateDeckWidget({
+    @required this.bloc,
+    Key key,
+  })  : assert(bloc != null),
+        super(key: key);
 
   @override
   Widget build(BuildContext context) => FloatingActionButton(
@@ -26,7 +32,7 @@ class CreateDeckWidget extends StatelessWidget {
             try {
               // TODO(dotdoom): pass DeckAccess as a second parameter, with
               // email, displayName and photoUrl filled in.
-              newDeck = await DecksListBloc.createDeck(
+              newDeck = await bloc.createDeck(
                   newDeck, currentUser.humanFriendlyIdentifier);
             } catch (e, stackTrace) {
               unawaited(UserMessages.showError(

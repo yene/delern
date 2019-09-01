@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:delern_flutter/models/base/data_writer.dart';
 import 'package:delern_flutter/models/card_model.dart';
 import 'package:delern_flutter/remote/analytics.dart';
 import 'package:delern_flutter/remote/auth.dart';
@@ -77,8 +76,8 @@ class CardCreateUpdateBloc extends ScreenBloc {
 
   Future<void> _saveCard() {
     logCardCreate(_cardModel.deckKey);
-    return DataWriter(uid: user.uid)
-        .createOrUpdateCard(card: _cardModel, addReversed: _addReversedCard);
+    return user.createOrUpdateCard(
+        card: _cardModel, addReversed: _addReversedCard);
   }
 
   Future<void> _disableUI(Future<void> Function() f) async {

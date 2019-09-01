@@ -39,10 +39,10 @@ class _DecksListState extends State<DecksList> {
 
   @override
   void didChangeDependencies() {
-    final uid = CurrentUserWidget.of(context).user.uid;
-    if (_bloc?.uid != uid) {
+    final user = CurrentUserWidget.of(context).user;
+    if (_bloc?.user != user) {
       _bloc?.dispose();
-      _bloc = DecksListBloc(uid: uid);
+      _bloc = DecksListBloc(user: user);
     }
     super.didChangeDependencies();
   }
@@ -130,7 +130,7 @@ class _DecksListState extends State<DecksList> {
             ),
           ],
         ),
-        floatingActionButton: CreateDeckWidget(key: fabKey),
+        floatingActionButton: CreateDeckWidget(key: fabKey, bloc: _bloc),
       );
 }
 

@@ -1,7 +1,6 @@
 import 'package:delern_flutter/flutter/device_info.dart';
 import 'package:delern_flutter/flutter/localization.dart' as localizations;
 import 'package:delern_flutter/flutter/styles.dart' as app_styles;
-import 'package:delern_flutter/models/base/data_writer.dart';
 import 'package:delern_flutter/models/fcm.dart';
 import 'package:delern_flutter/remote/auth.dart';
 import 'package:delern_flutter/remote/error_reporting.dart' as error_reporting;
@@ -49,7 +48,7 @@ class _SignInWidgetState extends State<SignInWidget> {
               .build();
 
           debugPrint('Registering for FCM as ${fcm.name} in ${fcm.language}');
-          unawaited(DataWriter(uid: fcm.uid).addFCM(fcm: fcm));
+          unawaited(Auth.instance.currentUser.addFCM(fcm: fcm));
         });
 
         // TODO(dotdoom): register onMessage to show a snack bar with

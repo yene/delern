@@ -1,11 +1,11 @@
 import 'dart:async';
 
-import 'package:delern_flutter/models/base/data_writer.dart';
 import 'package:delern_flutter/models/base/stream_muxer.dart';
 import 'package:delern_flutter/models/card_model.dart';
 import 'package:delern_flutter/models/deck_model.dart';
 import 'package:delern_flutter/models/scheduled_card_model.dart';
 import 'package:delern_flutter/remote/analytics.dart';
+import 'package:delern_flutter/remote/auth.dart';
 import 'package:meta/meta.dart';
 
 enum LearningUpdateType {
@@ -14,6 +14,8 @@ enum LearningUpdateType {
 }
 
 class LearningViewModel {
+  final User user;
+
   ScheduledCardModel get scheduledCard => _scheduledCard;
   ScheduledCardModel _scheduledCard;
 
@@ -23,8 +25,9 @@ class LearningViewModel {
   DeckModel get deck => _deck;
   DeckModel _deck;
 
-  LearningViewModel({@required DeckModel deck})
-      : assert(deck != null),
+  LearningViewModel({@required this.user, @required DeckModel deck})
+      : assert(user != null),
+        assert(deck != null),
         _deck = deck;
 
   Stream<LearningUpdateType> get updates {
@@ -45,12 +48,11 @@ class LearningViewModel {
 
   Future<void> answer(
           {@required bool knows, @required bool learnBeyondHorizon}) =>
-      DataWriter(uid: _deck.uid).learnCard(
+      user.learnCard(
           card: _card,
           scheduledCard: _scheduledCard,
           knows: knows,
           learnBeyondHorizon: learnBeyondHorizon);
 
-  Future<void> deleteCard() =>
-      DataWriter(uid: _deck.uid).deleteCard(card: card);
+  Future<void> deleteCard() => user.deleteCard(card: card);
 }

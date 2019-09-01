@@ -11,6 +11,7 @@ import 'package:delern_flutter/views/helpers/card_background_specifier.dart';
 import 'package:delern_flutter/views/helpers/flip_card_widget.dart';
 import 'package:delern_flutter/views/helpers/progress_indicator_widget.dart';
 import 'package:delern_flutter/views/helpers/save_updates_dialog.dart';
+import 'package:delern_flutter/views/helpers/sign_in_widget.dart';
 import 'package:delern_flutter/views/helpers/slow_operation_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -52,9 +53,12 @@ class CardsIntervalLearningState extends State<CardsIntervalLearning> {
   final _showReplyButtons = ValueNotifier(false);
 
   @override
-  void initState() {
-    _viewModel = LearningViewModel(deck: widget.deck);
-    super.initState();
+  void didChangeDependencies() {
+    final user = CurrentUserWidget.of(context).user;
+    if (_viewModel?.user != user) {
+      _viewModel = LearningViewModel(user: user, deck: widget.deck);
+    }
+    super.didChangeDependencies();
   }
 
   @override

@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:delern_flutter/models/base/data_writer.dart';
 import 'package:delern_flutter/models/card_model.dart';
 import 'package:delern_flutter/models/deck_access_model.dart';
 import 'package:delern_flutter/models/deck_model.dart';
@@ -36,7 +35,7 @@ class CardPreviewBloc extends ScreenBloc {
   void _initListeners() {
     _onDeleteCardController.stream.listen((_) async {
       try {
-        await DataWriter(uid: user.uid).deleteCard(card: _cardValue.card);
+        await user.deleteCard(card: _cardValue.card);
         notifyPop();
       } catch (e, stackTrace) {
         unawaited(error_reporting.report('deleteCard', e, stackTrace));

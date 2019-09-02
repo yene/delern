@@ -10,8 +10,8 @@ import 'package:delern_flutter/view_models/edit_bloc.dart';
 import 'package:delern_flutter/views/base/screen_bloc_view.dart';
 import 'package:delern_flutter/views/card_create_update/card_create_update.dart';
 import 'package:delern_flutter/views/card_preview/card_preview.dart';
-import 'package:delern_flutter/views/edit/deck_settings_widget.dart';
-import 'package:delern_flutter/views/edit/scroll_to_beginning_list_widget.dart';
+import 'package:delern_flutter/views/edit_deck/deck_settings_widget.dart';
+import 'package:delern_flutter/views/edit_deck/scroll_to_beginning_list_widget.dart';
 import 'package:delern_flutter/views/helpers/arrow_to_fab_widget.dart';
 import 'package:delern_flutter/views/helpers/card_background_specifier.dart';
 import 'package:delern_flutter/views/helpers/empty_list_message_widget.dart';
@@ -22,16 +22,16 @@ import 'package:flutter/material.dart';
 const int _kUpButtonVisibleRow = 20;
 const double _kDividerPadding = 24;
 
-class EditScreen extends StatefulWidget {
+class EditDeck extends StatefulWidget {
   final DeckModel deck;
 
-  const EditScreen({@required this.deck}) : assert(deck != null);
+  const EditDeck({@required this.deck}) : assert(deck != null);
 
   @override
-  _EditScreenState createState() => _EditScreenState();
+  _EditDeckState createState() => _EditDeckState();
 }
 
-class _EditScreenState extends State<EditScreen> {
+class _EditDeckState extends State<EditDeck> {
   final TextEditingController _deckNameController = TextEditingController();
   DeckModel _currentDeckState;
   GlobalKey fabKey = GlobalKey();

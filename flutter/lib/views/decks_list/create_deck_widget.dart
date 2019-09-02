@@ -20,6 +20,7 @@ class CreateDeckWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => FloatingActionButton(
+        tooltip: localizations.of(context).createDeckTooltip,
         onPressed: () async {
           var newDeck = await showDialog<DeckModel>(
             context: context,

@@ -84,6 +84,7 @@ class _EditScreenState extends State<EditScreen> {
 
   List<Widget> _buildActions(EditBloc bloc) {
     final menuAction = IconButton(
+      tooltip: localizations.of(context).deckSettingsTooltip,
       icon: Icon(Icons.more_vert),
       onPressed: () {
         showDialog<void>(
@@ -166,6 +167,7 @@ class _EditScreenState extends State<EditScreen> {
 
   Widget _buildAddCard(EditBloc bloc) => Builder(
         builder: (context) => FloatingActionButton(
+          tooltip: localizations.of(context).addCardTooltip,
           key: fabKey,
           onPressed: () {
             if (widget.deck.access != AccessType.read) {

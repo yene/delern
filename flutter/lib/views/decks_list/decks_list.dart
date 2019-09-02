@@ -14,7 +14,7 @@ import 'package:delern_flutter/views/cards_view_learning/cards_view_learning.dar
 import 'package:delern_flutter/views/decks_list/create_deck_widget.dart';
 import 'package:delern_flutter/views/decks_list/deck_menu.dart';
 import 'package:delern_flutter/views/decks_list/navigation_drawer.dart';
-import 'package:delern_flutter/views/edit/edit_screen.dart';
+import 'package:delern_flutter/views/edit_deck/edit_deck.dart';
 import 'package:delern_flutter/views/helpers/arrow_to_fab_widget.dart';
 import 'package:delern_flutter/views/helpers/empty_list_message_widget.dart';
 import 'package:delern_flutter/views/helpers/learning_method_widget.dart';
@@ -408,7 +408,7 @@ class EditDeleteDismissible extends StatelessWidget {
             context,
             MaterialPageRoute(
                 settings: const RouteSettings(name: '/decks/view'),
-                builder: (context) => EditScreen(
+                builder: (context) => EditDeck(
                       deck: deck,
                     )),
           ));

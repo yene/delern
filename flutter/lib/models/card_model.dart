@@ -39,30 +39,6 @@ class CardModel implements Model {
         : DateTime.fromMillisecondsSinceEpoch(value['createdAt']);
   }
 
-  @override
-  String get rootPath => 'cards/$deckKey';
-
-  @override
-  Map<String, dynamic> toMap({@required bool isNew}) {
-    final path = '$rootPath/$key';
-    final map = <String, dynamic>{
-      '$path/front': front,
-      '$path/back': back,
-    };
-    if (isNew) {
-      // Important note: we ask server to fill in the timestamp, but we do not
-      // update it in our object immediately. Something trivial like
-      // 'await get(...).first' would work most of the time. But when offline,
-      // Firebase "lies" to the application, replacing ServerValue.TIMESTAMP
-      // with phone's time, although later it saves to the server correctly.
-      // For this reason, we should never *update* createdAt because we risk
-      // changing it (see the note above), in which case Firebase Database will
-      // reject the update.
-      map['$path/createdAt'] = ServerValue.timestamp;
-    }
-    return map;
-  }
-
   static Stream<CardModel> get(
           {@required String deckKey, @required String key}) =>
       FirebaseDatabase.instance

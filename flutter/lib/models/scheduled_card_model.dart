@@ -5,10 +5,10 @@ import 'dart:math';
 import 'package:delern_flutter/models/base/database_observable_list.dart';
 import 'package:delern_flutter/models/base/keyed_list_item.dart';
 import 'package:delern_flutter/models/base/model.dart';
-import 'package:delern_flutter/models/base/transaction.dart';
 import 'package:delern_flutter/models/card_model.dart';
 import 'package:delern_flutter/models/card_reply_model.dart';
 import 'package:delern_flutter/models/deck_model.dart';
+import 'package:delern_flutter/remote/auth.dart';
 import 'package:delern_flutter/remote/error_reporting.dart' as error_reporting;
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/foundation.dart';
@@ -83,7 +83,7 @@ class ScheduledCardModel implements Model {
   static final _jitterRandom = Random();
   Duration _newJitter() => Duration(minutes: _jitterRandom.nextInt(180));
 
-  static Stream<CardAndScheduledCard> next(DeckModel deck) =>
+  static Stream<CardAndScheduledCard> next(User user, DeckModel deck) =>
       FirebaseDatabase.instance
           .reference()
           .child('learning')
@@ -139,23 +139,12 @@ class ScheduledCardModel implements Model {
         if (card.key == null) {
           // Card has been removed but we still have ScheduledCard for it.
           debugPrint('Removing dangling ScheduledCard ${scheduledCard.key}');
-          unawaited((Transaction()..delete(scheduledCard)).commit());
+          unawaited(user.cleanupDanglingScheduledCard(scheduledCard));
           return;
         }
 
         sink.add(CardAndScheduledCard(card, scheduledCard));
       }));
-
-  @override
-  String get rootPath => 'learning/$uid/$deckKey';
-
-  @override
-  Map<String, dynamic> toMap({@required bool isNew}) => {
-        '$rootPath/$key': {
-          'level': 'L$level',
-          'repeatAt': repeatAt.toUtc().millisecondsSinceEpoch,
-        }
-      };
 
   CardReplyModel answer(
       {@required bool knows, @required bool learnBeyondHorizon}) {

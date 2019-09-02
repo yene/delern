@@ -52,6 +52,7 @@ class _DeckSharingState extends State<DeckSharing> {
             Builder(
               builder: (context) => SlowOperationWidget(
                 (cb) => IconButton(
+                    tooltip: localizations.of(context).shareDeckTooltip,
                     icon: const Icon(Icons.send),
                     onPressed: _isEmailCorrect()
                         ? cb(() => _shareDeck(_accessValue, context))

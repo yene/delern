@@ -660,5 +660,47 @@
     "type": "text",
     "placeholders": {
     }
+  },
+  "createDeckTooltip": "Создать список",
+  "@createDeckTooltip": {
+    "description": "Create Deck tooltip",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "menuTooltip": "Меню",
+  "@menuTooltip": {
+    "description": "Menu tooltip",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "deckSettingsTooltip": "Настройки списка",
+  "@deckSettingsTooltip": {
+    "description": "Settings of deck",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "shareDeckTooltip": "Поделиться списком",
+  "@shareDeckTooltip": {
+    "description": "Share deck tooltip",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "deleteCardTooltip": "Удалить карточку",
+  "@deleteCardTooltip": {
+    "description": "Tooltip for deleting card",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "editCardTooltip": "Редактировать карточку",
+  "@editCardTooltip": {
+    "description": "Tooltip for editing card",
+    "type": "text",
+    "placeholders": {
+    }
   }
 }

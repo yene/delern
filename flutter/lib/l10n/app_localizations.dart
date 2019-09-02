@@ -608,4 +608,40 @@ To see the source code for this app, please visit the [Delern GitHub repo](https
         name: 'other',
         desc: 'Other',
       );
+
+  String get createDeckTooltip => Intl.message(
+        'Create deck',
+        name: 'createDeckTooltip',
+        desc: 'Create Deck tooltip',
+      );
+
+  String get menuTooltip => Intl.message(
+        'Menu',
+        name: 'menuTooltip',
+        desc: 'Menu tooltip',
+      );
+
+  String get deckSettingsTooltip => Intl.message(
+        'Settings of deck',
+        name: 'deckSettingsTooltip',
+        desc: 'Tooltip for settings of deck',
+      );
+
+  String get shareDeckTooltip => Intl.message(
+        'Share deck',
+        name: 'shareDeckTooltip',
+        desc: 'Tooltip for deck sharing',
+      );
+
+  String get deleteCardTooltip => Intl.message(
+        'Delete card',
+        name: 'deleteCardTooltip',
+        desc: 'Tooltip for deleting card',
+      );
+
+  String get editCardTooltip => Intl.message(
+        'Edit card',
+        name: 'editCardTooltip',
+        desc: 'Tooltip for editing card',
+      );
 }

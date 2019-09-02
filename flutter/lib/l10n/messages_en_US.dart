@@ -60,9 +60,13 @@ class MessageLookup extends MessageLookupByLibrary {
             "You have unsaved changes. Would you like to continue editing?"),
         "continueLearningQuestion": m1,
         "couldNotLaunchUrl": m2,
+        "createDeckTooltip":
+            MessageLookupByLibrary.simpleMessage("Create deck"),
         "deck": MessageLookupByLibrary.simpleMessage("Deck"),
         "deckDeletedUserMessage":
             MessageLookupByLibrary.simpleMessage("Deck was deleted"),
+        "deckSettingsTooltip":
+            MessageLookupByLibrary.simpleMessage("Settings of deck"),
         "deckType": MessageLookupByLibrary.simpleMessage("Deck Type"),
         "decksIntroDescription": MessageLookupByLibrary.simpleMessage(
             "Create decks with flashcards"),
@@ -70,6 +74,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "delete": MessageLookupByLibrary.simpleMessage("Delete"),
         "deleteCardQuestion": MessageLookupByLibrary.simpleMessage(
             "Do you want to delete this card?"),
+        "deleteCardTooltip":
+            MessageLookupByLibrary.simpleMessage("Delete card"),
         "deleteDeckButton": MessageLookupByLibrary.simpleMessage("Delete Deck"),
         "deleteDeckOwnerAccessQuestion": MessageLookupByLibrary.simpleMessage(
             "The deck, all cards and learning history will be removed.\n\nIf you have shared this deck with other users, it will also be removed from all users it is shared with. Do you want to delete deck?"),
@@ -80,6 +86,7 @@ class MessageLookup extends MessageLookupByLibrary {
             "I do not want any of these features"),
         "done": MessageLookupByLibrary.simpleMessage("Done"),
         "edit": MessageLookupByLibrary.simpleMessage("Edit"),
+        "editCardTooltip": MessageLookupByLibrary.simpleMessage("Edit card"),
         "editCardsDeckMenu": MessageLookupByLibrary.simpleMessage("Edit Cards"),
         "emailAddressHint":
             MessageLookupByLibrary.simpleMessage("Email address"),
@@ -107,6 +114,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "listOFDecksScreenTitle":
             MessageLookupByLibrary.simpleMessage("List of decks"),
         "markdown": MessageLookupByLibrary.simpleMessage("Markdown"),
+        "menuTooltip": MessageLookupByLibrary.simpleMessage("Menu"),
         "navigationDrawerAbout": MessageLookupByLibrary.simpleMessage("About"),
         "navigationDrawerCommunicateGroup":
             MessageLookupByLibrary.simpleMessage("Communicate"),
@@ -153,6 +161,7 @@ class MessageLookup extends MessageLookupByLibrary {
             "Server temporarily unavailable, please try again later"),
         "settingsDeckMenu": MessageLookupByLibrary.simpleMessage("Settings"),
         "shareDeckMenu": MessageLookupByLibrary.simpleMessage("Share"),
+        "shareDeckTooltip": MessageLookupByLibrary.simpleMessage("Share deck"),
         "shareIntroDescription": MessageLookupByLibrary.simpleMessage(
             "Share decks with friends and colleagues to learn together"),
         "shareIntroTitle": MessageLookupByLibrary.simpleMessage("Share decks"),

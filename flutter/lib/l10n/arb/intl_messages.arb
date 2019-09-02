@@ -1,6 +1,6 @@
 {
   "@@locale": "en_US",
-  "@@last_modified": "2019-08-31T14:55:28.047972",
+  "@@last_modified": "2019-09-02T11:31:48.152927",
   "navigationDrawerSignOut": "Sign Out",
   "@navigationDrawerSignOut": {
     "description": "Sign Out in Navigation Drawer",
@@ -658,6 +658,48 @@
   "other": "other",
   "@other": {
     "description": "Other",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "createDeckTooltip": "Create deck",
+  "@createDeckTooltip": {
+    "description": "Create Deck tooltip",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "menuTooltip": "Menu",
+  "@menuTooltip": {
+    "description": "Menu tooltip",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "deckSettingsTooltip": "Settings of deck",
+  "@deckSettingsTooltip": {
+    "description": "Tooltip for settings of deck",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "shareDeckTooltip": "Share deck",
+  "@shareDeckTooltip": {
+    "description": "Tooltip for deck sharing",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "deleteCardTooltip": "Delete card",
+  "@deleteCardTooltip": {
+    "description": "Tooltip for deleting card",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "editCardTooltip": "Edit card",
+  "@editCardTooltip": {
+    "description": "Tooltip for editing card",
     "type": "text",
     "placeholders": {
     }

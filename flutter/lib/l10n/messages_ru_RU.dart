@@ -65,9 +65,13 @@ class MessageLookup extends MessageLookupByLibrary {
             "У Вас есть несохраненные изменения. Хотите продолжить редактирование?"),
         "continueLearningQuestion": m1,
         "couldNotLaunchUrl": m2,
+        "createDeckTooltip":
+            MessageLookupByLibrary.simpleMessage("Создать список"),
         "deck": MessageLookupByLibrary.simpleMessage("Список"),
         "deckDeletedUserMessage":
             MessageLookupByLibrary.simpleMessage("Список был удален"),
+        "deckSettingsTooltip":
+            MessageLookupByLibrary.simpleMessage("Настройки списка"),
         "deckType": MessageLookupByLibrary.simpleMessage("Тип списка"),
         "decksIntroDescription": MessageLookupByLibrary.simpleMessage(
             "Создавайте списки с карточками"),
@@ -76,6 +80,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "delete": MessageLookupByLibrary.simpleMessage("Удалить"),
         "deleteCardQuestion": MessageLookupByLibrary.simpleMessage(
             "Вы хотите удалить эту карточку?"),
+        "deleteCardTooltip":
+            MessageLookupByLibrary.simpleMessage("Удалить карточку"),
         "deleteDeckButton":
             MessageLookupByLibrary.simpleMessage("Удалить список"),
         "deleteDeckOwnerAccessQuestion": MessageLookupByLibrary.simpleMessage(
@@ -87,6 +93,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "Мне не нужны все эти функции "),
         "done": MessageLookupByLibrary.simpleMessage("Закрыть"),
         "edit": MessageLookupByLibrary.simpleMessage("Редактировать"),
+        "editCardTooltip":
+            MessageLookupByLibrary.simpleMessage("Редактировать карточку"),
         "editCardsDeckMenu":
             MessageLookupByLibrary.simpleMessage("Редактировать карточки"),
         "emailAddressHint":
@@ -118,6 +126,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "listOFDecksScreenTitle":
             MessageLookupByLibrary.simpleMessage("Список папок"),
         "markdown": MessageLookupByLibrary.simpleMessage("Маркдаун"),
+        "menuTooltip": MessageLookupByLibrary.simpleMessage("Меню"),
         "navigationDrawerAbout":
             MessageLookupByLibrary.simpleMessage("О приложении"),
         "navigationDrawerCommunicateGroup":
@@ -164,6 +173,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "Сервер временно недоступен, пожалуйста, попробуйте позже"),
         "settingsDeckMenu": MessageLookupByLibrary.simpleMessage("Настройки"),
         "shareDeckMenu": MessageLookupByLibrary.simpleMessage("Поделиться"),
+        "shareDeckTooltip":
+            MessageLookupByLibrary.simpleMessage("Поделиться списком"),
         "shareIntroDescription": MessageLookupByLibrary.simpleMessage(
             "Делитесь списками с друзьями и коллегами, чтобы изучать вместе"),
         "shareIntroTitle":

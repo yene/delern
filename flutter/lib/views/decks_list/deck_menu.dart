@@ -46,6 +46,7 @@ class _DeckMenuState extends State<DeckMenu>
 
   @override
   Widget build(BuildContext context) => IconButton(
+        tooltip: '${widget.deck.name} ${localizations.of(context).menuTooltip}',
         padding: const EdgeInsets.all(app_styles.kIconDeckPadding),
         iconSize: widget.buttonSize,
         color: app_styles.kIconColor,

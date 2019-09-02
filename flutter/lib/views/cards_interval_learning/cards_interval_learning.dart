@@ -152,6 +152,7 @@ class CardsIntervalLearningState extends State<CardsIntervalLearning> {
 
   Widget _buildPopupMenu() => Builder(
         builder: (context) => PopupMenuButton<_CardMenuItemType>(
+          tooltip: localizations.of(context).menuTooltip,
           onSelected: (itemType) => _onCardMenuItemSelected(context, itemType),
           itemBuilder: (context) => _buildMenu(context)
               .entries

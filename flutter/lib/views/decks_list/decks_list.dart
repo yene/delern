@@ -308,9 +308,11 @@ class DeckListItemWidget extends StatelessWidget {
   Widget _buildLeading(double size) => IconButton(
         padding: const EdgeInsets.all(app_styles.kIconDeckPadding),
         onPressed: null,
-        icon: Icon(Icons.folder),
+        icon: Icon(
+          Icons.folder,
+          color: app_styles.kIconColor,
+        ),
         iconSize: size,
-        color: app_styles.kIconColor,
       );
 
   Widget _buildTrailing(BuildContext context, double size) => DeckMenu(

@@ -138,9 +138,6 @@ class ScheduledCardModel implements Model {
 
         if (card.key == null) {
           // Card has been removed but we still have ScheduledCard for it.
-
-          // card.key is used within ScheduledCard and must be set.
-          card.key = latestScheduledCard.key;
           debugPrint('Removing dangling ScheduledCard ${scheduledCard.key}');
           unawaited((Transaction()..delete(scheduledCard)).commit());
           return;

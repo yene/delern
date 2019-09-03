@@ -51,7 +51,7 @@ class DataWriter {
     return t.commit();
   }
 
-  Future<void> createOrUpdateCard({
+  Future<void> createCard({
     @required CardModel card,
     bool addReversed = false,
   }) {
@@ -73,6 +73,9 @@ class DataWriter {
     }
     return t.commit();
   }
+
+  Future<void> updateCard({@required CardModel card}) =>
+      (Transaction()..save(card)).commit();
 
   Future<void> deleteCard({@required CardModel card}) => (Transaction()
         ..delete(card)

@@ -74,10 +74,13 @@ class CardCreateUpdateBloc extends ScreenBloc {
     });
   }
 
-  Future<void> _saveCard() {
-    logCardCreate(_cardModel.deckKey);
-    return user.createOrUpdateCard(
-        card: _cardModel, addReversed: _addReversedCard);
+  Future<void> _createOrUpdateCard() {
+    if (isAddOperation) {
+      logCardCreate(_cardModel.deckKey);
+      return user.createCard(card: _cardModel, addReversed: _addReversedCard);
+    } else {
+      return user.updateCard(card: _cardModel);
+    }
   }
 
   Future<void> _disableUI(Future<void> Function() f) async {
@@ -96,7 +99,7 @@ class CardCreateUpdateBloc extends ScreenBloc {
       ..front = _frontText.trim()
       ..back = _backText.trim();
     try {
-      await _disableUI(_saveCard);
+      await _disableUI(_createOrUpdateCard);
       if (!isAddOperation) {
         notifyPop();
         return;

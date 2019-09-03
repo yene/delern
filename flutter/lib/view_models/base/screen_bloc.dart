@@ -47,10 +47,8 @@ abstract class ScreenBloc {
 
   /// Call when any errors occur
   @protected
-  void notifyErrorOccurred(Exception e) {
-    _doShowErrorController
-        .add(UserMessages.formUserFriendlyErrorMessage(locale, e));
-  }
+  void notifyErrorOccurred(e) => _doShowErrorController
+      .add(UserMessages.formUserFriendlyErrorMessage(locale, e));
 
   /// Call to show message to user
   @protected

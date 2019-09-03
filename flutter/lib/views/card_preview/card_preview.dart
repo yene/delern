@@ -1,9 +1,9 @@
 import 'package:delern_flutter/flutter/localization.dart' as localizations;
 import 'package:delern_flutter/models/card_model.dart';
 import 'package:delern_flutter/models/deck_model.dart';
+import 'package:delern_flutter/routes.dart';
 import 'package:delern_flutter/view_models/card_preview_bloc.dart';
 import 'package:delern_flutter/views/base/screen_bloc_view.dart';
-import 'package:delern_flutter/views/card_create_update/card_create_update.dart';
 import 'package:delern_flutter/views/helpers/card_background_specifier.dart';
 import 'package:delern_flutter/views/helpers/card_display_widget.dart';
 import 'package:delern_flutter/views/helpers/save_updates_dialog.dart';
@@ -29,7 +29,8 @@ class _CardPreviewState extends State<CardPreview> {
               CardPreviewBloc(user: user, card: widget.card, deck: widget.deck);
           bloc.doShowDeleteDialog
               .listen((message) => _showDeleteCardDialog(bloc, message));
-          bloc.doEditCard.listen((_) => _editCard());
+          bloc.doEditCard.listen(
+              (_) => openEditCardScreen(context, widget.deck, widget.card));
           return bloc;
         },
         appBarBuilder: (bloc) => AppBar(
@@ -82,16 +83,5 @@ class _CardPreviewState extends State<CardPreview> {
     if (deleteCardDialog) {
       bloc.onDeleteCard.add(null);
     }
-  }
-
-  void _editCard() {
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-            // 'name' is used by Firebase Analytics to log events.
-            // TODO(dotdoom): consider better route names.
-            settings: const RouteSettings(name: '/cards/edit'),
-            builder: (context) =>
-                CardCreateUpdate(card: widget.card, deck: widget.deck)));
   }
 }

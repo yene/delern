@@ -5,8 +5,8 @@ import 'package:delern_flutter/flutter/styles.dart' as app_styles;
 import 'package:delern_flutter/flutter/user_messages.dart';
 import 'package:delern_flutter/models/deck_access_model.dart';
 import 'package:delern_flutter/models/deck_model.dart';
+import 'package:delern_flutter/routes.dart';
 import 'package:delern_flutter/view_models/cards_interval_learning_view_model.dart';
-import 'package:delern_flutter/views/card_create_update/card_create_update.dart';
 import 'package:delern_flutter/views/helpers/card_background_specifier.dart';
 import 'package:delern_flutter/views/helpers/flip_card_widget.dart';
 import 'package:delern_flutter/views/helpers/progress_indicator_widget.dart';
@@ -204,14 +204,7 @@ class CardsIntervalLearningState extends State<CardsIntervalLearning> {
     switch (item) {
       case _CardMenuItemType.edit:
         if (widget.deck.access != AccessType.read) {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  settings: const RouteSettings(name: '/cards/edit'),
-                  builder: (context) => CardCreateUpdate(
-                        card: _viewModel.card,
-                        deck: widget.deck,
-                      )));
+          openEditCardScreen(context, widget.deck, _viewModel.card);
         } else {
           UserMessages.showMessage(Scaffold.of(context),
               localizations.of(context).noEditingWithReadAccessUserMessage);

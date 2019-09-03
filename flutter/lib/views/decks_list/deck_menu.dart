@@ -1,13 +1,10 @@
 import 'package:delern_flutter/flutter/localization.dart' as localizations;
 import 'package:delern_flutter/flutter/styles.dart' as app_styles;
 import 'package:delern_flutter/flutter/user_messages.dart';
-import 'package:delern_flutter/models/card_model.dart';
 import 'package:delern_flutter/models/deck_access_model.dart';
 import 'package:delern_flutter/models/deck_model.dart';
 import 'package:delern_flutter/remote/analytics.dart';
-import 'package:delern_flutter/views/card_create_update/card_create_update.dart';
-import 'package:delern_flutter/views/deck_sharing/deck_sharing.dart';
-import 'package:delern_flutter/views/edit_deck/edit_deck.dart';
+import 'package:delern_flutter/routes.dart';
 import 'package:delern_flutter/views/helpers/sign_in_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:pedantic/pedantic.dart';
@@ -74,14 +71,7 @@ class _DeckMenuState extends State<DeckMenu>
     switch (item) {
       case _DeckMenuItemType.add:
         if (allowEdit) {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  settings: const RouteSettings(name: '/cards/new'),
-                  builder: (context) => CardCreateUpdate(
-                        card: CardModel(deckKey: widget.deck.key),
-                        deck: widget.deck,
-                      )));
+          openNewCardScreen(context, widget.deck);
         } else {
           UserMessages.showMessage(Scaffold.of(context),
               localizations.of(context).noAddingWithReadAccessUserMessage);
@@ -89,23 +79,11 @@ class _DeckMenuState extends State<DeckMenu>
         break;
       case _DeckMenuItemType.edit:
         unawaited(logDeckEditMenu(widget.deck.key));
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-              settings: const RouteSettings(name: '/decks/view'),
-              builder: (context) => EditDeck(
-                    deck: widget.deck,
-                  )),
-        );
+        openEditDeckScreen(context, widget.deck);
         break;
       case _DeckMenuItemType.share:
         if (widget.deck.access == AccessType.owner) {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-                settings: const RouteSettings(name: '/decks/share'),
-                builder: (context) => DeckSharing(widget.deck)),
-          );
+          openShareDeckScreen(context, widget.deck);
         } else {
           UserMessages.showMessage(Scaffold.of(context),
               localizations.of(context).noSharingAccessUserMessage);

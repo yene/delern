@@ -6,10 +6,9 @@ import 'package:delern_flutter/flutter/user_messages.dart';
 import 'package:delern_flutter/models/card_model.dart';
 import 'package:delern_flutter/models/deck_access_model.dart';
 import 'package:delern_flutter/models/deck_model.dart';
+import 'package:delern_flutter/routes.dart';
 import 'package:delern_flutter/view_models/edit_bloc.dart';
 import 'package:delern_flutter/views/base/screen_bloc_view.dart';
-import 'package:delern_flutter/views/card_create_update/card_create_update.dart';
-import 'package:delern_flutter/views/card_preview/card_preview.dart';
 import 'package:delern_flutter/views/edit_deck/deck_settings_widget.dart';
 import 'package:delern_flutter/views/edit_deck/scroll_to_beginning_list_widget.dart';
 import 'package:delern_flutter/views/helpers/arrow_to_fab_widget.dart';
@@ -171,14 +170,7 @@ class _EditDeckState extends State<EditDeck> {
           key: fabKey,
           onPressed: () {
             if (widget.deck.access != AccessType.read) {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      settings: const RouteSettings(name: '/cards/new'),
-                      builder: (context) => CardCreateUpdate(
-                            card: CardModel(deckKey: widget.deck.key),
-                            deck: widget.deck,
-                          )));
+              openNewCardScreen(context, widget.deck);
             } else {
               UserMessages.showMessage(Scaffold.of(context),
                   localizations.of(context).noAddingWithReadAccessUserMessage);
@@ -227,14 +219,7 @@ class CardItemWidget extends StatelessWidget {
             elevation: app_styles.kItemElevation,
             child: InkWell(
               splashColor: Theme.of(context).splashColor,
-              onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      settings: const RouteSettings(name: '/cards/preview'),
-                      builder: (context) => CardPreview(
-                            card: card,
-                            deck: deck,
-                          ))),
+              onTap: () => openPreviewCardScreen(context, deck, card),
               child: Container(
                 decoration: BoxDecoration(
                     gradient: specifyEditCardBackgroundGradient(

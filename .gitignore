@@ -43,6 +43,8 @@ vendor
 
 # Local configuration file (sdk path, etc)
 local.properties
+#Local iOS configuration file
+/flutter/ios/Flutter/flutter_export_environment.sh
 
 # firebase-tools npm package output
 firebase-debug.log

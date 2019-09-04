@@ -82,7 +82,7 @@ class CardsIntervalLearningState extends State<CardsIntervalLearning> {
       }
     },
         // Tell caller that no cards were available,
-        onDone: () => Navigator.of(context).pop(false));
+        onDone: () => Navigator.of(context).pop());
 
     return Scaffold(
       appBar: AppBar(

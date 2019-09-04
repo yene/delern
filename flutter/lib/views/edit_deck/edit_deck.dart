@@ -113,7 +113,7 @@ class _EditDeckState extends State<EditDeck> {
         maxLines: null,
         keyboardType: TextInputType.multiline,
         controller: _deckNameController,
-        style: app_styles.primaryText,
+        style: app_styles.editDeckText,
         onChanged: (text) {
           setState(() {
             bloc.onDeckName.add(text);

@@ -6,6 +6,7 @@ import 'package:delern_flutter/flutter/user_messages.dart';
 import 'package:delern_flutter/models/card_model.dart';
 import 'package:delern_flutter/models/deck_access_model.dart';
 import 'package:delern_flutter/models/deck_model.dart';
+import 'package:delern_flutter/models/scheduled_card_model.dart';
 import 'package:delern_flutter/remote/analytics.dart';
 import 'package:delern_flutter/view_models/decks_list_bloc.dart';
 import 'package:delern_flutter/views/card_create_update/card_create_update.dart';
@@ -171,9 +172,7 @@ class DeckListItemWidget extends StatelessWidget {
             child: Material(
               elevation: app_styles.kItemElevation,
               child: InkWell(
-                onTap: () async {
-                  await _showLearningDialog(context);
-                },
+                onTap: () => _showLearningDialog(context),
                 child: Row(
                   children: <Widget>[
                     _buildLeading(iconSize),
@@ -190,8 +189,17 @@ class DeckListItemWidget extends StatelessWidget {
     );
   }
 
-  Future _showLearningDialog(BuildContext context) async {
-    await showDialog(
+  Future<void> _showLearningDialog(BuildContext context) async {
+    if (await ScheduledCardModel.next(deck).isEmpty) {
+      // If deck is empty, open a screen with adding cards
+      return Navigator.push(
+          context,
+          MaterialPageRoute(
+              settings: const RouteSettings(name: '/cards/new'),
+              builder: (context) => CardCreateUpdate(
+                  card: CardModel(deckKey: deck.key), deck: deck)));
+    }
+    return showDialog(
         context: context,
         barrierDismissible: true,
         builder: (context) => Dialog(
@@ -217,10 +225,10 @@ class DeckListItemWidget extends StatelessWidget {
                           tooltip:
                               localizations.of(context).intervalLearningTooltip,
                           icon: Icons.autorenew,
-                          onTap: () async {
+                          onTap: () {
                             // Close dialog
                             Navigator.pop(context);
-                            await _learnCards(
+                            Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                   settings:
@@ -237,10 +245,10 @@ class DeckListItemWidget extends StatelessWidget {
                           tooltip:
                               localizations.of(context).viewLearningTooltip,
                           icon: Icons.remove_red_eye,
-                          onTap: () async {
+                          onTap: () {
                             // Close dialog
                             Navigator.pop(context);
-                            await _learnCards(
+                            Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                   settings: const RouteSettings(
@@ -256,20 +264,6 @@ class DeckListItemWidget extends StatelessWidget {
                 ],
               ),
             ));
-  }
-
-  Future<void> _learnCards(
-      BuildContext context, MaterialPageRoute route) async {
-    final anyCardsShown = await Navigator.push(context, route);
-    if (anyCardsShown == false) {
-      // If deck is empty, open a screen with adding cards
-      unawaited(Navigator.push(
-          context,
-          MaterialPageRoute(
-              settings: const RouteSettings(name: '/cards/new'),
-              builder: (context) => CardCreateUpdate(
-                  card: CardModel(deckKey: deck.key), deck: deck))));
-    }
   }
 
   Widget _buildContent(BuildContext context) {

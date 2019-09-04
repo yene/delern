@@ -3,19 +3,15 @@ import 'dart:math';
 import 'package:delern_flutter/flutter/localization.dart' as localizations;
 import 'package:delern_flutter/flutter/styles.dart' as app_styles;
 import 'package:delern_flutter/flutter/user_messages.dart';
-import 'package:delern_flutter/models/card_model.dart';
 import 'package:delern_flutter/models/deck_access_model.dart';
 import 'package:delern_flutter/models/deck_model.dart';
 import 'package:delern_flutter/models/scheduled_card_model.dart';
 import 'package:delern_flutter/remote/analytics.dart';
+import 'package:delern_flutter/routes.dart';
 import 'package:delern_flutter/view_models/decks_list_bloc.dart';
-import 'package:delern_flutter/views/card_create_update/card_create_update.dart';
-import 'package:delern_flutter/views/cards_interval_learning/cards_interval_learning.dart';
-import 'package:delern_flutter/views/cards_view_learning/cards_view_learning.dart';
 import 'package:delern_flutter/views/decks_list/create_deck_widget.dart';
 import 'package:delern_flutter/views/decks_list/deck_menu.dart';
 import 'package:delern_flutter/views/decks_list/navigation_drawer.dart';
-import 'package:delern_flutter/views/edit_deck/edit_deck.dart';
 import 'package:delern_flutter/views/helpers/arrow_to_fab_widget.dart';
 import 'package:delern_flutter/views/helpers/empty_list_message_widget.dart';
 import 'package:delern_flutter/views/helpers/learning_method_widget.dart';
@@ -192,12 +188,7 @@ class DeckListItemWidget extends StatelessWidget {
   Future<void> _showLearningDialog(BuildContext context) async {
     if (await ScheduledCardModel.next(deck).isEmpty) {
       // If deck is empty, open a screen with adding cards
-      return Navigator.push(
-          context,
-          MaterialPageRoute(
-              settings: const RouteSettings(name: '/cards/new'),
-              builder: (context) => CardCreateUpdate(
-                  card: CardModel(deckKey: deck.key), deck: deck)));
+      return openNewCardScreen(context, deck);
     }
     return showDialog(
         context: context,
@@ -228,16 +219,7 @@ class DeckListItemWidget extends StatelessWidget {
                           onTap: () {
                             // Close dialog
                             Navigator.pop(context);
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  settings:
-                                      const RouteSettings(name: '/decks/learn'),
-                                  // TODO(dotdoom): pass scheduled cards list to
-                                  //  CardsLearning.
-                                  builder: (context) =>
-                                      CardsIntervalLearning(deck: deck),
-                                ));
+                            openLearnCardIntervalScreen(context, deck);
                           },
                         ),
                         LearningMethodWidget(
@@ -248,14 +230,7 @@ class DeckListItemWidget extends StatelessWidget {
                           onTap: () {
                             // Close dialog
                             Navigator.pop(context);
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  settings: const RouteSettings(
-                                      name: '/decks/learn-view'),
-                                  builder: (context) =>
-                                      CardsReviewLearning(deck: deck),
-                                ));
+                            openLearnCardViewScreen(context, deck);
                           },
                         ),
                       ],
@@ -398,14 +373,7 @@ class EditDeleteDismissible extends StatelessWidget {
             return onDeleteDismiss();
           }
           unawaited(logDeckEditSwipe(deck.key));
-          unawaited(Navigator.push(
-            context,
-            MaterialPageRoute(
-                settings: const RouteSettings(name: '/decks/view'),
-                builder: (context) => EditDeck(
-                      deck: deck,
-                    )),
-          ));
+          unawaited(openEditDeckScreen(context, deck));
           return false;
         },
         key: Key(deck.key),

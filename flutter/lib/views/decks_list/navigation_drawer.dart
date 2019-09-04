@@ -4,11 +4,11 @@ import 'package:delern_flutter/flutter/localization.dart' as localizations;
 import 'package:delern_flutter/flutter/styles.dart' as app_styles;
 import 'package:delern_flutter/remote/analytics.dart';
 import 'package:delern_flutter/remote/auth.dart';
+import 'package:delern_flutter/routes.dart';
 import 'package:delern_flutter/views/helpers/email_launcher.dart';
 import 'package:delern_flutter/views/helpers/save_updates_dialog.dart';
 import 'package:delern_flutter/views/helpers/send_invite.dart';
 import 'package:delern_flutter/views/helpers/sign_in_widget.dart';
-import 'package:delern_flutter/views/support_dev/support_development.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
@@ -61,11 +61,7 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
             Text(localizations.of(context).navigationDrawerSupportDevelopment),
         onTap: () {
           Navigator.pop(context);
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  settings: const RouteSettings(name: '/support'),
-                  builder: (context) => SupportDevelopment()));
+          openSupportDevelopmentScreen(context);
         },
       ),
       const Divider(height: 1),

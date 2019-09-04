@@ -19,7 +19,7 @@ import 'package:delern_flutter/views/helpers/search_bar_widget.dart';
 import 'package:flutter/material.dart';
 
 const int _kUpButtonVisibleRow = 20;
-const double _kDividerPadding = 24;
+const double _kDividerPadding = 12;
 
 class EditDeck extends StatefulWidget {
   final DeckModel deck;
@@ -72,8 +72,11 @@ class _EditDeckState extends State<EditDeck> {
           children: <Widget>[
             _buildEditDeck(bloc),
             _buildCardsInDeck(bloc),
+            const Padding(
+              padding: EdgeInsets.only(bottom: _kDividerPadding),
+            ),
             const Divider(
-              height: _kDividerPadding,
+              height: 0,
             ),
             Expanded(child: _buildCardList(bloc)),
           ],
@@ -139,8 +142,23 @@ class _EditDeckState extends State<EditDeck> {
     return ScrollToBeginningListWidget(
       builder: (controller) => ObservingAnimatedListWidget<CardModel>(
         list: bloc.list,
-        itemBuilder: (context, item, animation, index) =>
-            _buildCardItem(item, cardVerticalPadding),
+        itemBuilder: (context, item, animation, index) {
+          final card = _buildCardItem(item, cardVerticalPadding);
+          if (index == 0) {
+            return Padding(
+              // Space between 1st element and border must be 2 times indent
+              // between elements. Space between 2 elem = 2*cardVerticalPadding
+              // 1st indent is at the end of 1st elem, 2nd indent is at
+              // the beginning 2d element. 2 times more == 4*cardVerticalPadding
+              // we have already 1 indent at the beginning. Therefore
+              // we need 3 extra
+              padding: EdgeInsets.only(top: 3 * cardVerticalPadding),
+              child: card,
+            );
+          } else {
+            return card;
+          }
+        },
         emptyMessageBuilder: () => ArrowToFloatingActionButtonWidget(
             fabKey: fabKey,
             child: EmptyListMessageWidget(

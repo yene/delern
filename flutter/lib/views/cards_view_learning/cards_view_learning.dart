@@ -37,7 +37,7 @@ class _CardsReviewLearningState extends State<CardsReviewLearning>
   }
 
   @override
-  Widget build(BuildContext context) => ScreenBlocView(
+  Widget build(BuildContext context) => ScreenBlocView<CardsViewLearningBloc>(
         blocBuilder: (user) =>
             CardsViewLearningBloc(deck: widget.deck, user: user),
         appBarBuilder: (bloc) => AppBar(

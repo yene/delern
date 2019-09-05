@@ -45,15 +45,12 @@ class ScheduledCardModel implements Model {
     Duration(days: 60),
   ];
 
-  String uid;
   String deckKey;
   String key;
   int level;
   DateTime repeatAt;
 
-  ScheduledCardModel({@required this.deckKey, @required this.uid})
-      : assert(deckKey != null),
-        assert(uid != null) {
+  ScheduledCardModel({@required this.deckKey}) : assert(deckKey != null) {
     level = 0;
     repeatAt = DateTime.fromMillisecondsSinceEpoch(0);
   }
@@ -61,10 +58,8 @@ class ScheduledCardModel implements Model {
   ScheduledCardModel._fromSnapshot({
     @required this.key,
     @required this.deckKey,
-    @required this.uid,
     @required Map value,
-  })  : assert(uid != null),
-        assert(deckKey != null),
+  })  : assert(deckKey != null),
         assert(key != null) {
     if (value == null) {
       key = null;
@@ -87,7 +82,7 @@ class ScheduledCardModel implements Model {
       FirebaseDatabase.instance
           .reference()
           .child('learning')
-          .child(deck.uid)
+          .child(user.uid)
           .child(deck.key)
           .orderByChild('repeatAt')
           // Need at least 2 because of how Firebase local cache works.
@@ -131,7 +126,6 @@ class ScheduledCardModel implements Model {
             await CardModel.get(deckKey: deck.key, key: latestScheduledCard.key)
                 .first;
         final scheduledCard = ScheduledCardModel._fromSnapshot(
-            uid: deck.uid,
             key: latestScheduledCard.key,
             deckKey: deck.key,
             value: latestScheduledCard.value);
@@ -149,7 +143,6 @@ class ScheduledCardModel implements Model {
   CardReplyModel answer(
       {@required bool knows, @required bool learnBeyondHorizon}) {
     final cv = (CardReplyModelBuilder()
-          ..uid = uid
           ..cardKey = key
           ..deckKey = deckKey
           ..reply = knows
@@ -182,7 +175,6 @@ class ScheduledCardModel implements Model {
                     .map((entry) => ScheduledCardModel._fromSnapshot(
                           key: entry.key,
                           deckKey: deckKey,
-                          uid: uid,
                           value: entry.value,
                         ))));
           },

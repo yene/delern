@@ -34,7 +34,7 @@ class LearningViewModel {
     logStartLearning(deck.key);
     return StreamMuxer({
       LearningUpdateType.deckUpdate:
-          DeckModel.get(key: deck.key, uid: deck.uid).map((d) => _deck = d),
+          DeckModel.get(key: deck.key, uid: user.uid).map((d) => _deck = d),
       LearningUpdateType.scheduledCardUpdate:
           ScheduledCardModel.next(user, deck).map((casc) {
         _card = casc.card;

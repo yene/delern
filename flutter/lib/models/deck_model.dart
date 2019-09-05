@@ -19,9 +19,8 @@ class DeckModel implements Model {
   AccessType access;
   DateTime lastSyncAt;
   String category;
-  String uid;
 
-  DeckModel({@required this.uid}) : assert(uid != null) {
+  DeckModel() {
     lastSyncAt = DateTime.fromMillisecondsSinceEpoch(0);
     markdown = false;
     type = DeckType.basic;
@@ -30,8 +29,7 @@ class DeckModel implements Model {
 
   // We expect this to be called often and optimize for performance.
   DeckModel.copyFrom(DeckModel other)
-      : uid = other.uid,
-        key = other.key,
+      : key = other.key,
         name = other.name,
         markdown = other.markdown,
         type = other.type,
@@ -41,11 +39,9 @@ class DeckModel implements Model {
         access = other.access;
 
   DeckModel._fromSnapshot({
-    @required this.uid,
     @required this.key,
     @required Map value,
-  })  : assert(uid != null),
-        assert(key != null) {
+  }) : assert(key != null) {
     if (value == null) {
       key = null;
       return;
@@ -69,7 +65,6 @@ class DeckModel implements Model {
           .child(key)
           .onValue
           .map((evt) => DeckModel._fromSnapshot(
-                uid: uid,
                 key: key,
                 value: evt.snapshot.value,
               ));
@@ -89,7 +84,7 @@ class DeckModel implements Model {
             .orderByKey(),
         snapshotParser: (key, value) {
           _keepDeckSynced(uid, key);
-          return DeckModel._fromSnapshot(uid: uid, key: key, value: value);
+          return DeckModel._fromSnapshot(key: key, value: value);
         });
   }
 

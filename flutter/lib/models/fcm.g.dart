@@ -10,8 +10,6 @@ class _$FCM extends FCM {
   @override
   final String key;
   @override
-  final String uid;
-  @override
   final String name;
   @override
   final String language;
@@ -19,12 +17,9 @@ class _$FCM extends FCM {
   factory _$FCM([void Function(FCMBuilder) updates]) =>
       (new FCMBuilder()..update(updates)).build();
 
-  _$FCM._({this.key, this.uid, this.name, this.language}) : super._() {
+  _$FCM._({this.key, this.name, this.language}) : super._() {
     if (key == null) {
       throw new BuiltValueNullFieldError('FCM', 'key');
-    }
-    if (uid == null) {
-      throw new BuiltValueNullFieldError('FCM', 'uid');
     }
     if (name == null) {
       throw new BuiltValueNullFieldError('FCM', 'name');
@@ -46,22 +41,20 @@ class _$FCM extends FCM {
     if (identical(other, this)) return true;
     return other is FCM &&
         key == other.key &&
-        uid == other.uid &&
         name == other.name &&
         language == other.language;
   }
 
   @override
   int get hashCode {
-    return $jf($jc($jc($jc($jc(0, key.hashCode), uid.hashCode), name.hashCode),
-        language.hashCode));
+    return $jf(
+        $jc($jc($jc(0, key.hashCode), name.hashCode), language.hashCode));
   }
 
   @override
   String toString() {
     return (newBuiltValueToStringHelper('FCM')
           ..add('key', key)
-          ..add('uid', uid)
           ..add('name', name)
           ..add('language', language))
         .toString();
@@ -74,10 +67,6 @@ class FCMBuilder implements Builder<FCM, FCMBuilder> {
   String _key;
   String get key => _$this._key;
   set key(String key) => _$this._key = key;
-
-  String _uid;
-  String get uid => _$this._uid;
-  set uid(String uid) => _$this._uid = uid;
 
   String _name;
   String get name => _$this._name;
@@ -92,7 +81,6 @@ class FCMBuilder implements Builder<FCM, FCMBuilder> {
   FCMBuilder get _$this {
     if (_$v != null) {
       _key = _$v.key;
-      _uid = _$v.uid;
       _name = _$v.name;
       _language = _$v.language;
       _$v = null;
@@ -116,7 +104,7 @@ class FCMBuilder implements Builder<FCM, FCMBuilder> {
   @override
   _$FCM build() {
     final _$result =
-        _$v ?? new _$FCM._(key: key, uid: uid, name: name, language: language);
+        _$v ?? new _$FCM._(key: key, name: name, language: language);
     replace(_$result);
     return _$result;
   }

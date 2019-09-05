@@ -8,7 +8,6 @@ part 'card_reply_model.g.dart';
 
 abstract class CardReplyModel
     implements Built<CardReplyModel, CardReplyModelBuilder>, ReadonlyModel {
-  String get uid;
   String get deckKey;
 
   // The rest are nullable to create a CardReplyModel for deletion of a deck.

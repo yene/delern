@@ -7,7 +7,6 @@ part 'fcm.g.dart';
 
 abstract class FCM implements Built<FCM, FCMBuilder>, ReadonlyModel {
   String get key;
-  String get uid;
   String get name;
   String get language;
 

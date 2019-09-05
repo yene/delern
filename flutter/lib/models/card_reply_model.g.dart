@@ -8,8 +8,6 @@ part of 'card_reply_model.dart';
 
 class _$CardReplyModel extends CardReplyModel {
   @override
-  final String uid;
-  @override
   final String deckKey;
   @override
   final String cardKey;
@@ -27,17 +25,13 @@ class _$CardReplyModel extends CardReplyModel {
           as _$CardReplyModel;
 
   _$CardReplyModel._(
-      {this.uid,
-      this.deckKey,
+      {this.deckKey,
       this.cardKey,
       this.key,
       this.levelBefore,
       this.reply,
       this.timestamp})
       : super._() {
-    if (uid == null) {
-      throw new BuiltValueNullFieldError('CardReplyModel', 'uid');
-    }
     if (deckKey == null) {
       throw new BuiltValueNullFieldError('CardReplyModel', 'deckKey');
     }
@@ -55,7 +49,6 @@ class _$CardReplyModel extends CardReplyModel {
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
     return other is CardReplyModel &&
-        uid == other.uid &&
         deckKey == other.deckKey &&
         cardKey == other.cardKey &&
         key == other.key &&
@@ -69,9 +62,7 @@ class _$CardReplyModel extends CardReplyModel {
     return $jf($jc(
         $jc(
             $jc(
-                $jc(
-                    $jc($jc($jc(0, uid.hashCode), deckKey.hashCode),
-                        cardKey.hashCode),
+                $jc($jc($jc(0, deckKey.hashCode), cardKey.hashCode),
                     key.hashCode),
                 levelBefore.hashCode),
             reply.hashCode),
@@ -81,7 +72,6 @@ class _$CardReplyModel extends CardReplyModel {
   @override
   String toString() {
     return (newBuiltValueToStringHelper('CardReplyModel')
-          ..add('uid', uid)
           ..add('deckKey', deckKey)
           ..add('cardKey', cardKey)
           ..add('key', key)
@@ -94,18 +84,6 @@ class _$CardReplyModel extends CardReplyModel {
 
 class _$CardReplyModelBuilder extends CardReplyModelBuilder {
   _$CardReplyModel _$v;
-
-  @override
-  String get uid {
-    _$this;
-    return super.uid;
-  }
-
-  @override
-  set uid(String uid) {
-    _$this;
-    super.uid = uid;
-  }
 
   @override
   String get deckKey {
@@ -183,7 +161,6 @@ class _$CardReplyModelBuilder extends CardReplyModelBuilder {
 
   CardReplyModelBuilder get _$this {
     if (_$v != null) {
-      super.uid = _$v.uid;
       super.deckKey = _$v.deckKey;
       super.cardKey = _$v.cardKey;
       super.key = _$v.key;
@@ -212,7 +189,6 @@ class _$CardReplyModelBuilder extends CardReplyModelBuilder {
   _$CardReplyModel build() {
     final _$result = _$v ??
         new _$CardReplyModel._(
-            uid: uid,
             deckKey: deckKey,
             cardKey: cardKey,
             key: key,

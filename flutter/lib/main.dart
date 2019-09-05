@@ -24,6 +24,7 @@ class App extends StatelessWidget {
     var title = 'Delern';
     assert((title = 'Delern DEBUG') != null);
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       // Produce collections of localized values
       localizationsDelegates: [
         AppLocalizationsDelegate(),

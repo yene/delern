@@ -67,3 +67,9 @@ const TextStyle editCardSecondaryText = TextStyle(
   fontWeight: FontWeight.w400,
   color: Colors.black,
 );
+
+final TextStyle editDeckText = TextStyle(
+  fontSize: 24,
+  fontWeight: FontWeight.w400,
+  color: Colors.grey[900],
+);

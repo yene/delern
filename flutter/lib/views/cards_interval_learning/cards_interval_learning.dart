@@ -50,105 +50,106 @@ class CardsIntervalLearningState extends State<CardsIntervalLearning> {
   LearningViewModel _viewModel;
   StreamSubscription<void> _updates;
 
-  final _showReplyButtons = ValueNotifier(false);
+  final _showReplyButtons = ValueNotifier<bool>(false);
 
   @override
   void didChangeDependencies() {
     final user = CurrentUserWidget.of(context).user;
     if (_viewModel?.user != user) {
       _viewModel = LearningViewModel(user: user, deck: widget.deck);
+      _updates?.cancel();
+
+      _updates ??= _viewModel.updates.listen((updateType) {
+        if (!mounted) {
+          return;
+        }
+        if (updateType == LearningUpdateType.scheduledCardUpdate) {
+          _nextCardArrived();
+        } else {
+          // Usually a deck update.
+          setState(() {});
+        }
+      },
+          // Tell caller that no cards were available,
+          onDone: () => Navigator.of(context).pop());
     }
     super.didChangeDependencies();
   }
 
   @override
-  void deactivate() {
+  void dispose() {
     _updates?.cancel();
-    _updates = null;
-    super.deactivate();
+    super.dispose();
   }
 
   @override
-  Widget build(BuildContext context) {
-    _updates ??= _viewModel.updates.listen((updateType) {
-      if (!mounted) {
-        return;
-      }
-      if (updateType == LearningUpdateType.scheduledCardUpdate) {
-        _nextCardArrived();
-      } else {
-        // Usually a deck update.
-        setState(() {});
-      }
-    },
-        // Tell caller that no cards were available,
-        onDone: () => Navigator.of(context).pop());
-
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(_viewModel.deck.name),
-        actions: _viewModel.card == null ? null : <Widget>[_buildPopupMenu()],
-      ),
-      body: _viewModel.card == null
-          ? ProgressIndicatorWidget()
-          : Builder(
-              builder: (context) => Column(
-                children: <Widget>[
-                  Expanded(
-                      child: Padding(
-                    padding: MediaQuery.of(context).orientation ==
-                            Orientation.portrait
-                        ? EdgeInsets.all(MediaQuery.of(context).size.width *
-                            _kCardPaddingRatio)
-                        : EdgeInsets.only(
-                            top: 10,
-                            left: MediaQuery.of(context).size.width *
-                                _kCardPaddingRatio,
-                            right: MediaQuery.of(context).size.width *
-                                _kCardPaddingRatio),
-                    child: FlipCardWidget(
-                      front: _viewModel.card.front,
-                      back: _viewModel.card.back,
-                      isMarkdown: _viewModel.deck.markdown,
-                      gradient: specifyLearnCardBackgroundGradient(
-                          _viewModel.deck.type, _viewModel.card.back),
-                      onFlip: () {
-                        _showReplyButtons.value = true;
-                      },
-                      key: ValueKey(_viewModel.card.key),
-                    ),
-                  )),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 20),
-                    child: ValueListenableBuilder<bool>(
-                      valueListenable: _showReplyButtons,
-                      builder: (context, showReplyButtons, child) =>
-                          showReplyButtons
-                              ? _buildButtons(context)
-                              : ConstrainedBox(
-                                  constraints: _kFloatingButtonHeightConstraint,
-                                ),
-                    ),
-                  ),
-                  Row(
-                    children: <Widget>[
-                      // Use SafeArea to indent the child by the amount
-                      // necessary to avoid The Notch on the iPhone X,
-                      // or other similar creative physical features of
-                      // the display.
-                      SafeArea(
-                        child: Text(
-                          localizations.of(context).watchedCards(_watchedCount),
-                          style: app_styles.secondaryText,
-                        ),
+  Widget build(BuildContext context) => Scaffold(
+        appBar: AppBar(
+          title: Text(_viewModel.deck.name),
+          actions: _viewModel.card == null ? null : <Widget>[_buildPopupMenu()],
+        ),
+        body: _viewModel.card == null
+            ? ProgressIndicatorWidget()
+            : Builder(
+                builder: (context) => Column(
+                  children: <Widget>[
+                    Expanded(
+                        child: Padding(
+                      padding: MediaQuery.of(context).orientation ==
+                              Orientation.portrait
+                          ? EdgeInsets.all(MediaQuery.of(context).size.width *
+                              _kCardPaddingRatio)
+                          : EdgeInsets.only(
+                              top: 10,
+                              left: MediaQuery.of(context).size.width *
+                                  _kCardPaddingRatio,
+                              right: MediaQuery.of(context).size.width *
+                                  _kCardPaddingRatio),
+                      child: FlipCardWidget(
+                        front: _viewModel.card.front,
+                        back: _viewModel.card.back,
+                        isMarkdown: _viewModel.deck.markdown,
+                        gradient: specifyLearnCardBackgroundGradient(
+                            _viewModel.deck.type, _viewModel.card.back),
+                        onFlip: () {
+                          _showReplyButtons.value = true;
+                        },
+                        key: ValueKey(_viewModel.card.key),
                       ),
-                    ],
-                  )
-                ],
+                    )),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 20),
+                      child: ValueListenableBuilder<bool>(
+                        valueListenable: _showReplyButtons,
+                        builder: (context, showReplyButtons, child) =>
+                            showReplyButtons
+                                ? _buildButtons(context)
+                                : ConstrainedBox(
+                                    constraints:
+                                        _kFloatingButtonHeightConstraint,
+                                  ),
+                      ),
+                    ),
+                    Row(
+                      children: <Widget>[
+                        // Use SafeArea to indent the child by the amount
+                        // necessary to avoid The Notch on the iPhone X,
+                        // or other similar creative physical features of
+                        // the display.
+                        SafeArea(
+                          child: Text(
+                            localizations
+                                .of(context)
+                                .watchedCards(_watchedCount),
+                            style: app_styles.secondaryText,
+                          ),
+                        ),
+                      ],
+                    )
+                  ],
+                ),
               ),
-            ),
-    );
-  }
+      );
 
   Widget _buildPopupMenu() => Builder(
         builder: (context) => PopupMenuButton<_CardMenuItemType>(

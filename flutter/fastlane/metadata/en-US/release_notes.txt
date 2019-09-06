@@ -1,0 +1,5 @@
+- New UI for list of decks;
+- New learning method - view all cards;
+- Tap on card to flip it when learning;
+- Deck type settings moved to edit cards screen;
+- Various improvements and bug fixes.

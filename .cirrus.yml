@@ -231,9 +231,7 @@ task:
       bc7655d8560e1f37d3d27df5d3dcba00dd73ac40148c247b]"
   << : *FLUTTER_AND_FASTLANE_TASK_TEMPLATE
   install_gcloud_script:
-  - >
-    curl -sSL https://sdk.cloud.google.com |
-    bash -s -- --disable-prompts --install-dir="${HOME?}"
+  - curl -sSL https://sdk.cloud.google.com | bash -s
   - >
     git config --global credential.https://source.developers.google.com.helper
     gcloud.sh

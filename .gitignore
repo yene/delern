@@ -54,8 +54,6 @@ firebase-debug.log
 report.xml
 # deliver temporary files
 /flutter/fastlane/Preview.html
-# snapshot generated screenshots
-/flutter/fastlane/screenshots
 # scan temporary files
 /flutter/fastlane/test_output
 # keystore deployed by CI

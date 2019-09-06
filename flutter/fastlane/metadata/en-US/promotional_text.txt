@@ -1,0 +1,3 @@
+New learning option - view all your cards!
+Improved UI for cards and decks!
+New colors for cards!

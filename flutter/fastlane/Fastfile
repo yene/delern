@@ -125,15 +125,27 @@ platform :ios do
     # no effect outside CI.
     setup_travis
 
+    app_identifier = 'org.dasfoo.delern'
+
     match(
       type: 'appstore',
-      app_identifier: 'org.dasfoo.delern',
+      app_identifier: app_identifier,
     )
     # Build the app to:
     # - add version
     # - switch to release mode
     flutter_build
     gym(silent: true, suppress_xcode_output: true)
+    # Upload screenshots and metadata.
+    upload_to_app_store(
+      app_identifier: app_identifier,
+      skip_binary_upload: true,
+      overwrite_screenshots: true,
+      # Skip the HTML report file verification.
+      force: true,
+      # Rejects the previously submitted build.
+      reject_if_possible: true,
+    )
     # TODO(dotdoom): set also "changelog".
     pilot(
       ipa: 'build/Runner.ipa',

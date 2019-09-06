@@ -1,0 +1,16 @@
+Delern Flashcards helps you to learn easier and faster, using flashcards and spaced repetition system.
+
+Install the Delern Flashcards on your devices. Easily create and manage your own flashcards to learn all sorts of things. The progress and cards will be synchronized across all your devices. Learn even when you are offline and don't have an Internet connection. Share your flashcards with friends to learn together.
+
+Download for free now, prepare for exams, improve vocabulary!
+
+Key Features:
+
+- Synchronized across all devices;
+- Sharing with friends;
+- Background colors for German cards;
+- Available learning in Offline;
+- Cards and learning progress saved in a Cloud;
+- Supported flashcards content: Text, Markdown.
+
+We appreciate your feedback! Please email us at delern@dasfoo.org or find us on Twitter @dasdelern or Facebook fb.me/das.delern.

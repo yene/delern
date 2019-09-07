@@ -57,7 +57,8 @@ class _CardCreateUpdateState extends State<CardCreateUpdate> {
   @override
   Widget build(BuildContext context) => ScreenBlocView(
         blocBuilder: (user) {
-          final bloc = CardCreateUpdateBloc(cardModel: widget.card, user: user);
+          final bloc =
+              CardCreateUpdateBloc(initialCardModel: widget.card, user: user);
           bloc.doClearInputFields.listen((_) => _clearInputFields(bloc));
           bloc.doShowConfirmationDialog
               .listen((_) => showCardSaveUpdateDialog(bloc));

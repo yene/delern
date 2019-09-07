@@ -44,9 +44,6 @@ install:
   - ps: pushd functions
   - npm ci
   - ps: popd
-  - ps: pushd www
-  - ..\node_modules\.bin\bower --silent --allow-root install
-  - ps: popd
   - ps: popd
   - 'echo [timing: %time%] Firebase dependencies installed'
 
@@ -61,10 +58,6 @@ build_script:
   - ps: pushd functions
   - npm run lint
   - npm run build
-  - ps: popd
-  - ps: pushd www
-  # TODO(dotdoom): fix polymer lint.
-  #- ..\node_modules\.bin\polymer lint
   - ps: popd
   - ps: popd
   - 'echo [timing: %time%] Firebase built'

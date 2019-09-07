@@ -3,7 +3,9 @@
     "manifest.json"
   ],
   "lint": {
-    "rules": ["polymer-2-hybrid"]
+    "rules": ["polymer-2-hybrid"],
+    "__comment__ignoreWarnings": "https://github.com/Polymer/tools/issues/2136",
+    "ignoreWarnings": ["could-not-resolve-reference", "not-loadable"]
   },
   "builds": [
     {

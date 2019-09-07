@@ -21,16 +21,8 @@ task:
     folder: firebase/functions/node_modules
     fingerprint_script: cat firebase/functions/package-lock.json
     populate_script: cd firebase/functions && npm ci
-  bower_components_cache: &BOWER_COMPONENTS_CACHE
-    folder: firebase/www/bower_components
-    # NOTE: this file contains floating versions and is not a good SoT!
-    fingerprint_script: cat firebase/www/bower.json
-    populate_script: >
-      cd firebase/www &&
-      ../node_modules/.bin/bower --silent --allow-root install
   lint_script:
   - ( cd firebase/functions && npm run lint )
-  - ( cd firebase/www && ../node_modules/.bin/polymer lint )
   build_script:
   - ( cd firebase && npm run build )
   - ( cd firebase/functions && npm run build )
@@ -160,8 +152,6 @@ task:
     << : *NODE_MODULES_CACHE
   functions_node_modules_cache:
     << : *FUNCTIONS_NODE_MODULES_CACHE
-  bower_components_cache:
-    << : *BOWER_COMPONENTS_CACHE
   configure_gcloud_script: &CONFIGURE_GCLOUD_SCRIPT
   - echo "${GOOGLE_APPLICATION_CREDENTIALS_DATA?}" >
     "${GOOGLE_APPLICATION_CREDENTIALS?}"

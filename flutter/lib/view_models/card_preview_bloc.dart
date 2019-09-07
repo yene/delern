@@ -13,12 +13,12 @@ class CardViewModel {
   CardModel card;
   DeckModel deck;
 
-  CardViewModel({@required this.deck, this.card}) : assert(deck != null) {
-    card ??= CardModel(deckKey: deck.key);
-  }
+  CardViewModel({@required this.deck, @required this.card})
+      : assert(deck != null),
+        assert(card != null);
 
   CardViewModel._copyFrom(CardViewModel other)
-      : card = CardModel.copyFrom(other.card),
+      : card = other.card,
         deck = DeckModel.copyFrom(other.deck);
 }
 

@@ -74,9 +74,9 @@ class CardCreateUpdateBloc extends ScreenBloc {
   }
 
   Future<void> _createOrUpdateCard() {
-    final card = CardModel.copyFrom(initialCardModel)
+    final card = initialCardModel.rebuild((b) => b
       ..front = _frontText.trim()
-      ..back = _backText.trim();
+      ..back = _backText.trim());
     if (isAddOperation) {
       logCardCreate(card.deckKey);
       return user.createCard(card: card, addReversed: _addReversedCard);

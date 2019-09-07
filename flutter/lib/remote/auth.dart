@@ -4,14 +4,12 @@ import 'package:delern_flutter/models/base/data_writer.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:meta/meta.dart';
 import 'package:quiver/strings.dart';
 
 enum SignInProvider {
   google,
 }
 
-@immutable
 class User extends DataWriter {
   final FirebaseUser _dataSource;
 

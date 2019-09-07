@@ -11,7 +11,6 @@ import 'package:meta/meta.dart';
 enum DeckType { basic, german, swiss }
 
 class DeckModel implements Model {
-  String uid;
   String key;
   String name;
   bool markdown;
@@ -21,7 +20,7 @@ class DeckModel implements Model {
   DateTime lastSyncAt;
   String category;
 
-  DeckModel({@required this.uid}) : assert(uid != null) {
+  DeckModel() {
     lastSyncAt = DateTime.fromMillisecondsSinceEpoch(0);
     markdown = false;
     type = DeckType.basic;
@@ -30,8 +29,7 @@ class DeckModel implements Model {
 
   // We expect this to be called often and optimize for performance.
   DeckModel.copyFrom(DeckModel other)
-      : uid = other.uid,
-        key = other.key,
+      : key = other.key,
         name = other.name,
         markdown = other.markdown,
         type = other.type,
@@ -41,11 +39,9 @@ class DeckModel implements Model {
         access = other.access;
 
   DeckModel._fromSnapshot({
-    @required this.uid,
     @required this.key,
     @required Map value,
-  })  : assert(uid != null),
-        assert(key != null) {
+  }) : assert(key != null) {
     if (value == null) {
       key = null;
       return;
@@ -61,26 +57,6 @@ class DeckModel implements Model {
     access = Enum.fromString(value['access'], AccessType.values);
   }
 
-  @override
-  String get rootPath => 'decks/$uid';
-
-  Map<String, dynamic> toMap({@required bool isNew}) {
-    final path = '$rootPath/$key';
-    // Intentionally flatten the update and exclude "access" field because it is
-    // written by DeckAccessModel. Firebase does not allow overlapping updates
-    // within a single update() call.
-    // Besides, flattening the map allows us to preserve new properties, which
-    // tend to appear quite often in DeckModel.
-    return {
-      '$path/name': name,
-      '$path/markdown': markdown,
-      '$path/deckType': Enum.asString(type)?.toUpperCase(),
-      '$path/accepted': accepted,
-      '$path/lastSyncAt': lastSyncAt.toUtc().millisecondsSinceEpoch,
-      '$path/category': category,
-    };
-  }
-
   static Stream<DeckModel> get({@required String uid, @required String key}) =>
       FirebaseDatabase.instance
           .reference()
@@ -89,7 +65,6 @@ class DeckModel implements Model {
           .child(key)
           .onValue
           .map((evt) => DeckModel._fromSnapshot(
-                uid: uid,
                 key: key,
                 value: evt.snapshot.value,
               ));
@@ -109,7 +84,7 @@ class DeckModel implements Model {
             .orderByKey(),
         snapshotParser: (key, value) {
           _keepDeckSynced(uid, key);
-          return DeckModel._fromSnapshot(uid: uid, key: key, value: value);
+          return DeckModel._fromSnapshot(key: key, value: value);
         });
   }
 

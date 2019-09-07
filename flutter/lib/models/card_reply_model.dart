@@ -3,13 +3,11 @@ import 'dart:core';
 import 'package:built_value/built_value.dart';
 import 'package:delern_flutter/models/base/model.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:meta/meta.dart';
 
 part 'card_reply_model.g.dart';
 
 abstract class CardReplyModel
     implements Built<CardReplyModel, CardReplyModelBuilder>, ReadonlyModel {
-  String get uid;
   String get deckKey;
 
   // The rest are nullable to create a CardReplyModel for deletion of a deck.
@@ -27,18 +25,6 @@ abstract class CardReplyModel
   factory CardReplyModel([void Function(CardReplyModelBuilder) updates]) =
       _$CardReplyModel;
   CardReplyModel._();
-
-  @override
-  String get rootPath => 'views/$uid/$deckKey/$cardKey';
-
-  @override
-  Map<String, dynamic> toMap({@required bool isNew}) => {
-        '$rootPath/$key': {
-          'levelBefore': 'L$levelBefore',
-          'reply': reply ? 'Y' : 'N',
-          'timestamp': timestamp.toUtc().millisecondsSinceEpoch,
-        },
-      };
 }
 
 abstract class CardReplyModelBuilder

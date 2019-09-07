@@ -71,17 +71,4 @@ class DeckAccessModel implements KeyedListItem, Model {
           .onValue
           .map((evt) => DeckAccessModel._fromSnapshot(
               key: key, deckKey: deckKey, value: evt.snapshot.value));
-
-  @override
-  String get rootPath => 'deck_access/$deckKey';
-
-  @override
-  Map<String, dynamic> toMap({@required bool isNew}) => {
-        // Do not save displayName and photoUrl because these are populated by
-        // Cloud functions.
-        '$rootPath/$key/access': Enum.asString(access),
-        '$rootPath/$key/email': email,
-        // Update "access" field of the Deck, too.
-        'decks/$key/$deckKey/access': Enum.asString(access),
-      };
 }

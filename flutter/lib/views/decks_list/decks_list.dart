@@ -186,7 +186,7 @@ class DeckListItemWidget extends StatelessWidget {
   }
 
   Future<void> _showLearningDialog(BuildContext context) async {
-    if (await ScheduledCardModel.next(deck).isEmpty) {
+    if (await ScheduledCardModel.next(bloc.user, deck).isEmpty) {
       // If deck is empty, open a screen with adding cards
       return openNewCardScreen(context, deck);
     }

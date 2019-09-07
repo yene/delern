@@ -41,7 +41,6 @@ class _SignInWidgetState extends State<SignInWidget> {
 
         _firebaseMessaging.onTokenRefresh.listen((token) async {
           final fcm = (FCMBuilder()
-                ..uid = Auth.instance.currentUser.uid
                 ..language = Localizations.localeOf(context).toString()
                 ..name = (await DeviceInfo.getDeviceInfo()).userFriendlyName
                 ..key = token)

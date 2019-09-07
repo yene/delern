@@ -3,7 +3,6 @@ import 'dart:isolate';
 
 import 'package:delern_flutter/flutter/localization.dart';
 import 'package:delern_flutter/flutter/styles.dart' as app_styles;
-import 'package:delern_flutter/models/base/transaction.dart';
 import 'package:delern_flutter/remote/error_reporting.dart' as error_reporting;
 import 'package:delern_flutter/views/decks_list/decks_list.dart';
 import 'package:delern_flutter/views/helpers/sign_in_widget.dart';
@@ -79,7 +78,6 @@ Future<void> main() async {
   }).sendPort);
   unawaited(runZoned<Future>(() async {
     unawaited(FirebaseDatabase.instance.setPersistenceEnabled(true));
-    Transaction.subscribeToOnlineStatus();
     unawaited(FirebaseAnalytics().logAppOpen());
     runApp(App());
   }, onError: (error, stackTrace) async {

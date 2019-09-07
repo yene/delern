@@ -1,108 +1,168 @@
-import 'package:delern_flutter/models/base/transaction.dart';
+import 'package:delern_flutter/models/base/enum.dart';
 import 'package:delern_flutter/models/card_model.dart';
-import 'package:delern_flutter/models/card_reply_model.dart';
 import 'package:delern_flutter/models/deck_access_model.dart';
 import 'package:delern_flutter/models/deck_model.dart';
 import 'package:delern_flutter/models/fcm.dart';
 import 'package:delern_flutter/models/scheduled_card_model.dart';
+import 'package:delern_flutter/remote/error_reporting.dart' as error_reporting;
+import 'package:firebase_database/firebase_database.dart';
 import 'package:meta/meta.dart';
+import 'package:pedantic/pedantic.dart';
 
-@immutable
 class DataWriter {
   final String uid;
+  bool _isOnline = false;
 
-  const DataWriter({@required this.uid}) : assert(uid != null);
+  DataWriter({@required this.uid}) : assert(uid != null) {
+    FirebaseDatabase.instance
+        .reference()
+        .child('.info/connected')
+        .onValue
+        .listen((event) {
+      _isOnline = event.snapshot.value;
+    });
+  }
 
   Future<DeckModel> createDeck({
     @required DeckModel deck,
     @required String email,
   }) async {
-    await (Transaction()
-          ..save(deck..access = AccessType.owner)
-          ..save(DeckAccessModel(deckKey: deck.key)
-            ..key = deck.uid
-            ..access = AccessType.owner
-            ..email = email))
-        .commit();
-    return deck;
+    final deckKey = _newKey();
+    final deckPath = 'decks/$uid/$deckKey';
+    final deckAccessPath = 'deck_access/$deckKey/$uid';
+    await _write({
+      '$deckPath/name': deck.name,
+      '$deckPath/markdown': deck.markdown,
+      '$deckPath/deckType': Enum.asString(deck.type)?.toUpperCase(),
+      '$deckPath/accepted': deck.accepted,
+      '$deckPath/lastSyncAt': deck.lastSyncAt.millisecondsSinceEpoch,
+      '$deckPath/category': deck.category,
+
+      '$deckPath/access': Enum.asString(AccessType.owner),
+      '$deckAccessPath/access': Enum.asString(AccessType.owner),
+      '$deckAccessPath/email': email,
+      // Do not save displayName and photoUrl because these are populated by
+      // Cloud functions.
+    });
+
+    return deck
+      ..access = AccessType.owner
+      ..key = deckKey;
   }
 
-  Future<void> updateDeck({@required DeckModel deck}) =>
-      (Transaction()..save(deck)).commit();
+  Future<void> updateDeck({@required DeckModel deck}) {
+    final deckPath = 'decks/$uid/${deck.key}';
+    return _write({
+      '$deckPath/name': deck.name,
+      '$deckPath/markdown': deck.markdown,
+      '$deckPath/deckType': Enum.asString(deck.type)?.toUpperCase(),
+      '$deckPath/accepted': deck.accepted,
+      '$deckPath/lastSyncAt': deck.lastSyncAt.millisecondsSinceEpoch,
+      '$deckPath/category': deck.category,
+    });
+  }
 
   Future<void> deleteDeck({@required DeckModel deck}) async {
-    final t = Transaction()..delete(deck);
-    final card = CardModel(deckKey: deck.key);
+    // We want to enforce that the values in this map are all "null", because we
+    // are only removing data.
+    // ignore: prefer_void_to_null
+    final updates = <String, Null>{
+      'decks/$uid/${deck.key}': null,
+      'learning/$uid/${deck.key}': null,
+      'views/$uid/${deck.key}': null,
+      if (deck.access == AccessType.owner) ...{
+        'cards/${deck.key}': null,
+        'deck_access/${deck.key}': null,
+      },
+    };
+
     if (deck.access == AccessType.owner) {
       final accessList = DeckAccessModel.getList(deckKey: deck.key);
       await accessList.fetchFullValue();
-      accessList
-          .forEach((a) => t.delete(DeckModel(uid: a.key)..key = deck.key));
-      t..deleteAll(DeckAccessModel(deckKey: deck.key))..deleteAll(card);
-      // TODO(dotdoom): delete other users' ScheduledCard and Views?
+      accessList.forEach((a) => updates['decks/${a.key}/${deck.key}'] = null);
     }
-    t
-      ..deleteAll(ScheduledCardModel(deckKey: deck.key, uid: deck.uid))
-      ..deleteAll((CardReplyModelBuilder()
-            ..uid = deck.uid
-            ..deckKey = deck.key
-            ..cardKey = null)
-          .build());
-    return t.commit();
+
+    return _write(updates);
   }
 
   Future<void> createCard({
     @required CardModel card,
     bool addReversed = false,
   }) {
-    final t = Transaction()..save(card);
-    final sCard = ScheduledCardModel(deckKey: card.deckKey, uid: uid)
-      ..key = card.key;
-    t.save(sCard);
+    final updates = <String, dynamic>{};
 
-    if (addReversed) {
-      final reverse = CardModel.copyFrom(card)
-        ..key = null
-        ..front = card.back
-        ..back = card.front;
-      t.save(reverse);
-      final reverseScCard =
-          ScheduledCardModel(deckKey: reverse.deckKey, uid: uid)
-            ..key = reverse.key;
-      t.save(reverseScCard);
+    void addCard({bool reverse = false}) {
+      final cardKey = _newKey();
+      final cardPath = 'cards/${card.deckKey}/$cardKey';
+      final scheduledCardPath = 'learning/$uid/${card.deckKey}/$cardKey';
+      updates.addAll({
+        '$cardPath/front': reverse ? card.back : card.front,
+        '$cardPath/back': reverse ? card.front : card.back,
+        // Important note: we ask server to fill in the timestamp, but we do not
+        // update it in our object immediately. Something trivial like
+        // 'await get(...).first' would work most of the time. But when offline,
+        // Firebase "lies" to the application, replacing ServerValue.TIMESTAMP
+        // with phone's time, although later it saves to the server correctly.
+        // For this reason, we should never *update* createdAt because we risk
+        // changing it (see the note above), in which case Firebase Database
+        // will reject the update.
+        '$cardPath/createdAt': ServerValue.timestamp,
+        '$scheduledCardPath/level': 'L0',
+        '$scheduledCardPath/repeatAt': 0,
+      });
     }
-    return t.commit();
+
+    addCard();
+    if (addReversed) {
+      addCard(reverse: true);
+    }
+
+    return _write(updates);
   }
 
-  Future<void> updateCard({@required CardModel card}) =>
-      (Transaction()..save(card)).commit();
+  Future<void> updateCard({@required CardModel card}) {
+    final cardPath = 'cards/${card.deckKey}/${card.key}';
+    return _write({
+      '$cardPath/front': card.front,
+      '$cardPath/back': card.back,
+    });
+  }
 
-  Future<void> deleteCard({@required CardModel card}) => (Transaction()
-        ..delete(card)
-        ..delete(ScheduledCardModel(deckKey: card.deckKey, uid: uid)
-          ..key = card.key))
-      .commit();
+  Future<void> deleteCard({@required CardModel card}) => _write({
+        'cards/${card.deckKey}/${card.key}': null,
+        'learning/$uid/${card.deckKey}/${card.key}': null,
+      });
 
   Future<void> learnCard({
-    @required CardModel card,
     @required ScheduledCardModel scheduledCard,
     @required bool knows,
     @required bool learnBeyondHorizon,
   }) {
     final cv = scheduledCard.answer(
         knows: knows, learnBeyondHorizon: learnBeyondHorizon);
-    return (Transaction()..save(scheduledCard)..save(cv)).commit();
+    final scheduledCardPath =
+        'learning/$uid/${scheduledCard.deckKey}/${scheduledCard.key}';
+    final cardViewPath =
+        'views/$uid/${scheduledCard.deckKey}/${scheduledCard.key}/${_newKey()}';
+    return _write({
+      '$scheduledCardPath/level': 'L${scheduledCard.level}',
+      '$scheduledCardPath/repeatAt':
+          scheduledCard.repeatAt.millisecondsSinceEpoch,
+      '$cardViewPath/levelBefore': 'L${cv.levelBefore}',
+      '$cardViewPath/reply': cv.reply ? 'Y' : 'N',
+      '$cardViewPath/timestamp': cv.timestamp.millisecondsSinceEpoch,
+    });
   }
 
   Future<void> unshareDeck({
     @required DeckModel deck,
     @required String shareWithUid,
   }) =>
-      (Transaction()
-            ..delete(DeckAccessModel(
-              deckKey: deck.key,
-            )..key = shareWithUid))
-          .commit();
+      _write({
+        'deck_access/${deck.key}/$shareWithUid': null,
+        // TODO(dotdoom): figure out why this doesn't work and enable it.
+        // 'decks/$shareWithUid/${deck.key}': null,
+      });
 
   Future<void> shareDeck({
     @required DeckModel deck,
@@ -111,26 +171,63 @@ class DataWriter {
     String sharedDeckName,
     String shareWithUserEmail,
   }) async {
-    final accessModel = DeckAccessModel(deckKey: deck.key)
-      ..key = shareWithUid
-      ..access = access
-      ..email = shareWithUserEmail;
-
-    final tr = Transaction()..save(accessModel);
+    final deckAccessPath = 'deck_access/${deck.key}/$shareWithUid';
+    final deckPath = 'decks/$shareWithUid/${deck.key}';
+    final updates = <String, dynamic>{
+      '$deckAccessPath/access': Enum.asString(access),
+      '$deckPath/access': Enum.asString(access),
+    };
     if ((await DeckAccessModel.get(deckKey: deck.key, key: shareWithUid).first)
             .key ==
         null) {
-      // If there's no DeckAccess, assume the deck hasn't been shared yet.
-      tr.save(DeckModel.copyFrom(deck)
-        ..uid = shareWithUid
-        ..accepted = false
-        ..name = sharedDeckName ?? deck.name
-        ..access = access);
+      // If there's no DeckAccess, assume the deck hasn't been shared yet, as
+      // opposed to changing access level for a previously shared deck.
+      updates.addAll({
+        '$deckPath/name': deck.name,
+        '$deckPath/markdown': deck.markdown,
+        '$deckPath/deckType': Enum.asString(deck.type)?.toUpperCase(),
+        '$deckPath/accepted': false,
+        '$deckPath/lastSyncAt': 0,
+        '$deckPath/category': deck.category,
+        // Do not save displayName and photoUrl because these are populated by
+        // Cloud functions.
+        '$deckAccessPath/email': shareWithUserEmail,
+      });
     }
 
-    return tr.commit();
+    return _write(updates);
   }
 
-  Future<void> addFCM({@required FCM fcm}) =>
-      (Transaction()..save(fcm)).commit();
+  Future<void> addFCM({@required FCM fcm}) => _write({
+        'fcm/$uid/${fcm.key}': {
+          'name': fcm.name,
+          'language': fcm.language,
+        }
+      });
+
+  Future<void> cleanupDanglingScheduledCard(ScheduledCardModel sc) => _write({
+        'learning/$uid/${sc.deckKey}/${sc.key}': null,
+      });
+
+  Future<void> _write(Map<String, dynamic> updates) async {
+    // Firebase update() does not return until it gets response from the server.
+    final updateFuture = FirebaseDatabase.instance.reference().update(updates);
+
+    if (!_isOnline) {
+      unawaited(updateFuture.catchError((error, stackTrace) => error_reporting
+          .report('DataWriter', error, stackTrace,
+              extra: {'updates': updates, 'online': false})));
+      return;
+    }
+
+    try {
+      await updateFuture;
+    } catch (error, stackTrace) {
+      unawaited(error_reporting.report('DataWriter', error, stackTrace,
+          extra: {'updates': updates, 'online': true}));
+      rethrow;
+    }
+  }
+
+  String _newKey() => FirebaseDatabase.instance.reference().push().key;
 }

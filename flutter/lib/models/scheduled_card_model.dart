@@ -5,10 +5,10 @@ import 'dart:math';
 import 'package:delern_flutter/models/base/database_observable_list.dart';
 import 'package:delern_flutter/models/base/keyed_list_item.dart';
 import 'package:delern_flutter/models/base/model.dart';
-import 'package:delern_flutter/models/base/transaction.dart';
 import 'package:delern_flutter/models/card_model.dart';
 import 'package:delern_flutter/models/card_reply_model.dart';
 import 'package:delern_flutter/models/deck_model.dart';
+import 'package:delern_flutter/remote/auth.dart';
 import 'package:delern_flutter/remote/error_reporting.dart' as error_reporting;
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/foundation.dart';
@@ -45,15 +45,12 @@ class ScheduledCardModel implements Model {
     Duration(days: 60),
   ];
 
-  String uid;
   String deckKey;
   String key;
   int level;
   DateTime repeatAt;
 
-  ScheduledCardModel({@required this.deckKey, @required this.uid})
-      : assert(deckKey != null),
-        assert(uid != null) {
+  ScheduledCardModel({@required this.deckKey}) : assert(deckKey != null) {
     level = 0;
     repeatAt = DateTime.fromMillisecondsSinceEpoch(0);
   }
@@ -61,10 +58,8 @@ class ScheduledCardModel implements Model {
   ScheduledCardModel._fromSnapshot({
     @required this.key,
     @required this.deckKey,
-    @required this.uid,
     @required Map value,
-  })  : assert(uid != null),
-        assert(deckKey != null),
+  })  : assert(deckKey != null),
         assert(key != null) {
     if (value == null) {
       key = null;
@@ -83,11 +78,11 @@ class ScheduledCardModel implements Model {
   static final _jitterRandom = Random();
   Duration _newJitter() => Duration(minutes: _jitterRandom.nextInt(180));
 
-  static Stream<CardAndScheduledCard> next(DeckModel deck) =>
+  static Stream<CardAndScheduledCard> next(User user, DeckModel deck) =>
       FirebaseDatabase.instance
           .reference()
           .child('learning')
-          .child(deck.uid)
+          .child(user.uid)
           .child(deck.key)
           .orderByChild('repeatAt')
           // Need at least 2 because of how Firebase local cache works.
@@ -131,7 +126,6 @@ class ScheduledCardModel implements Model {
             await CardModel.get(deckKey: deck.key, key: latestScheduledCard.key)
                 .first;
         final scheduledCard = ScheduledCardModel._fromSnapshot(
-            uid: deck.uid,
             key: latestScheduledCard.key,
             deckKey: deck.key,
             value: latestScheduledCard.value);
@@ -139,28 +133,16 @@ class ScheduledCardModel implements Model {
         if (card.key == null) {
           // Card has been removed but we still have ScheduledCard for it.
           debugPrint('Removing dangling ScheduledCard ${scheduledCard.key}');
-          unawaited((Transaction()..delete(scheduledCard)).commit());
+          unawaited(user.cleanupDanglingScheduledCard(scheduledCard));
           return;
         }
 
         sink.add(CardAndScheduledCard(card, scheduledCard));
       }));
 
-  @override
-  String get rootPath => 'learning/$uid/$deckKey';
-
-  @override
-  Map<String, dynamic> toMap({@required bool isNew}) => {
-        '$rootPath/$key': {
-          'level': 'L$level',
-          'repeatAt': repeatAt.toUtc().millisecondsSinceEpoch,
-        }
-      };
-
   CardReplyModel answer(
       {@required bool knows, @required bool learnBeyondHorizon}) {
     final cv = (CardReplyModelBuilder()
-          ..uid = uid
           ..cardKey = key
           ..deckKey = deckKey
           ..reply = knows
@@ -193,7 +175,6 @@ class ScheduledCardModel implements Model {
                     .map((entry) => ScheduledCardModel._fromSnapshot(
                           key: entry.key,
                           deckKey: deckKey,
-                          uid: uid,
                           value: entry.value,
                         ))));
           },

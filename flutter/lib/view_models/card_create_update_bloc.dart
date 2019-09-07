@@ -12,15 +12,14 @@ class CardCreateUpdateBloc extends ScreenBloc {
   String _frontText;
   String _backText;
   bool _addReversedCard = false;
-  CardModel _cardModel;
+  final CardModel initialCardModel;
   final bool isAddOperation;
   bool _isOperationEnabled = true;
 
-  CardCreateUpdateBloc({@required User user, @required cardModel})
-      : assert(cardModel != null),
-        isAddOperation = cardModel.key == null,
+  CardCreateUpdateBloc({@required User user, @required this.initialCardModel})
+      : assert(initialCardModel != null),
+        isAddOperation = initialCardModel.key == null,
         super(user) {
-    _cardModel = cardModel;
     _initFields();
     _initListeners();
   }
@@ -51,8 +50,8 @@ class CardCreateUpdateBloc extends ScreenBloc {
   Sink<void> get onDiscardChanges => _onDiscardChangesController.sink;
 
   void _initFields() {
-    _frontText = _cardModel.front ?? '';
-    _backText = _cardModel.back ?? '';
+    _frontText = initialCardModel.front ?? '';
+    _backText = initialCardModel.back ?? '';
   }
 
   void _initListeners() {
@@ -75,11 +74,14 @@ class CardCreateUpdateBloc extends ScreenBloc {
   }
 
   Future<void> _createOrUpdateCard() {
+    final card = CardModel.copyFrom(initialCardModel)
+      ..front = _frontText.trim()
+      ..back = _backText.trim();
     if (isAddOperation) {
-      logCardCreate(_cardModel.deckKey);
-      return user.createCard(card: _cardModel, addReversed: _addReversedCard);
+      logCardCreate(card.deckKey);
+      return user.createCard(card: card, addReversed: _addReversedCard);
     } else {
-      return user.updateCard(card: _cardModel);
+      return user.updateCard(card: card);
     }
   }
 
@@ -95,16 +97,12 @@ class CardCreateUpdateBloc extends ScreenBloc {
   }
 
   Future<void> _processSavingCard() async {
-    _cardModel
-      ..front = _frontText.trim()
-      ..back = _backText.trim();
     try {
       await _disableUI(_createOrUpdateCard);
       if (!isAddOperation) {
         notifyPop();
         return;
       }
-      _clearCard();
       if (_addReversedCard) {
         showMessage(locale.cardAndReversedAddedUserMessage);
       } else {
@@ -115,11 +113,6 @@ class CardCreateUpdateBloc extends ScreenBloc {
       unawaited(error_reporting.report('saveCard', e, stackTrace));
       notifyErrorOccurred(e);
     }
-  }
-
-  void _clearCard() {
-    // Unset Card key so that we create a new one.
-    _cardModel.key = null;
   }
 
   bool _isCardValid() => _addReversedCard

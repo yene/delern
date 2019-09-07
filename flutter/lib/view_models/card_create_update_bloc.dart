@@ -104,7 +104,6 @@ class CardCreateUpdateBloc extends ScreenBloc {
         notifyPop();
         return;
       }
-      _clearCard();
       if (_addReversedCard) {
         showMessage(locale.cardAndReversedAddedUserMessage);
       } else {
@@ -115,11 +114,6 @@ class CardCreateUpdateBloc extends ScreenBloc {
       unawaited(error_reporting.report('saveCard', e, stackTrace));
       notifyErrorOccurred(e);
     }
-  }
-
-  void _clearCard() {
-    // Unset Card key so that we create a new one.
-    _cardModel.key = null;
   }
 
   bool _isCardValid() => _addReversedCard

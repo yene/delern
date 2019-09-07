@@ -32,13 +32,6 @@ const delern = {
             }
         }
 
-        // TODO(dotdoom): we already do this on app side, not necessary.
-        for (const cardKey in scheduledCards) {
-            if (!(cardKey in cards)) {
-                scheduledCardsUpdates[cardKey] = null;
-            }
-        }
-
         if (Object.keys(scheduledCardsUpdates).length !== 0) {
             console.error(Error(`Database denormalized in deck ${deckKey} ` +
                 `for user ${uid}, fixing (see below for details)`));
@@ -190,6 +183,8 @@ export const triggers = {
             }
             await admin.database().ref('fcm').update(tokenUpdates);
         }),
+    // TODO(dotdoom): Deck is removed by owner, and Learning/Views should be
+    //                cleaned up by databaseMaintenance (2.4+).
     deckUnShared: functions.database
         .ref('/deck_access/{deckKey}/{uid}')
         .onDelete((data, context) => {
@@ -208,12 +203,6 @@ export const triggers = {
                 // Don't update for the user creating this card - done by app.
                 context.params.cardKey, context.auth.uid,
                 delern.createScheduledCardObject())),
-
-    // TODO(dotdoom): deleting deck with too many cards may be bad. Debounce?
-    cardDeleted: functions.database.ref('/cards/{deckKey}/{cardKey}')
-        .onDelete((data, context) =>
-            delern.setScheduledCardForAllUsers(context.params.deckKey,
-                context.params.cardKey, context.auth.uid, null)),
 };
 
 delern.forEachUser = async (batchSize: number,
@@ -275,10 +264,6 @@ export const databaseMaintenance = functions
                 if (uid in decks && deckKey in decks[uid]) {
                     missingCardsOperations.push(
                         delern.createMissingScheduledCards(uid, deckKey));
-
-                    // TODO(dotdoom): this should be done by app.
-                    updates[`decks/${uid}/${deckKey}/access`] =
-                        deckAccess[uid].access;
                 } else {
                     deletedSharedDecks++;
                 }

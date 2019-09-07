@@ -160,8 +160,7 @@ class DataWriter {
   }) =>
       _write({
         'deck_access/${deck.key}/$shareWithUid': null,
-        // TODO(dotdoom): figure out why this doesn't work and enable it.
-        // 'decks/$shareWithUid/${deck.key}': null,
+        'decks/$shareWithUid/${deck.key}': null,
       });
 
   Future<void> shareDeck({

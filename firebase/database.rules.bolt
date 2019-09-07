@@ -11,17 +11,7 @@
  *   user experience when your app is offline.
  */
 
-type User {
-  name: String,
-  photoUrl: String | Null,
-}
-
 isCurrentUser(uid) { auth !== null && auth.uid === uid }
-
-path /users/{userId} is User {
-  read() { auth !== null }
-  write() { isCurrentUser(userId) }
-}
 
 type FCMToken {
   name: String,
@@ -83,6 +73,7 @@ path /deck_access/{deckId}/{sharedWithUserId} is DeckAccess {
     )
   }
   update() { prior(deckAccess(deckId)) === "owner" }
+  // TODO(dotdoom): when deleting DeckAccess, make sure Deck is deleted (2.4+).
   delete() {
     (
       isCurrentUser(sharedWithUserId) ||
@@ -119,7 +110,13 @@ path /decks/{userId} {
 path /decks/{userId}/{deckId} is Deck {
   create() {
     deckAccess(deckId) === "owner" &&
-    (isCurrentUser(userId) === this.accepted)
+    (
+      // Overwriting null with null triggers create(). This can happen when the
+      // receiving user has removed their Deck, but the DeckAccess is still
+      // there.
+      (this === null) ||
+      (isCurrentUser(userId) === this.accepted)
+    )
   }
 
   update() { isCurrentUser(userId) }
@@ -147,8 +144,7 @@ type CreatedAtTimestamp extends Number {
 type Card {
   front: String,
   back: String,
-  // TODO(dotdoom): CreatedAtTimestamp when Flutter app is released.
-  createdAt: Number | Null,
+  createdAt: Number,
 }
 
 path /cards/{deckId} {

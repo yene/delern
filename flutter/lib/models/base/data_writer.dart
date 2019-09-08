@@ -106,7 +106,7 @@ class DataWriter {
         // changing it (see the note above), in which case Firebase Database
         // will reject the update.
         '$cardPath/createdAt': ServerValue.timestamp,
-        '$scheduledCardPath/level': 'L0',
+        '$scheduledCardPath/level': 0,
         '$scheduledCardPath/repeatAt': 0,
       });
     }
@@ -144,11 +144,11 @@ class DataWriter {
     final cardViewPath =
         'views/$uid/${scheduledCard.deckKey}/${scheduledCard.key}/${_newKey()}';
     return _write({
-      '$scheduledCardPath/level': 'L${scheduledCard.level}',
+      '$scheduledCardPath/level': scheduledCard.level,
       '$scheduledCardPath/repeatAt':
           scheduledCard.repeatAt.millisecondsSinceEpoch,
-      '$cardViewPath/levelBefore': 'L${cv.levelBefore}',
-      '$cardViewPath/reply': cv.reply ? 'Y' : 'N',
+      '$cardViewPath/levelBefore': cv.levelBefore,
+      '$cardViewPath/reply': cv.reply,
       '$cardViewPath/timestamp': cv.timestamp.millisecondsSinceEpoch,
     });
   }

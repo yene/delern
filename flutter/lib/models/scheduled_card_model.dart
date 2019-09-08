@@ -65,8 +65,12 @@ class ScheduledCardModel implements Model {
       key = null;
       return;
     }
+    var levelString = value['level'].toString();
+    if (levelString.startsWith('L')) {
+      levelString = levelString.substring(1);
+    }
     try {
-      level = int.parse(value['level'].toString().substring(1));
+      level = int.parse(levelString);
     } on FormatException catch (e, stackTrace) {
       error_reporting.report('ScheduledCard', e, stackTrace);
       level = 0;

@@ -165,8 +165,8 @@ type CardReply extends String {
 }
 
 type View {
-  levelBefore: CardLevel,
-  reply: CardReply,
+  levelBefore: CardLevel | Number,
+  reply: CardReply | Boolean,
   timestamp: Number,
 }
 
@@ -178,7 +178,7 @@ path /views/{userId}/{deckId}/{cardId}/{viewId} is View {
 }
 
 type ScheduledCard {
-  level: CardLevel,
+  level: CardLevel | Number,
   repeatAt: Number,
 }
 

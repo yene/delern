@@ -57,7 +57,7 @@ class _EditDeckState extends State<EditDeck> {
   @override
   Widget build(BuildContext context) => ScreenBlocView(
         blocBuilder: (user) {
-          final bloc = EditDeckBloc(deck: widget.deck, user: user);
+          final bloc = EditDeckBloc(deck: _currentDeckState, user: user);
           bloc.doDeckChanged.listen((deck) {
             _currentDeckState = deck;
           });
@@ -176,7 +176,7 @@ class _EditDeckState extends State<EditDeck> {
             padding: EdgeInsets.symmetric(vertical: verticalPadding),
             child: CardItemWidget(
               card: item,
-              deck: widget.deck,
+              deck: _currentDeckState,
             ),
           ),
         ],
@@ -187,8 +187,8 @@ class _EditDeckState extends State<EditDeck> {
           tooltip: localizations.of(context).addCardTooltip,
           key: fabKey,
           onPressed: () {
-            if (widget.deck.access != AccessType.read) {
-              openNewCardScreen(context, widget.deck);
+            if (_currentDeckState.access != AccessType.read) {
+              openNewCardScreen(context, _currentDeckState);
             } else {
               UserMessages.showMessage(Scaffold.of(context),
                   localizations.of(context).noAddingWithReadAccessUserMessage);

@@ -1,11 +1,8 @@
-import 'dart:async';
-
 import 'package:delern_flutter/flutter/localization.dart' as localizations;
 import 'package:delern_flutter/flutter/styles.dart' as app_styles;
 import 'package:delern_flutter/models/deck_model.dart';
 import 'package:delern_flutter/view_models/edit_bloc.dart';
 import 'package:delern_flutter/views/helpers/card_background_specifier.dart';
-import 'package:delern_flutter/views/helpers/save_updates_dialog.dart';
 import 'package:flutter/material.dart';
 
 const double _kBorderPadding = 8;
@@ -27,21 +24,11 @@ class _DeckSettingsWidgetState extends State<DeckSettingsWidget> {
   DeckType _currentDeckType;
   bool _isMarkdown;
 
-  StreamSubscription _deleteDeckSubscription;
-
   @override
   void initState() {
-    _deleteDeckSubscription = widget.bloc.doShowDeleteConfirmationDialog
-        .listen(_showDeleteDeckDialog);
     _currentDeckType = widget.deck.type;
     _isMarkdown = widget.deck.markdown;
     super.initState();
-  }
-
-  @override
-  void dispose() {
-    _deleteDeckSubscription.cancel();
-    super.dispose();
   }
 
   @override
@@ -51,19 +38,6 @@ class _DeckSettingsWidgetState extends State<DeckSettingsWidget> {
       widget.bloc.onLocale.add(locale);
     }
     super.didChangeDependencies();
-  }
-
-  Future<void> _showDeleteDeckDialog(deleteDeckQuestion) async {
-    final deleteDeckDialog = await showSaveUpdatesDialog(
-        context: context,
-        changesQuestion: deleteDeckQuestion,
-        yesAnswer: localizations.of(context).delete,
-        noAnswer: MaterialLocalizations.of(context).cancelButtonLabel);
-    if (deleteDeckDialog) {
-      // Close settings dialog
-      Navigator.of(context).pop();
-      widget.bloc.onDeleteDeck.add(null);
-    }
   }
 
   @override
@@ -121,15 +95,6 @@ class _DeckSettingsWidgetState extends State<DeckSettingsWidget> {
                       },
                     )
                   ],
-                ),
-                RaisedButton(
-                  onPressed: () async {
-                    widget.bloc.onDeleteDeckIntention.add(null);
-                  },
-                  child: Text(
-                    localizations.of(context).deleteDeckButton,
-                    style: TextStyle(color: Theme.of(context).accentColor),
-                  ),
                 ),
               ],
             ),

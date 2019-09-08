@@ -21,8 +21,7 @@ class _$CardReplyModel extends CardReplyModel {
   final DateTime timestamp;
 
   factory _$CardReplyModel([void Function(CardReplyModelBuilder) updates]) =>
-      (new CardReplyModelBuilder()..update(updates)).build()
-          as _$CardReplyModel;
+      (new CardReplyModelBuilder()..update(updates)).build();
 
   _$CardReplyModel._(
       {this.deckKey,
@@ -35,6 +34,18 @@ class _$CardReplyModel extends CardReplyModel {
     if (deckKey == null) {
       throw new BuiltValueNullFieldError('CardReplyModel', 'deckKey');
     }
+    if (cardKey == null) {
+      throw new BuiltValueNullFieldError('CardReplyModel', 'cardKey');
+    }
+    if (levelBefore == null) {
+      throw new BuiltValueNullFieldError('CardReplyModel', 'levelBefore');
+    }
+    if (reply == null) {
+      throw new BuiltValueNullFieldError('CardReplyModel', 'reply');
+    }
+    if (timestamp == null) {
+      throw new BuiltValueNullFieldError('CardReplyModel', 'timestamp');
+    }
   }
 
   @override
@@ -42,8 +53,8 @@ class _$CardReplyModel extends CardReplyModel {
       (toBuilder()..update(updates)).build();
 
   @override
-  _$CardReplyModelBuilder toBuilder() =>
-      new _$CardReplyModelBuilder()..replace(this);
+  CardReplyModelBuilder toBuilder() =>
+      new CardReplyModelBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -82,91 +93,44 @@ class _$CardReplyModel extends CardReplyModel {
   }
 }
 
-class _$CardReplyModelBuilder extends CardReplyModelBuilder {
+class CardReplyModelBuilder
+    implements Builder<CardReplyModel, CardReplyModelBuilder> {
   _$CardReplyModel _$v;
 
-  @override
-  String get deckKey {
-    _$this;
-    return super.deckKey;
-  }
+  String _deckKey;
+  String get deckKey => _$this._deckKey;
+  set deckKey(String deckKey) => _$this._deckKey = deckKey;
 
-  @override
-  set deckKey(String deckKey) {
-    _$this;
-    super.deckKey = deckKey;
-  }
+  String _cardKey;
+  String get cardKey => _$this._cardKey;
+  set cardKey(String cardKey) => _$this._cardKey = cardKey;
 
-  @override
-  String get cardKey {
-    _$this;
-    return super.cardKey;
-  }
+  String _key;
+  String get key => _$this._key;
+  set key(String key) => _$this._key = key;
 
-  @override
-  set cardKey(String cardKey) {
-    _$this;
-    super.cardKey = cardKey;
-  }
+  int _levelBefore;
+  int get levelBefore => _$this._levelBefore;
+  set levelBefore(int levelBefore) => _$this._levelBefore = levelBefore;
 
-  @override
-  String get key {
-    _$this;
-    return super.key;
-  }
+  bool _reply;
+  bool get reply => _$this._reply;
+  set reply(bool reply) => _$this._reply = reply;
 
-  @override
-  set key(String key) {
-    _$this;
-    super.key = key;
-  }
+  DateTime _timestamp;
+  DateTime get timestamp => _$this._timestamp;
+  set timestamp(DateTime timestamp) => _$this._timestamp = timestamp;
 
-  @override
-  int get levelBefore {
-    _$this;
-    return super.levelBefore;
-  }
-
-  @override
-  set levelBefore(int levelBefore) {
-    _$this;
-    super.levelBefore = levelBefore;
-  }
-
-  @override
-  bool get reply {
-    _$this;
-    return super.reply;
-  }
-
-  @override
-  set reply(bool reply) {
-    _$this;
-    super.reply = reply;
-  }
-
-  @override
-  DateTime get timestamp {
-    _$this;
-    return super.timestamp;
-  }
-
-  @override
-  set timestamp(DateTime timestamp) {
-    _$this;
-    super.timestamp = timestamp;
-  }
-
-  _$CardReplyModelBuilder() : super._();
+  CardReplyModelBuilder();
 
   CardReplyModelBuilder get _$this {
     if (_$v != null) {
-      super.deckKey = _$v.deckKey;
-      super.cardKey = _$v.cardKey;
-      super.key = _$v.key;
-      super.levelBefore = _$v.levelBefore;
-      super.reply = _$v.reply;
-      super.timestamp = _$v.timestamp;
+      _deckKey = _$v.deckKey;
+      _cardKey = _$v.cardKey;
+      _key = _$v.key;
+      _levelBefore = _$v.levelBefore;
+      _reply = _$v.reply;
+      _timestamp = _$v.timestamp;
       _$v = null;
     }
     return this;

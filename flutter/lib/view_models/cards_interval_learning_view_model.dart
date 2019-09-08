@@ -49,7 +49,7 @@ class LearningViewModel {
   Future<void> answer(
           {@required bool knows, @required bool learnBeyondHorizon}) =>
       user.learnCard(
-          scheduledCard: _scheduledCard,
+          unansweredScheduledCard: _scheduledCard,
           knows: knows,
           learnBeyondHorizon: learnBeyondHorizon);
 

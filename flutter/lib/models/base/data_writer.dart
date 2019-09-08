@@ -1,10 +1,12 @@
 import 'package:delern_flutter/models/card_model.dart';
+import 'package:delern_flutter/models/card_reply_model.dart';
 import 'package:delern_flutter/models/deck_access_model.dart';
 import 'package:delern_flutter/models/deck_model.dart';
 import 'package:delern_flutter/models/fcm.dart';
 import 'package:delern_flutter/models/scheduled_card_model.dart';
 import 'package:delern_flutter/remote/error_reporting.dart' as error_reporting;
 import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/foundation.dart';
 import 'package:meta/meta.dart';
 import 'package:pedantic/pedantic.dart';
 
@@ -23,12 +25,14 @@ class DataWriter {
   }
 
   Future<DeckModel> createDeck({
-    @required DeckModel deck,
+    @required DeckModel deckTemplate,
     @required String email,
   }) async {
-    final deckKey = _newKey();
-    final deckPath = 'decks/$uid/$deckKey';
-    final deckAccessPath = 'deck_access/$deckKey/$uid';
+    final deck = deckTemplate.rebuild((b) => b
+      ..key = _newKey()
+      ..access = AccessType.owner);
+    final deckPath = 'decks/$uid/${deck.key}';
+    final deckAccessPath = 'deck_access/${deck.key}/$uid';
     await _write({
       '$deckPath/name': deck.name,
       '$deckPath/markdown': deck.markdown,
@@ -37,16 +41,14 @@ class DataWriter {
       '$deckPath/lastSyncAt': deck.lastSyncAt.millisecondsSinceEpoch,
       '$deckPath/category': deck.category,
 
-      '$deckPath/access': AccessType.owner.toString(),
-      '$deckAccessPath/access': AccessType.owner.toString(),
+      '$deckPath/access': deck.access.toString(),
+      '$deckAccessPath/access': deck.access.toString(),
       '$deckAccessPath/email': email,
       // Do not save displayName and photoUrl because these are populated by
       // Cloud functions.
     });
 
-    return deck
-      ..access = AccessType.owner
-      ..key = deckKey;
+    return deck;
   }
 
   Future<void> updateDeck({@required DeckModel deck}) {
@@ -133,11 +135,13 @@ class DataWriter {
       });
 
   Future<void> learnCard({
-    @required ScheduledCardModel scheduledCard,
+    @required ScheduledCardModel unansweredScheduledCard,
     @required bool knows,
     @required bool learnBeyondHorizon,
   }) {
-    final cv = scheduledCard.answer(
+    final cardReply =
+        CardReplyModel.fromScheduledCard(unansweredScheduledCard, reply: knows);
+    final scheduledCard = unansweredScheduledCard.answer(
         knows: knows, learnBeyondHorizon: learnBeyondHorizon);
     final scheduledCardPath =
         'learning/$uid/${scheduledCard.deckKey}/${scheduledCard.key}';
@@ -147,9 +151,9 @@ class DataWriter {
       '$scheduledCardPath/level': scheduledCard.level,
       '$scheduledCardPath/repeatAt':
           scheduledCard.repeatAt.millisecondsSinceEpoch,
-      '$cardViewPath/levelBefore': cv.levelBefore,
-      '$cardViewPath/reply': cv.reply,
-      '$cardViewPath/timestamp': cv.timestamp.millisecondsSinceEpoch,
+      '$cardViewPath/levelBefore': cardReply.levelBefore,
+      '$cardViewPath/reply': cardReply.reply,
+      '$cardViewPath/timestamp': cardReply.timestamp.millisecondsSinceEpoch,
     });
   }
 

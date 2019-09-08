@@ -120,9 +120,7 @@ class _EditDeckState extends State<EditDeck> {
         controller: _deckNameController,
         style: app_styles.editDeckText,
         onChanged: (text) {
-          setState(() {
-            bloc.onDeckName.add(text);
-          });
+          bloc.onDeckName.add(text);
         },
       );
 

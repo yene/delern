@@ -19,7 +19,7 @@ class CardViewModel {
 
   CardViewModel._copyFrom(CardViewModel other)
       : card = other.card,
-        deck = DeckModel.copyFrom(other.deck);
+        deck = other.deck;
 }
 
 class CardPreviewBloc extends ScreenBloc {

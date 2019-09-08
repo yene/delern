@@ -21,9 +21,14 @@ part 'scheduled_card_model.g.dart';
 
 @immutable
 class CardAndScheduledCard {
-  final CardModel card;
+  final CardModel initialCard;
+  final Stream<CardModel> card;
   final ScheduledCardModel scheduledCard;
-  const CardAndScheduledCard(this.card, this.scheduledCard);
+  const CardAndScheduledCard({
+    @required this.initialCard,
+    @required this.card,
+    @required this.scheduledCard,
+  });
 }
 
 @immutable
@@ -159,7 +164,11 @@ abstract class ScheduledCardModel
           return;
         }
 
-        sink.add(CardAndScheduledCard(card, scheduledCard));
+        sink.add(CardAndScheduledCard(
+            initialCard: card,
+            card:
+                CardModel.get(deckKey: deck.key, key: latestScheduledCard.key),
+            scheduledCard: scheduledCard));
       }));
 
   ScheduledCardModel answer(

@@ -12,7 +12,7 @@ import 'package:delern_flutter/view_models/base/screen_bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:pedantic/pedantic.dart';
 
-class EditBloc extends ScreenBloc {
+class EditDeckBloc extends ScreenBloc {
   final DeckModel _deck;
 
   DelayedInitializationObservableList<CardModel> get list => _list;
@@ -21,7 +21,7 @@ class EditBloc extends ScreenBloc {
   set filter(Filter<CardModel> newValue) => _list.filter = newValue;
   Filter<CardModel> get filter => _list.filter;
 
-  EditBloc({@required User user, @required DeckModel deck})
+  EditDeckBloc({@required User user, @required DeckModel deck})
       : assert(deck != null),
         _deck = deck,
         _list =

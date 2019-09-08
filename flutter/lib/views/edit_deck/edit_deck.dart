@@ -7,7 +7,7 @@ import 'package:delern_flutter/models/card_model.dart';
 import 'package:delern_flutter/models/deck_access_model.dart';
 import 'package:delern_flutter/models/deck_model.dart';
 import 'package:delern_flutter/routes.dart';
-import 'package:delern_flutter/view_models/edit_bloc.dart';
+import 'package:delern_flutter/view_models/edit_deck_bloc.dart';
 import 'package:delern_flutter/views/base/screen_bloc_view.dart';
 import 'package:delern_flutter/views/edit_deck/deck_settings_widget.dart';
 import 'package:delern_flutter/views/edit_deck/scroll_to_beginning_list_widget.dart';
@@ -35,7 +35,7 @@ class _EditDeckState extends State<EditDeck> {
   DeckModel _currentDeckState;
   GlobalKey fabKey = GlobalKey();
 
-  void _searchTextChanged(EditBloc bloc, String input) {
+  void _searchTextChanged(EditDeckBloc bloc, String input) {
     if (input == null) {
       bloc.filter = null;
       return;
@@ -57,7 +57,7 @@ class _EditDeckState extends State<EditDeck> {
   @override
   Widget build(BuildContext context) => ScreenBlocView(
         blocBuilder: (user) {
-          final bloc = EditBloc(deck: widget.deck, user: user);
+          final bloc = EditDeckBloc(deck: widget.deck, user: user);
           bloc.doDeckChanged.listen((deck) {
             _currentDeckState = deck;
           });
@@ -84,7 +84,7 @@ class _EditDeckState extends State<EditDeck> {
         floatingActionButtonBuilder: _buildAddCard,
       );
 
-  List<Widget> _buildActions(EditBloc bloc) {
+  List<Widget> _buildActions(EditDeckBloc bloc) {
     final menuAction = IconButton(
       tooltip: localizations.of(context).deckSettingsTooltip,
       icon: Icon(Icons.more_vert),
@@ -100,7 +100,7 @@ class _EditDeckState extends State<EditDeck> {
     return <Widget>[menuAction];
   }
 
-  Widget _buildEditDeck(EditBloc bloc) => TextField(
+  Widget _buildEditDeck(EditDeckBloc bloc) => TextField(
         textAlign: TextAlign.center,
         decoration: InputDecoration(
           border: InputBorder.none,
@@ -124,7 +124,7 @@ class _EditDeckState extends State<EditDeck> {
         },
       );
 
-  Widget _buildCardsInDeck(EditBloc bloc) => StreamBuilder<List>(
+  Widget _buildCardsInDeck(EditDeckBloc bloc) => StreamBuilder<List>(
       stream: bloc.list.listChanges,
       builder: (context, snapshot) => Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -136,7 +136,7 @@ class _EditDeckState extends State<EditDeck> {
             ],
           ));
 
-  Widget _buildCardList(EditBloc bloc) {
+  Widget _buildCardList(EditDeckBloc bloc) {
     final cardVerticalPadding =
         MediaQuery.of(context).size.height * app_styles.kItemListPaddingRatio;
     return ScrollToBeginningListWidget(
@@ -182,7 +182,7 @@ class _EditDeckState extends State<EditDeck> {
         ],
       );
 
-  Widget _buildAddCard(EditBloc bloc) => Builder(
+  Widget _buildAddCard(EditDeckBloc bloc) => Builder(
         builder: (context) => FloatingActionButton(
           tooltip: localizations.of(context).addCardTooltip,
           key: fabKey,

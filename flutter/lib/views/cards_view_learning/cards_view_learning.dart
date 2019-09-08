@@ -10,16 +10,16 @@ import 'package:flutter/material.dart';
 const _kCardPageRatio = 0.9;
 const double _kCardPadding = 8;
 
-class CardsReviewLearning extends StatefulWidget {
+class CardsViewLearning extends StatefulWidget {
   final DeckModel deck;
 
-  const CardsReviewLearning({@required this.deck}) : assert(deck != null);
+  const CardsViewLearning({@required this.deck}) : assert(deck != null);
 
   @override
-  _CardsReviewLearningState createState() => _CardsReviewLearningState();
+  _CardsViewLearningState createState() => _CardsViewLearningState();
 }
 
-class _CardsReviewLearningState extends State<CardsReviewLearning>
+class _CardsViewLearningState extends State<CardsViewLearning>
     with TickerProviderStateMixin {
   final PageController _controller = PageController(viewportFraction: 0.7);
   int _currentCard = 0;

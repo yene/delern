@@ -12,11 +12,14 @@ import 'package:meta/meta.dart';
 
 part 'deck_access_model.g.dart';
 
-class AccessType extends EnumClass {
+class AccessType extends EnumClass implements Comparable<AccessType> {
   static Serializer<AccessType> get serializer => _$accessTypeSerializer;
 
   static const AccessType owner = _$owner;
+
+  /// "write" implies "read".
   static const AccessType write = _$write;
+
   static const AccessType read = _$read;
 
   const AccessType._(String name) : super(name);
@@ -28,6 +31,7 @@ class AccessType extends EnumClass {
   // Convert it to a List here to make the values indexable.
   static final List<AccessType> orderedValues = _$values.toList();
 
+  @override
   int compareTo(AccessType other) =>
       orderedValues.indexOf(this).compareTo(orderedValues.indexOf(other));
 }

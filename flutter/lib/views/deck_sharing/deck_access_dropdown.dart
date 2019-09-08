@@ -29,7 +29,7 @@ class _DropdownState extends State<DeckAccessDropdownWidget> {
           child: DropdownButton<AccessType>(
         // Provide default value.
         value: widget.value,
-        items: (AccessType.values + [null])
+        items: (AccessType.orderedValues + [null])
             .where(widget.filter)
             .map((value) => DropdownMenuItem<AccessType>(
                   value: value,

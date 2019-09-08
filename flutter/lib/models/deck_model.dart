@@ -1,14 +1,29 @@
 import 'dart:async';
 import 'dart:core';
 
+import 'package:built_collection/built_collection.dart';
+import 'package:built_value/built_value.dart';
+import 'package:built_value/serializer.dart';
 import 'package:delern_flutter/models/base/database_observable_list.dart';
-import 'package:delern_flutter/models/base/enum.dart';
 import 'package:delern_flutter/models/base/model.dart';
 import 'package:delern_flutter/models/deck_access_model.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:meta/meta.dart';
 
-enum DeckType { basic, german, swiss }
+part 'deck_model.g.dart';
+
+class DeckType extends EnumClass {
+  static Serializer<DeckType> get serializer => _$deckTypeSerializer;
+
+  static const DeckType basic = _$basic;
+  static const DeckType german = _$german;
+  static const DeckType swiss = _$swiss;
+
+  const DeckType._(String name) : super(name);
+
+  static BuiltSet<DeckType> get values => _$values;
+  static DeckType valueOf(String name) => _$valueOf(name);
+}
 
 class DeckModel implements Model {
   String key;
@@ -48,13 +63,15 @@ class DeckModel implements Model {
     }
     name = value['name'];
     markdown = value['markdown'] ?? false;
-    type = Enum.fromString(
-            value['deckType']?.toString()?.toLowerCase(), DeckType.values) ??
-        DeckType.basic;
+    type = value.containsKey('deckType')
+        ? DeckType.valueOf(value['deckType'].toLowerCase())
+        : DeckType.basic;
     accepted = value['accepted'] ?? false;
     lastSyncAt = DateTime.fromMillisecondsSinceEpoch(value['lastSyncAt'] ?? 0);
     category = value['category'];
-    access = Enum.fromString(value['access'], AccessType.values);
+    access = value.containsKey('access')
+        ? AccessType.valueOf(value['access'])
+        : null;
   }
 
   static Stream<DeckModel> get({@required String uid, @required String key}) =>

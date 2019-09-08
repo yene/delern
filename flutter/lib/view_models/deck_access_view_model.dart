@@ -27,8 +27,7 @@ class DeckAccessesViewModel {
             // ignore: unnecessary_parenthesis
             (FilteredSortedObservableList(
                 DeckAccessModel.getList(deckKey: deck.key))
-              ..comparator =
-                  (c1, c2) => c1.access.index.compareTo(c2.access.index));
+              ..comparator = (c1, c2) => c1.access.compareTo(c2.access));
 
   Future<void> shareDeck(DeckAccessModel access) {
     assert(deck.key == access.deckKey);

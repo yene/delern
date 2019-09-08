@@ -1,19 +1,35 @@
 import 'dart:async';
 import 'dart:core';
 
+import 'package:built_collection/built_collection.dart';
+import 'package:built_value/built_value.dart';
+import 'package:built_value/serializer.dart';
 import 'package:delern_flutter/models/base/database_observable_list.dart';
-import 'package:delern_flutter/models/base/enum.dart';
 import 'package:delern_flutter/models/base/keyed_list_item.dart';
 import 'package:delern_flutter/models/base/model.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:meta/meta.dart';
 
-enum AccessType {
-  read,
+part 'deck_access_model.g.dart';
 
-  /// "write" implies "read".
-  write,
-  owner,
+class AccessType extends EnumClass {
+  static Serializer<AccessType> get serializer => _$accessTypeSerializer;
+
+  static const AccessType owner = _$owner;
+  static const AccessType write = _$write;
+  static const AccessType read = _$read;
+
+  const AccessType._(String name) : super(name);
+
+  static BuiltSet<AccessType> get values => _$values;
+  static AccessType valueOf(String name) => _$valueOf(name);
+
+  // In Dart, default Set implementation is LinkedHashSet, which is ordered.
+  // Convert it to a List here to make the values indexable.
+  static final List<AccessType> orderedValues = _$values.toList();
+
+  int compareTo(AccessType other) =>
+      orderedValues.indexOf(this).compareTo(orderedValues.indexOf(other));
 }
 
 class DeckAccessModel implements KeyedListItem, Model {
@@ -47,7 +63,7 @@ class DeckAccessModel implements KeyedListItem, Model {
     _displayName = value['displayName'];
     _photoUrl = value['photoUrl'];
     email = value['email'];
-    access = Enum.fromString(value['access'], AccessType.values);
+    access = AccessType.valueOf(value['access']);
   }
 
   static DatabaseObservableList<DeckAccessModel> getList(

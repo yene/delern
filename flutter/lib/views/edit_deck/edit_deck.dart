@@ -59,7 +59,9 @@ class _EditDeckState extends State<EditDeck> {
         blocBuilder: (user) {
           final bloc = EditDeckBloc(deck: _currentDeckState, user: user);
           bloc.doDeckChanged.listen((deck) {
-            _currentDeckState = deck;
+            setState(() {
+              _currentDeckState = deck;
+            });
           });
           return bloc;
         },

@@ -9,6 +9,7 @@ import 'package:delern_flutter/views/helpers/sign_in_widget.dart';
 import 'package:delern_flutter/views/onboarding/onboarding.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -55,19 +56,12 @@ Future<void> main() async {
   // can call into the native code.
   WidgetsFlutterBinding.ensureInitialized();
 
-  FlutterError.onError = (details) async {
-    FlutterError.dumpErrorToConsole(details);
-    await error_reporting.report(
-        'FlutterError', details.exception, details.stack,
-        extra: {
-          'FlutterErrorDetails': {
-            'library': details.library,
-            'context': details.context,
-            'silent': details.silent,
-          },
-        },
-        printErrorInfo: false);
-  };
+  // We report under a different project in dev mode.
+  // TODO(dotdoom): https://github.com/FirebaseExtended/flutterfire/pull/105.
+  // Crashlytics.instance.enableInDevMode = true;
+
+  FlutterError.onError = Crashlytics.instance.recordFlutterError;
+
   Isolate.current.addErrorListener(RawReceivePort((pair) async {
     final List<dynamic> errorAndStacktrace = pair;
     await error_reporting.report(
@@ -76,11 +70,10 @@ Future<void> main() async {
       errorAndStacktrace.last,
     );
   }).sendPort);
+
   unawaited(runZoned<Future>(() async {
     unawaited(FirebaseDatabase.instance.setPersistenceEnabled(true));
     unawaited(FirebaseAnalytics().logAppOpen());
     runApp(App());
-  }, onError: (error, stackTrace) async {
-    await error_reporting.report('Zone', error, stackTrace);
-  }));
+  }, onError: Crashlytics.instance.recordError));
 }

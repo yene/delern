@@ -98,17 +98,19 @@ class _DeckMenuState extends State<DeckMenu>
 
 enum _DeckMenuItemType { add, edit, share, delete }
 
-Map<_DeckMenuItemType, String> _buildMenu(BuildContext context) {
+List<MapEntry<_DeckMenuItemType, String>> _buildMenu(BuildContext context) {
   final deckMenu = <_DeckMenuItemType, String>{
     _DeckMenuItemType.add: localizations.of(context).addCardsDeckMenu,
     _DeckMenuItemType.edit: localizations.of(context).editCardsDeckMenu,
-    _DeckMenuItemType.delete: localizations.of(context).delete,
   };
 
   if (!CurrentUserWidget.of(context).user.isAnonymous) {
     deckMenu[_DeckMenuItemType.share] = localizations.of(context).shareDeckMenu;
   }
-  return deckMenu;
+
+  // Put delete the last to be sure that delete is the last in menu
+  deckMenu[_DeckMenuItemType.delete] = localizations.of(context).delete;
+  return deckMenu.entries.toList();
 }
 
 class _MenuRoute<_DeckMenuItemType> extends PopupRoute<_DeckMenuItemType> {
@@ -192,23 +194,23 @@ class _MenuItemsWidgetState extends State<_MenuItemsWidget>
   Widget build(BuildContext context) {
     final menu = _buildMenu(context);
     return AnimatedBuilder(
-      animation: _controller,
-      builder: (context, child) => Stack(
-        alignment: AlignmentDirectional.topEnd,
-        children: menu.entries
-            .map((entry) => FadeTransition(
+        animation: _controller,
+        builder: (context, child) =>
+            Stack(alignment: AlignmentDirectional.topEnd, children: [
+              // We need to use loop here to know for which item in list
+              // we build menu button to count padding.
+              for (int i = 0; i < menu.length; i++)
+                FadeTransition(
                   opacity: _opacityAnimation,
                   child: Align(
                       alignment: _moveAnimation.value,
                       child: Container(
-                          padding: EdgeInsets.only(
-                              bottom:
-                                  (menu.length - 1 - entry.key.index) * 45.0),
-                          child: _buildMenuItem(entry.key, entry.value))),
-                ))
-            .toList(),
-      ),
-    );
+                        padding: EdgeInsets.only(
+                            bottom: (menu.length - 1 - i) * 45.0),
+                        child: _buildMenuItem(menu[i].key, menu[i].value),
+                      )),
+                )
+            ]));
   }
 
   void finishAnimation() {

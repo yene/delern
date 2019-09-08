@@ -1,7 +1,7 @@
 import 'package:delern_flutter/flutter/localization.dart' as localizations;
 import 'package:delern_flutter/flutter/styles.dart' as app_styles;
 import 'package:delern_flutter/models/deck_model.dart';
-import 'package:delern_flutter/view_models/edit_bloc.dart';
+import 'package:delern_flutter/view_models/edit_deck_bloc.dart';
 import 'package:delern_flutter/views/helpers/card_background_specifier.dart';
 import 'package:flutter/material.dart';
 
@@ -11,7 +11,7 @@ final _kItemListPadding = Container(width: _kBorderPadding * 2);
 
 class DeckSettingsWidget extends StatefulWidget {
   final DeckModel deck;
-  final EditBloc bloc;
+  final EditDeckBloc bloc;
 
   const DeckSettingsWidget({@required this.deck, @required this.bloc})
       : assert(bloc != null);

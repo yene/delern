@@ -38,7 +38,7 @@ Future<void> openLearnCardViewScreen(BuildContext context, DeckModel deck) =>
           settings: const RouteSettings(name: '/decks/learn-view'),
           // TODO(dotdoom): pass scheduled cards list to
           //  CardsLearning.
-          builder: (context) => CardsReviewLearning(deck: deck),
+          builder: (context) => CardsViewLearning(deck: deck),
         ));
 
 Future<void> openNewCardScreen(BuildContext context, DeckModel deck) =>

@@ -6,6 +6,9 @@ import 'package:built_value/standard_json_plugin.dart';
 import 'package:delern_flutter/models/card_model.dart';
 import 'package:delern_flutter/models/deck_access_model.dart';
 import 'package:delern_flutter/models/deck_model.dart';
+import 'package:delern_flutter/models/scheduled_card_model.dart';
+
+import 'deck_access_model.dart';
 
 part 'serializers.g.dart';
 
@@ -29,8 +32,11 @@ class FirebaseDateTimeSerializer implements PrimitiveSerializer<DateTime> {
 
 @SerializersFor([
   CardModel,
+  DeckModel,
   AccessType,
   DeckType,
+  DeckAccessModel,
+  ScheduledCardModel,
 ])
 final Serializers serializers = (_$serializers.toBuilder()
       ..addPlugin(StandardJsonPlugin())

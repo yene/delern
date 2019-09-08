@@ -5,8 +5,8 @@ import 'package:built_collection/built_collection.dart';
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
 import 'package:delern_flutter/models/base/database_observable_list.dart';
-import 'package:delern_flutter/models/base/keyed_list_item.dart';
 import 'package:delern_flutter/models/base/model.dart';
+import 'package:delern_flutter/models/serializers.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:meta/meta.dart';
 
@@ -36,38 +36,47 @@ class AccessType extends EnumClass implements Comparable<AccessType> {
       orderedValues.indexOf(this).compareTo(orderedValues.indexOf(other));
 }
 
-class DeckAccessModel implements KeyedListItem, Model {
+abstract class DeckAccessModel
+    implements Built<DeckAccessModel, DeckAccessModelBuilder>, ReadonlyModel {
   /// DeckAccessModel key is uid of the user whose access it holds.
-  String key;
+  @nullable
+  String get key;
 
-  String deckKey;
-  AccessType access;
-  String email;
+  @nullable
+  String get deckKey;
+  @nullable
+  AccessType get access;
+  @nullable
+  String get email;
 
   /// Display Name is populated by database, can be null.
-  String get displayName => _displayName;
-  String _displayName;
+  @nullable
+  String get displayName;
 
   /// Photo URL is populated by database, can be null.
-  String get photoUrl => _photoUrl;
-  String _photoUrl;
+  @nullable
+  String get photoUrl;
 
-  DeckAccessModel({@required this.deckKey}) : assert(deckKey != null);
+  static Serializer<DeckAccessModel> get serializer =>
+      _$deckAccessModelSerializer;
 
-  DeckAccessModel._fromSnapshot({
-    @required this.key,
-    @required this.deckKey,
+  factory DeckAccessModel([void Function(DeckAccessModelBuilder) updates]) =
+      _$DeckAccessModel;
+  DeckAccessModel._();
+
+  static DeckAccessModel fromSnapshot({
+    @required String key,
+    @required String deckKey,
     @required Map value,
-  })  : assert(key != null),
-        assert(deckKey != null) {
+  }) {
     if (value == null) {
-      key = null;
-      return;
+      return (DeckAccessModelBuilder()..deckKey = deckKey).build();
     }
-    _displayName = value['displayName'];
-    _photoUrl = value['photoUrl'];
-    email = value['email'];
-    access = AccessType.valueOf(value['access']);
+    return serializers
+        .deserializeWith(DeckAccessModel.serializer, value)
+        .rebuild((b) => b
+          ..deckKey = deckKey
+          ..key = key);
   }
 
   static DatabaseObservableList<DeckAccessModel> getList(
@@ -78,7 +87,7 @@ class DeckAccessModel implements KeyedListItem, Model {
               .child('deck_access')
               .child(deckKey)
               .orderByKey(),
-          snapshotParser: (key, value) => DeckAccessModel._fromSnapshot(
+          snapshotParser: (key, value) => DeckAccessModel.fromSnapshot(
               key: key, deckKey: deckKey, value: value));
 
   static Stream<DeckAccessModel> get(
@@ -89,6 +98,6 @@ class DeckAccessModel implements KeyedListItem, Model {
           .child(deckKey)
           .child(key)
           .onValue
-          .map((evt) => DeckAccessModel._fromSnapshot(
+          .map((evt) => DeckAccessModel.fromSnapshot(
               key: key, deckKey: deckKey, value: evt.snapshot.value));
 }

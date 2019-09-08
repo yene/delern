@@ -10,18 +10,18 @@ import 'package:meta/meta.dart';
 import 'package:pedantic/pedantic.dart';
 
 class DeckSettingsBloc extends ScreenBloc {
-  final DeckModel _deck;
+  final DeckModel initialDeck;
   String _deckName;
   DeckType _deckType;
   bool _markdown;
 
-  DeckSettingsBloc({@required User user, @required DeckModel deck})
-      : assert(deck != null),
-        _deck = deck,
+  DeckSettingsBloc({@required User user, @required this.initialDeck})
+      : assert(initialDeck != null),
         super(user) {
-    _deckName = deck.name;
-    _deckType = deck.type;
-    _markdown = deck.markdown;
+    // TODO(ksheremet): this is usually called _initFields().
+    _deckName = initialDeck.name;
+    _deckType = initialDeck.type;
+    _markdown = initialDeck.markdown;
     _initListeners();
   }
 
@@ -45,11 +45,9 @@ class DeckSettingsBloc extends ScreenBloc {
   Sink<bool> get onMarkdown => _onMarkdownController.sink;
 
   Future<void> _delete() {
-    unawaited(logDeckDelete(_deck.key));
-    return user.deleteDeck(deck: _deck);
+    unawaited(logDeckDelete(initialDeck.key));
+    return user.deleteDeck(deck: initialDeck);
   }
-
-  Future<void> _save() => user.updateDeck(deck: _deck);
 
   @override
   void dispose() {
@@ -63,12 +61,12 @@ class DeckSettingsBloc extends ScreenBloc {
   }
 
   Future<bool> _saveDeckSettings() async {
-    _deck
-      ..name = _deckName
-      ..markdown = _markdown
-      ..type = _deckType;
     try {
-      await _save();
+      await user.updateDeck(
+          deck: initialDeck.rebuild((b) => b
+            ..name = _deckName
+            ..markdown = _markdown
+            ..type = _deckType));
       return true;
     } catch (e, stackTrace) {
       unawaited(error_reporting.report('updateDeck', e, stackTrace));
@@ -90,7 +88,7 @@ class DeckSettingsBloc extends ScreenBloc {
 
     _onDeleteDeckIntention.stream.listen((_) {
       String deleteDeckQuestion;
-      switch (_deck.access) {
+      switch (initialDeck.access) {
         case AccessType.owner:
           deleteDeckQuestion = locale.deleteDeckOwnerAccessQuestion;
           break;

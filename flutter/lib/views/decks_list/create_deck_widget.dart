@@ -60,8 +60,8 @@ class _CreateDeckDialogState extends State<_CreateDeckDialog> {
       onPressed: _textController.text.isEmpty
           ? null
           : () {
-              Navigator.of(context)
-                  .pop(DeckModel()..name = _textController.text);
+              Navigator.of(context).pop(
+                  (DeckModelBuilder()..name = _textController.text).build());
             },
       child: Text(
         localizations.of(context).add.toUpperCase(),

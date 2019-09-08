@@ -2,18 +2,22 @@ import 'dart:async';
 import 'dart:core';
 import 'dart:math';
 
+import 'package:built_value/built_value.dart';
+import 'package:built_value/serializer.dart';
 import 'package:delern_flutter/models/base/database_observable_list.dart';
 import 'package:delern_flutter/models/base/keyed_list_item.dart';
 import 'package:delern_flutter/models/base/model.dart';
 import 'package:delern_flutter/models/card_model.dart';
-import 'package:delern_flutter/models/card_reply_model.dart';
 import 'package:delern_flutter/models/deck_model.dart';
+import 'package:delern_flutter/models/serializers.dart';
 import 'package:delern_flutter/remote/auth.dart';
 import 'package:delern_flutter/remote/error_reporting.dart' as error_reporting;
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/foundation.dart';
 import 'package:meta/meta.dart';
 import 'package:pedantic/pedantic.dart';
+
+part 'scheduled_card_model.g.dart';
 
 @immutable
 class CardAndScheduledCard {
@@ -34,7 +38,10 @@ class ScheduledCardsListModel implements KeyedListItem {
         assert(scheduledCards != null);
 }
 
-class ScheduledCardModel implements Model {
+abstract class ScheduledCardModel
+    implements
+        Built<ScheduledCardModel, ScheduledCardModelBuilder>,
+        ReadonlyModel {
   static const levelDurations = [
     Duration(hours: 4),
     Duration(days: 1),
@@ -45,37 +52,48 @@ class ScheduledCardModel implements Model {
     Duration(days: 60),
   ];
 
-  String deckKey;
-  String key;
-  int level;
-  DateTime repeatAt;
+  @nullable
+  String get deckKey;
+  @nullable
+  String get key;
+  int get level;
+  DateTime get repeatAt;
 
-  ScheduledCardModel({@required this.deckKey}) : assert(deckKey != null) {
-    level = 0;
-    repeatAt = DateTime.fromMillisecondsSinceEpoch(0);
-  }
+  static Serializer<ScheduledCardModel> get serializer =>
+      _$scheduledCardModelSerializer;
 
-  ScheduledCardModel._fromSnapshot({
-    @required this.key,
-    @required this.deckKey,
+  factory ScheduledCardModel(
+          [void Function(ScheduledCardModelBuilder) updates]) =
+      _$ScheduledCardModel;
+  ScheduledCardModel._();
+
+  static ScheduledCardModel fromSnapshot({
+    @required String key,
+    @required String deckKey,
     @required Map value,
-  })  : assert(deckKey != null),
-        assert(key != null) {
+  }) {
     if (value == null) {
-      key = null;
-      return;
+      return (ScheduledCardModelBuilder()..deckKey = deckKey).build();
     }
+
+    // Below is a hack to translate legacy values (i.e. strings starting with
+    // 'L') into something that BuiltValue understands.
     var levelString = value['level'].toString();
     if (levelString.startsWith('L')) {
       levelString = levelString.substring(1);
     }
     try {
-      level = int.parse(levelString);
+      value['level'] = int.parse(levelString);
     } on FormatException catch (e, stackTrace) {
       error_reporting.report('ScheduledCard', e, stackTrace);
-      level = 0;
+      value['level'] = 0;
     }
-    repeatAt = DateTime.fromMillisecondsSinceEpoch(value['repeatAt']);
+
+    return serializers
+        .deserializeWith(ScheduledCardModel.serializer, value)
+        .rebuild((b) => b
+          ..deckKey = deckKey
+          ..key = key);
   }
 
   // A jutter used to calculate diverse next scheduled time for a card.
@@ -129,7 +147,7 @@ class ScheduledCardModel implements Model {
         final card =
             await CardModel.get(deckKey: deck.key, key: latestScheduledCard.key)
                 .first;
-        final scheduledCard = ScheduledCardModel._fromSnapshot(
+        final scheduledCard = ScheduledCardModel.fromSnapshot(
             key: latestScheduledCard.key,
             deckKey: deck.key,
             value: latestScheduledCard.value);
@@ -144,24 +162,21 @@ class ScheduledCardModel implements Model {
         sink.add(CardAndScheduledCard(card, scheduledCard));
       }));
 
-  CardReplyModel answer(
+  ScheduledCardModel answer(
       {@required bool knows, @required bool learnBeyondHorizon}) {
-    final cv = (CardReplyModelBuilder()
-          ..cardKey = key
-          ..deckKey = deckKey
-          ..reply = knows
-          ..levelBefore = level)
-        .build();
+    var newLevel = level;
 
-    // if know==true and learnBeyondHorizon==true, the level stays the same
     if (knows && !learnBeyondHorizon) {
-      level = min(level + 1, levelDurations.length - 1);
+      newLevel = min(level + 1, levelDurations.length - 1);
     }
     if (!knows) {
-      level = 0;
+      newLevel = 0;
     }
-    repeatAt = DateTime.now().toUtc().add(levelDurations[level] + _newJitter());
-    return cv;
+
+    return rebuild((b) => b
+      ..level = newLevel
+      ..repeatAt =
+          DateTime.now().toUtc().add(levelDurations[level] + _newJitter()));
   }
 
   static DatabaseObservableList<ScheduledCardsListModel> listsForUser(
@@ -176,7 +191,7 @@ class ScheduledCardModel implements Model {
             return ScheduledCardsListModel(
                 key: deckKey,
                 scheduledCards: List.unmodifiable(value.entries
-                    .map((entry) => ScheduledCardModel._fromSnapshot(
+                    .map((entry) => ScheduledCardModel.fromSnapshot(
                           key: entry.key,
                           deckKey: deckKey,
                           value: entry.value,

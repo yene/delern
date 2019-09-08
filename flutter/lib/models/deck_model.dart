@@ -7,7 +7,9 @@ import 'package:built_value/serializer.dart';
 import 'package:delern_flutter/models/base/database_observable_list.dart';
 import 'package:delern_flutter/models/base/model.dart';
 import 'package:delern_flutter/models/deck_access_model.dart';
+import 'package:delern_flutter/models/serializers.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/foundation.dart';
 import 'package:meta/meta.dart';
 
 part 'deck_model.g.dart';
@@ -15,8 +17,13 @@ part 'deck_model.g.dart';
 class DeckType extends EnumClass {
   static Serializer<DeckType> get serializer => _$deckTypeSerializer;
 
+  @BuiltValueEnumConst(wireName: 'BASIC')
   static const DeckType basic = _$basic;
+
+  @BuiltValueEnumConst(wireName: 'GERMAN')
   static const DeckType german = _$german;
+
+  @BuiltValueEnumConst(wireName: 'SWISS')
   static const DeckType swiss = _$swiss;
 
   const DeckType._(String name) : super(name);
@@ -25,53 +32,38 @@ class DeckType extends EnumClass {
   static DeckType valueOf(String name) => _$valueOf(name);
 }
 
-class DeckModel implements Model {
-  String key;
-  String name;
-  bool markdown;
-  DeckType type;
-  bool accepted;
-  AccessType access;
-  DateTime lastSyncAt;
-  String category;
+abstract class DeckModel
+    implements Built<DeckModel, DeckModelBuilder>, ReadonlyModel {
+  @nullable
+  String get key;
+  @nullable
+  String get name;
+  bool get markdown;
+  @BuiltValueField(wireName: 'deckType')
+  DeckType get type;
+  @nullable
+  bool get accepted;
+  @nullable
+  AccessType get access;
+  DateTime get lastSyncAt;
+  @nullable
+  String get category;
 
-  DeckModel() {
-    lastSyncAt = DateTime.fromMillisecondsSinceEpoch(0);
-    markdown = false;
-    type = DeckType.basic;
-    accepted = true;
-  }
+  static Serializer<DeckModel> get serializer => _$deckModelSerializer;
 
-  // We expect this to be called often and optimize for performance.
-  DeckModel.copyFrom(DeckModel other)
-      : key = other.key,
-        name = other.name,
-        markdown = other.markdown,
-        type = other.type,
-        accepted = other.accepted,
-        lastSyncAt = other.lastSyncAt,
-        category = other.category,
-        access = other.access;
+  factory DeckModel([void Function(DeckModelBuilder) updates]) = _$DeckModel;
+  DeckModel._();
 
-  DeckModel._fromSnapshot({
-    @required this.key,
+  static DeckModel fromSnapshot({
+    @required String key,
     @required Map value,
-  }) : assert(key != null) {
+  }) {
     if (value == null) {
-      key = null;
-      return;
+      return DeckModelBuilder().build();
     }
-    name = value['name'];
-    markdown = value['markdown'] ?? false;
-    type = value.containsKey('deckType')
-        ? DeckType.valueOf(value['deckType'].toLowerCase())
-        : DeckType.basic;
-    accepted = value['accepted'] ?? false;
-    lastSyncAt = DateTime.fromMillisecondsSinceEpoch(value['lastSyncAt'] ?? 0);
-    category = value['category'];
-    access = value.containsKey('access')
-        ? AccessType.valueOf(value['access'])
-        : null;
+    return serializers
+        .deserializeWith(DeckModel.serializer, value)
+        .rebuild((b) => b..key = key);
   }
 
   static Stream<DeckModel> get({@required String uid, @required String key}) =>
@@ -81,7 +73,7 @@ class DeckModel implements Model {
           .child(uid)
           .child(key)
           .onValue
-          .map((evt) => DeckModel._fromSnapshot(
+          .map((evt) => DeckModel.fromSnapshot(
                 key: key,
                 value: evt.snapshot.value,
               ));
@@ -101,7 +93,7 @@ class DeckModel implements Model {
             .orderByKey(),
         snapshotParser: (key, value) {
           _keepDeckSynced(uid, key);
-          return DeckModel._fromSnapshot(key: key, value: value);
+          return DeckModel.fromSnapshot(key: key, value: value);
         });
   }
 
@@ -118,4 +110,19 @@ class DeckModel implements Model {
         .child(deckId)
         .keepSynced(true);
   }
+}
+
+abstract class DeckModelBuilder
+    implements Builder<DeckModel, DeckModelBuilder> {
+  String key;
+  String name;
+  bool markdown = false;
+  DeckType type = DeckType.basic;
+  bool accepted = true;
+  AccessType access;
+  DateTime lastSyncAt = DateTime.fromMillisecondsSinceEpoch(0);
+  String category;
+
+  factory DeckModelBuilder() = _$DeckModelBuilder;
+  DeckModelBuilder._();
 }

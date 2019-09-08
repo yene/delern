@@ -9,11 +9,12 @@ import 'package:delern_flutter/remote/auth.dart';
 import 'package:delern_flutter/remote/error_reporting.dart' as error_reporting;
 import 'package:delern_flutter/view_models/base/filtered_sorted_observable_list.dart';
 import 'package:delern_flutter/view_models/base/screen_bloc.dart';
+import 'package:flutter/foundation.dart';
 import 'package:meta/meta.dart';
 import 'package:pedantic/pedantic.dart';
 
 class EditDeckBloc extends ScreenBloc {
-  final DeckModel _deck;
+  DeckModel _deck;
 
   DelayedInitializationObservableList<CardModel> get list => _list;
   final FilteredSortedObservableList<CardModel> _list;
@@ -62,7 +63,7 @@ class EditDeckBloc extends ScreenBloc {
 
   void _initListeners() {
     _onDeckNameController.stream.listen((name) {
-      _deck.name = name;
+      _deck = _deck.rebuild((b) => b.name = name);
       _doDeckChangedController.add(_deck);
     });
 
@@ -91,12 +92,12 @@ class EditDeckBloc extends ScreenBloc {
     });
 
     _onDeckTypeController.stream.listen((deckType) {
-      _deck.type = deckType;
+      _deck = _deck.rebuild((b) => b.type = deckType);
       _doDeckChangedController.add(_deck);
     });
 
     _onMarkdownController.stream.listen((markdown) {
-      _deck.markdown = markdown;
+      _deck = _deck.rebuild((b) => b.markdown = markdown);
       _doDeckChangedController.add(_deck);
     });
   }

@@ -1,4 +1,3 @@
-import 'package:delern_flutter/models/base/enum.dart';
 import 'package:delern_flutter/models/card_model.dart';
 import 'package:delern_flutter/models/deck_access_model.dart';
 import 'package:delern_flutter/models/deck_model.dart';
@@ -33,13 +32,13 @@ class DataWriter {
     await _write({
       '$deckPath/name': deck.name,
       '$deckPath/markdown': deck.markdown,
-      '$deckPath/deckType': Enum.asString(deck.type)?.toUpperCase(),
+      '$deckPath/deckType': deck.type.toString().toUpperCase(),
       '$deckPath/accepted': deck.accepted,
       '$deckPath/lastSyncAt': deck.lastSyncAt.millisecondsSinceEpoch,
       '$deckPath/category': deck.category,
 
-      '$deckPath/access': Enum.asString(AccessType.owner),
-      '$deckAccessPath/access': Enum.asString(AccessType.owner),
+      '$deckPath/access': AccessType.owner.toString(),
+      '$deckAccessPath/access': AccessType.owner.toString(),
       '$deckAccessPath/email': email,
       // Do not save displayName and photoUrl because these are populated by
       // Cloud functions.
@@ -55,7 +54,7 @@ class DataWriter {
     return _write({
       '$deckPath/name': deck.name,
       '$deckPath/markdown': deck.markdown,
-      '$deckPath/deckType': Enum.asString(deck.type)?.toUpperCase(),
+      '$deckPath/deckType': deck.type.toString().toUpperCase(),
       '$deckPath/accepted': deck.accepted,
       '$deckPath/lastSyncAt': deck.lastSyncAt.millisecondsSinceEpoch,
       '$deckPath/category': deck.category,
@@ -173,8 +172,8 @@ class DataWriter {
     final deckAccessPath = 'deck_access/${deck.key}/$shareWithUid';
     final deckPath = 'decks/$shareWithUid/${deck.key}';
     final updates = <String, dynamic>{
-      '$deckAccessPath/access': Enum.asString(access),
-      '$deckPath/access': Enum.asString(access),
+      '$deckAccessPath/access': access.toString(),
+      '$deckPath/access': access.toString(),
     };
     if ((await DeckAccessModel.get(deckKey: deck.key, key: shareWithUid).first)
             .key ==
@@ -184,7 +183,7 @@ class DataWriter {
       updates.addAll({
         '$deckPath/name': deck.name,
         '$deckPath/markdown': deck.markdown,
-        '$deckPath/deckType': Enum.asString(deck.type)?.toUpperCase(),
+        '$deckPath/deckType': deck.type.toString().toUpperCase(),
         '$deckPath/accepted': false,
         '$deckPath/lastSyncAt': 0,
         '$deckPath/category': deck.category,

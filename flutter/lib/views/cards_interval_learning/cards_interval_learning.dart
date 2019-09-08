@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:delern_flutter/flutter/localization.dart' as localizations;
 import 'package:delern_flutter/flutter/styles.dart' as app_styles;
 import 'package:delern_flutter/flutter/user_messages.dart';
+import 'package:delern_flutter/models/card_model.dart';
 import 'package:delern_flutter/models/deck_access_model.dart';
 import 'package:delern_flutter/models/deck_model.dart';
 import 'package:delern_flutter/routes.dart';
@@ -105,17 +106,25 @@ class CardsIntervalLearningState extends State<CardsIntervalLearning> {
                                   _kCardPaddingRatio,
                               right: MediaQuery.of(context).size.width *
                                   _kCardPaddingRatio),
-                      child: FlipCardWidget(
-                        front: _viewModel.card.front,
-                        back: _viewModel.card.back,
-                        isMarkdown: _viewModel.deck.markdown,
-                        gradient: specifyLearnCardBackgroundGradient(
-                            _viewModel.deck.type, _viewModel.card.back),
-                        onFlip: () {
-                          _showReplyButtons.value = true;
-                        },
-                        key: ValueKey(_viewModel.card.key),
-                      ),
+                      child: StreamBuilder<CardModel>(
+                          initialData: _viewModel.initialCard,
+                          stream: _viewModel.card,
+                          builder: (context, snapshot) {
+                            final card = snapshot.data.key == null
+                                ? _viewModel.initialCard
+                                : snapshot.data;
+                            return FlipCardWidget(
+                              front: card.front,
+                              back: card.back,
+                              isMarkdown: _viewModel.deck.markdown,
+                              gradient: specifyLearnCardBackgroundGradient(
+                                  _viewModel.deck.type, card.back),
+                              onFlip: () {
+                                _showReplyButtons.value = true;
+                              },
+                              key: ValueKey(card.key),
+                            );
+                          }),
                     )),
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 20),
@@ -205,7 +214,7 @@ class CardsIntervalLearningState extends State<CardsIntervalLearning> {
     switch (item) {
       case _CardMenuItemType.edit:
         if (widget.deck.access != AccessType.read) {
-          openEditCardScreen(context, widget.deck, _viewModel.card);
+          openEditCardScreen(context, widget.deck, _viewModel.initialCard);
         } else {
           UserMessages.showMessage(Scaffold.of(context),
               localizations.of(context).noEditingWithReadAccessUserMessage);

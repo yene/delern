@@ -19,8 +19,11 @@ class LearningViewModel {
   ScheduledCardModel get scheduledCard => _scheduledCard;
   ScheduledCardModel _scheduledCard;
 
-  CardModel get card => _card;
-  CardModel _card;
+  Stream<CardModel> get card => _card;
+  Stream<CardModel> _card;
+
+  CardModel get initialCard => _initialCard;
+  CardModel _initialCard;
 
   DeckModel get deck => _deck;
   DeckModel _deck;
@@ -37,6 +40,7 @@ class LearningViewModel {
           DeckModel.get(key: deck.key, uid: user.uid).map((d) => _deck = d),
       LearningUpdateType.scheduledCardUpdate:
           ScheduledCardModel.next(user, deck).map((casc) {
+        _initialCard = casc.initialCard;
         _card = casc.card;
         _scheduledCard = casc.scheduledCard;
       }),
@@ -53,5 +57,5 @@ class LearningViewModel {
           knows: knows,
           learnBeyondHorizon: learnBeyondHorizon);
 
-  Future<void> deleteCard() => user.deleteCard(card: card);
+  Future<void> deleteCard() => user.deleteCard(card: initialCard);
 }

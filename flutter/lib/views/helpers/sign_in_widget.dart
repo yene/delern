@@ -23,8 +23,8 @@ class SignInWidget extends StatefulWidget {
 }
 
 class _SignInWidgetState extends State<SignInWidget> {
-  final _itemPadding =
-      const Padding(padding: EdgeInsets.symmetric(vertical: 10));
+  static const _itemPadding =
+      Padding(padding: EdgeInsets.symmetric(vertical: 10));
   User _currentUser;
 
   @override

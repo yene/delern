@@ -40,7 +40,11 @@ class _SignInWidgetState extends State<SignInWidget> {
         error_reporting.uid = _currentUser.uid;
 
         unawaited(FirebaseAnalytics().setUserId(_currentUser.uid));
-        unawaited(FirebaseAnalytics().logLogin());
+        final loginProviders = _currentUser.providers;
+        unawaited(FirebaseAnalytics().logLogin(
+            loginMethod: loginProviders.isEmpty
+                ? 'anonymous'
+                : loginProviders.first.toString()));
 
         _firebaseMessaging.onTokenRefresh.listen((token) async {
           final fcm = (FCMBuilder()

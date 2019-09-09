@@ -10,53 +10,57 @@ class EditDeleteDismissible extends StatelessWidget {
   final DeleteCallback onDelete;
   final EditCallback onEdit;
 
-  const EditDeleteDismissible(
-      {@required this.child,
-      @required this.iconSize,
-      @required this.onDelete,
-      @required this.onEdit,
-      @required key})
-      : assert(child != null),
+  const EditDeleteDismissible({
+    @required this.child,
+    @required this.iconSize,
+    @required key,
+    this.onDelete,
+    this.onEdit,
+  })  : assert(child != null),
         assert(iconSize != null),
-        assert(onDelete != null),
-        assert(onEdit != null),
         super(key: key);
 
   @override
   Widget build(BuildContext context) => Dismissible(
         direction: DismissDirection.horizontal,
         resizeDuration: const Duration(seconds: 1),
-        background: Container(
-          color: app_styles.kEditDismissibleColor,
-          child: Align(
-            alignment: Alignment.centerLeft,
-            child: AspectRatio(
-              aspectRatio: 1,
-              child: Icon(
-                Icons.edit,
-                color: Colors.white,
-                size: iconSize,
+        background: (onEdit == null)
+            ? null
+            : Container(
+                color: app_styles.kEditDismissibleColor,
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: AspectRatio(
+                    aspectRatio: 1,
+                    child: Icon(
+                      Icons.edit,
+                      color: Colors.white,
+                      size: iconSize,
+                    ),
+                  ),
+                ),
               ),
-            ),
-          ),
-        ),
-        secondaryBackground: Container(
-          color: app_styles.kDeleteDismissibleColor,
-          alignment: Alignment.centerRight,
-          child: AspectRatio(
-            aspectRatio: 1,
-            child: Icon(
-              Icons.delete,
-              color: Colors.white,
-              size: iconSize,
-            ),
-          ),
-        ),
+        secondaryBackground: (onDelete == null)
+            ? null
+            : Container(
+                color: app_styles.kDeleteDismissibleColor,
+                alignment: Alignment.centerRight,
+                child: AspectRatio(
+                  aspectRatio: 1,
+                  child: Icon(
+                    Icons.delete,
+                    color: Colors.white,
+                    size: iconSize,
+                  ),
+                ),
+              ),
         confirmDismiss: (direction) async {
-          if (direction == DismissDirection.endToStart) {
+          if (direction == DismissDirection.endToStart && onDelete != null) {
             return onDelete();
           }
-          onEdit();
+          if (onEdit != null) {
+            onEdit();
+          }
           return false;
         },
         key: key,

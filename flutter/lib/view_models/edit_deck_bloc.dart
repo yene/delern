@@ -61,6 +61,13 @@ class EditDeckBloc extends ScreenBloc {
   final _onMarkdownController = StreamController<bool>();
   Sink<bool> get onMarkdown => _onMarkdownController.sink;
 
+  final _onEditCardIntentionController = StreamController<CardModel>();
+  Sink<CardModel> get onEditCardIntention =>
+      _onEditCardIntentionController.sink;
+
+  final _doEditCardController = StreamController<CardModel>();
+  Stream<CardModel> get doEditCard => _doEditCardController.stream;
+
   void _initListeners() {
     _onDeckNameController.stream.listen((name) {
       _deck = _deck.rebuild((b) => b.name = name);
@@ -100,7 +107,17 @@ class EditDeckBloc extends ScreenBloc {
       _deck = _deck.rebuild((b) => b.markdown = markdown);
       _doDeckChangedController.add(_deck);
     });
+
+    _onEditCardIntentionController.stream.listen((card) {
+      if (_isEditAllowed()) {
+        _doEditCardController.add(card);
+      } else {
+        showMessage(locale.noEditingWithReadAccessUserMessage);
+      }
+    });
   }
+
+  bool _isEditAllowed() => _deck.access != AccessType.read;
 
   Future<void> _delete() {
     unawaited(logDeckDelete(_deck.key));
@@ -131,6 +148,8 @@ class EditDeckBloc extends ScreenBloc {
     _onDeckTypeController.close();
     _onMarkdownController.close();
     _doDeckChangedController.close();
+    _onEditCardIntentionController.close();
+    _doEditCardController.close();
     super.dispose();
   }
 }

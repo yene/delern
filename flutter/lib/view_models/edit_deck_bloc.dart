@@ -4,7 +4,6 @@ import 'package:delern_flutter/models/base/delayed_initialization.dart';
 import 'package:delern_flutter/models/card_model.dart';
 import 'package:delern_flutter/models/deck_access_model.dart';
 import 'package:delern_flutter/models/deck_model.dart';
-import 'package:delern_flutter/remote/analytics.dart';
 import 'package:delern_flutter/remote/auth.dart';
 import 'package:delern_flutter/remote/error_reporting.dart' as error_reporting;
 import 'package:delern_flutter/view_models/base/filtered_sorted_observable_list.dart';
@@ -39,12 +38,6 @@ class EditDeckBloc extends ScreenBloc {
   final _onDeckNameController = StreamController<String>();
   Sink<String> get onDeckName => _onDeckNameController.sink;
 
-  final _onDeleteDeckController = StreamController<void>();
-  Sink<void> get onDeleteDeck => _onDeleteDeckController.sink;
-
-  final _onDeleteDeckIntention = StreamController<void>();
-  Sink<void> get onDeleteDeckIntention => _onDeleteDeckIntention.sink;
-
   // This stream is used in deck settings (popup menu). To open deck settings
   // more than one time, we need a broadcast.
   final _doShowConfirmationDialogController =
@@ -61,34 +54,17 @@ class EditDeckBloc extends ScreenBloc {
   final _onMarkdownController = StreamController<bool>();
   Sink<bool> get onMarkdown => _onMarkdownController.sink;
 
+  final _onEditCardIntentionController = StreamController<CardModel>();
+  Sink<CardModel> get onEditCardIntention =>
+      _onEditCardIntentionController.sink;
+
+  final _doEditCardController = StreamController<CardModel>();
+  Stream<CardModel> get doEditCard => _doEditCardController.stream;
+
   void _initListeners() {
     _onDeckNameController.stream.listen((name) {
       _deck = _deck.rebuild((b) => b.name = name);
       _doDeckChangedController.add(_deck);
-    });
-
-    _onDeleteDeckController.stream.listen((_) async {
-      try {
-        await _delete();
-        notifyPop();
-      } catch (e, stackTrace) {
-        unawaited(error_reporting.report('deleteDeck', e, stackTrace));
-        notifyErrorOccurred(e);
-      }
-    });
-
-    _onDeleteDeckIntention.stream.listen((_) {
-      String deleteDeckQuestion;
-      switch (_deck.access) {
-        case AccessType.owner:
-          deleteDeckQuestion = locale.deleteDeckOwnerAccessQuestion;
-          break;
-        case AccessType.write:
-        case AccessType.read:
-          deleteDeckQuestion = locale.deleteDeckWriteReadAccessQuestion;
-          break;
-      }
-      _doShowConfirmationDialogController.add(deleteDeckQuestion);
     });
 
     _onDeckTypeController.stream.listen((deckType) {
@@ -100,12 +76,17 @@ class EditDeckBloc extends ScreenBloc {
       _deck = _deck.rebuild((b) => b.markdown = markdown);
       _doDeckChangedController.add(_deck);
     });
+
+    _onEditCardIntentionController.stream.listen((card) {
+      if (_isEditAllowed()) {
+        _doEditCardController.add(card);
+      } else {
+        showMessage(locale.noEditingWithReadAccessUserMessage);
+      }
+    });
   }
 
-  Future<void> _delete() {
-    unawaited(logDeckDelete(_deck.key));
-    return user.deleteDeck(deck: _deck);
-  }
+  bool _isEditAllowed() => _deck.access != AccessType.read;
 
   @override
   @protected
@@ -125,12 +106,12 @@ class EditDeckBloc extends ScreenBloc {
   @override
   void dispose() {
     _onDeckNameController.close();
-    _onDeleteDeckController.close();
-    _onDeleteDeckIntention.close();
     _doShowConfirmationDialogController.close();
     _onDeckTypeController.close();
     _onMarkdownController.close();
     _doDeckChangedController.close();
+    _onEditCardIntentionController.close();
+    _doEditCardController.close();
     super.dispose();
   }
 }

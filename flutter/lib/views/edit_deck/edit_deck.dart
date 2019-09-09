@@ -13,6 +13,7 @@ import 'package:delern_flutter/views/edit_deck/deck_settings_widget.dart';
 import 'package:delern_flutter/views/edit_deck/scroll_to_beginning_list_widget.dart';
 import 'package:delern_flutter/views/helpers/arrow_to_fab_widget.dart';
 import 'package:delern_flutter/views/helpers/card_background_specifier.dart';
+import 'package:delern_flutter/views/helpers/edit_delete_dismissible_widget.dart';
 import 'package:delern_flutter/views/helpers/empty_list_message_widget.dart';
 import 'package:delern_flutter/views/helpers/observing_animated_list_widget.dart';
 import 'package:delern_flutter/views/helpers/search_bar_widget.dart';
@@ -63,6 +64,10 @@ class _EditDeckState extends State<EditDeck> {
               _currentDeckState = deck;
             });
           });
+          bloc.doEditCard.listen((card) {
+            openEditCardScreen(context, _currentDeckState, card);
+          });
+
           return bloc;
         },
         appBarBuilder: (bloc) => SearchBarWidget(
@@ -143,7 +148,7 @@ class _EditDeckState extends State<EditDeck> {
       builder: (controller) => ObservingAnimatedListWidget<CardModel>(
         list: bloc.list,
         itemBuilder: (context, item, animation, index) {
-          final card = _buildCardItem(item, cardVerticalPadding);
+          final card = _buildCardItem(item, cardVerticalPadding, bloc);
           if (index == 0) {
             return Padding(
               // Space between 1st element and border must be 2 times indent
@@ -170,13 +175,16 @@ class _EditDeckState extends State<EditDeck> {
     );
   }
 
-  Column _buildCardItem(CardModel item, double verticalPadding) => Column(
+  Column _buildCardItem(
+          CardModel item, double verticalPadding, EditDeckBloc bloc) =>
+      Column(
         children: <Widget>[
           Padding(
             padding: EdgeInsets.symmetric(vertical: verticalPadding),
             child: CardItemWidget(
               card: item,
               deck: _currentDeckState,
+              bloc: bloc,
             ),
           ),
         ],
@@ -205,10 +213,15 @@ const double _kFrontBackTextPadding = 5;
 class CardItemWidget extends StatelessWidget {
   final CardModel card;
   final DeckModel deck;
+  final EditDeckBloc bloc;
 
-  const CardItemWidget({@required this.card, @required this.deck})
-      : assert(card != null),
-        assert(deck != null);
+  const CardItemWidget({
+    @required this.card,
+    @required this.deck,
+    @required this.bloc,
+  })  : assert(card != null),
+        assert(deck != null),
+        assert(bloc != null);
 
   @override
   Widget build(BuildContext context) {
@@ -228,41 +241,52 @@ class CardItemWidget extends StatelessWidget {
         app_styles.editCardPrimaryText.copyWith(fontSize: primaryFontSize);
     final secondaryTextStyle = app_styles.editCardSecondaryText
         .copyWith(fontSize: primaryFontSize / 1.5);
+    final iconSize = max(minHeight * 0.5, app_styles.kMinIconHeight);
     return Row(
       children: <Widget>[
         emptyExpanded,
         Expanded(
           flex: 8,
-          child: Material(
-            elevation: app_styles.kItemElevation,
-            child: InkWell(
-              splashColor: Theme.of(context).splashColor,
-              onTap: () => openPreviewCardScreen(context, deck, card),
-              child: Container(
-                decoration: BoxDecoration(
-                    gradient: specifyEditCardBackgroundGradient(
-                        deck.type, card.back)),
-                child: Padding(
+          child: EditDeleteDismissible(
+            key: Key(card.key),
+            iconSize: iconSize,
+            onEdit: () {
+              bloc.onEditCardIntention.add(card);
+            },
+            child: Material(
+              elevation: app_styles.kItemElevation,
+              child: InkWell(
+                splashColor: Theme.of(context).splashColor,
+                onTap: () => openPreviewCardScreen(context, deck, card),
+                child: Container(
                   padding: const EdgeInsets.all(_kCardBorderPadding),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
+                  decoration: BoxDecoration(
+                      gradient: specifyEditCardBackgroundGradient(
+                          deck.type, card.back)),
+                  // Use row to expand content to all available space
+                  child: Row(
                     children: <Widget>[
-                      Text(
-                        card.front,
-                        maxLines: 1,
-                        softWrap: true,
-                        style: primaryTextStyle,
-                      ),
-                      Container(
-                        padding:
-                            const EdgeInsets.only(top: _kFrontBackTextPadding),
-                        child: Text(
-                          card.back ?? '',
-                          maxLines: 1,
-                          softWrap: true,
-                          style: secondaryTextStyle,
-                        ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Text(
+                            card.front,
+                            maxLines: 1,
+                            softWrap: true,
+                            style: primaryTextStyle,
+                          ),
+                          Container(
+                            padding: const EdgeInsets.only(
+                                top: _kFrontBackTextPadding),
+                            child: Text(
+                              card.back ?? '',
+                              maxLines: 1,
+                              softWrap: true,
+                              style: secondaryTextStyle,
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),

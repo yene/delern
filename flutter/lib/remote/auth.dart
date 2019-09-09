@@ -28,6 +28,9 @@ class User extends DataWriter {
   String get photoUrl =>
       isBlank(_dataSource.photoUrl) ? null : _dataSource.photoUrl;
 
+  /// Email. Can be null.
+  String get email => isBlank(_dataSource.email) ? null : _dataSource.email;
+
   /// All providers (aka "linked accounts") for the current user. Empty for
   /// anonymously signed in.
   Iterable<SignInProvider> get providers => _dataSource.providerData
@@ -35,37 +38,6 @@ class User extends DataWriter {
       .where((p) => p != null);
 
   bool get isAnonymous => _dataSource.isAnonymous;
-
-  /// A human friendly string with user id. Usually presented under display name
-  /// in navigation drawer. Example: `example@gmail.com [G]`, meaning that
-  /// the user has linked their Google account.
-  String get humanFriendlyIdentifier {
-    String idString;
-    // Surprisingly some of the properties can be empty strings instead of null.
-    if (_dataSource.isEmailVerified && !isBlank(_dataSource.email)) {
-      idString = _dataSource.email;
-    } else if (!isBlank(_dataSource.phoneNumber)) {
-      idString = _dataSource.phoneNumber;
-    } else if (!isBlank(_dataSource.email)) {
-      // Not null, but also not verified. Give a locale-independent hint.
-      idString = '(${_dataSource.email})';
-    } else {
-      idString = '#${_dataSource.uid}';
-    }
-
-    if (_dataSource.providerData.length > 1) {
-      // TODO(dotdoom): show linked accounts as icons in UI.
-      const providerShortName = <SignInProvider, String>{
-        // TODO(dotdoom): add more providers here #944.
-        SignInProvider.google: 'G',
-      };
-      assert(providerShortName.length == SignInProvider.values.length);
-      final providerShortNames = providers.map((p) => providerShortName[p]);
-      idString += ' [${providerShortNames.join(',')}]';
-    }
-
-    return idString;
-  }
 
   static SignInProvider _parseSignInProvider(String providerId) {
     switch (providerId) {

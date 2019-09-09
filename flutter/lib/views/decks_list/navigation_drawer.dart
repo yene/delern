@@ -4,6 +4,7 @@ import 'package:delern_flutter/flutter/localization.dart' as localizations;
 import 'package:delern_flutter/flutter/styles.dart' as app_styles;
 import 'package:delern_flutter/remote/analytics.dart';
 import 'package:delern_flutter/remote/auth.dart';
+import 'package:delern_flutter/remote/error_reporting.dart' as error_reporting;
 import 'package:delern_flutter/routes.dart';
 import 'package:delern_flutter/views/helpers/email_launcher.dart';
 import 'package:delern_flutter/views/helpers/save_updates_dialog.dart';
@@ -113,7 +114,15 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
           children: <Widget>[
             UserAccountsDrawerHeader(
               accountName: Text(accountName),
-              accountEmail: Text(user.humanFriendlyIdentifier),
+              accountEmail: Padding(
+                  padding: const EdgeInsets.only(right: 8),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(user.email),
+                      ...user.providers.map(_buildProviderImage),
+                    ],
+                  )),
               currentAccountPicture: CircleAvatar(
                 backgroundImage: user.photoUrl == null
                     ? const AssetImage('images/anonymous.jpg')
@@ -123,6 +132,28 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
             ..._buildUserButtons(user),
           ]),
     );
+  }
+
+  Widget _buildProviderImage(SignInProvider provider) {
+    switch (provider) {
+      // TODO(dotdoom): add more providers here #944.
+      case SignInProvider.google:
+        return Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: const BorderRadius.all(Radius.circular(2)),
+          ),
+          padding: const EdgeInsets.all(8),
+          child: Image.asset('images/google_sign_in.png', height: 18),
+        );
+      default:
+        unawaited(error_reporting.report(
+            'NavigationDrawer', 'Unknown provider: $provider', null));
+        // For "SignInProvider.facebook" returns Text("facebook").
+        return Text(provider
+            .toString()
+            .substring(provider.runtimeType.toString().length + 1));
+    }
   }
 
   Future<void> _promoteAnonymous(BuildContext context) async {

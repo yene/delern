@@ -200,10 +200,11 @@ class AppLocalizations {
 
 Proceed to install it from:
 Google Play: https://play.google.com/store/apps/details?id=org.dasfoo.delern
-App Store: https://itunes.apple.com/us/app/delern/id1435734822?ls=1&mt=8
+App Store: https://itunes.apple.com/us/app/delern/id1435734822
 
 After install, follow Delern latest news on:
 Facebook: https://fb.me/das.delern
+LinkedIn: https://www.linkedin.com/company/delern
 VK: https://vk.com/delern
 Twitter: https://twitter.com/dasdelern''',
         name: 'inviteToAppMessage',
@@ -348,6 +349,7 @@ Follow latest news on:
 
 - [Facebook](https://fb.me/das.delern)
 - [Twitter](https://twitter.com/dasdelern)
+- [LinkedIn](https://www.linkedin.com/company/delern)
 - [VK](https://vk.com/delern)
 
 To see the source code for this app, please visit the [Delern GitHub repo](https://github.com/dasfoo/delern).

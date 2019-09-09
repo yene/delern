@@ -70,7 +70,6 @@ class Auth {
   bool get authStateKnown => _authStateKnown;
 
   User _currentUser;
-  User get currentUser => _currentUser;
 
   /// Sign in using a specified provider. If the user is currently signed in
   /// anonymously, try to preserve uid. This will work only if the user hasn't

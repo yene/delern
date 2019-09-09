@@ -25,18 +25,21 @@ class SignInWidget extends StatefulWidget {
 class _SignInWidgetState extends State<SignInWidget> {
   final _itemPadding =
       const Padding(padding: EdgeInsets.symmetric(vertical: 10));
+  User _currentUser;
 
   @override
   void initState() {
     super.initState();
 
-    Auth.instance.onUserChanged.listen((_) async {
-      setState(() {});
+    Auth.instance.onUserChanged.listen((newUser) async {
+      setState(() {
+        _currentUser = newUser;
+      });
 
-      if (Auth.instance.currentUser != null) {
-        error_reporting.uid = Auth.instance.currentUser.uid;
+      if (_currentUser != null) {
+        error_reporting.uid = _currentUser.uid;
 
-        unawaited(FirebaseAnalytics().setUserId(Auth.instance.currentUser.uid));
+        unawaited(FirebaseAnalytics().setUserId(_currentUser.uid));
         unawaited(FirebaseAnalytics().logLogin());
 
         _firebaseMessaging.onTokenRefresh.listen((token) async {
@@ -47,7 +50,7 @@ class _SignInWidgetState extends State<SignInWidget> {
               .build();
 
           debugPrint('Registering for FCM as ${fcm.name} in ${fcm.language}');
-          unawaited(Auth.instance.currentUser.addFCM(fcm: fcm));
+          unawaited(_currentUser.addFCM(fcm: fcm));
         });
 
         // TODO(dotdoom): register onMessage to show a snack bar with
@@ -66,9 +69,9 @@ class _SignInWidgetState extends State<SignInWidget> {
 
   @override
   Widget build(BuildContext context) {
-    if (Auth.instance.currentUser != null) {
+    if (_currentUser != null) {
       return CurrentUserWidget(
-          user: Auth.instance.currentUser, child: widget.afterSignInBuilder());
+          user: _currentUser, child: widget.afterSignInBuilder());
     }
     if (!Auth.instance.authStateKnown) {
       return ProgressIndicatorWidget();

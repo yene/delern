@@ -13,6 +13,7 @@ import 'package:delern_flutter/views/decks_list/create_deck_widget.dart';
 import 'package:delern_flutter/views/decks_list/deck_menu.dart';
 import 'package:delern_flutter/views/decks_list/navigation_drawer.dart';
 import 'package:delern_flutter/views/helpers/arrow_to_fab_widget.dart';
+import 'package:delern_flutter/views/helpers/edit_delete_dismissible_widget.dart';
 import 'package:delern_flutter/views/helpers/empty_list_message_widget.dart';
 import 'package:delern_flutter/views/helpers/learning_method_widget.dart';
 import 'package:delern_flutter/views/helpers/observing_animated_list_widget.dart';
@@ -156,14 +157,18 @@ class DeckListItemWidget extends StatelessWidget {
         Expanded(
           flex: 8,
           child: EditDeleteDismissible(
+            key: Key(deck.key),
             iconSize: iconSize,
-            deck: deck,
-            onDeleteDismiss: () async {
+            onDelete: () async {
               if (await _showDeleteDeckDialog(context)) {
                 unawaited(logDeckDeleteSwipe(deck.key));
                 return _deleteDeck(context);
               }
               return false;
+            },
+            onEdit: () {
+              unawaited(logDeckEditSwipe(deck.key));
+              unawaited(openEditDeckScreen(context, deck));
             },
             child: Material(
               elevation: app_styles.kItemElevation,
@@ -318,65 +323,4 @@ class DeckListItemWidget extends StatelessWidget {
     }
     return false;
   }
-}
-
-typedef DeleteDismissibleCallback = Future<bool> Function();
-
-class EditDeleteDismissible extends StatelessWidget {
-  final Widget child;
-  final DeckModel deck;
-  final double iconSize;
-  final DeleteDismissibleCallback onDeleteDismiss;
-
-  const EditDeleteDismissible({
-    @required this.child,
-    @required this.deck,
-    @required this.iconSize,
-    @required this.onDeleteDismiss,
-  })  : assert(child != null),
-        assert(deck != null),
-        assert(iconSize != null),
-        assert(onDeleteDismiss != null);
-
-  @override
-  Widget build(BuildContext context) => Dismissible(
-        direction: DismissDirection.horizontal,
-        resizeDuration: const Duration(seconds: 1),
-        background: Container(
-          color: app_styles.kEditDismissibleColor,
-          child: Align(
-            alignment: Alignment.centerLeft,
-            child: AspectRatio(
-              aspectRatio: 1,
-              child: Icon(
-                Icons.edit,
-                color: Colors.white,
-                size: iconSize,
-              ),
-            ),
-          ),
-        ),
-        secondaryBackground: Container(
-          color: app_styles.kDeleteDismissibleColor,
-          alignment: Alignment.centerRight,
-          child: AspectRatio(
-            aspectRatio: 1,
-            child: Icon(
-              Icons.delete,
-              color: Colors.white,
-              size: iconSize,
-            ),
-          ),
-        ),
-        confirmDismiss: (direction) async {
-          if (direction == DismissDirection.endToStart) {
-            return onDeleteDismiss();
-          }
-          unawaited(logDeckEditSwipe(deck.key));
-          unawaited(openEditDeckScreen(context, deck));
-          return false;
-        },
-        key: Key(deck.key),
-        child: child,
-      );
 }

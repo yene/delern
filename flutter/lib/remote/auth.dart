@@ -61,8 +61,8 @@ class Auth {
     });
   }
 
-  final _userChanged = StreamController<void>.broadcast();
-  Stream<void> get onUserChanged => _userChanged.stream;
+  final _userChanged = StreamController<User>.broadcast();
+  Stream<User> get onUserChanged => _userChanged.stream;
 
   static final GoogleSignIn _googleSignIn = GoogleSignIn();
 
@@ -175,7 +175,7 @@ class Auth {
 
   void _setCurrentUser(FirebaseUser user) {
     _currentUser = user == null ? null : User._(user);
-    _userChanged.add(null);
+    _userChanged.add(_currentUser);
   }
 
   static Future<bool> _updateProfileFromProviders(FirebaseUser user) async {

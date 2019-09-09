@@ -119,7 +119,7 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(user.humanFriendlyIdentifier),
+                      Text(user.email),
                       ...user.providers.map(_buildProviderImage),
                     ],
                   )),

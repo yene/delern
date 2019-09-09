@@ -28,6 +28,9 @@ class User extends DataWriter {
   String get photoUrl =>
       isBlank(_dataSource.photoUrl) ? null : _dataSource.photoUrl;
 
+  /// Email. Can be null.
+  String get email => isBlank(_dataSource.email) ? null : _dataSource.email;
+
   /// All providers (aka "linked accounts") for the current user. Empty for
   /// anonymously signed in.
   Iterable<SignInProvider> get providers => _dataSource.providerData
@@ -35,25 +38,6 @@ class User extends DataWriter {
       .where((p) => p != null);
 
   bool get isAnonymous => _dataSource.isAnonymous;
-
-  /// A human friendly string with user id. Usually presented under display name
-  /// in navigation drawer.
-  String get humanFriendlyIdentifier {
-    String idString;
-    // Surprisingly some of the properties can be empty strings instead of null.
-    if (_dataSource.isEmailVerified && !isBlank(_dataSource.email)) {
-      idString = _dataSource.email;
-    } else if (!isBlank(_dataSource.phoneNumber)) {
-      idString = _dataSource.phoneNumber;
-    } else if (!isBlank(_dataSource.email)) {
-      // Not null, but also not verified. Give a locale-independent hint.
-      idString = '(${_dataSource.email})';
-    } else {
-      idString = '#${_dataSource.uid}';
-    }
-
-    return idString;
-  }
 
   static SignInProvider _parseSignInProvider(String providerId) {
     switch (providerId) {

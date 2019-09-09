@@ -32,8 +32,7 @@ class CreateDeckWidget extends StatelessWidget {
             try {
               // TODO(dotdoom): pass DeckAccess as a second parameter, with
               // email, displayName and photoUrl filled in.
-              newDeck = await bloc.createDeck(
-                  newDeck, currentUser.humanFriendlyIdentifier);
+              newDeck = await bloc.createDeck(newDeck, currentUser.email);
             } catch (e, stackTrace) {
               unawaited(UserMessages.showError(
                   () => Scaffold.of(context), e, stackTrace));

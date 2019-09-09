@@ -106,7 +106,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "intervalLearningTooltip": MessageLookupByLibrary.simpleMessage(
             "Start learning cards ordered for interval learning"),
         "inviteToAppMessage": MessageLookupByLibrary.simpleMessage(
-            "I invite you to install Delern, a spaced repetition learning app, which will allow you to learn quickly and easily!\n\nProceed to install it from:\nGoogle Play: https://play.google.com/store/apps/details?id=org.dasfoo.delern\nApp Store: https://itunes.apple.com/us/app/delern/id1435734822?ls=1&mt=8\n\nAfter install, follow Delern latest news on:\nFacebook: https://fb.me/das.delern\nVK: https://vk.com/delern\nTwitter: https://twitter.com/dasdelern"),
+            "I invite you to install Delern, a spaced repetition learning app, which will allow you to learn quickly and easily!\n\nProceed to install it from:\nGoogle Play: https://play.google.com/store/apps/details?id=org.dasfoo.delern\nApp Store: https://itunes.apple.com/us/app/delern/id1435734822\n\nAfter install, follow Delern latest news on:\nFacebook: https://fb.me/das.delern\nLinkedIn: https://www.linkedin.com/company/delern\nVK: https://vk.com/delern\nTwitter: https://twitter.com/dasdelern"),
         "learnIntroDescription": MessageLookupByLibrary.simpleMessage(
             "Learn in any place and offline as well"),
         "learnIntroTitle": MessageLookupByLibrary.simpleMessage("Learn"),
@@ -171,7 +171,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "splashScreenFeatures": MessageLookupByLibrary.simpleMessage(
             "Data and progress are saved in the Cloud\nData and progress are synchronized across all your devices\nShare cards with your friends and colleagues"),
         "supportDevelopment": MessageLookupByLibrary.simpleMessage(
-            "Please tell us what we can do to make your experience with Delern better!\n\nIf you have any questions or suggestions please contact us:\n[delern@dasfoo.org](mailto:delern@dasfoo.org)\n\nFollow latest news on:\n\n- [Facebook](https://fb.me/das.delern)\n- [Twitter](https://twitter.com/dasdelern)\n- [VK](https://vk.com/delern)\n\nTo see the source code for this app, please visit the [Delern GitHub repo](https://github.com/dasfoo/delern).\n      "),
+            "Please tell us what we can do to make your experience with Delern better!\n\nIf you have any questions or suggestions please contact us:\n[delern@dasfoo.org](mailto:delern@dasfoo.org)\n\nFollow latest news on:\n\n- [Facebook](https://fb.me/das.delern)\n- [Twitter](https://twitter.com/dasdelern)\n- [LinkedIn](https://www.linkedin.com/company/delern)\n- [VK](https://vk.com/delern)\n\nTo see the source code for this app, please visit the [Delern GitHub repo](https://github.com/dasfoo/delern).\n      "),
         "swissDeckType": MessageLookupByLibrary.simpleMessage("Swiss"),
         "unknownDeckType": MessageLookupByLibrary.simpleMessage("Unknown"),
         "viewLearning": MessageLookupByLibrary.simpleMessage("View"),

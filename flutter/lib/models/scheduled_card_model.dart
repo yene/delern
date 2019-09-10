@@ -185,7 +185,7 @@ abstract class ScheduledCardModel
     return rebuild((b) => b
       ..level = newLevel
       ..repeatAt =
-          DateTime.now().toUtc().add(levelDurations[level] + _newJitter()));
+          DateTime.now().toUtc().add(levelDurations[newLevel] + _newJitter()));
   }
 
   static DatabaseObservableList<ScheduledCardsListModel> listsForUser(

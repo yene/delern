@@ -68,8 +68,18 @@ task:
   - bundle exec fastlane lint
   test_script:
   - ( cd flutter && flutter test --coverage )
-  # Broken until https://github.com/codecov/codecov-bash/pull/127 is merged.
-  - bash <(curl -s https://codecov.io/bash)
+  # Simulate Travis CI until https://github.com/codecov/codecov-bash/pull/127.
+  - CODECOV_TOKEN=eeabc1cc-89fc-447f-969d-39777e568284
+    TRAVIS=true
+    TRAVIS_COMMIT="$CIRRUS_CHANGE_IN_REPO"
+    TRAVIS_JOB_NUMBER="$CIRRUS_TASK_ID"
+    TRAVIS_PULL_REQUEST="$CIRRUS_PR"
+    TRAVIS_JOB_ID="$CIRRUS_TASK_NAME"
+    TRAVIS_REPO_SLUG="$CIRRUS_REPO_FULL_NAME"
+    TRAVIS_TAG="$CIRRUS_TAG"
+    TRAVIS_BRANCH="$CIRRUS_BRANCH"
+    TRAVIS_OS_NAME="$CIRRUS_OS"
+    bash <(curl -s https://codecov.io/bash)
   gradle_cache:
     folder: ~/.gradle/caches
     fingerprint_script:

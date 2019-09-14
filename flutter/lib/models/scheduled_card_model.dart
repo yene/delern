@@ -9,7 +9,7 @@ import 'package:delern_flutter/models/base/keyed_list_item.dart';
 import 'package:delern_flutter/models/card_model.dart';
 import 'package:delern_flutter/models/deck_model.dart';
 import 'package:delern_flutter/models/serializers.dart';
-import 'package:delern_flutter/remote/auth.dart';
+import 'package:delern_flutter/models/user.dart';
 import 'package:delern_flutter/remote/error_reporting.dart' as error_reporting;
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/foundation.dart';

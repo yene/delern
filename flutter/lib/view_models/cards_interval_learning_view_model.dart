@@ -4,8 +4,8 @@ import 'package:delern_flutter/models/base/stream_muxer.dart';
 import 'package:delern_flutter/models/card_model.dart';
 import 'package:delern_flutter/models/deck_model.dart';
 import 'package:delern_flutter/models/scheduled_card_model.dart';
+import 'package:delern_flutter/models/user.dart';
 import 'package:delern_flutter/remote/analytics.dart';
-import 'package:delern_flutter/remote/auth.dart';
 import 'package:meta/meta.dart';
 
 enum LearningUpdateType {

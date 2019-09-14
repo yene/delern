@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:delern_flutter/models/card_model.dart';
 import 'package:delern_flutter/models/card_reply_model.dart';
 import 'package:delern_flutter/models/deck_access_model.dart';
@@ -16,17 +18,34 @@ enum SignInProvider {
 }
 
 class User {
-  final FirebaseUser _dataSource;
+  FirebaseUser _dataSource;
   bool _isOnline = false;
+  StreamSubscription _onlineSubscription;
 
   User(this._dataSource) : assert(_dataSource != null) {
-    FirebaseDatabase.instance
+    _onlineSubscription = FirebaseDatabase.instance
         .reference()
         .child('.info/connected')
         .onValue
         .listen((event) {
       _isOnline = event.snapshot.value;
     });
+  }
+
+  /// Update source of profile information (such as email, displayName etc) for
+  /// this user. If in-place update is not possible, i.e. [newDataSource] is
+  /// about a different user, this method returns false.
+  bool updateDataSource(FirebaseUser newDataSource) {
+    assert(newDataSource != null);
+    if (newDataSource.uid == _dataSource.uid) {
+      _dataSource = newDataSource;
+      return true;
+    }
+    return false;
+  }
+
+  void dispose() {
+    _onlineSubscription.cancel();
   }
 
   /// Unique ID of the user used in Firebase Database and across the app.

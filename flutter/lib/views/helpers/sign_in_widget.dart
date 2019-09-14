@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:delern_flutter/flutter/device_info.dart';
 import 'package:delern_flutter/flutter/localization.dart' as localizations;
 import 'package:delern_flutter/flutter/styles.dart' as app_styles;
@@ -26,11 +28,13 @@ class _SignInWidgetState extends State<SignInWidget> {
       Padding(padding: EdgeInsets.symmetric(vertical: 10));
   User _currentUser;
 
+  StreamSubscription _fcmSubscription, _userChangedSubscription;
+
   @override
   void initState() {
     super.initState();
 
-    FirebaseMessaging().onTokenRefresh.listen((token) async {
+    _fcmSubscription = FirebaseMessaging().onTokenRefresh.listen((token) async {
       final fcm = (FCMBuilder()
             ..language = Localizations.localeOf(context).toString()
             ..name = (await DeviceInfo.getDeviceInfo()).userFriendlyName
@@ -41,7 +45,8 @@ class _SignInWidgetState extends State<SignInWidget> {
       unawaited(_currentUser.addFCM(fcm: fcm));
     });
 
-    Auth.instance.onUserChanged.listen((newUser) async {
+    _userChangedSubscription =
+        Auth.instance.onUserChanged.listen((newUser) async {
       setState(() {
         _currentUser = newUser;
       });
@@ -63,7 +68,17 @@ class _SignInWidgetState extends State<SignInWidget> {
       }
     });
 
-    Auth.instance.signInSilently();
+    if (!Auth.instance.authStateKnown) {
+      debugPrint('Auth state unknown, trying to sign in silently...');
+      Auth.instance.signInSilently();
+    }
+  }
+
+  @override
+  void dispose() {
+    _fcmSubscription?.cancel();
+    _userChangedSubscription?.cancel();
+    super.dispose();
   }
 
   Widget _buildFeatureText(String text) => ListTile(

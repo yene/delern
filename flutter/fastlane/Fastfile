@@ -40,26 +40,28 @@ def cirrus_ci_build_number
   }).data.github_repository.builds.edges.size
 end
 
-before_all do
-  commits_since_last_tag = changelog_from_git_commits(
-    quiet: true,
-    # One line per commit, which allows us to easily count them.
-    pretty: 'oneline',
-    # We push to "master" only when merging a PR, so increment with each merge.
-    merge_commit_filtering: 'only_include_merges',
-  ).lines.count
+before_all do |lane|
+  if [:build, :publish].include?(lane)
+    commits_since_last_tag = changelog_from_git_commits(
+      quiet: true,
+      # One line per commit, which allows us to easily count them.
+      pretty: 'oneline',
+      # We push to "master" only when merging a PR, so increment with each merge.
+      merge_commit_filtering: 'only_include_merges',
+    ).lines.count
 
-  # Add a fixed integer to CI build number, because we drifted away. Outside of
-  # CI, usually on a developer's workstation, just use number of commits.
-  lane_context[SharedValues::BUILD_NUMBER] = is_ci ?
-    Integer(cirrus_ci_build_number) + 5000 :
-    number_of_commits
+    # Add a fixed integer to CI build number, because we drifted away. Outside of
+    # CI, usually on a developer's workstation, just use number of commits.
+    lane_context[SharedValues::BUILD_NUMBER] = is_ci ?
+      Integer(cirrus_ci_build_number) + 5000 :
+      number_of_commits
 
-  # If there are any commits since the last tag (ex.: "2.1"), add them as the
-  # third version number, turning it into "2.1.42". Otherwise just keep "2.1".
-  lane_context[SharedValues::VERSION_NUMBER] = commits_since_last_tag > 0 ?
-      '%s.%d' % [last_git_tag, commits_since_last_tag] :
-      last_git_tag
+    # If there are any commits since the last tag (ex.: "2.1"), add them as the
+    # third version number, turning it into "2.1.42". Otherwise just keep "2.1".
+    lane_context[SharedValues::VERSION_NUMBER] = commits_since_last_tag > 0 ?
+        '%s.%d' % [last_git_tag, commits_since_last_tag] :
+        last_git_tag
+  end
 end
 
 desc 'Install or upgrade Flutter and Android SDK licenses'

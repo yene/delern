@@ -129,7 +129,10 @@ class Auth {
   }
 
   void _setCurrentUser(FirebaseUser user) {
-    _currentUser = user == null ? null : User(user);
+    if (user == null || _currentUser?.updateDataSource(user) != true) {
+      _currentUser?.dispose();
+      _currentUser = user == null ? null : User(user);
+    }
     _userChanged.add(_currentUser);
   }
 

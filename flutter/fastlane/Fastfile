@@ -123,11 +123,12 @@ platform :android do
     flutter_build(debug: true)
   end
 
-  desc 'Build a release AAB and publish it (including Store artifacts)'
-  lane :publish do
+  desc 'Build a release AAB and publish it (including Store artifacts).'
+  desc 'Set "release" lane key to non-empty value to upload to "alpha" track.'
+  lane :publish do |options|
     aab = flutter_build(build: 'appbundle')
     supply(
-      track: 'internal',
+      track: options[:release].empty? ? 'internal' : 'alpha',
       aab: aab,
     )
   end
@@ -142,8 +143,9 @@ platform :ios do
     )
   end
 
-  desc 'Build a release iOS package and publish it (including Store artifacts)'
-  lane :publish do
+  desc 'Build a release iOS package and publish it (including Store artifacts).'
+  desc 'Set "release" lane key to non-empty value to upload metadata.'
+  lane :publish do |options|
     # Set up OS X keychain and switch match to readonly model. This command has
     # no effect outside CI.
     setup_travis
@@ -154,21 +156,23 @@ platform :ios do
       type: 'appstore',
       app_identifier: app_identifier,
     )
-    # Build the app to:
+    # Perform an (otherwise unnecessary) build to:
     # - add version
     # - switch to release mode
     flutter_build
     gym(silent: true, suppress_xcode_output: true)
-    # Upload screenshots and metadata.
-    upload_to_app_store(
-      app_identifier: app_identifier,
-      skip_binary_upload: true,
-      overwrite_screenshots: true,
-      # Skip the HTML report file verification.
-      force: true,
-      # Rejects the previously submitted build.
-      reject_if_possible: true,
-    )
+
+    unless options[:release].empty?
+      # Upload screenshots and metadata.
+      upload_to_app_store(
+        app_identifier: app_identifier,
+        skip_binary_upload: true,
+        overwrite_screenshots: true,
+        # Skip the HTML report file verification.
+        force: true,
+      )
+    end
+
     # TODO(dotdoom): set also "changelog".
     pilot(
       ipa: 'build/Runner.ipa',

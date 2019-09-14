@@ -50,7 +50,9 @@ Build a debug APK
 ```
 fastlane android publish
 ```
-Build a release AAB and publish it (including Store artifacts)
+Build a release AAB and publish it (including Store artifacts).
+
+Set "release" lane key to non-empty value to upload to "alpha" track.
 
 ----
 
@@ -64,7 +66,9 @@ Build a debug iOS package
 ```
 fastlane ios publish
 ```
-Build a release iOS package and publish it (including Store artifacts)
+Build a release iOS package and publish it (including Store artifacts).
+
+Set "release" lane key to non-empty value to upload metadata.
 
 ----
 

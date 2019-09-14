@@ -5,7 +5,7 @@ import 'package:built_collection/built_collection.dart';
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
 import 'package:delern_flutter/models/base/database_observable_list.dart';
-import 'package:delern_flutter/models/base/model.dart';
+import 'package:delern_flutter/models/base/keyed_list_item.dart';
 import 'package:delern_flutter/models/deck_access_model.dart';
 import 'package:delern_flutter/models/serializers.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -33,7 +33,7 @@ class DeckType extends EnumClass {
 }
 
 abstract class DeckModel
-    implements Built<DeckModel, DeckModelBuilder>, ReadonlyModel {
+    implements Built<DeckModel, DeckModelBuilder>, KeyedListItem {
   @nullable
   String get key;
   @nullable

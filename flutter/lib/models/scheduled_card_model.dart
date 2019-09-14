@@ -6,7 +6,6 @@ import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
 import 'package:delern_flutter/models/base/database_observable_list.dart';
 import 'package:delern_flutter/models/base/keyed_list_item.dart';
-import 'package:delern_flutter/models/base/model.dart';
 import 'package:delern_flutter/models/card_model.dart';
 import 'package:delern_flutter/models/deck_model.dart';
 import 'package:delern_flutter/models/serializers.dart';
@@ -46,7 +45,7 @@ class ScheduledCardsListModel implements KeyedListItem {
 abstract class ScheduledCardModel
     implements
         Built<ScheduledCardModel, ScheduledCardModelBuilder>,
-        ReadonlyModel {
+        KeyedListItem {
   static const levelDurations = [
     Duration(hours: 4),
     Duration(days: 1),

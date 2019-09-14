@@ -30,6 +30,13 @@ Generate files for Intl and built_value and format all files
 fastlane lint
 ```
 Run static analysis on Flutter files
+### install_debug_keys
+```
+fastlane install_debug_keys
+```
+Replace system-wide Android debug keystore and app-wide GoogleServices
+
+with those configured for "delern-debug" Firebase project
 
 ----
 

@@ -48,6 +48,7 @@ flutter_and_fastlane_task_template: &FLUTTER_AND_FASTLANE_TASK_TEMPLATE
   install_dependencies_script:
   - cd flutter
   - bundle exec fastlane install_dependencies
+  - bundle exec fastlane install_debug_keys
 
 task:
   << : *REGULAR_TASK_TEMPLATE
@@ -93,7 +94,6 @@ task:
   #  fingerprint_script:
   #  - uname -ms
   #  - cat flutter/android/app/build.gradle
-  install_debug_keys_script: tools/ci.sh install_debug_keys
   build_script:
   - ( cd flutter && bundle exec fastlane android build )
   ensure_clean_git_script: bundle exec fastlane ensure_clean_git
@@ -119,7 +119,6 @@ task:
   generate_script:
   - cd flutter
   - bundle exec fastlane generate
-  install_debug_keys_script: tools/ci.sh install_debug_keys
   # Keep repo up-to-date: https://github.com/CocoaPods/CocoaPods/issues/8761.
   pod_specs_repo_update_script: pod repo update
   build_script:

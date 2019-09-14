@@ -9,6 +9,8 @@
 # Uncomment the line if you want fastlane to automatically update itself
 # update_fastlane
 
+fastlane_require 'fileutils'
+
 default_platform(:android)
 
 def cirrus_ci_build_number
@@ -94,6 +96,25 @@ end
 desc 'Run static analysis on Flutter files'
 lane :lint do
   flutter(args: %w(analyze lib))
+end
+
+desc 'Replace system-wide Android debug keystore and app-wide GoogleServices'
+desc 'with those configured for "delern-debug" Firebase project'
+lane :install_debug_keys do
+  FileUtils.cp(
+    'debug-project/google-services.json',
+    '../android/app/',
+    verbose: true)
+  FileUtils.cp(
+    'debug-project/org.dasfoo.delern.debug',
+    '../ios/Runner/GoogleService-Info/',
+    verbose: true)
+  system_wide_android_directory = File.expand_path('~/.android/')
+  FileUtils.mkdir_p(system_wide_android_directory)
+  FileUtils.cp(
+    'debug-project/debug.keystore',
+    system_wide_android_directory,
+    verbose: true)
 end
 
 platform :android do

@@ -1,11 +1,11 @@
 import 'dart:core';
 
 import 'package:built_value/built_value.dart';
-import 'package:delern_flutter/models/base/model.dart';
+import 'package:delern_flutter/models/base/keyed_list_item.dart';
 
 part 'fcm.g.dart';
 
-abstract class FCM implements Built<FCM, FCMBuilder>, ReadonlyModel {
+abstract class FCM implements Built<FCM, FCMBuilder>, KeyedListItem {
   String get key;
   String get name;
   String get language;

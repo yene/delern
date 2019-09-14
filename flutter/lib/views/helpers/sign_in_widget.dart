@@ -2,6 +2,7 @@ import 'package:delern_flutter/flutter/device_info.dart';
 import 'package:delern_flutter/flutter/localization.dart' as localizations;
 import 'package:delern_flutter/flutter/styles.dart' as app_styles;
 import 'package:delern_flutter/models/fcm.dart';
+import 'package:delern_flutter/models/user.dart';
 import 'package:delern_flutter/remote/auth.dart';
 import 'package:delern_flutter/remote/error_reporting.dart' as error_reporting;
 import 'package:delern_flutter/views/helpers/progress_indicator_widget.dart';
@@ -9,8 +10,6 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:pedantic/pedantic.dart';
-
-final _firebaseMessaging = FirebaseMessaging();
 
 class SignInWidget extends StatefulWidget {
   final Widget Function() afterSignInBuilder;
@@ -23,36 +22,44 @@ class SignInWidget extends StatefulWidget {
 }
 
 class _SignInWidgetState extends State<SignInWidget> {
-  final _itemPadding =
-      const Padding(padding: EdgeInsets.symmetric(vertical: 10));
+  static const _itemPadding =
+      Padding(padding: EdgeInsets.symmetric(vertical: 10));
+  User _currentUser;
 
   @override
   void initState() {
     super.initState();
 
-    Auth.instance.onUserChanged.listen((_) async {
-      setState(() {});
+    FirebaseMessaging().onTokenRefresh.listen((token) async {
+      final fcm = (FCMBuilder()
+            ..language = Localizations.localeOf(context).toString()
+            ..name = (await DeviceInfo.getDeviceInfo()).userFriendlyName
+            ..key = token)
+          .build();
 
-      if (Auth.instance.currentUser != null) {
-        error_reporting.uid = Auth.instance.currentUser.uid;
+      debugPrint('Registering for FCM as ${fcm.name} in ${fcm.language}');
+      unawaited(_currentUser.addFCM(fcm: fcm));
+    });
 
-        unawaited(FirebaseAnalytics().setUserId(Auth.instance.currentUser.uid));
-        unawaited(FirebaseAnalytics().logLogin());
+    Auth.instance.onUserChanged.listen((newUser) async {
+      setState(() {
+        _currentUser = newUser;
+      });
 
-        _firebaseMessaging.onTokenRefresh.listen((token) async {
-          final fcm = (FCMBuilder()
-                ..language = Localizations.localeOf(context).toString()
-                ..name = (await DeviceInfo.getDeviceInfo()).userFriendlyName
-                ..key = token)
-              .build();
+      if (_currentUser != null) {
+        error_reporting.uid = _currentUser.uid;
 
-          debugPrint('Registering for FCM as ${fcm.name} in ${fcm.language}');
-          unawaited(Auth.instance.currentUser.addFCM(fcm: fcm));
-        });
+        unawaited(FirebaseAnalytics().setUserId(_currentUser.uid));
+        final loginProviders = _currentUser.providers;
+        unawaited(FirebaseAnalytics().logLogin(
+            loginMethod: loginProviders.isEmpty
+                ? 'anonymous'
+                : loginProviders.first.toString()));
 
         // TODO(dotdoom): register onMessage to show a snack bar with
         //                notification when the app is in foreground.
-        _firebaseMessaging.configure();
+        // Must be called after each login to obtain a FirebaseMessaging token.
+        FirebaseMessaging().configure();
       }
     });
 
@@ -66,9 +73,9 @@ class _SignInWidgetState extends State<SignInWidget> {
 
   @override
   Widget build(BuildContext context) {
-    if (Auth.instance.currentUser != null) {
+    if (_currentUser != null) {
       return CurrentUserWidget(
-          user: Auth.instance.currentUser, child: widget.afterSignInBuilder());
+          user: _currentUser, child: widget.afterSignInBuilder());
     }
     if (!Auth.instance.authStateKnown) {
       return ProgressIndicatorWidget();

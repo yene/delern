@@ -5,7 +5,7 @@ import 'package:built_collection/built_collection.dart';
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
 import 'package:delern_flutter/models/base/database_observable_list.dart';
-import 'package:delern_flutter/models/base/model.dart';
+import 'package:delern_flutter/models/base/keyed_list_item.dart';
 import 'package:delern_flutter/models/serializers.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:meta/meta.dart';
@@ -37,7 +37,7 @@ class AccessType extends EnumClass implements Comparable<AccessType> {
 }
 
 abstract class DeckAccessModel
-    implements Built<DeckAccessModel, DeckAccessModelBuilder>, ReadonlyModel {
+    implements Built<DeckAccessModel, DeckAccessModelBuilder>, KeyedListItem {
   /// DeckAccessModel key is uid of the user whose access it holds.
   @nullable
   String get key;

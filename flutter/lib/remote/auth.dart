@@ -1,54 +1,10 @@
 import 'dart:async';
 
-import 'package:delern_flutter/models/base/data_writer.dart';
+import 'package:delern_flutter/models/user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:quiver/strings.dart';
-
-enum SignInProvider {
-  google,
-}
-
-class User extends DataWriter {
-  final FirebaseUser _dataSource;
-
-  User._(this._dataSource)
-      : assert(_dataSource != null),
-        super(uid: _dataSource.uid);
-
-  /// Unique ID of the user used in Firebase Database and across the app.
-  String get uid => _dataSource.uid;
-
-  /// Display name. Can be null, e.g. for anonymous user.
-  String get displayName =>
-      isBlank(_dataSource.displayName) ? null : _dataSource.displayName;
-
-  /// Photo URL. Can be null.
-  String get photoUrl =>
-      isBlank(_dataSource.photoUrl) ? null : _dataSource.photoUrl;
-
-  /// Email. Can be null.
-  String get email => isBlank(_dataSource.email) ? null : _dataSource.email;
-
-  /// All providers (aka "linked accounts") for the current user. Empty for
-  /// anonymously signed in.
-  Iterable<SignInProvider> get providers => _dataSource.providerData
-      .map((p) => _parseSignInProvider(p.providerId))
-      .where((p) => p != null);
-
-  bool get isAnonymous => _dataSource.isAnonymous;
-
-  static SignInProvider _parseSignInProvider(String providerId) {
-    switch (providerId) {
-      case GoogleAuthProvider.providerId:
-        return SignInProvider.google;
-      // TODO(dotdoom): add more providers here #944.
-    }
-    // For anonymous users, providerId == 'firebase'.
-    return null;
-  }
-}
 
 class Auth {
   static final instance = Auth._();
@@ -61,8 +17,8 @@ class Auth {
     });
   }
 
-  final _userChanged = StreamController<void>.broadcast();
-  Stream<void> get onUserChanged => _userChanged.stream;
+  final _userChanged = StreamController<User>.broadcast();
+  Stream<User> get onUserChanged => _userChanged.stream;
 
   static final GoogleSignIn _googleSignIn = GoogleSignIn();
 
@@ -70,7 +26,6 @@ class Auth {
   bool get authStateKnown => _authStateKnown;
 
   User _currentUser;
-  User get currentUser => _currentUser;
 
   /// Sign in using a specified provider. If the user is currently signed in
   /// anonymously, try to preserve uid. This will work only if the user hasn't
@@ -174,8 +129,8 @@ class Auth {
   }
 
   void _setCurrentUser(FirebaseUser user) {
-    _currentUser = user == null ? null : User._(user);
-    _userChanged.add(null);
+    _currentUser = user == null ? null : User(user);
+    _userChanged.add(_currentUser);
   }
 
   static Future<bool> _updateProfileFromProviders(FirebaseUser user) async {

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:delern_flutter/flutter/localization.dart' as localizations;
 import 'package:delern_flutter/flutter/styles.dart' as app_styles;
+import 'package:delern_flutter/models/user.dart';
 import 'package:delern_flutter/remote/analytics.dart';
 import 'package:delern_flutter/remote/auth.dart';
 import 'package:delern_flutter/remote/error_reporting.dart' as error_reporting;
@@ -119,7 +120,7 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(user.email),
+                      if (user.email != null) Text(user.email),
                       ...user.providers.map(_buildProviderImage),
                     ],
                   )),

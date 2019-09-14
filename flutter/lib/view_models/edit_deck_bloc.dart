@@ -4,7 +4,7 @@ import 'package:delern_flutter/models/base/delayed_initialization.dart';
 import 'package:delern_flutter/models/card_model.dart';
 import 'package:delern_flutter/models/deck_access_model.dart';
 import 'package:delern_flutter/models/deck_model.dart';
-import 'package:delern_flutter/remote/auth.dart';
+import 'package:delern_flutter/models/user.dart';
 import 'package:delern_flutter/remote/error_reporting.dart' as error_reporting;
 import 'package:delern_flutter/view_models/base/filtered_sorted_observable_list.dart';
 import 'package:delern_flutter/view_models/base/screen_bloc.dart';

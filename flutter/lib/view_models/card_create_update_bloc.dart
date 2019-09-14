@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:delern_flutter/models/card_model.dart';
+import 'package:delern_flutter/models/user.dart';
 import 'package:delern_flutter/remote/analytics.dart';
-import 'package:delern_flutter/remote/auth.dart';
 import 'package:delern_flutter/remote/error_reporting.dart' as error_reporting;
 import 'package:delern_flutter/view_models/base/screen_bloc.dart';
 import 'package:meta/meta.dart';

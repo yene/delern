@@ -1,14 +1,14 @@
 import 'dart:core';
 
 import 'package:built_value/built_value.dart';
-import 'package:delern_flutter/models/base/model.dart';
+import 'package:delern_flutter/models/base/keyed_list_item.dart';
 import 'package:delern_flutter/models/scheduled_card_model.dart';
 import 'package:meta/meta.dart';
 
 part 'card_reply_model.g.dart';
 
 abstract class CardReplyModel
-    implements Built<CardReplyModel, CardReplyModelBuilder>, ReadonlyModel {
+    implements Built<CardReplyModel, CardReplyModelBuilder>, KeyedListItem {
   String get deckKey;
   String get cardKey;
   @nullable

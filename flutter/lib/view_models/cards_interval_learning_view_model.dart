@@ -4,8 +4,8 @@ import 'package:delern_flutter/models/base/stream_muxer.dart';
 import 'package:delern_flutter/models/card_model.dart';
 import 'package:delern_flutter/models/deck_model.dart';
 import 'package:delern_flutter/models/scheduled_card_model.dart';
+import 'package:delern_flutter/models/user.dart';
 import 'package:delern_flutter/remote/analytics.dart';
-import 'package:delern_flutter/remote/auth.dart';
 import 'package:meta/meta.dart';
 
 enum LearningUpdateType {
@@ -51,11 +51,13 @@ class LearningViewModel {
   }
 
   Future<void> answer(
-          {@required bool knows, @required bool learnBeyondHorizon}) =>
-      user.learnCard(
-          unansweredScheduledCard: _scheduledCard,
-          knows: knows,
-          learnBeyondHorizon: learnBeyondHorizon);
+      {@required bool knows, @required bool learnBeyondHorizon}) {
+    logCardResponse(deckId: deck.key, knows: knows);
+    return user.learnCard(
+        unansweredScheduledCard: _scheduledCard,
+        knows: knows,
+        learnBeyondHorizon: learnBeyondHorizon);
+  }
 
   Future<void> deleteCard() => user.deleteCard(card: initialCard);
 }

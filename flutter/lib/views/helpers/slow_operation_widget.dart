@@ -8,7 +8,7 @@ typedef ChildCallbackBuilder = ChildCallback Function(
 typedef ChildBuilder = Widget Function(
     ChildCallbackBuilder childCallbackBuilder);
 
-class SlowOperationWidget<T extends Function> extends StatefulWidget {
+class SlowOperationWidget extends StatefulWidget {
   final ChildBuilder childBuilder;
 
   const SlowOperationWidget(this.childBuilder);

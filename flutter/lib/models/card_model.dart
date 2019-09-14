@@ -4,7 +4,7 @@ import 'dart:core';
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
 import 'package:delern_flutter/models/base/database_observable_list.dart';
-import 'package:delern_flutter/models/base/model.dart';
+import 'package:delern_flutter/models/base/keyed_list_item.dart';
 import 'package:delern_flutter/models/serializers.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:meta/meta.dart';
@@ -12,7 +12,7 @@ import 'package:meta/meta.dart';
 part 'card_model.g.dart';
 
 abstract class CardModel
-    implements Built<CardModel, CardModelBuilder>, ReadonlyModel {
+    implements Built<CardModel, CardModelBuilder>, KeyedListItem {
   @nullable
   String get deckKey;
   @nullable

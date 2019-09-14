@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:delern_flutter/models/base/delayed_initialization.dart';
 import 'package:delern_flutter/models/deck_model.dart';
 import 'package:delern_flutter/models/scheduled_card_model.dart';
+import 'package:delern_flutter/models/user.dart';
 import 'package:delern_flutter/remote/analytics.dart';
-import 'package:delern_flutter/remote/auth.dart';
 import 'package:delern_flutter/view_models/base/filtered_sorted_observable_list.dart';
 import 'package:flutter/foundation.dart';
 import 'package:meta/meta.dart';
@@ -54,9 +54,9 @@ class DecksListBloc {
     Future.delayed(const Duration(milliseconds: 100), _loadScheduledCards);
   }
 
-  Future<DeckModel> createDeck(DeckModel deck, String email) {
+  Future<DeckModel> createDeck(DeckModel deck) {
     logDeckCreate();
-    return user.createDeck(deckTemplate: deck, email: email);
+    return user.createDeck(deckTemplate: deck);
   }
 
   void _loadScheduledCards() {

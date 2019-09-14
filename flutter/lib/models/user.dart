@@ -5,16 +5,21 @@ import 'package:delern_flutter/models/deck_model.dart';
 import 'package:delern_flutter/models/fcm.dart';
 import 'package:delern_flutter/models/scheduled_card_model.dart';
 import 'package:delern_flutter/remote/error_reporting.dart' as error_reporting;
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:flutter/foundation.dart';
 import 'package:meta/meta.dart';
 import 'package:pedantic/pedantic.dart';
+import 'package:quiver/strings.dart';
 
-class DataWriter {
-  final String uid;
+enum SignInProvider {
+  google,
+}
+
+class User {
+  final FirebaseUser _dataSource;
   bool _isOnline = false;
 
-  DataWriter({@required this.uid}) : assert(uid != null) {
+  User(this._dataSource) : assert(_dataSource != null) {
     FirebaseDatabase.instance
         .reference()
         .child('.info/connected')
@@ -24,9 +29,40 @@ class DataWriter {
     });
   }
 
+  /// Unique ID of the user used in Firebase Database and across the app.
+  String get uid => _dataSource.uid;
+
+  /// Display name. Can be null, e.g. for anonymous user.
+  String get displayName =>
+      isBlank(_dataSource.displayName) ? null : _dataSource.displayName;
+
+  /// Photo URL. Can be null.
+  String get photoUrl =>
+      isBlank(_dataSource.photoUrl) ? null : _dataSource.photoUrl;
+
+  /// Email. Can be null.
+  String get email => isBlank(_dataSource.email) ? null : _dataSource.email;
+
+  /// All providers (aka "linked accounts") for the current user. Empty for
+  /// anonymously signed in.
+  Iterable<SignInProvider> get providers => _dataSource.providerData
+      .map((p) => _parseSignInProvider(p.providerId))
+      .where((p) => p != null);
+
+  bool get isAnonymous => _dataSource.isAnonymous;
+
+  static SignInProvider _parseSignInProvider(String providerId) {
+    switch (providerId) {
+      case GoogleAuthProvider.providerId:
+        return SignInProvider.google;
+      // TODO(dotdoom): add more providers here #944.
+    }
+    // For anonymous users, providerId == 'firebase'.
+    return null;
+  }
+
   Future<DeckModel> createDeck({
     @required DeckModel deckTemplate,
-    @required String email,
   }) async {
     final deck = deckTemplate.rebuild((b) => b
       ..key = _newKey()
@@ -40,12 +76,11 @@ class DataWriter {
       '$deckPath/accepted': deck.accepted,
       '$deckPath/lastSyncAt': deck.lastSyncAt.millisecondsSinceEpoch,
       '$deckPath/category': deck.category,
-
       '$deckPath/access': deck.access.toString(),
       '$deckAccessPath/access': deck.access.toString(),
       '$deckAccessPath/email': email,
-      // Do not save displayName and photoUrl because these are populated by
-      // Cloud functions.
+      '$deckAccessPath/displayName': displayName,
+      '$deckAccessPath/photoUrl': photoUrl,
     });
 
     return deck;

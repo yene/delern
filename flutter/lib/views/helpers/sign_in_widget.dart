@@ -11,8 +11,6 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:pedantic/pedantic.dart';
 
-final _firebaseMessaging = FirebaseMessaging();
-
 class SignInWidget extends StatefulWidget {
   final Widget Function() afterSignInBuilder;
 
@@ -32,6 +30,17 @@ class _SignInWidgetState extends State<SignInWidget> {
   void initState() {
     super.initState();
 
+    FirebaseMessaging().onTokenRefresh.listen((token) async {
+      final fcm = (FCMBuilder()
+            ..language = Localizations.localeOf(context).toString()
+            ..name = (await DeviceInfo.getDeviceInfo()).userFriendlyName
+            ..key = token)
+          .build();
+
+      debugPrint('Registering for FCM as ${fcm.name} in ${fcm.language}');
+      unawaited(_currentUser.addFCM(fcm: fcm));
+    });
+
     Auth.instance.onUserChanged.listen((newUser) async {
       setState(() {
         _currentUser = newUser;
@@ -47,20 +56,10 @@ class _SignInWidgetState extends State<SignInWidget> {
                 ? 'anonymous'
                 : loginProviders.first.toString()));
 
-        _firebaseMessaging.onTokenRefresh.listen((token) async {
-          final fcm = (FCMBuilder()
-                ..language = Localizations.localeOf(context).toString()
-                ..name = (await DeviceInfo.getDeviceInfo()).userFriendlyName
-                ..key = token)
-              .build();
-
-          debugPrint('Registering for FCM as ${fcm.name} in ${fcm.language}');
-          unawaited(_currentUser.addFCM(fcm: fcm));
-        });
-
         // TODO(dotdoom): register onMessage to show a snack bar with
         //                notification when the app is in foreground.
-        _firebaseMessaging.configure();
+        // Must be called after each login to obtain a FirebaseMessaging token.
+        FirebaseMessaging().configure();
       }
     });
 

@@ -51,11 +51,13 @@ class LearningViewModel {
   }
 
   Future<void> answer(
-          {@required bool knows, @required bool learnBeyondHorizon}) =>
-      user.learnCard(
-          unansweredScheduledCard: _scheduledCard,
-          knows: knows,
-          learnBeyondHorizon: learnBeyondHorizon);
+      {@required bool knows, @required bool learnBeyondHorizon}) {
+    logCardResponse(deckId: deck.key, knows: knows);
+    return user.learnCard(
+        unansweredScheduledCard: _scheduledCard,
+        knows: knows,
+        learnBeyondHorizon: learnBeyondHorizon);
+  }
 
   Future<void> deleteCard() => user.deleteCard(card: initialCard);
 }

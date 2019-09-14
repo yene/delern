@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:meta/meta.dart';
 
 Future<void> logDeckCreate() =>
     FirebaseAnalytics().logEvent(name: 'deck_create');
@@ -39,6 +40,12 @@ Future<void> logUnshare(String deckId) => FirebaseAnalytics().logShare(
 Future<void> logCardCreate(String deckId) =>
     FirebaseAnalytics().logEvent(name: 'card_create', parameters: {
       'item_id': deckId,
+    });
+
+Future<void> logCardResponse({@required String deckId, @required bool knows}) =>
+    FirebaseAnalytics().logEvent(name: 'card_response', parameters: {
+      'item_id': deckId,
+      'knows': knows ? 1 : 0,
     });
 
 Future<void> logPromoteAnonymous() =>

@@ -4,7 +4,6 @@ import 'package:delern_flutter/flutter/user_messages.dart';
 import 'package:delern_flutter/models/deck_model.dart';
 import 'package:delern_flutter/routes.dart';
 import 'package:delern_flutter/view_models/decks_list_bloc.dart';
-import 'package:delern_flutter/views/helpers/sign_in_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:pedantic/pedantic.dart';
 
@@ -28,11 +27,8 @@ class CreateDeckWidget extends StatelessWidget {
             builder: (_) => _CreateDeckDialog(),
           );
           if (newDeck != null) {
-            final currentUser = CurrentUserWidget.of(context).user;
             try {
-              // TODO(dotdoom): pass DeckAccess as a second parameter, with
-              // email, displayName and photoUrl filled in.
-              newDeck = await bloc.createDeck(newDeck, currentUser.email);
+              newDeck = await bloc.createDeck(newDeck);
             } catch (e, stackTrace) {
               unawaited(UserMessages.showError(
                   () => Scaffold.of(context), e, stackTrace));

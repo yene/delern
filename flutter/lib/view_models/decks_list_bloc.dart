@@ -54,9 +54,9 @@ class DecksListBloc {
     Future.delayed(const Duration(milliseconds: 100), _loadScheduledCards);
   }
 
-  Future<DeckModel> createDeck(DeckModel deck, String email) {
+  Future<DeckModel> createDeck(DeckModel deck) {
     logDeckCreate();
-    return user.createDeck(deckTemplate: deck, email: email);
+    return user.createDeck(deckTemplate: deck);
   }
 
   void _loadScheduledCards() {

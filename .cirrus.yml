@@ -118,7 +118,6 @@ task:
   << : *FLUTTER_AND_FASTLANE_TASK_TEMPLATE
   generate_script:
   - cd flutter
-  - bundle exec fastlane install_dependencies
   - bundle exec fastlane generate
   install_debug_keys_script: tools/ci.sh install_debug_keys
   # Keep repo up-to-date: https://github.com/CocoaPods/CocoaPods/issues/8761.

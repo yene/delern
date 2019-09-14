@@ -48,6 +48,7 @@ flutter_and_fastlane_task_template: &FLUTTER_AND_FASTLANE_TASK_TEMPLATE
   install_dependencies_script:
   - cd flutter
   - bundle exec fastlane install_dependencies
+  - bundle exec fastlane install_debug_keys
 
 task:
   << : *REGULAR_TASK_TEMPLATE
@@ -68,8 +69,18 @@ task:
   - bundle exec fastlane lint
   test_script:
   - ( cd flutter && flutter test --coverage )
-  # Broken until https://github.com/codecov/codecov-bash/pull/127 is merged.
-  - bash <(curl -s https://codecov.io/bash)
+  # Simulate Travis CI until https://github.com/codecov/codecov-bash/pull/127.
+  - CODECOV_TOKEN=eeabc1cc-89fc-447f-969d-39777e568284
+    TRAVIS=true
+    TRAVIS_COMMIT="$CIRRUS_CHANGE_IN_REPO"
+    TRAVIS_JOB_NUMBER="$CIRRUS_TASK_ID"
+    TRAVIS_PULL_REQUEST="$CIRRUS_PR"
+    TRAVIS_JOB_ID="$CIRRUS_TASK_NAME"
+    TRAVIS_REPO_SLUG="$CIRRUS_REPO_FULL_NAME"
+    TRAVIS_TAG="$CIRRUS_TAG"
+    TRAVIS_BRANCH="$CIRRUS_BRANCH"
+    TRAVIS_OS_NAME="$CIRRUS_OS"
+    bash <(curl -s https://codecov.io/bash)
   gradle_cache:
     folder: ~/.gradle/caches
     fingerprint_script:
@@ -83,7 +94,6 @@ task:
   #  fingerprint_script:
   #  - uname -ms
   #  - cat flutter/android/app/build.gradle
-  install_debug_keys_script: tools/ci.sh install_debug_keys
   build_script:
   - ( cd flutter && bundle exec fastlane android build )
   ensure_clean_git_script: bundle exec fastlane ensure_clean_git
@@ -108,9 +118,7 @@ task:
   << : *FLUTTER_AND_FASTLANE_TASK_TEMPLATE
   generate_script:
   - cd flutter
-  - bundle exec fastlane install_dependencies
   - bundle exec fastlane generate
-  install_debug_keys_script: tools/ci.sh install_debug_keys
   # Keep repo up-to-date: https://github.com/CocoaPods/CocoaPods/issues/8761.
   pod_specs_repo_update_script: pod repo update
   build_script:
@@ -184,7 +192,7 @@ task:
   configure_gcloud_script: *CONFIGURE_GCLOUD_SCRIPT
   publish_script:
   - echo "${ANDROID_KEYSTORE_DATA?}" | base64 -d > "${ANDROID_KEYSTORE_PATH?}"
-  - ( cd flutter && bundle exec fastlane android publish )
+  - ( cd flutter && bundle exec fastlane android publish "release:$CIRRUS_TAG" )
   always:
     move_artifacts_script:
     - mv flutter/build/app/outputs/bundle/release/app.aab
@@ -229,7 +237,7 @@ task:
   # Keep repo up-to-date: https://github.com/CocoaPods/CocoaPods/issues/8761.
   pod_specs_repo_update_script: pod repo update
   publish_script:
-  - ( cd flutter && bundle exec fastlane ios publish )
+  - ( cd flutter && bundle exec fastlane ios publish "release:$CIRRUS_TAG" )
   always:
     move_artifacts_script:
     - mv flutter/build/Runner.ipa "${CIRRUS_REPO_NAME}.ipa"

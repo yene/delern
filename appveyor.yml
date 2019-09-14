@@ -47,9 +47,6 @@ install:
   - ps: popd
   - 'echo [timing: %time%] Firebase dependencies installed'
 
-  - copy tools\ci\google-services.json flutter\android\app\google-services.json
-  - copy tools\ci\debug.keystore %USERPROFILE%\.android\debug.keystore
-
 build: off
 
 build_script:
@@ -64,6 +61,7 @@ build_script:
 
   - ps: pushd flutter
   - bundle exec fastlane install_dependencies
+  - bundle exec fastlane install_debug_keys
   - 'echo [timing: %time%] Dependencies installed'
   # TODO(dotdoom): test generate and lint.
   - bundle exec fastlane android build

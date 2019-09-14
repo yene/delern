@@ -9,6 +9,8 @@
 # Uncomment the line if you want fastlane to automatically update itself
 # update_fastlane
 
+fastlane_require 'fileutils'
+
 default_platform(:android)
 
 def cirrus_ci_build_number
@@ -40,26 +42,28 @@ def cirrus_ci_build_number
   }).data.github_repository.builds.edges.size
 end
 
-before_all do
-  commits_since_last_tag = changelog_from_git_commits(
-    quiet: true,
-    # One line per commit, which allows us to easily count them.
-    pretty: 'oneline',
-    # We push to "master" only when merging a PR, so increment with each merge.
-    merge_commit_filtering: 'only_include_merges',
-  ).lines.count
+before_all do |lane|
+  if [:build, :publish].include?(lane)
+    commits_since_last_tag = changelog_from_git_commits(
+      quiet: true,
+      # One line per commit, which allows us to easily count them.
+      pretty: 'oneline',
+      # We push to "master" only when merging a PR, so increment with each merge.
+      merge_commit_filtering: 'only_include_merges',
+    ).lines.count
 
-  # Add a fixed integer to CI build number, because we drifted away. Outside of
-  # CI, usually on a developer's workstation, just use number of commits.
-  lane_context[SharedValues::BUILD_NUMBER] = is_ci ?
-    Integer(cirrus_ci_build_number) + 5000 :
-    number_of_commits
+    # Add a fixed integer to CI build number, because we drifted away. Outside of
+    # CI, usually on a developer's workstation, just use number of commits.
+    lane_context[SharedValues::BUILD_NUMBER] = is_ci ?
+      Integer(cirrus_ci_build_number) + 5000 :
+      number_of_commits
 
-  # If there are any commits since the last tag (ex.: "2.1"), add them as the
-  # third version number, turning it into "2.1.42". Otherwise just keep "2.1".
-  lane_context[SharedValues::VERSION_NUMBER] = commits_since_last_tag > 0 ?
-      '%s.%d' % [last_git_tag, commits_since_last_tag] :
-      last_git_tag
+    # If there are any commits since the last tag (ex.: "2.1"), add them as the
+    # third version number, turning it into "2.1.42". Otherwise just keep "2.1".
+    lane_context[SharedValues::VERSION_NUMBER] = commits_since_last_tag > 0 ?
+        '%s.%d' % [last_git_tag, commits_since_last_tag] :
+        last_git_tag
+  end
 end
 
 desc 'Install or upgrade Flutter and Android SDK licenses'
@@ -94,17 +98,37 @@ lane :lint do
   flutter(args: %w(analyze lib))
 end
 
+desc 'Replace system-wide Android debug keystore and app-wide GoogleServices'
+desc 'with those configured for "delern-debug" Firebase project'
+lane :install_debug_keys do
+  FileUtils.cp(
+    'debug-project/google-services.json',
+    '../android/app/',
+    verbose: true)
+  FileUtils.cp(
+    'debug-project/org.dasfoo.delern.debug',
+    '../ios/Runner/GoogleService-Info/',
+    verbose: true)
+  system_wide_android_directory = File.expand_path('~/.android/')
+  FileUtils.mkdir_p(system_wide_android_directory)
+  FileUtils.cp(
+    'debug-project/debug.keystore',
+    system_wide_android_directory,
+    verbose: true)
+end
+
 platform :android do
   desc 'Build a debug APK'
   lane :build do
     flutter_build(debug: true)
   end
 
-  desc 'Build a release AAB and publish it (including Store artifacts)'
-  lane :publish do
+  desc 'Build a release AAB and publish it (including Store artifacts).'
+  desc 'Set "release" lane key to non-empty value to upload to "alpha" track.'
+  lane :publish do |options|
     aab = flutter_build(build: 'appbundle')
     supply(
-      track: 'internal',
+      track: options[:release].empty? ? 'internal' : 'alpha',
       aab: aab,
     )
   end
@@ -119,8 +143,9 @@ platform :ios do
     )
   end
 
-  desc 'Build a release iOS package and publish it (including Store artifacts)'
-  lane :publish do
+  desc 'Build a release iOS package and publish it (including Store artifacts).'
+  desc 'Set "release" lane key to non-empty value to upload metadata.'
+  lane :publish do |options|
     # Set up OS X keychain and switch match to readonly model. This command has
     # no effect outside CI.
     setup_travis
@@ -131,21 +156,23 @@ platform :ios do
       type: 'appstore',
       app_identifier: app_identifier,
     )
-    # Build the app to:
+    # Perform an (otherwise unnecessary) build to:
     # - add version
     # - switch to release mode
     flutter_build
     gym(silent: true, suppress_xcode_output: true)
-    # Upload screenshots and metadata.
-    upload_to_app_store(
-      app_identifier: app_identifier,
-      skip_binary_upload: true,
-      overwrite_screenshots: true,
-      # Skip the HTML report file verification.
-      force: true,
-      # Rejects the previously submitted build.
-      reject_if_possible: true,
-    )
+
+    unless options[:release].empty?
+      # Upload screenshots and metadata.
+      upload_to_app_store(
+        app_identifier: app_identifier,
+        skip_binary_upload: true,
+        overwrite_screenshots: true,
+        # Skip the HTML report file verification.
+        force: true,
+      )
+    end
+
     # TODO(dotdoom): set also "changelog".
     pilot(
       ipa: 'build/Runner.ipa',

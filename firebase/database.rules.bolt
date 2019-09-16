@@ -109,13 +109,15 @@ path /decks/{userId} {
 }
 path /decks/{userId}/{deckId} is Deck {
   create() {
-    deckAccess(deckId) === "owner" &&
-    (
+    this === null ? (
       // Overwriting null with null triggers create(). This can happen when the
       // receiving user has removed their Deck, but the DeckAccess is still
-      // there.
-      (this === null) ||
-      (isCurrentUser(userId) === this.accepted)
+      // there: https://github.com/FirebaseExtended/bolt/issues/248.
+      deckAccess(deckId) === "owner" ||
+      prior(deckAccess(deckId)) === "owner"
+    ) : (
+      deckAccess(deckId) === "owner" &&
+      isCurrentUser(userId) === this.accepted
     )
   }
 

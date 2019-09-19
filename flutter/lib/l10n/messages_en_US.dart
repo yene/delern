@@ -82,6 +82,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "deleteDeckWriteReadAccessQuestion": MessageLookupByLibrary.simpleMessage(
             "The deck will be removed from your account only, all cards and learning history will remain with the owner and other users. Do you want to delete deck?"),
         "discard": MessageLookupByLibrary.simpleMessage("Discard"),
+        "doNotKnowCardTooltip":
+            MessageLookupByLibrary.simpleMessage("I don\'t know"),
         "doNotNeedFeaturesText": MessageLookupByLibrary.simpleMessage(
             "I do not want any of these features"),
         "done": MessageLookupByLibrary.simpleMessage("Done"),
@@ -107,6 +109,7 @@ class MessageLookup extends MessageLookupByLibrary {
             "Start learning cards ordered for interval learning"),
         "inviteToAppMessage": MessageLookupByLibrary.simpleMessage(
             "I invite you to install Delern, a spaced repetition learning app, which will allow you to learn quickly and easily!\n\nProceed to install it from:\nGoogle Play: https://play.google.com/store/apps/details?id=org.dasfoo.delern\nApp Store: https://itunes.apple.com/us/app/delern/id1435734822\n\nAfter install, follow Delern latest news on:\nFacebook: https://fb.me/das.delern\nLinkedIn: https://www.linkedin.com/company/delern\nVK: https://vk.com/delern\nTwitter: https://twitter.com/dasdelern"),
+        "knowCardTooltip": MessageLookupByLibrary.simpleMessage("I know"),
         "learnIntroDescription": MessageLookupByLibrary.simpleMessage(
             "Learn in any place and offline as well"),
         "learnIntroTitle": MessageLookupByLibrary.simpleMessage("Learn"),

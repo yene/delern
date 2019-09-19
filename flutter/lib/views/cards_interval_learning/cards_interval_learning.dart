@@ -179,12 +179,14 @@ class CardsIntervalLearningState extends State<CardsIntervalLearning> {
         children: [
           FloatingActionButton(
             // heroTag - https://stackoverflow.com/questions/46509553/
+            tooltip: localizations.of(context).doNotKnowCardTooltip,
             heroTag: 'dontknow',
             backgroundColor: Colors.red,
             onPressed: cb(() => _answerCard(false, context)),
             child: const Icon(Icons.clear),
           ),
           FloatingActionButton(
+            tooltip: localizations.of(context).knowCardTooltip,
             heroTag: 'know',
             backgroundColor: Colors.green,
             onPressed: cb(() => _answerCard(true, context)),

@@ -702,5 +702,19 @@
     "type": "text",
     "placeholders": {
     }
+  },
+  "knowCardTooltip": "Я знаю",
+  "@knowCardTooltip": {
+    "description": "Tooltip for know card button",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "doNotKnowCardTooltip": "Я не знаю",
+  "@doNotKnowCardTooltip": {
+    "description": "Tooltip for do not know card button",
+    "type": "text",
+    "placeholders": {
+    }
   }
 }

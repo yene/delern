@@ -1,6 +1,6 @@
 {
   "@@locale": "en_US",
-  "@@last_modified": "2019-09-09T10:02:43.727972",
+  "@@last_modified": "2019-09-19T11:05:39.014732",
   "navigationDrawerSignOut": "Sign Out",
   "@navigationDrawerSignOut": {
     "description": "Sign Out in Navigation Drawer",
@@ -700,6 +700,20 @@
   "editCardTooltip": "Edit card",
   "@editCardTooltip": {
     "description": "Tooltip for editing card",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "knowCardTooltip": "I know",
+  "@knowCardTooltip": {
+    "description": "Tooltip for know card button",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "doNotKnowCardTooltip": "I don't know",
+  "@doNotKnowCardTooltip": {
+    "description": "Tooltip for do not know card button",
     "type": "text",
     "placeholders": {
     }

@@ -646,4 +646,16 @@ To see the source code for this app, please visit the [Delern GitHub repo](https
         name: 'editCardTooltip',
         desc: 'Tooltip for editing card',
       );
+
+  String get knowCardTooltip => Intl.message(
+        'I know',
+        name: 'knowCardTooltip',
+        desc: 'Tooltip for know card button',
+      );
+
+  String get doNotKnowCardTooltip => Intl.message(
+        'I don\'t know',
+        name: 'doNotKnowCardTooltip',
+        desc: 'Tooltip for do not know card button',
+      );
 }

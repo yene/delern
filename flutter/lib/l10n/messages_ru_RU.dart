@@ -89,6 +89,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "deleteDeckWriteReadAccessQuestion": MessageLookupByLibrary.simpleMessage(
             "Список будет удален с Вашего аккаунта, все карточки и история изучения останутся у владельца списка и остальных пользователей. Вы хотите удалить список?"),
         "discard": MessageLookupByLibrary.simpleMessage("Отменить изменения"),
+        "doNotKnowCardTooltip":
+            MessageLookupByLibrary.simpleMessage("Я не знаю"),
         "doNotNeedFeaturesText": MessageLookupByLibrary.simpleMessage(
             "Мне не нужны все эти функции "),
         "done": MessageLookupByLibrary.simpleMessage("Закрыть"),
@@ -119,6 +121,7 @@ class MessageLookup extends MessageLookupByLibrary {
             "Начать изучение карточек в порядке интервального обучения"),
         "inviteToAppMessage": MessageLookupByLibrary.simpleMessage(
             "Я приглашаю Вас установить Delern, систему интервального изучения, которая позволяет изучать быстро и легко!\n\nПройдите по ссылке чтобы установить из\nGoogle Play: https://play.google.com/store/apps/details?id=org.dasfoo.delern\nApp Store: https://itunes.apple.com/us/app/delern/id1435734822\n\nПосле установки, следите за последними новостями Delern:\nFacebook: https://fb.me/das.delern\nLinkedIn: https://www.linkedin.com/company/delern\nVK: https://vk.com/delern\nTwitter: https://twitter.com/dasdelern"),
+        "knowCardTooltip": MessageLookupByLibrary.simpleMessage("Я знаю"),
         "learnIntroDescription": MessageLookupByLibrary.simpleMessage(
             "Изучайте в любом месте, а также без сети"),
         "learnIntroTitle": MessageLookupByLibrary.simpleMessage("Изучайте"),

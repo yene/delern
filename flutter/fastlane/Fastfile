@@ -58,11 +58,13 @@ before_all do |lane|
       Integer(cirrus_ci_build_number) + 5000 :
       number_of_commits
 
-    # If there are any commits since the last tag (ex.: "2.1"), add them as the
-    # third version number, turning it into "2.1.42". Otherwise just keep "2.1".
-    lane_context[SharedValues::VERSION_NUMBER] = commits_since_last_tag > 0 ?
-        '%s.%d' % [last_git_tag, commits_since_last_tag] :
-        last_git_tag
+    lane_context[SharedValues::VERSION_NUMBER] = '%s.%d' % [
+        # First 2 digits of version number are taken from tag (ex.: "2.1").
+        last_git_tag,
+        # Add the number of commits afterwards, multiplied by 10 to allow room
+        # for manual testing of CI/CD, if necessary.
+        commits_since_last_tag * 10,
+    ]
   end
 end
 
@@ -128,7 +130,7 @@ platform :android do
   lane :publish do |options|
     aab = flutter_build(build: 'appbundle')
     supply(
-      track: options[:release].empty? ? 'internal' : 'alpha',
+      track: options[:release].to_s.empty? ? 'internal' : 'alpha',
       aab: aab,
     )
   end
@@ -162,21 +164,36 @@ platform :ios do
     flutter_build
     gym(silent: true, suppress_xcode_output: true)
 
-    unless options[:release].empty?
-      # Upload screenshots and metadata.
+    upload_to_testflight(
+      distribute_external: true,
+      groups: ['fastlane_testers'],
+    )
+
+    unless options[:release].to_s.empty?
       upload_to_app_store(
         app_identifier: app_identifier,
-        skip_binary_upload: true,
         overwrite_screenshots: true,
+        submit_for_review: true,
+        submission_information: {
+          add_id_info_uses_idfa: false,
+        },
+
         # Skip the HTML report file verification.
         force: true,
+
+        # Binary is already uploaded by upload_to_testflight, just use it.
+        skip_binary_upload: true,
+        build_number: lane_context[SharedValues::BUILD_NUMBER].to_s,
+
+        # Override because defaults make directory layout messy.
+        # Default is: "screenshots".
+        screenshots_path: File.join(Dir.pwd, 'metadata/ios/screenshots'),
+        # Default is: "metadata". Also have to bury it into additional directory
+        # because storing metadata in "metadata/ios" complains about
+        # unrecognized subdirectory "screenshots".
+        metadata_path: File.join(Dir.pwd, 'metadata/ios/metadata'),
       )
     end
-
-    # TODO(dotdoom): set also "changelog".
-    pilot(
-      ipa: 'build/Runner.ipa',
-    )
   end
 end
 

@@ -62,6 +62,12 @@ Future<void> main() async {
 
   FlutterError.onError = Crashlytics.instance.recordFlutterError;
 
+  final debugPrintWithoutCrashlytics = debugPrint;
+  debugPrint = (message, {wrapWidth}) {
+    Crashlytics.instance.log(message);
+    debugPrintWithoutCrashlytics(message, wrapWidth: wrapWidth);
+  };
+
   Isolate.current.addErrorListener(RawReceivePort((pair) async {
     final List<dynamic> errorAndStacktrace = pair;
     await error_reporting.report(

@@ -1,5 +1,8 @@
 {
   "database": {
+    "predeploy": [
+      "npm run build"
+    ],
     "rules": "database.rules.json"
   },
   "functions": {
@@ -7,6 +10,9 @@
     "predeploy": [
       "npm --prefix \"$RESOURCE_DIR\" run lint",
       "npm --prefix \"$RESOURCE_DIR\" run build"
+    ],
+    "postdeploy": [
+      "cd \"$PROJECT_DIR\"/appengine && gcloud --project=\"$GCLOUD_PROJECT\" app deploy --version=ci app.yaml cron.yaml"
     ]
   }
 }

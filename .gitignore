@@ -22,9 +22,6 @@ vendor
 # Directoy with locally saved Firebase application ID etc.
 /firebase/www/__/
 
-# firebase-bolt conversion tool output.
-/firebase/database.rules.json
-
 # Directory with firebase tool cache.
 /firebase/.firebase
 

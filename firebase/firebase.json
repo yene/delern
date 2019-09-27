@@ -3,7 +3,7 @@
     "predeploy": [
       "npm run build"
     ],
-    "rules": "database.rules.json"
+    "rules": "database.rules.bolt"
   },
   "functions": {
     "source": "functions",

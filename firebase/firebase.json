@@ -1,8 +1,5 @@
 {
   "database": {
-    "predeploy": [
-      "npm run build"
-    ],
     "rules": "database.rules.bolt"
   },
   "functions": {

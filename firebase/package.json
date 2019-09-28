@@ -2,8 +2,7 @@
   "name": "firebase",
   "description": "Umbrella package for Firebase",
   "scripts": {
-    "build": "firebase-bolt database.rules.bolt",
-    "deploy": "firebase --project=${PROJECT?} deploy --force"
+    "deploy": "firebase --project=\"${PROJECT?}\" deploy --force --message=\"$(git describe --tags --dirty)\""
   },
   "dependencies": {
     "firebase-bolt": "^0.8.4",

@@ -24,7 +24,9 @@ task:
   lint_script:
   - ( cd firebase/functions && npm run lint )
   build_script:
-  - ( cd firebase && npm run build )
+  # Run firebase-bolt just to verify that the rules parse. Since it always
+  # creates output, redirect it to a temporary file to keep Git tree clean.
+  - ( cd firebase && node_modules/.bin/firebase-bolt database.rules.bolt -o $(mktemp -u))
   - ( cd firebase/functions && npm run build )
 
 flutter_and_fastlane_task_template: &FLUTTER_AND_FASTLANE_TASK_TEMPLATE

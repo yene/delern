@@ -39,23 +39,17 @@ install:
   - ps: Install-Product node 8
   - node --version
   - npm --version
-  - ps: pushd firebase
+  - ps: pushd firebase\functions
   - npm ci
-  - ps: pushd functions
-  - npm ci
-  - ps: popd
   - ps: popd
   - 'echo [timing: %time%] Firebase dependencies installed'
 
 build: off
 
 build_script:
-  - ps: pushd firebase
-  - npm run build
-  - ps: pushd functions
+  - ps: pushd firebase\functions
   - npm run lint
   - npm run build
-  - ps: popd
   - ps: popd
   - 'echo [timing: %time%] Firebase built'
 

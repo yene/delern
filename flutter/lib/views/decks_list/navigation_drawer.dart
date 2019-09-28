@@ -7,6 +7,7 @@ import 'package:delern_flutter/remote/analytics.dart';
 import 'package:delern_flutter/remote/auth.dart';
 import 'package:delern_flutter/remote/error_reporting.dart' as error_reporting;
 import 'package:delern_flutter/routes.dart';
+import 'package:delern_flutter/views/decks_list/developer_menu.dart';
 import 'package:delern_flutter/views/helpers/email_launcher.dart';
 import 'package:delern_flutter/views/helpers/save_updates_dialog.dart';
 import 'package:delern_flutter/views/helpers/send_invite.dart';
@@ -94,10 +95,14 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
     if (user.isAnonymous) {
       list..insert(0, signInOutWidget)..insert(1, const Divider(height: 1));
     } else {
-      list
-        ..insert(list.length, const Divider(height: 1))
-        ..insert(list.length, signInOutWidget);
+      list..add(const Divider(height: 1))..add(signInOutWidget);
     }
+
+    assert(() {
+      list.addAll(buildDeveloperMenu(context));
+      return true;
+    }());
+
     return list;
   }
 

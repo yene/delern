@@ -26,7 +26,7 @@ class SignInWidget extends StatefulWidget {
 class _SignInWidgetState extends State<SignInWidget> {
   static const _itemPadding =
       Padding(padding: EdgeInsets.symmetric(vertical: 10));
-  User _currentUser;
+  User _currentUser = Auth.instance.currentUser;
 
   StreamSubscription _fcmSubscription, _userChangedSubscription;
 

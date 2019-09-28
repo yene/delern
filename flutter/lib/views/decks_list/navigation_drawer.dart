@@ -7,11 +7,11 @@ import 'package:delern_flutter/remote/analytics.dart';
 import 'package:delern_flutter/remote/auth.dart';
 import 'package:delern_flutter/remote/error_reporting.dart' as error_reporting;
 import 'package:delern_flutter/routes.dart';
+import 'package:delern_flutter/views/decks_list/developer_menu.dart';
 import 'package:delern_flutter/views/helpers/email_launcher.dart';
 import 'package:delern_flutter/views/helpers/save_updates_dialog.dart';
 import 'package:delern_flutter/views/helpers/send_invite.dart';
 import 'package:delern_flutter/views/helpers/sign_in_widget.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
@@ -99,16 +99,7 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
     }
 
     assert(() {
-      // This code will run only in debug mode. Add some dev menu items.
-      // Since dev menu items are not visible to the end user, we do not need to
-      // localize them.
-      list
-        ..add(const Divider(height: 1))
-        ..add(ListTile(
-          leading: const Icon(Icons.cancel),
-          title: const Text('Simulate a crash'),
-          onTap: Crashlytics().crash,
-        ));
+      list.addAll(buildDeveloperMenu(context));
       return true;
     }());
 

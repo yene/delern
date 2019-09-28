@@ -11,6 +11,7 @@ import 'package:delern_flutter/views/helpers/email_launcher.dart';
 import 'package:delern_flutter/views/helpers/save_updates_dialog.dart';
 import 'package:delern_flutter/views/helpers/send_invite.dart';
 import 'package:delern_flutter/views/helpers/sign_in_widget.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
@@ -94,10 +95,23 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
     if (user.isAnonymous) {
       list..insert(0, signInOutWidget)..insert(1, const Divider(height: 1));
     } else {
-      list
-        ..insert(list.length, const Divider(height: 1))
-        ..insert(list.length, signInOutWidget);
+      list..add(const Divider(height: 1))..add(signInOutWidget);
     }
+
+    assert(() {
+      // This code will run only in debug mode. Add some dev menu items.
+      // Since dev menu items are not visible to the end user, we do not need to
+      // localize them.
+      list
+        ..add(const Divider(height: 1))
+        ..add(ListTile(
+          leading: const Icon(Icons.cancel),
+          title: const Text('Simulate a crash'),
+          onTap: Crashlytics().crash,
+        ));
+      return true;
+    }());
+
     return list;
   }
 

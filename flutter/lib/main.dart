@@ -73,7 +73,9 @@ Future<void> main() async {
     await error_reporting.report(
       'Isolate ErrorListener',
       errorAndStacktrace.first,
-      errorAndStacktrace.last,
+      errorAndStacktrace.last == null
+          ? null
+          : StackTrace.fromString(errorAndStacktrace.last),
     );
   }).sendPort);
 

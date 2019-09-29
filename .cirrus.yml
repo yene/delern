@@ -22,8 +22,10 @@ task:
     fingerprint_script: cat firebase/functions/package-lock.json
     populate_script: cd firebase/functions && npm ci
   lint_script:
+  - ( cd firebase && npm run check )
   - ( cd firebase/functions && npm run check )
   build_script:
+  - ( cd firebase && npm run compile )
   - ( cd firebase/functions && npm run compile )
   # Run firebase-bolt just to verify that the rules parse. Since it always
   # creates output, redirect it to a temporary file to keep Git tree clean.

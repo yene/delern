@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:delern_flutter/models/base/stream_with_latest_value.dart';
 import 'package:delern_flutter/models/card_model.dart';
 import 'package:delern_flutter/models/card_reply_model.dart';
 import 'package:delern_flutter/models/deck_access_model.dart';
@@ -18,18 +19,22 @@ enum SignInProvider {
 }
 
 class User {
+  StreamWithValue<bool> _isOnline;
   FirebaseUser _dataSource;
-  bool _isOnline = false;
   StreamSubscription _onlineSubscription;
 
+  StreamWithValue<bool> get isOnline => _isOnline;
+
   User(this._dataSource) : assert(_dataSource != null) {
-    _onlineSubscription = FirebaseDatabase.instance
+    _isOnline = StreamWithLatestValue<bool>(FirebaseDatabase.instance
         .reference()
         .child('.info/connected')
         .onValue
-        .listen((event) {
-      _isOnline = event.snapshot.value;
-    });
+        .map((event) => event.snapshot.value));
+    // Subscribe ourselves to online status immediately because we always want
+    // to know the current value. We pass a dummy function to onData parameter
+    // because we can always extract the latest data with _isOnline.value.
+    _onlineSubscription = _isOnline.stream.listen((_) {});
   }
 
   /// Update source of profile information (such as email, displayName etc) for
@@ -269,7 +274,7 @@ class User {
     // Firebase update() does not return until it gets response from the server.
     final updateFuture = FirebaseDatabase.instance.reference().update(updates);
 
-    if (!_isOnline) {
+    if (_isOnline.value != true) {
       unawaited(updateFuture.catchError((error, stackTrace) => error_reporting
           .report('DataWriter', error, stackTrace,
               extra: {'updates': updates, 'online': false})));

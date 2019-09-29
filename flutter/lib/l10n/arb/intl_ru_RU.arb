@@ -716,5 +716,12 @@
     "type": "text",
     "placeholders": {
     }
+  },
+  "offlineProfileTooltip": "Профиль (Вы не в сети)",
+  "@offlineProfileTooltip": {
+    "description": "Tooltip for the icon in top corner when offline",
+    "type": "text",
+    "placeholders": {
+    }
   }
 }

@@ -548,7 +548,13 @@ To see the source code for this app, please visit the [Delern GitHub repo](https
   String get profileTooltip => Intl.message(
         'Profile',
         name: 'profileTooltip',
-        desc: 'Profile tooltip',
+        desc: 'Tooltip for the icon in top corner that opens Navigation Drawer',
+      );
+
+  String get offlineProfileTooltip => Intl.message(
+        'Profile (you are offline)',
+        name: 'offlineProfileTooltip',
+        desc: 'Tooltip for the icon in top corner when offline',
       );
 
   String get deckDeletedUserMessage => Intl.message(

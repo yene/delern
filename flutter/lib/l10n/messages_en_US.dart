@@ -145,6 +145,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "noSharingAccessUserMessage": MessageLookupByLibrary.simpleMessage(
             "Only owner of deck can share it."),
         "numberOfCards": m3,
+        "offlineProfileTooltip":
+            MessageLookupByLibrary.simpleMessage("Profile (you are offline)"),
         "offlineUserMessage": MessageLookupByLibrary.simpleMessage(
             "You are offline, please try it later"),
         "other": MessageLookupByLibrary.simpleMessage("other"),

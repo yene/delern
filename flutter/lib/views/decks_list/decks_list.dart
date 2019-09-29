@@ -72,7 +72,7 @@ class _DecksListState extends State<DecksList> {
         appBar: SearchBarWidget(
           title: localizations.of(context).listOFDecksScreenTitle,
           search: setFilter,
-          leading: streamWithValueBuilder<bool>(
+          leading: buildStreamBuilderWithValue<bool>(
               streamWithValue: _bloc.isOnline,
               builder: (context, snapshot) {
                 final online = snapshot.data == true;

@@ -157,6 +157,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "noSharingAccessUserMessage": MessageLookupByLibrary.simpleMessage(
             "Только владелец может поделиться списком."),
         "numberOfCards": m3,
+        "offlineProfileTooltip":
+            MessageLookupByLibrary.simpleMessage("Профиль (Вы не в сети)"),
         "offlineUserMessage": MessageLookupByLibrary.simpleMessage(
             "Нет сети, пожалуйста, попробуйте позже"),
         "other": MessageLookupByLibrary.simpleMessage("другие"),

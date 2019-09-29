@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:delern_flutter/models/base/delayed_initialization.dart';
+import 'package:delern_flutter/models/base/stream_with_latest_value.dart';
 import 'package:delern_flutter/models/deck_model.dart';
 import 'package:delern_flutter/models/scheduled_card_model.dart';
 import 'package:delern_flutter/models/user.dart';
@@ -87,6 +88,8 @@ class DecksListBloc {
       });
     });
   }
+
+  StreamWithValue<bool> get isOnline => user.isOnline;
 
   /// A delay between next scheduled card and our timer trigger, to avoid time
   /// computation uncertainties, and also avoid timer restart churn if multiple

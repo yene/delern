@@ -1,6 +1,6 @@
 {
   "@@locale": "en_US",
-  "@@last_modified": "2019-09-19T11:05:39.014732",
+  "@@last_modified": "2019-09-29T11:13:08.091587",
   "navigationDrawerSignOut": "Sign Out",
   "@navigationDrawerSignOut": {
     "description": "Sign Out in Navigation Drawer",
@@ -587,7 +587,14 @@
   },
   "profileTooltip": "Profile",
   "@profileTooltip": {
-    "description": "Profile tooltip",
+    "description": "Tooltip for the icon in top corner that opens Navigation Drawer",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "offlineProfileTooltip": "Profile (you are offline)",
+  "@offlineProfileTooltip": {
+    "description": "Tooltip for the icon in top corner when offline",
     "type": "text",
     "placeholders": {
     }

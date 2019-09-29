@@ -20,6 +20,7 @@ import 'package:delern_flutter/views/helpers/observing_animated_list_widget.dart
 import 'package:delern_flutter/views/helpers/save_updates_dialog.dart';
 import 'package:delern_flutter/views/helpers/search_bar_widget.dart';
 import 'package:delern_flutter/views/helpers/sign_in_widget.dart';
+import 'package:delern_flutter/views/helpers/stream_with_value_builder.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:pedantic/pedantic.dart';
@@ -71,13 +72,28 @@ class _DecksListState extends State<DecksList> {
         appBar: SearchBarWidget(
           title: localizations.of(context).listOFDecksScreenTitle,
           search: setFilter,
-          leading: IconButton(
-            tooltip: localizations.of(context).profileTooltip,
-            icon: const Icon(Icons.person),
-            onPressed: () {
-              _scaffoldKey.currentState.openDrawer();
-            },
-          ),
+          leading: buildStreamBuilderWithValue<bool>(
+              streamWithValue: _bloc.isOnline,
+              builder: (context, snapshot) {
+                final online = snapshot.data == true;
+                return IconButton(
+                  tooltip: online
+                      ? localizations.of(context).profileTooltip
+                      : localizations.of(context).offlineProfileTooltip,
+                  icon: AnimatedCrossFade(
+                    duration: const Duration(milliseconds: 500),
+                    firstChild: const Icon(Icons.person),
+                    secondChild: const Icon(Icons.offline_bolt,
+                        color: Colors.amberAccent),
+                    crossFadeState: online
+                        ? CrossFadeState.showFirst
+                        : CrossFadeState.showSecond,
+                  ),
+                  onPressed: () {
+                    _scaffoldKey.currentState.openDrawer();
+                  },
+                );
+              }),
         ),
         drawer: NavigationDrawer(),
         body: Column(

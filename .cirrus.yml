@@ -5,6 +5,10 @@ env:
   FLUTTER_SDK_ROOT: "${HOME}/flutter"
   PATH: "${HOME}/bin:${FLUTTER_SDK_ROOT}/bin:${PATH}"
 
+fetch_tags_task_template: &FETCH_TAGS_TASK_TEMPLATE
+  fetch_tags_script:
+  - git fetch --tags
+
 regular_task_template: &REGULAR_TASK_TEMPLATE
   only_if: $CIRRUS_BRANCH == 'master' || $CIRRUS_TAG != '' || $CIRRUS_PR != ''
 
@@ -32,7 +36,6 @@ task:
   - ( cd firebase && node_modules/.bin/firebase-bolt database.rules.bolt -o $(mktemp -u) )
 
 flutter_and_fastlane_task_template: &FLUTTER_AND_FASTLANE_TASK_TEMPLATE
-  fetch_tags_script: git fetch --tags --quiet
   flutter_cache:
     folder: $FLUTTER_SDK_ROOT
     fingerprint_script:
@@ -55,6 +58,7 @@ flutter_and_fastlane_task_template: &FLUTTER_AND_FASTLANE_TASK_TEMPLATE
   - bundle exec fastlane install_debug_keys
 
 task:
+  << : *FETCH_TAGS_TASK_TEMPLATE
   << : *REGULAR_TASK_TEMPLATE
   name: flutter (linux)
   container:
@@ -115,6 +119,7 @@ task:
       path: ${CIRRUS_REPO_NAME}.apk
 
 task:
+  << : *FETCH_TAGS_TASK_TEMPLATE
   << : *REGULAR_TASK_TEMPLATE
   name: flutter (osx)
   osx_instance: &OSX_INSTANCE
@@ -150,6 +155,7 @@ gcloud_env_template: &GCLOUD_ENV_TEMPLATE
     13088ca6627460186af52248c2d6287f9be05b6c7889a4b5]"
 
 task:
+  << : *FETCH_TAGS_TASK_TEMPLATE
   << : *DEPLOY_TASK_TEMPLATE
   name: deploy (firebase)
   depends_on: firebase
@@ -174,6 +180,7 @@ task:
   - ( cd firebase && PROJECT=delern-e1b33 npm run deploy )
 
 task:
+  << : *FETCH_TAGS_TASK_TEMPLATE
   << : *DEPLOY_TASK_TEMPLATE
   name: deploy (Play Store)
   depends_on:
@@ -205,6 +212,7 @@ task:
       path: "${CIRRUS_REPO_NAME}.aab"
 
 task:
+  << : *FETCH_TAGS_TASK_TEMPLATE
   << : *DEPLOY_TASK_TEMPLATE
   name: deploy (App Store)
   depends_on:

@@ -48,8 +48,8 @@ build: off
 
 build_script:
   - ps: pushd firebase\functions
-  - npm run lint
-  - npm run build
+  - npm run check
+  - npm run compile
   - ps: popd
   - 'echo [timing: %time%] Firebase built'
 

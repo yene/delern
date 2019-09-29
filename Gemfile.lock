@@ -114,6 +114,7 @@ GEM
     fourflusher (2.3.1)
     fuzzy_match (2.0.4)
     gh_inspector (1.1.3)
+    git-remote-parser (1.0.0)
     google-api-client (0.23.9)
       addressable (~> 2.5, >= 2.5.1)
       googleauth (>= 0.5, < 0.7.0)
@@ -222,6 +223,7 @@ DEPENDENCIES
   fastlane
   fastlane-plugin-flutter
   fastlane-plugin-versioning
+  git-remote-parser
   graphql-client
 
 BUNDLED WITH

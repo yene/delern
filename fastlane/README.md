@@ -30,6 +30,11 @@ fastlane update_analysis_options
 fastlane update
 ```
 Update all dependencies in lockfiles (bundler, npm, Flutter)
+### setup
+```
+fastlane setup
+```
+Create or migrate a debug Firebase project for this GitHub fork
 
 ----
 

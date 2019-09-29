@@ -22,12 +22,12 @@ task:
     fingerprint_script: cat firebase/functions/package-lock.json
     populate_script: cd firebase/functions && npm ci
   lint_script:
-  - ( cd firebase/functions && npm run lint )
+  - ( cd firebase/functions && npm run check )
   build_script:
+  - ( cd firebase/functions && npm run compile )
   # Run firebase-bolt just to verify that the rules parse. Since it always
   # creates output, redirect it to a temporary file to keep Git tree clean.
-  - ( cd firebase && node_modules/.bin/firebase-bolt database.rules.bolt -o $(mktemp -u))
-  - ( cd firebase/functions && npm run build )
+  - ( cd firebase && node_modules/.bin/firebase-bolt database.rules.bolt -o $(mktemp -u) )
 
 flutter_and_fastlane_task_template: &FLUTTER_AND_FASTLANE_TASK_TEMPLATE
   fetch_tags_script: git fetch --tags --quiet

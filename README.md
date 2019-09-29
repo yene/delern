@@ -4,6 +4,8 @@
 <a href='https://itunes.apple.com/us/app/delern/id1435734822?mt=8'><img alt='Get it on App Store' src='https://linkmaker.itunes.apple.com/assets/shared/badges/en-us/appstore-lrg.svg' height='43px'/></a>
 </td></tr></table>
 
+[![Code Style: Google](https://img.shields.io/badge/code%20style-google-blueviolet.svg)](https://github.com/google/gts)
+
 ## <img src="flutter/images/ic_launcher.png" height="64px" /> Delern
 
 Spaced repetition learning system. Ideal for studying. The application works on the principle of flashcards.

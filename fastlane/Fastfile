@@ -55,4 +55,33 @@ lane :update do
   end
 end
 
+def _github_fork_name()
+  git_remotes = sh(%w(git remote)).split
+  # Definitely not what we want.
+  git_remotes.delete('upstream')
+  # Try to use "origin" if we have it, otherwise whatever we have.
+  origin_git_remote = git_remotes.include?('origin') ?
+    'origin' : git_remotes.first
+
+  fastlane_require 'git/remote/parser'
+  url_parser = Git::Remote::Parser.new
+  url_parser.parse(
+    sh(%W(git remote get-url #{origin_git_remote})).strip
+  ).owner
+rescue => e
+  UI.important(e)
+  UI.input('Cannot autodetect fork name. What is your GitHub handle? ')
+end
+
+desc 'Create or migrate a debug Firebase project for this GitHub fork'
+lane :setup do
+  Dir.chdir('../firebase') do
+    project_id = "delern-debug-#{_github_fork_name()}"
+    sh %w(npm install)
+    fastlane_require 'shellwords'
+    # Give Firebase login interactive mode and do not crop lines.
+    exec %W(npm start -- #{project_id}).shelljoin
+  end
+end
+
 # vim: ft=ruby

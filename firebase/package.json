@@ -2,11 +2,30 @@
   "name": "firebase",
   "description": "Umbrella package for Firebase",
   "scripts": {
-    "deploy": "firebase --project=\"${PROJECT?}\" deploy --force --message=\"$(git describe --tags --dirty)\""
+    "deploy": "firebase --project=\"${PROJECT?}\" deploy --force --message=\"$(git describe --tags --dirty)\"",
+    "start": "node build/src/index.js",
+    "check": "gts check",
+    "clean": "gts clean",
+    "compile": "tsc -p .",
+    "fix": "gts fix",
+    "prepare": "npm run compile",
+    "pretest": "npm run compile",
+    "posttest": "npm run check"
   },
   "dependencies": {
+    "configstore": "^5.0.0",
+    "firebase-admin": "^8.6.0",
     "firebase-bolt": "^0.8.4",
     "firebase-tools": "^7.4.0"
+  },
+  "devDependencies": {
+    "gts": "^1.1.0",
+    "typescript": "~3.5.0",
+    "@types/configstore": "^4.0.0",
+    "@types/node": "^10.0.3"
+  },
+  "engines": {
+    "node": "8"
   },
   "private": true
 }

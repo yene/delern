@@ -40,8 +40,10 @@ lane :update do
   Dir.chdir('..') do
     sh %w(bundle update)
     Dir.chdir('flutter') do
-      sh %w(flutter upgrade)
-      sh %w(flutter packages upgrade)
+      flutter_bootstrap
+      Dir.chdir('fastlane') do
+        flutter(args: %w(packages upgrade))
+      end
       if RUBY_PLATFORM.include? 'darwin'
         Dir.chdir('ios') { sh %w(bundle exec pod update) }
       end

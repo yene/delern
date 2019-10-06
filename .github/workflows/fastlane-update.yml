@@ -1,0 +1,33 @@
+name: Fastlane Update
+
+on:
+  schedule:
+    # TODO(dotdoom): change to '4 3 * * SAT' after testing.
+    - cron: "4 * * * *"
+
+jobs:
+  fastlane-update:
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    runs-on: macOS-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: "Install dependencies"
+        run: bundle install
+      - name: "Fastlane Update"
+        run: bundle exec fastlane update
+      - name: "Check for changes and create/update PR"
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            git config url."https://api:${GITHUB_TOKEN?}@github.com/".insteadOf 'https://github.com/'
+
+            git checkout -b automated-update
+            git add .
+            git commit --message "[auto] update dependencies"
+            git push -f origin HEAD
+
+            brew install hub
+            # If PR already exists, hub exits with code 1 (just like any other
+            # failure). Ignore it.
+            hub pull-request --no-edit || true
+          fi

@@ -168,7 +168,7 @@ packages:
       name: device_info
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.4.0+2"
+    version: "0.4.0+3"
   file:
     dependency: transitive
     description:
@@ -291,7 +291,7 @@ packages:
       name: html
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.14.0+2"
+    version: "0.14.0+3"
   http:
     dependency: "direct main"
     description:
@@ -524,7 +524,7 @@ packages:
       name: share
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.6.2+1"
+    version: "0.6.2+3"
   shared_preferences:
     dependency: "direct main"
     description:

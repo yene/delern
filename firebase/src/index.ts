@@ -133,10 +133,14 @@ const findOrCreateIOSApp = async (
     force: true,
   });
 
+  // TODO(dotdoom): need to update flutter/ios/Runner.xcodeproj/project.pbxproj
+  // TODO(dotdoom): create OAuth2 client ID for Android once it's possible:
+  //                https://issuetracker.google.com/issues/116182848
+
   const sha1 = hashes.find(value => value.length === 59);
   console.log(`Terraforming (mostly) complete!
 
-Do not forget to make the following steps:
+The following steps have to be completed manually if you have not done them yet:
 
 - [⚠️ required] go to
   https://console.firebase.google.com/project/${projectId}/authentication/providers
@@ -146,17 +150,17 @@ Do not forget to make the following steps:
 
 - [optional, required for Google authentication only] go to
   https://console.developers.google.com/apis/credentials/oauthclient?project=${projectId}
-  and create an OAuth2 Client ID:
+  and create an OAuth2 Client ID (if it does not exist yet):
   * Application type: Android
   * Signing-certificate fingerprint: ${sha1}
   * Package name: ${packageName}
 
 - [optional] go to
   https://console.firebase.google.com/project/${projectId}/analytics/app/android:${packageName}/overview
-  and Enable Google Analytics
+  if you would like to Enable Google Analytics
 
 - [⚠️ required] if you have done anything per the steps above, re-run this script
-  to download updated artifacats for Android and iOS apps
+  and it will download updated artifacts for Android and iOS apps
 
 Have a nice day!`);
 })()

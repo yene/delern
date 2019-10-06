@@ -2,11 +2,13 @@ name: Fastlane Update
 
 on:
   schedule:
-    # TODO(dotdoom): change to '4 3 * * SAT' after testing.
-    - cron: "4 * * * *"
+    # Every Saturday at [3:04] UTC: https://crontab.guru/#4_3_*_*_SAT
+    - cron: "4 3 * * SAT"
 
 jobs:
   fastlane-update:
+    # Do not run on forks.
+    if: "github.repository == 'dasfoo/delern'"
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     runs-on: macOS-latest

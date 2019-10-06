@@ -78,6 +78,40 @@ end
 desc 'Create or migrate a debug Firebase project for this GitHub fork'
 lane :setup do
   Dir.chdir('../firebase') do
+    software = {
+      'Google Cloud SDK' => [
+        lambda { Helper.backticks('gcloud --version').lines.first },
+        'https://cloud.google.com/sdk/install',
+      ],
+      'NodeJS 8.0 or above' => [
+        lambda { Helper.backticks('npm --version') },
+        'https://nodejs.org/',
+      ],
+      'keytool from JDK' => [
+        lambda { Helper.backticks("keytool 2>#{File::NULL}") && 'it' },
+        'https://www3.ntu.edu.sg/home/ehchua/programming/howto/JDK_Howto.html',
+      ],
+    }.map do |software_name, (version_getter, download_url)|
+      begin
+        "✔️ #{software_name} (you have #{version_getter[].strip} installed)"
+      rescue Errno::ENOENT
+        "⚠️ #{software_name} (download at #{download_url})"
+      end
+    end
+
+    puts <<INFO
+Welcome to Fastlane Setup tool!
+
+This tool requires the following software to be installed on this computer (and
+corresponding binaries must be in your PATH environment variable):
+
+#{software.map { |s| "  - #{s}" }.join("\n")}
+
+We will proceed now anyway, but if some of this software is missing, you will
+likely get an error!
+
+INFO
+
     project_id = "delern-debug-#{_github_fork_name()}"
     sh %w(npm install)
     fastlane_require 'shellwords'

@@ -138,7 +138,7 @@ const findOrCreateIOSApp = async (
   //                https://issuetracker.google.com/issues/116182848
 
   const sha1 = hashes.find(value => value.length === 59);
-  console.log(`Terraforming (mostly) complete!
+  console.log(`Terraforming of project ${projectId} (mostly) complete!
 
 The following steps have to be completed manually if you have not done them yet:
 

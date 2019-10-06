@@ -1,0 +1,49 @@
+name: flutter drive
+
+on: [create, push, pull_request]
+
+jobs:
+  build:
+    # Run only on tags, PRs or pushes to master.
+    if: >
+      github.base_ref ||
+      startsWith(github.ref, 'refs/tags/') ||
+      github.ref == 'refs/heads/master'
+    strategy:
+      fail-fast: false
+      matrix:
+        device:
+          # Flutter only supports 64-bit simulators:
+          # https://flutter.dev/docs/get-started/install/macos.
+          # TODO(dotdoom): find out why this hangs forever:
+          # https://github.com/dasfoo/delern/commit/0383919cfb03c182a79ab624c8a8406bf3967507/checks?check_suite_id=283014770
+          # - "iPhone 5s (8.4)"
+          - "iPhone 7 (10.2)"
+          - "iPhone 7 (12.4)"
+          - "iPhone Xs Max (12.4)"
+    runs-on: macOS-latest
+    env:
+      FLUTTER_SDK_ROOT: /tmp/flutter
+    steps:
+      - name: "Print a list of simulators and start one"
+        run: |
+          echo 'Looking for specified device in the following list:'
+          DEVICES=$(xcrun instruments -s)
+          echo "$DEVICES"
+          SIMULATOR_UDID=$(grep -F '${{ matrix.device }} [' <<<"${DEVICES?}" | \
+              awk -F '[][]' '{ print $2 }')
+          xcrun simctl boot "${SIMULATOR_UDID?}"
+      - uses: actions/checkout@v1
+      - name: "Install dependencies"
+        run: |
+          bundle install --deployment
+          cd flutter
+          bundle exec fastlane install_dependencies
+          bundle exec fastlane install_debug_keys
+      - name: "Pre-build app to unclutter test output"
+        working-directory: flutter
+        run: bundle exec fastlane ios build
+      - name: "Build and run tests"
+        working-directory: flutter
+        run: |
+          "${FLUTTER_SDK_ROOT?}/bin/flutter" drive --target test_driver/main.dart

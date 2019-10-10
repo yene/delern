@@ -6,6 +6,7 @@ import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
 import 'package:delern_flutter/models/base/database_observable_list.dart';
 import 'package:delern_flutter/models/base/keyed_list_item.dart';
+import 'package:delern_flutter/models/base/list_accessor.dart';
 import 'package:delern_flutter/models/deck_access_model.dart';
 import 'package:delern_flutter/models/serializers.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -125,4 +126,13 @@ abstract class DeckModelBuilder
 
   factory DeckModelBuilder() = _$DeckModelBuilder;
   DeckModelBuilder._();
+}
+
+class DeckListAccessor extends ListAccessor<DeckModel> {
+  DeckListAccessor(String uid)
+      : super(FirebaseDatabase.instance.reference().child('decks').child(uid));
+
+  @override
+  DeckModel parseItem(String key, value) =>
+      DeckModel.fromSnapshot(key: key, value: value);
 }

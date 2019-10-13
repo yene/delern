@@ -15,8 +15,16 @@ jobs:
     runs-on: macOS-latest
     steps:
       - uses: actions/checkout@v1
+      - uses: actions/setup-ruby@v1
+        with:
+          # Restrict to Ruby version we're running at Cirrus CI.
+          ruby-version: '2.3'
       - name: "Install dependencies"
-        run: bundle install
+        run: |
+          gem environment
+          gem install bundler --no-doc
+          bundle install
+          bundle console <<<RUBY_VERSION
       - name: "Fastlane Update"
         run: bundle exec fastlane update
       - name: "Check for changes and create/update PR"
@@ -26,6 +34,7 @@ jobs:
           if [ -n "$(git status --porcelain)" ]; then
             git checkout -b "${UPDATE_BRANCH?}"
             git add .
+            git diff --cached
             git commit --message "[auto] update dependencies"
             git push -f origin HEAD
 

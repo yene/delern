@@ -32,7 +32,7 @@ jobs:
             brew install hub
             # If PR already exists, hub exits with code 1 (just like any other
             # failure). Ignore it.
-            hub pull-request --no-edit || true
+            hub pull-request --labels dependencies --no-edit || true
           else
             # Delete branch when there are no changes (e.g. to close PR), ignore
             # if it does not exist.

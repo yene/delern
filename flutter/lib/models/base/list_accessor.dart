@@ -10,6 +10,9 @@ abstract class ListAccessor<T extends KeyedListItem> {
   List<T> _currentValue;
   final _value = StreamController<BuiltList<T>>.broadcast();
   final _events = StreamController<ListChangeRecord<T>>.broadcast();
+  BuiltList<T> get currentValue => BuiltList.from(_currentValue);
+  Stream<BuiltList<T>> get value => _value.stream;
+  Stream<ListChangeRecord<T>> get events => _events.stream;
 
   StreamSubscription<Event> _onChildAdded;
   StreamSubscription<Event> _onChildChanged;
@@ -24,8 +27,8 @@ abstract class ListAccessor<T extends KeyedListItem> {
         _value.add(BuiltList.from(_currentValue));
       }
       if (_events.hasListener) {
-        _events.add(
-            ListChangeRecord.add(_currentValue, _currentValue.length - 1, 1));
+        _events.add(ListChangeRecord<T>.add(
+            _currentValue, _currentValue.length - 1, 1));
       }
     });
     _onChildChanged = reference.onChildChanged.listen((data) {
@@ -39,7 +42,7 @@ abstract class ListAccessor<T extends KeyedListItem> {
       }
       if (_events.hasListener) {
         _events.add(
-            ListChangeRecord.replace(_currentValue, index, [replacedItem]));
+            ListChangeRecord<T>.replace(_currentValue, index, [replacedItem]));
       }
     });
     _onChildRemoved = reference.onChildRemoved.listen((data) {
@@ -52,16 +55,11 @@ abstract class ListAccessor<T extends KeyedListItem> {
         _value.add(BuiltList.from(_currentValue));
       }
       if (_events.hasListener) {
-        _events
-            .add(ListChangeRecord.remove(_currentValue, index, [deletedItem]));
+        _events.add(
+            ListChangeRecord<T>.remove(_currentValue, index, [deletedItem]));
       }
     });
   }
-
-  BuiltList<T> get currentValue => BuiltList.from(_currentValue);
-  Stream<BuiltList<T>> get value => _value.stream;
-
-  Stream<ListChangeRecord<T>> get events => _events.stream;
 
   Stream<T> getItemUpdates(String key) async* {
     await for (final listChangedRecord in events) {
@@ -118,9 +116,10 @@ abstract class ListAccessor<T extends KeyedListItem> {
   void disposeItem(T item) {}
 
   void close() {
-    _onChildAdded.cancel();
-    _onChildChanged.cancel();
-    _onChildRemoved.cancel();
-    _events.close();
+    _currentValue?.forEach(disposeItem);
+    _onChildAdded?.cancel();
+    _onChildChanged?.cancel();
+    _onChildRemoved?.cancel();
+    _events?.close();
   }
 }

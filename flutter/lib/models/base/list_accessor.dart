@@ -19,6 +19,12 @@ abstract class ListAccessor<T extends KeyedListItem> {
   StreamSubscription<Event> _onChildRemoved;
 
   ListAccessor(DatabaseReference reference) {
+    /*reference.once().then((val) {
+      // TODO(ksheremet): Initialize _currentValue;
+      if (val == null) {
+        _currentValue = [];
+      }
+    });*/
     _onChildAdded = reference.onChildAdded.listen((data) {
       final newItem = parseItem(data.snapshot.key, data.snapshot.value);
       _currentValue ??= [];

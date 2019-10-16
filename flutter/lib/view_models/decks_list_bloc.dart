@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:delern_flutter/models/base/delayed_initialization.dart';
 import 'package:delern_flutter/models/base/stream_with_latest_value.dart';
 import 'package:delern_flutter/models/deck_model.dart';
 import 'package:delern_flutter/models/scheduled_card_model.dart';
@@ -35,18 +34,19 @@ class NumberOfCardsDue {
 class DecksListBloc {
   final User user;
 
-  DelayedInitializationObservableList<DeckModel> get decksList => _decksList;
-  final FilteredSortedObservableList<DeckModel> _decksList;
+  /*DelayedInitializationObservableList<DeckModel> get decksList => _decksList;
+  final FilteredSortedObservableList<DeckModel> _decksList;*/
+  DeckModelListAccessor get decksList => _decksList;
+  final DeckModelListAccessor _decksList;
 
-  set decksListFilter(Filter<DeckModel> newValue) =>
-      _decksList.filter = newValue;
-  Filter<DeckModel> get decksListFilter => _decksList.filter;
+  // TODO(ksheremet): Implement filter
+  set decksListFilter(Filter<DeckModel> newValue) => null;
+  //_decksList.filter = newValue;
+  Filter<DeckModel> get decksListFilter => null; //_decksList.filter;
 
   DecksListBloc({@required this.user})
       : assert(user != null),
-        _decksList =
-            (FilteredSortedObservableList(DeckModel.getList(uid: user.uid))
-              ..comparator = (c1, c2) => c1.key.compareTo(c2.key)) {
+        _decksList = user.decks {
     // Delay initial data load. In case we have a significant amount of
     // ScheduledCards, loading them slows down decks list, because of the
     // MethodChannel bottleneck.

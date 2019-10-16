@@ -25,7 +25,11 @@ class User {
 
   StreamWithValue<bool> get isOnline => _isOnline;
 
-  User(this._dataSource) : assert(_dataSource != null) {
+  final DeckModelListAccessor decks;
+
+  User(this._dataSource)
+      : assert(_dataSource != null),
+        decks = DeckModelListAccessor(_dataSource.uid) {
     _isOnline = StreamWithLatestValue<bool>(FirebaseDatabase.instance
         .reference()
         .child('.info/connected')
@@ -51,6 +55,7 @@ class User {
 
   void dispose() {
     _onlineSubscription.cancel();
+    decks.close();
   }
 
   /// Unique ID of the user used in Firebase Database and across the app.

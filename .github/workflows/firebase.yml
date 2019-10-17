@@ -1,0 +1,37 @@
+name: firebase
+
+on: [create, push, pull_request]
+
+jobs:
+  build:
+    # Run only on tags, PRs or pushes to master.
+    if: >
+      github.base_ref ||
+      startsWith(github.ref, 'refs/tags/') ||
+      github.ref == 'refs/heads/master'
+    strategy:
+      fail-fast: false
+      matrix:
+        runson: [macOS-latest, ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.runson }}
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 8
+      # On Windows, npm is 5.6 and "npm ci" was introduced in 5.7.
+      - run: npm install -g npm@latest
+      # Have to split into steps because Windows can't handle multiple commands.
+      - run: npm ci
+        working-directory: firebase
+      - run: npm run check
+        working-directory: firebase
+      # "compile" is run by "npm install" (i.e. "npm ci").
+      - run: npm ci
+        working-directory: firebase/functions
+      - run: npm run check
+        working-directory: firebase/functions
+      # Run firebase-bolt just to verify that the rules parse. Since it always
+      # creates output, redirect it to a temporary file to keep Git tree clean.
+      - run: node_modules/.bin/firebase-bolt database.rules.bolt -o ../../../nothing
+        working-directory: firebase

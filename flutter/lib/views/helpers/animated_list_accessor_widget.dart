@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:delern_flutter/models/base/keyed_list_item.dart';
 import 'package:delern_flutter/models/base/list_accessor.dart';
+import 'package:delern_flutter/views/helpers/progress_indicator_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 import 'package:observable/observable.dart';
@@ -86,15 +87,10 @@ class AnimatedListAccessorWidgetState<T extends KeyedListItem>
   Widget build(BuildContext context) => StreamBuilder(
       stream: widget.list.value,
       builder: (context, snapshot) {
-        // TODO(ksheremet): Check whether data is empty
-        if (snapshot.connectionState == ConnectionState.waiting &&
-            !snapshot.hasData) {
-          return widget.emptyMessageBuilder();
-          //return ProgressIndicatorWidget();
+        if (widget.list.loaded == false) {
+          return ProgressIndicatorWidget();
         }
-        if (snapshot.connectionState == ConnectionState.active &&
-            snapshot.hasData &&
-            snapshot.data.isEmpty) {
+        if (widget.list.currentValue.isEmpty && widget.list.loaded == true) {
           return widget.emptyMessageBuilder();
         }
 

@@ -25,6 +25,7 @@ void main() {
     when(dbReference.onChildAdded).thenAnswer((_) => onChildAdded.stream);
     when(dbReference.onChildRemoved).thenAnswer((_) => onChildRemoved.stream);
     when(dbReference.onChildChanged).thenAnswer((_) => onChildChanged.stream);
+    when(dbReference.once()).thenAnswer((_) => Future.value(FakeSnapshot()));
     accessor = MyListAccessor(dbReference);
   });
 
@@ -102,6 +103,10 @@ void main() {
       await allEventsDelivered();
       expect(accessor.currentValue,
           BuiltList.of([const MyModel(key: '1', value: '1')]));
+    });
+
+    test('empty current value when initialized', () async {
+      expect(accessor.currentValue, const Iterable.empty());
     });
   });
 

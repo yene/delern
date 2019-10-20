@@ -7,10 +7,13 @@ import 'package:flutter/foundation.dart';
 import 'package:observable/observable.dart';
 
 abstract class ListAccessor<T extends KeyedListItem> {
-  List<T> _currentValue;
+  final List<T> _currentValue = [];
+  bool _loaded = false;
   final _value = StreamController<BuiltList<T>>.broadcast();
   final _events = StreamController<ListChangeRecord<T>>.broadcast();
-  BuiltList<T> get currentValue => BuiltList.from(_currentValue);
+  BuiltList<T> get currentValue =>
+      _currentValue == null ? null : BuiltList.from(_currentValue);
+  bool get loaded => _loaded;
   Stream<BuiltList<T>> get value => _value.stream;
   Stream<ListChangeRecord<T>> get events => _events.stream;
 
@@ -19,22 +22,17 @@ abstract class ListAccessor<T extends KeyedListItem> {
   StreamSubscription<Event> _onChildRemoved;
 
   ListAccessor(DatabaseReference reference) {
-    /*reference.once().then((val) {
-      // TODO(ksheremet): Initialize _currentValue;
-      if (val == null) {
-        _currentValue = [];
-      }
-    });*/
     _onChildAdded = reference.onChildAdded.listen((data) {
       final newItem = parseItem(data.snapshot.key, data.snapshot.value);
-      _currentValue ??= [];
       _currentValue.add(newItem);
-      if (_value.hasListener) {
-        _value.add(BuiltList.from(_currentValue));
-      }
-      if (_events.hasListener) {
-        _events.add(ListChangeRecord<T>.add(
-            _currentValue, _currentValue.length - 1, 1));
+      if (_loaded) {
+        if (_value.hasListener) {
+          _value.add(BuiltList.from(_currentValue));
+        }
+        if (_events.hasListener) {
+          _events.add(ListChangeRecord<T>.add(
+              _currentValue, _currentValue.length - 1, 1));
+        }
       }
     });
     _onChildChanged = reference.onChildChanged.listen((data) {
@@ -43,12 +41,14 @@ abstract class ListAccessor<T extends KeyedListItem> {
       final replacedItem = _currentValue[index];
       disposeItem(replacedItem);
       _currentValue[index] = newItem;
-      if (_value.hasListener) {
-        _value.add(BuiltList.from(_currentValue));
-      }
-      if (_events.hasListener) {
-        _events.add(
-            ListChangeRecord<T>.replace(_currentValue, index, [replacedItem]));
+      if (_loaded) {
+        if (_value.hasListener) {
+          _value.add(BuiltList.from(_currentValue));
+        }
+        if (_events.hasListener) {
+          _events.add(ListChangeRecord<T>.replace(
+              _currentValue, index, [replacedItem]));
+        }
       }
     });
     _onChildRemoved = reference.onChildRemoved.listen((data) {
@@ -57,12 +57,27 @@ abstract class ListAccessor<T extends KeyedListItem> {
       final deletedItem = _currentValue[index];
       _currentValue.removeAt(index);
       disposeItem(deletedItem);
+      if (_loaded) {
+        if (_value.hasListener) {
+          _value.add(BuiltList.from(_currentValue));
+        }
+        if (_events.hasListener) {
+          _events.add(
+              ListChangeRecord<T>.remove(_currentValue, index, [deletedItem]));
+        }
+      }
+    });
+    // Firstly onChildAdded listener are called. We don't send value, until
+    // it is completely initialized. When it is done, send whole value to
+    // listener
+    reference.once().then((val) {
+      _loaded = true;
       if (_value.hasListener) {
         _value.add(BuiltList.from(_currentValue));
       }
       if (_events.hasListener) {
         _events.add(
-            ListChangeRecord<T>.remove(_currentValue, index, [deletedItem]));
+            ListChangeRecord<T>.add(_currentValue, 0, _currentValue.length));
       }
     });
   }

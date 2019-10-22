@@ -6,30 +6,17 @@ build/
 # Bundler config
 .bundle/
 
-/flutter/.packages
-/flutter/.packages.generated
-/flutter/.pub/
-/flutter/packages
-/flutter/.flutter-plugins
-/flutter/coverage
-/flutter/.dart_tool/
-
 # Dependencies
 bower_components
 node_modules
 vendor
 
-# Directoy with locally saved Firebase application ID etc.
-/firebase/www/__/
-
 # Directory with firebase tool cache.
 /firebase/.firebase
-
 # Firebase config file (e.g. project aliases).
 /firebase/.firebaserc
-
-# Google Play (and other usage) deploy key
-/flutter/android/app/play-store-service-account.json
+# firebase-tools npm package output
+firebase-debug.log
 
 # Intellij
 *.iml
@@ -38,13 +25,20 @@ vendor
 # Editor temporary files
 *.swp
 
-# Local configuration file (sdk path, etc)
-local.properties
-#Local iOS configuration file
-/flutter/ios/Flutter/flutter_export_environment.sh
+#
+# Artifacts created inside flutter/ directory that are specific to our project.
+# We do not edit flutter/.gitignore file on purpose, to avoid diffs when
+# migrating project to a new version.
+#
 
-# firebase-tools npm package output
-firebase-debug.log
+# Google Play (and other usage) deploy key
+/flutter/android/app/play-store-service-account.json
+
+# Keys for connecting application to Firebase services. We do not version
+# control them because every developer creates their own with "fastlane setup".
+/flutter/android/app/google-services.json
+/flutter/ios/Runner/GoogleService-Info/org.dasfoo.delern.debug
+/flutter/ios/Runner/GoogleService-Info.plist
 
 # https://docs.fastlane.tools/best-practices/source-control/
 # fastlane specific
@@ -55,4 +49,9 @@ report.xml
 /flutter/fastlane/test_output
 # keystore deployed by CI
 /flutter/android/app/delern.jks
-# TODO(dotdoom): move all .gitignores here
+
+# File created by "flutter generate"
+/flutter/.packages.generated
+
+# Coverage information
+/flutter/coverage

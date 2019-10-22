@@ -7,7 +7,7 @@
 		<string>googlegmail</string>
 	</array>
 	<key>CFBundleDevelopmentRegion</key>
-	<string>en</string>
+	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<!-- Set up TestFlight Compliance
 	https://stackoverflow.com/questions/35841117 -->
 	<key>ITSAppUsesNonExemptEncryption</key>

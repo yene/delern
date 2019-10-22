@@ -664,4 +664,16 @@ To see the source code for this app, please visit the [Delern GitHub repo](https
         name: 'doNotKnowCardTooltip',
         desc: 'Tooltip for do not know card button',
       );
+
+  String get privacyPolicy => Intl.message(
+        'Privacy Policy',
+        name: 'privacyPolicy',
+        desc: 'Privacy Policy label',
+      );
+
+  String get termsOfService => Intl.message(
+        'Terms of Service',
+        name: 'termsOfService',
+        desc: 'Terms of Service label',
+      );
 }

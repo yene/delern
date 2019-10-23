@@ -1,8 +1,10 @@
 import 'dart:async';
 
+import 'package:delern_flutter/flutter/constants.dart';
 import 'package:delern_flutter/flutter/device_info.dart';
 import 'package:delern_flutter/flutter/localization.dart' as localizations;
 import 'package:delern_flutter/flutter/styles.dart' as app_styles;
+import 'package:delern_flutter/flutter/url_launcher.dart';
 import 'package:delern_flutter/models/fcm.dart';
 import 'package:delern_flutter/models/user.dart';
 import 'package:delern_flutter/remote/auth.dart';
@@ -216,7 +218,7 @@ class _SignInWidgetState extends State<SignInWidget> {
                       _buildDoNotNeedFeaturesText(),
                       _itemPadding,
                       _buildAnonymousSignInButton(Orientation.landscape),
-                      _itemPadding,
+                      _buildLegalInfo(),
                     ],
               ),
             ),
@@ -240,8 +242,45 @@ class _SignInWidgetState extends State<SignInWidget> {
               _buildDoNotNeedFeaturesText(),
               _itemPadding,
               _buildAnonymousSignInButton(Orientation.portrait),
-              _itemPadding
+              _buildLegalInfo(),
             ],
+      );
+
+  Widget _buildLegalInfo() => SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8),
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                _buildLegacyUrl(
+                    kPrivacyPolicy, localizations.of(context).privacyPolicy),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  child: Container(
+                    width: 10,
+                    height: 10,
+                    decoration: const BoxDecoration(
+                        color: Colors.grey, shape: BoxShape.circle),
+                  ),
+                ),
+                _buildLegacyUrl(
+                    kTermsOfService, localizations.of(context).termsOfService),
+              ],
+            ),
+          ),
+        ),
+      );
+
+  Widget _buildLegacyUrl(String url, String text) => GestureDetector(
+        onTap: () {
+          launchUrl(url, context);
+        },
+        child: Text(
+          text,
+          style: app_styles.secondaryText,
+        ),
       );
 }
 

@@ -217,7 +217,7 @@ task:
   - ( cd flutter && bundle exec fastlane android publish "release:$CIRRUS_TAG" )
   always:
     move_artifacts_script:
-    - mv flutter/build/app/outputs/bundle/release/app.aab
+    - mv flutter/build/app/outputs/bundle/release/app-release.aab
       "${CIRRUS_REPO_NAME}.aab"
     aab_artifacts:
       path: "${CIRRUS_REPO_NAME}.aab"

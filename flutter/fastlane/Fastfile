@@ -102,14 +102,14 @@ end
 
 desc 'Replace system-wide Android debug keystore and app-wide GoogleServices'
 desc 'with those configured for "delern-debug" Firebase project'
-lane :install_debug_keys do
+lane :install_debug_keys do |options|
   FileUtils.cp(
     'debug-project/google-services.json',
     '../android/app/',
     verbose: true)
   FileUtils.cp(
     'debug-project/org.dasfoo.delern.debug',
-    '../ios/Runner/GoogleService-Info/',
+    '../ios/Runner/GoogleService-Info.plist',
     verbose: true)
   system_wide_android_directory = File.expand_path('~/.android/')
   FileUtils.mkdir_p(system_wide_android_directory)
@@ -158,6 +158,10 @@ platform :ios do
       type: 'appstore',
       app_identifier: app_identifier,
     )
+    FileUtils.cp(
+      'debug-project/org.dasfoo.delern',
+      '../ios/Runner/GoogleService-Info.plist',
+      verbose: true)
     # Perform an (otherwise unnecessary) build to:
     # - add version
     # - switch to release mode

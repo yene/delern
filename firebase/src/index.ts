@@ -129,7 +129,7 @@ Please be patient.
     await androidApp.getConfig()
   );
   fs.writeFileSync(
-    '../flutter/ios/Runner/GoogleService-Info/' + packageName,
+    '../flutter/ios/Runner/GoogleService-Info.plist',
     await iosApp.getConfig()
   );
 

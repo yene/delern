@@ -217,7 +217,7 @@ task:
   - ( cd flutter && bundle exec fastlane android publish "release:$CIRRUS_TAG" )
   always:
     move_artifacts_script:
-    - mv flutter/build/app/outputs/bundle/release/app.aab
+    - mv flutter/build/app/outputs/bundle/release/app-release.aab
       "${CIRRUS_REPO_NAME}.aab"
     aab_artifacts:
       path: "${CIRRUS_REPO_NAME}.aab"
@@ -250,6 +250,9 @@ task:
     MATCH_GIT_URL: "ENCRYPTED\
       [bcd44b07e11df836376f23b5f6e527c7b6e554a321050c1a\
       bc7655d8560e1f37d3d27df5d3dcba00dd73ac40148c247b]"
+    # Trying to fix transient AppStore upload issues on CirrusCI:
+    # https://docs.fastlane.tools/actions/upload_to_app_store/#firewall-issues
+    DELIVER_ITMSTRANSPORTER_ADDITIONAL_UPLOAD_PARAMETERS: "-t DAV"
   << : *FLUTTER_AND_FASTLANE_TASK_TEMPLATE
   install_gcloud_script:
   - curl -sSL https://sdk.cloud.google.com | bash -s

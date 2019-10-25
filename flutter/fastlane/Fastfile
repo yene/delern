@@ -111,6 +111,11 @@ lane :install_debug_keys do |options|
     'debug-project/org.dasfoo.delern.debug',
     '../ios/Runner/GoogleService-Info.plist',
     verbose: true)
+  FileUtils.cp(
+    'debug-project/FirebaseLocalDeveloper.xcconfig',
+    '../ios/Flutter/',
+    verbose: true)
+
   system_wide_android_directory = File.expand_path('~/.android/')
   FileUtils.mkdir_p(system_wide_android_directory)
   FileUtils.cp(

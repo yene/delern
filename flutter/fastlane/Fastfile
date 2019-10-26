@@ -97,7 +97,7 @@ end
 
 desc 'Run static analysis on Flutter files'
 lane :lint do
-  flutter(args: %w(analyze lib))
+  flutter(args: %w(analyze))
 end
 
 desc 'Replace system-wide Android debug keystore and app-wide GoogleServices'

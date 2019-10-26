@@ -1,4 +1,4 @@
-name: Fastlane Update
+name: fastlane update
 
 on:
   schedule:
@@ -12,13 +12,17 @@ jobs:
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       UPDATE_BRANCH: automated-update
+      # The default SDK directory created by fastlane-plugin-flutter is
+      # vendor/flutter under application root, which likely confuses flutter
+      # cocoapods integration. Reroute here, and debug when we have spare time.
+      FLUTTER_SDK_ROOT: /tmp/flutter
     runs-on: macOS-latest
     steps:
       - uses: actions/checkout@v1
       - uses: actions/setup-ruby@v1
         with:
           # Restrict to Ruby version we're running at Cirrus CI.
-          ruby-version: '2.3'
+          ruby-version: "2.3"
       - name: "Install dependencies"
         run: |
           gem environment

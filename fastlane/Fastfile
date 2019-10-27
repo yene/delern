@@ -29,8 +29,10 @@ lane :update do
   Dir.chdir('..') do
     sh %w(bundle update)
     Dir.chdir('flutter') do
+      # This will automatically upgrade flutter, if necessary.
       flutter_bootstrap
       Dir.chdir('fastlane') do
+        # Upgrade current application packages (within pubspec.yaml spec).
         flutter(args: %w(packages upgrade))
       end
       if RUBY_PLATFORM.include? 'darwin'

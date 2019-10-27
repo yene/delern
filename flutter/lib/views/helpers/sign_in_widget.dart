@@ -35,6 +35,10 @@ class _SignInWidgetState extends State<SignInWidget> {
     super.initState();
 
     _fcmSubscription = FirebaseMessaging().onTokenRefresh.listen((token) async {
+      if (token == null) {
+        return;
+      }
+
       final fcm = (FCMBuilder()
             ..language = Localizations.localeOf(context).toString()
             ..name = (await DeviceInfo.getDeviceInfo()).userFriendlyName

@@ -1,3 +1,5 @@
+import 'package:delern_flutter/models/card_model.dart';
+import 'package:delern_flutter/models/deck_model.dart';
 import 'package:delern_flutter/views/card_create_update/card_create_update.dart';
 import 'package:delern_flutter/views/card_preview/card_preview.dart';
 import 'package:delern_flutter/views/cards_interval_learning/cards_interval_learning.dart';
@@ -6,9 +8,6 @@ import 'package:delern_flutter/views/deck_sharing/deck_sharing.dart';
 import 'package:delern_flutter/views/edit_deck/edit_deck.dart';
 import 'package:delern_flutter/views/support_dev/support_development.dart';
 import 'package:flutter/material.dart';
-
-import 'models/card_model.dart';
-import 'models/deck_model.dart';
 
 Future<void> openEditDeckScreen(BuildContext context, DeckModel deck) =>
     Navigator.push(

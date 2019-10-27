@@ -52,34 +52,35 @@ class App extends StatelessWidget {
 }
 
 Future<void> main() async {
-  // This is necessary to initialize Flutter method channels so that Crashlytics
-  // can call into the native code.
-  WidgetsFlutterBinding.ensureInitialized();
-
-  // We report under a different project in dev mode.
-  // TODO(dotdoom): https://github.com/FirebaseExtended/flutterfire/pull/105.
-  // Crashlytics.instance.enableInDevMode = true;
-
-  FlutterError.onError = Crashlytics.instance.recordFlutterError;
-
-  final debugPrintWithoutCrashlytics = debugPrint;
-  debugPrint = (message, {wrapWidth}) {
-    Crashlytics.instance.log(message);
-    debugPrintWithoutCrashlytics(message, wrapWidth: wrapWidth);
-  };
-
-  Isolate.current.addErrorListener(RawReceivePort((pair) async {
-    final List<dynamic> errorAndStacktrace = pair;
-    await error_reporting.report(
-      'Isolate ErrorListener',
-      errorAndStacktrace.first,
-      errorAndStacktrace.last == null
-          ? null
-          : StackTrace.fromString(errorAndStacktrace.last),
-    );
-  }).sendPort);
-
   unawaited(runZoned<Future>(() async {
+    // This is necessary to initialize Flutter method channels so that
+    // Crashlytics can call into the native code. It also must be in the same
+    // zone as the app: https://github.com/flutter/flutter/issues/42682.
+    WidgetsFlutterBinding.ensureInitialized();
+
+    // We report under a different project in dev mode.
+    // TODO(dotdoom): https://github.com/FirebaseExtended/flutterfire/pull/105.
+    // Crashlytics.instance.enableInDevMode = true;
+
+    FlutterError.onError = Crashlytics.instance.recordFlutterError;
+
+    final debugPrintWithoutCrashlytics = debugPrint;
+    debugPrint = (message, {wrapWidth}) {
+      Crashlytics.instance.log(message);
+      debugPrintWithoutCrashlytics(message, wrapWidth: wrapWidth);
+    };
+
+    Isolate.current.addErrorListener(RawReceivePort((pair) async {
+      final List<dynamic> errorAndStacktrace = pair;
+      await error_reporting.report(
+        'Isolate ErrorListener',
+        errorAndStacktrace.first,
+        errorAndStacktrace.last == null
+            ? null
+            : StackTrace.fromString(errorAndStacktrace.last),
+      );
+    }).sendPort);
+
     unawaited(FirebaseDatabase.instance.setPersistenceEnabled(true));
     unawaited(FirebaseAnalytics().logAppOpen());
     runApp(App());

@@ -3,13 +3,13 @@ import 'dart:async';
 import 'package:delern_flutter/flutter/constants.dart';
 import 'package:delern_flutter/flutter/localization.dart' as localizations;
 import 'package:delern_flutter/flutter/styles.dart' as app_styles;
+import 'package:delern_flutter/flutter/url_launcher.dart';
 import 'package:delern_flutter/models/user.dart';
 import 'package:delern_flutter/remote/analytics.dart';
 import 'package:delern_flutter/remote/auth.dart';
 import 'package:delern_flutter/remote/error_reporting.dart' as error_reporting;
 import 'package:delern_flutter/routes.dart';
 import 'package:delern_flutter/views/decks_list/developer_menu.dart';
-import 'package:delern_flutter/views/helpers/dialog_with_webview.dart';
 import 'package:delern_flutter/views/helpers/email_launcher.dart';
 import 'package:delern_flutter/views/helpers/save_updates_dialog.dart';
 import 'package:delern_flutter/views/helpers/send_invite.dart';
@@ -88,10 +88,10 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
         applicationLegalese: 'GNU General Public License v3.0',
         aboutBoxChildren: <Widget>[
           _buildTextLink(localizations.of(context).termsOfService, () {
-            showDialogWithWebView(kTermsOfService, context);
+            launchUrl(kTermsOfService, context);
           }),
           _buildTextLink(localizations.of(context).privacyPolicy, () {
-            showDialogWithWebView(kPrivacyPolicy, context);
+            launchUrl(kPrivacyPolicy, context);
           }),
         ],
         child: Text(localizations.of(context).navigationDrawerAbout),

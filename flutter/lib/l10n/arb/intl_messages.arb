@@ -1,6 +1,6 @@
 {
   "@@locale": "en_US",
-  "@@last_modified": "2019-10-09T12:54:49.420612",
+  "@@last_modified": "2019-10-30T14:50:58.950406",
   "navigationDrawerSignOut": "Sign Out",
   "@navigationDrawerSignOut": {
     "description": "Sign Out in Navigation Drawer",
@@ -721,6 +721,48 @@
   "doNotKnowCardTooltip": "I don't know",
   "@doNotKnowCardTooltip": {
     "description": "Tooltip for do not know card button",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "privacyPolicy": "Privacy Policy",
+  "@privacyPolicy": {
+    "description": "Privacy Policy label",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "termsOfService": "Terms of Service",
+  "@termsOfService": {
+    "description": "Terms of Service label",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "legacyAcceptanceLabel": "By using this app you accept the ",
+  "@legacyAcceptanceLabel": {
+    "description": "User accept policy by using the app",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "legacyPartsConnector": " and the  ",
+  "@legacyPartsConnector": {
+    "description": "Connects parts of legacy",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "privacyPolicySignIn": "Privacy Policy",
+  "@privacyPolicySignIn": {
+    "description": "Privacy Policy label",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "termsOfServiceSignIn": "Terms of Service",
+  "@termsOfServiceSignIn": {
+    "description": "Terms of Service label",
     "type": "text",
     "placeholders": {
     }

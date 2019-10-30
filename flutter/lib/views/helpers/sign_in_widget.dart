@@ -1,8 +1,10 @@
 import 'dart:async';
 
 import 'package:delern_flutter/flutter/device_info.dart';
+import 'package:delern_flutter/flutter/legal.dart';
 import 'package:delern_flutter/flutter/localization.dart' as localizations;
 import 'package:delern_flutter/flutter/styles.dart' as app_styles;
+import 'package:delern_flutter/flutter/url_launcher.dart';
 import 'package:delern_flutter/models/fcm.dart';
 import 'package:delern_flutter/models/user.dart';
 import 'package:delern_flutter/remote/auth.dart';
@@ -10,7 +12,9 @@ import 'package:delern_flutter/remote/error_reporting.dart' as error_reporting;
 import 'package:delern_flutter/views/helpers/progress_indicator_widget.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:pedantic/pedantic.dart';
 
 class SignInWidget extends StatefulWidget {
@@ -216,7 +220,7 @@ class _SignInWidgetState extends State<SignInWidget> {
                       _buildDoNotNeedFeaturesText(),
                       _itemPadding,
                       _buildAnonymousSignInButton(Orientation.landscape),
-                      _itemPadding,
+                      _buildLegalInfo(),
                     ],
               ),
             ),
@@ -240,9 +244,38 @@ class _SignInWidgetState extends State<SignInWidget> {
               _buildDoNotNeedFeaturesText(),
               _itemPadding,
               _buildAnonymousSignInButton(Orientation.portrait),
-              _itemPadding
+              _buildLegalInfo(),
             ],
       );
+
+  Widget _buildLegalInfo() => SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(8),
+          child: RichText(
+            textAlign: TextAlign.center,
+            text: TextSpan(
+              style: app_styles.secondaryText,
+              children: <TextSpan>[
+                TextSpan(text: localizations.of(context).legacyAcceptanceLabel),
+                _buildLegacyUrl(kPrivacyPolicy,
+                    localizations.of(context).privacyPolicySignIn),
+                TextSpan(text: localizations.of(context).legacyPartsConnector),
+                _buildLegacyUrl(kTermsOfService,
+                    localizations.of(context).termsOfServiceSignIn),
+              ],
+            ),
+          ),
+        ),
+      );
+
+  TextSpan _buildLegacyUrl(String url, String text) => TextSpan(
+      text: text,
+      style: app_styles.secondaryText
+          .copyWith(decoration: TextDecoration.underline),
+      recognizer: TapGestureRecognizer()
+        ..onTap = () {
+          launchUrl(url, context);
+        });
 }
 
 class CurrentUserWidget extends InheritedWidget {

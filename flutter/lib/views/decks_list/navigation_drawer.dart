@@ -1,7 +1,9 @@
 import 'dart:async';
 
+import 'package:delern_flutter/flutter/legal.dart';
 import 'package:delern_flutter/flutter/localization.dart' as localizations;
 import 'package:delern_flutter/flutter/styles.dart' as app_styles;
+import 'package:delern_flutter/flutter/url_launcher.dart';
 import 'package:delern_flutter/models/user.dart';
 import 'package:delern_flutter/remote/analytics.dart';
 import 'package:delern_flutter/remote/auth.dart';
@@ -33,6 +35,17 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
           versionCode = packageInfo.version;
         }));
   }
+
+  Widget _buildTextLink(String text, Function onTap) => GestureDetector(
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.only(top: 8),
+          child: Text(
+            text,
+            style: const TextStyle(color: app_styles.kHyperlinkColor),
+          ),
+        ),
+      );
 
   List<Widget> _buildUserButtons(User user) {
     final list = <Widget>[
@@ -73,6 +86,14 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
         applicationIcon: Image.asset('images/ic_launcher.png'),
         applicationVersion: versionCode,
         applicationLegalese: 'GNU General Public License v3.0',
+        aboutBoxChildren: <Widget>[
+          _buildTextLink(localizations.of(context).termsOfService, () {
+            launchUrl(kTermsOfService, context);
+          }),
+          _buildTextLink(localizations.of(context).privacyPolicy, () {
+            launchUrl(kPrivacyPolicy, context);
+          }),
+        ],
         child: Text(localizations.of(context).navigationDrawerAbout),
       ),
     ];

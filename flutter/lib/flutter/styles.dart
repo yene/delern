@@ -9,6 +9,7 @@ final kIconColor = Colors.grey[600];
 const kSecondaryTextDeckItemColor = Color(0xff757575);
 const kEditDismissibleColor = Color(0xFF2196F3);
 const kDeleteDismissibleColor = Color(0xFFFF5252);
+const kHyperlinkColor = Colors.blueAccent;
 
 const double kMinItemHeight = 48;
 const double kMinIconHeight = 24;

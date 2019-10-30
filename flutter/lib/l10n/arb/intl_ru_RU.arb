@@ -737,5 +737,33 @@
     "type": "text",
     "placeholders": {
     }
+  },
+  "legacyAcceptanceLabel": "При использовании приложения Вы соглашаетесь с  ",
+  "@legacyAcceptanceLabel": {
+    "description": "User accept policy by using the app",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "legacyPartsConnector": " и  ",
+  "@legacyPartsConnector": {
+    "description": "Connects parts of legacy",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "privacyPolicySignIn": "Политикой Конфиденциальности",
+  "@privacyPolicySignIn": {
+    "description": "Privacy Policy label",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "termsOfServiceSignIn": "Условиями Использования",
+  "@termsOfServiceSignIn": {
+    "description": "Terms of Service label",
+    "type": "text",
+    "placeholders": {
+    }
   }
 }

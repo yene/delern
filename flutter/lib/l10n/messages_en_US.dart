@@ -114,6 +114,10 @@ class MessageLookup extends MessageLookupByLibrary {
             "Learn in any place and offline as well"),
         "learnIntroTitle": MessageLookupByLibrary.simpleMessage("Learn"),
         "learning": MessageLookupByLibrary.simpleMessage("Learning"),
+        "legacyAcceptanceLabel": MessageLookupByLibrary.simpleMessage(
+            "By using this app you accept the "),
+        "legacyPartsConnector":
+            MessageLookupByLibrary.simpleMessage(" and the  "),
         "listOFDecksScreenTitle":
             MessageLookupByLibrary.simpleMessage("List of decks"),
         "markdown": MessageLookupByLibrary.simpleMessage("Markdown"),
@@ -153,6 +157,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "owner": MessageLookupByLibrary.simpleMessage("Owner"),
         "peopleLabel": MessageLookupByLibrary.simpleMessage("People"),
         "privacyPolicy": MessageLookupByLibrary.simpleMessage("Privacy Policy"),
+        "privacyPolicySignIn":
+            MessageLookupByLibrary.simpleMessage("Privacy Policy"),
         "profileTooltip": MessageLookupByLibrary.simpleMessage("Profile"),
         "reversedCardLabel":
             MessageLookupByLibrary.simpleMessage("Add reversed card"),
@@ -180,6 +186,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "Please tell us what we can do to make your experience with Delern better!\n\nIf you have any questions or suggestions please contact us:\n[delern@dasfoo.org](mailto:delern@dasfoo.org)\n\nFollow latest news on:\n\n- [Facebook](https://fb.me/das.delern)\n- [Twitter](https://twitter.com/dasdelern)\n- [LinkedIn](https://www.linkedin.com/company/delern)\n- [VK](https://vk.com/delern)\n\nTo see the source code for this app, please visit the [Delern GitHub repo](https://github.com/dasfoo/delern).\n      "),
         "swissDeckType": MessageLookupByLibrary.simpleMessage("Swiss"),
         "termsOfService":
+            MessageLookupByLibrary.simpleMessage("Terms of Service"),
+        "termsOfServiceSignIn":
             MessageLookupByLibrary.simpleMessage("Terms of Service"),
         "unknownDeckType": MessageLookupByLibrary.simpleMessage("Unknown"),
         "viewLearning": MessageLookupByLibrary.simpleMessage("View"),

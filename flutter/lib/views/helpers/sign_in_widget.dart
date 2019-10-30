@@ -12,7 +12,9 @@ import 'package:delern_flutter/remote/error_reporting.dart' as error_reporting;
 import 'package:delern_flutter/views/helpers/progress_indicator_widget.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:pedantic/pedantic.dart';
 
 class SignInWidget extends StatefulWidget {
@@ -248,40 +250,32 @@ class _SignInWidgetState extends State<SignInWidget> {
 
   Widget _buildLegalInfo() => SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8),
-          child: SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                _buildLegacyUrl(
-                    kPrivacyPolicy, localizations.of(context).privacyPolicy),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8),
-                  child: Container(
-                    width: 10,
-                    height: 10,
-                    decoration: const BoxDecoration(
-                        color: Colors.grey, shape: BoxShape.circle),
-                  ),
-                ),
-                _buildLegacyUrl(
-                    kTermsOfService, localizations.of(context).termsOfService),
+          padding: const EdgeInsets.all(8),
+          child: RichText(
+            textAlign: TextAlign.center,
+            text: TextSpan(
+              style: app_styles.secondaryText,
+              children: <TextSpan>[
+                TextSpan(text: localizations.of(context).legacyAcceptanceLabel),
+                _buildLegacyUrl(kPrivacyPolicy,
+                    localizations.of(context).privacyPolicySignIn),
+                TextSpan(text: localizations.of(context).legacyPartsConnector),
+                _buildLegacyUrl(kTermsOfService,
+                    localizations.of(context).termsOfServiceSignIn),
               ],
             ),
           ),
         ),
       );
 
-  Widget _buildLegacyUrl(String url, String text) => GestureDetector(
-        onTap: () {
+  TextSpan _buildLegacyUrl(String url, String text) => TextSpan(
+      text: text,
+      style: app_styles.secondaryText
+          .copyWith(decoration: TextDecoration.underline),
+      recognizer: TapGestureRecognizer()
+        ..onTap = () {
           launchUrl(url, context);
-        },
-        child: Text(
-          text,
-          style: app_styles.secondaryText,
-        ),
-      );
+        });
 }
 
 class CurrentUserWidget extends InheritedWidget {

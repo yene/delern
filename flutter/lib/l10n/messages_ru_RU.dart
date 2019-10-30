@@ -126,6 +126,9 @@ class MessageLookup extends MessageLookupByLibrary {
             "Изучайте в любом месте, а также без сети"),
         "learnIntroTitle": MessageLookupByLibrary.simpleMessage("Изучайте"),
         "learning": MessageLookupByLibrary.simpleMessage("Изучение"),
+        "legacyAcceptanceLabel": MessageLookupByLibrary.simpleMessage(
+            "При использовании приложения Вы соглашаетесь с  "),
+        "legacyPartsConnector": MessageLookupByLibrary.simpleMessage(" и  "),
         "listOFDecksScreenTitle":
             MessageLookupByLibrary.simpleMessage("Список папок"),
         "markdown": MessageLookupByLibrary.simpleMessage("Маркдаун"),
@@ -166,6 +169,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "peopleLabel": MessageLookupByLibrary.simpleMessage("Люди"),
         "privacyPolicy":
             MessageLookupByLibrary.simpleMessage("Политика Конфиденциальности"),
+        "privacyPolicySignIn": MessageLookupByLibrary.simpleMessage(
+            "Политикой Конфиденциальности"),
         "profileTooltip": MessageLookupByLibrary.simpleMessage("Профиль"),
         "reversedCardLabel":
             MessageLookupByLibrary.simpleMessage("Добавить обратную карточку"),
@@ -196,6 +201,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "swissDeckType": MessageLookupByLibrary.simpleMessage("Швейцарский"),
         "termsOfService":
             MessageLookupByLibrary.simpleMessage("Условия Использования"),
+        "termsOfServiceSignIn":
+            MessageLookupByLibrary.simpleMessage("Условиями Использования"),
         "unknownDeckType": MessageLookupByLibrary.simpleMessage("Неизвестный"),
         "viewLearning": MessageLookupByLibrary.simpleMessage("Просмотр"),
         "viewLearningTooltip": MessageLookupByLibrary.simpleMessage(

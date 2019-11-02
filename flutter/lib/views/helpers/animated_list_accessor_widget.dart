@@ -97,7 +97,8 @@ class AnimatedListAccessorWidgetState<T extends KeyedListItem>
         return AnimatedList(
           key: _animatedListKey,
           itemBuilder: _buildItem,
-          initialItemCount: snapshot.data.length,
+          initialItemCount:
+              snapshot.data?.length ?? widget.list.currentValue.length,
           controller: widget.controller,
         );
       });

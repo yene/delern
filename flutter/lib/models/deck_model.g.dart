@@ -110,6 +110,12 @@ class _$DeckModelSerializer implements StructuredSerializer<DeckModel> {
         ..add(serializers.serialize(object.category,
             specifiedType: const FullType(String)));
     }
+    if (object.cards != null) {
+      result
+        ..add('cards')
+        ..add(serializers.serialize(object.cards,
+            specifiedType: const FullType(CardModelListAccessor)));
+    }
     return result;
   }
 
@@ -156,6 +162,11 @@ class _$DeckModelSerializer implements StructuredSerializer<DeckModel> {
           result.category = serializers.deserialize(value,
               specifiedType: const FullType(String)) as String;
           break;
+        case 'cards':
+          result.cards = serializers.deserialize(value,
+                  specifiedType: const FullType(CardModelListAccessor))
+              as CardModelListAccessor;
+          break;
       }
     }
 
@@ -180,6 +191,8 @@ class _$DeckModel extends DeckModel {
   final DateTime lastSyncAt;
   @override
   final String category;
+  @override
+  final CardModelListAccessor cards;
 
   factory _$DeckModel([void Function(DeckModelBuilder) updates]) =>
       (new DeckModelBuilder()..update(updates)).build() as _$DeckModel;
@@ -192,7 +205,8 @@ class _$DeckModel extends DeckModel {
       this.accepted,
       this.access,
       this.lastSyncAt,
-      this.category})
+      this.category,
+      this.cards})
       : super._() {
     if (markdown == null) {
       throw new BuiltValueNullFieldError('DeckModel', 'markdown');
@@ -223,7 +237,8 @@ class _$DeckModel extends DeckModel {
         accepted == other.accepted &&
         access == other.access &&
         lastSyncAt == other.lastSyncAt &&
-        category == other.category;
+        category == other.category &&
+        cards == other.cards;
   }
 
   @override
@@ -233,13 +248,15 @@ class _$DeckModel extends DeckModel {
             $jc(
                 $jc(
                     $jc(
-                        $jc($jc($jc(0, key.hashCode), name.hashCode),
-                            markdown.hashCode),
-                        type.hashCode),
-                    accepted.hashCode),
-                access.hashCode),
-            lastSyncAt.hashCode),
-        category.hashCode));
+                        $jc(
+                            $jc($jc($jc(0, key.hashCode), name.hashCode),
+                                markdown.hashCode),
+                            type.hashCode),
+                        accepted.hashCode),
+                    access.hashCode),
+                lastSyncAt.hashCode),
+            category.hashCode),
+        cards.hashCode));
   }
 
   @override
@@ -252,7 +269,8 @@ class _$DeckModel extends DeckModel {
           ..add('accepted', accepted)
           ..add('access', access)
           ..add('lastSyncAt', lastSyncAt)
-          ..add('category', category))
+          ..add('category', category)
+          ..add('cards', cards))
         .toString();
   }
 }
@@ -356,6 +374,18 @@ class _$DeckModelBuilder extends DeckModelBuilder {
     super.category = category;
   }
 
+  @override
+  CardModelListAccessor get cards {
+    _$this;
+    return super.cards;
+  }
+
+  @override
+  set cards(CardModelListAccessor cards) {
+    _$this;
+    super.cards = cards;
+  }
+
   _$DeckModelBuilder() : super._();
 
   DeckModelBuilder get _$this {
@@ -368,6 +398,7 @@ class _$DeckModelBuilder extends DeckModelBuilder {
       super.access = _$v.access;
       super.lastSyncAt = _$v.lastSyncAt;
       super.category = _$v.category;
+      super.cards = _$v.cards;
       _$v = null;
     }
     return this;
@@ -397,7 +428,8 @@ class _$DeckModelBuilder extends DeckModelBuilder {
             accepted: accepted,
             access: access,
             lastSyncAt: lastSyncAt,
-            category: category);
+            category: category,
+            cards: cards);
     replace(_$result);
     return _$result;
   }

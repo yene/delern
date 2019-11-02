@@ -285,9 +285,9 @@ class DeckListItemWidget extends StatelessWidget {
           stream: bloc.numberOfCardsDue(deck.key).stream,
           builder: (context, snapshot) => Container(
             child: Text(
-              localizations
-                  .of(context)
-                  .cardsToLearnLabel(snapshot.data?.toString() ?? 'N/A'),
+              localizations.of(context).cardsToLearnLabel(
+                  snapshot.data?.toString() ?? 'N/A',
+                  deck.cards.currentValue?.length.toString() ?? 'N/A'),
               style: secondaryTextStyle,
             ),
           ),

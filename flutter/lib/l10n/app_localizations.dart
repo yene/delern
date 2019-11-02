@@ -538,9 +538,9 @@ To see the source code for this app, please visit the [Delern GitHub repo](https
         desc: 'List of decks',
       );
 
-  String cardsToLearnLabel(String numberOfCards) => Intl.message(
-        '$numberOfCards to learn',
-        args: [numberOfCards],
+  String cardsToLearnLabel(String numberOfCards, String total) => Intl.message(
+        '$numberOfCards of $total to learn',
+        args: [numberOfCards, total],
         name: 'cardsToLearnLabel',
         desc: 'Cards to learn label',
       );

@@ -7,6 +7,7 @@ import 'package:built_value/serializer.dart';
 import 'package:delern_flutter/models/base/database_observable_list.dart';
 import 'package:delern_flutter/models/base/keyed_list_item.dart';
 import 'package:delern_flutter/models/base/list_accessor.dart';
+import 'package:delern_flutter/models/card_model.dart';
 import 'package:delern_flutter/models/deck_access_model.dart';
 import 'package:delern_flutter/models/serializers.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -49,6 +50,8 @@ abstract class DeckModel
   DateTime get lastSyncAt;
   @nullable
   String get category;
+  @nullable
+  CardModelListAccessor get cards;
 
   static Serializer<DeckModel> get serializer => _$deckModelSerializer;
 
@@ -123,7 +126,8 @@ abstract class DeckModelBuilder
   AccessType access;
   DateTime lastSyncAt = DateTime.fromMillisecondsSinceEpoch(0);
   String category;
-
+  @nullable
+  CardModelListAccessor cards;
   factory DeckModelBuilder() = _$DeckModelBuilder;
   DeckModelBuilder._();
 }
@@ -133,6 +137,17 @@ class DeckModelListAccessor extends ListAccessor<DeckModel> {
       : super(FirebaseDatabase.instance.reference().child('decks').child(uid));
 
   @override
-  DeckModel parseItem(String key, value) =>
-      DeckModel.fromSnapshot(key: key, value: value);
+  DeckModel parseItem(String key, value) {
+    final initDeck = DeckModel.fromSnapshot(key: key, value: value);
+    return initDeck.rebuild((d) => d..cards = CardModelListAccessor(d.key));
+  }
+
+  @override
+  DeckModel updateItem(DeckModel previous, String key, value) {
+    final initDeck = DeckModel.fromSnapshot(key: key, value: value);
+    return initDeck.rebuild((d) => d..cards = previous.cards);
+  }
+
+  @override
+  void disposeItem(DeckModel item) => item.cards.close();
 }

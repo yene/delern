@@ -5,6 +5,7 @@ import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
 import 'package:delern_flutter/models/base/database_observable_list.dart';
 import 'package:delern_flutter/models/base/keyed_list_item.dart';
+import 'package:delern_flutter/models/base/list_accessor.dart';
 import 'package:delern_flutter/models/serializers.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:meta/meta.dart';
@@ -68,4 +69,16 @@ abstract class CardModel
                 key: key,
                 value: value,
               ));
+}
+
+class CardModelListAccessor extends ListAccessor<CardModel> {
+  final String deckId;
+
+  CardModelListAccessor(this.deckId)
+      : super(
+            FirebaseDatabase.instance.reference().child('cards').child(deckId));
+
+  @override
+  CardModel parseItem(String key, value) =>
+      CardModel.fromSnapshot(deckKey: deckId, key: key, value: value);
 }

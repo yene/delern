@@ -1,2 +1,2 @@
-const String kPrivacyPolicy = 'https://www.iubenda.com/privacy-policy/69239405';
-const String kTermsOfService = 'https://dasfoo.org/delern-tos';
+const String kPrivacyPolicy = 'https://dasfoo.org/delern/privacy';
+const String kTermsOfService = 'https://dasfoo.org/delern/tos';

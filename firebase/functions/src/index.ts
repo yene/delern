@@ -232,7 +232,7 @@ export const triggers = {
             console.warn('Removing a token because of', e.code);
             tokenRemovals[sharedWithUser.uid + '/' + fcmId] = null;
           } else {
-            console.error('Failed:', e);
+            console.error('FCM notification failed:', e.code, e);
           }
         }
       }

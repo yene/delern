@@ -10,6 +10,7 @@ abstract class ListAccessor<T> {
   bool get loaded;
   BuiltList<T> get currentValue;
   Stream<BuiltList<T>> get value;
+  void close();
 }
 
 abstract class DataListAccessor<T extends KeyedListItem>

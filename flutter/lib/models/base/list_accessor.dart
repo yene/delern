@@ -90,45 +90,12 @@ abstract class DataListAccessor<T extends KeyedListItem>
 
   Stream<T> getItemUpdates(String key) async* {
     await for (final listChangedRecord in events) {
-      // New items were added
-      if (listChangedRecord.addedCount > 0 &&
-          listChangedRecord.removed.isEmpty) {
-        for (var i = listChangedRecord.index;
-            i < (listChangedRecord.index + listChangedRecord.addedCount);
-            i++) {
-          if (listChangedRecord.object[i].key == key) {
-            yield listChangedRecord.object[i];
-            break;
-          }
-        }
-      }
-      // Items were removed
-      if (listChangedRecord.addedCount == 0 &&
-          listChangedRecord.removed.isNotEmpty) {
-        for (var i = 0; i < listChangedRecord.removed.length; i++) {
-          if (listChangedRecord.removed[i].key == key) {
-            yield null;
-            break;
-          }
-        }
-      }
-      // Items were changed
-      if (listChangedRecord.addedCount > 0 &&
-          listChangedRecord.removed.isNotEmpty) {
-        for (var i = 0; i < listChangedRecord.removed.length; i++) {
-          if (listChangedRecord.removed[i].key == key) {
-            // Find new value of item
-            for (var j = listChangedRecord.index;
-                j < listChangedRecord.index + listChangedRecord.addedCount;
-                j++) {
-              if (listChangedRecord.object[j].key == key) {
-                yield listChangedRecord.object[j];
-                break;
-              }
-            }
-            break;
-          }
-        }
+      final addedItem = listChangedRecord.added
+          .firstWhere((item) => item.key == key, orElse: () => null);
+      final itemWasRemoved =
+          listChangedRecord.removed.any((item) => item.key == key);
+      if (addedItem != null || itemWasRemoved) {
+        yield addedItem;
       }
     }
   }
@@ -142,6 +109,7 @@ abstract class DataListAccessor<T extends KeyedListItem>
   @protected
   void disposeItem(T item) {}
 
+  @override
   void close() {
     _currentValue?.forEach(disposeItem);
     _onChildAdded?.cancel();

@@ -37,7 +37,6 @@ class DecksListBloc {
   /*DelayedInitializationObservableList<DeckModel> get decksList => _decksList;
   final FilteredSortedObservableList<DeckModel> _decksList;*/
   ListAccessor<DeckModel> get decksList => _filteredDecksList;
-  final DeckModelListAccessor _decksList;
   FilteredListAccessor<DeckModel> _filteredDecksList;
 
   // TODO(ksheremet): Implement filter
@@ -48,14 +47,13 @@ class DecksListBloc {
       _filteredDecksList.filter; //_decksList.filter;
 
   DecksListBloc({@required this.user})
-      : assert(user != null),
-        _decksList = user.decks
-  // Analyzer bug: https://github.com/dart-lang/sdk/issues/35577.
+      : assert(user !=
+            null) // Analyzer bug: https://github.com/dart-lang/sdk/issues/35577.
   // ignore: unnecessary_parenthesis
   /*(FilteredSortedObservableList(user.decks.currentValue)
               ..comparator = (c1, c2) => c1.key.compareTo(c2.key))*/
   {
-    _filteredDecksList = FilteredListAccessor<DeckModel>(_decksList);
+    _filteredDecksList = FilteredListAccessor<DeckModel>(user.decks);
     // Delay initial data load. In case we have a significant amount of
     // ScheduledCards, loading them slows down decks list, because of the
     // MethodChannel bottleneck.
@@ -143,7 +141,6 @@ class DecksListBloc {
   void dispose() {
     _numberOfCardsDue.values.forEach((c) => c._dispose());
     _filteredDecksList.close();
-    _decksList.close();
   }
 
   Future<void> deleteDeck(DeckModel deck) => user.deleteDeck(deck: deck);

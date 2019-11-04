@@ -114,7 +114,8 @@ class _$DeckModelSerializer implements StructuredSerializer<DeckModel> {
       result
         ..add('cards')
         ..add(serializers.serialize(object.cards,
-            specifiedType: const FullType(CardModelListAccessor)));
+            specifiedType: const FullType(
+                ListAccessor, const [const FullType(CardModel)])));
     }
     return result;
   }
@@ -164,8 +165,9 @@ class _$DeckModelSerializer implements StructuredSerializer<DeckModel> {
           break;
         case 'cards':
           result.cards = serializers.deserialize(value,
-                  specifiedType: const FullType(CardModelListAccessor))
-              as CardModelListAccessor;
+                  specifiedType: const FullType(
+                      ListAccessor, const [const FullType(CardModel)]))
+              as ListAccessor<CardModel>;
           break;
       }
     }
@@ -192,7 +194,7 @@ class _$DeckModel extends DeckModel {
   @override
   final String category;
   @override
-  final CardModelListAccessor cards;
+  final ListAccessor<CardModel> cards;
 
   factory _$DeckModel([void Function(DeckModelBuilder) updates]) =>
       (new DeckModelBuilder()..update(updates)).build() as _$DeckModel;
@@ -375,13 +377,13 @@ class _$DeckModelBuilder extends DeckModelBuilder {
   }
 
   @override
-  CardModelListAccessor get cards {
+  ListAccessor<CardModel> get cards {
     _$this;
     return super.cards;
   }
 
   @override
-  set cards(CardModelListAccessor cards) {
+  set cards(ListAccessor<CardModel> cards) {
     _$this;
     super.cards = cards;
   }

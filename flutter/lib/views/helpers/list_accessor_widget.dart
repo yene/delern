@@ -32,11 +32,10 @@ class ListAccessorWidget<T extends KeyedListItem> extends StatefulWidget {
   final ScrollController controller;
 
   @override
-  AnimatedListAccessorWidgetState<T> createState() =>
-      AnimatedListAccessorWidgetState<T>();
+  _ListAccessorWidgetState<T> createState() => _ListAccessorWidgetState<T>();
 }
 
-class AnimatedListAccessorWidgetState<T extends KeyedListItem>
+class _ListAccessorWidgetState<T extends KeyedListItem>
     extends State<ListAccessorWidget<T>> {
   StreamSubscription<BuiltList<T>> _listValueSubscription;
   BuiltList<T> _list;

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:delern_flutter/models/base/list_accessor.dart';
 import 'package:delern_flutter/models/base/stream_with_latest_value.dart';
 import 'package:delern_flutter/models/card_model.dart';
 import 'package:delern_flutter/models/card_reply_model.dart';
@@ -25,7 +26,7 @@ class User {
 
   StreamWithValue<bool> get isOnline => _isOnline;
 
-  final DeckModelListAccessor decks;
+  final DataListAccessor<DeckModel> decks;
 
   User(this._dataSource)
       : assert(_dataSource != null),

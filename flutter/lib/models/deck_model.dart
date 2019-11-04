@@ -51,7 +51,7 @@ abstract class DeckModel
   @nullable
   String get category;
   @nullable
-  CardModelListAccessor get cards;
+  ListAccessor<CardModel> get cards;
 
   static Serializer<DeckModel> get serializer => _$deckModelSerializer;
 
@@ -127,7 +127,7 @@ abstract class DeckModelBuilder
   DateTime lastSyncAt = DateTime.fromMillisecondsSinceEpoch(0);
   String category;
   @nullable
-  CardModelListAccessor cards;
+  ListAccessor<CardModel> cards;
   factory DeckModelBuilder() = _$DeckModelBuilder;
   DeckModelBuilder._();
 }

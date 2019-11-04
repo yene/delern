@@ -1,11 +1,11 @@
 import 'dart:async';
 
+import 'package:delern_flutter/models/base/list_accessor.dart';
 import 'package:delern_flutter/models/base/stream_with_latest_value.dart';
 import 'package:delern_flutter/models/deck_model.dart';
 import 'package:delern_flutter/models/scheduled_card_model.dart';
 import 'package:delern_flutter/models/user.dart';
 import 'package:delern_flutter/remote/analytics.dart';
-import 'package:delern_flutter/view_models/base/filtered_sorted_observable_list.dart';
 import 'package:flutter/foundation.dart';
 import 'package:meta/meta.dart';
 
@@ -36,7 +36,7 @@ class DecksListBloc {
 
   /*DelayedInitializationObservableList<DeckModel> get decksList => _decksList;
   final FilteredSortedObservableList<DeckModel> _decksList;*/
-  DeckModelListAccessor get decksList => _decksList;
+  ListAccessor<DeckModel> get decksList => _decksList;
   final DeckModelListAccessor _decksList;
 
   // TODO(ksheremet): Implement filter

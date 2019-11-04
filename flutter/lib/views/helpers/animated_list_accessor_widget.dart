@@ -87,10 +87,10 @@ class AnimatedListAccessorWidgetState<T extends KeyedListItem>
   Widget build(BuildContext context) => StreamBuilder(
       stream: widget.list.value,
       builder: (context, snapshot) {
-        if (widget.list.loaded == false) {
+        if (!widget.list.loaded) {
           return ProgressIndicatorWidget();
         }
-        if (widget.list.currentValue.isEmpty && widget.list.loaded == true) {
+        if (widget.list.currentValue.isEmpty) {
           return widget.emptyMessageBuilder();
         }
 

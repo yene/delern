@@ -43,10 +43,10 @@ class AnimatedListAccessorWidgetState<T extends KeyedListItem>
 
   @override
   void initState() {
+    _list = widget.list.currentValue;
     _listValueSubscription = widget.list.value.listen((value) => setState(() {
           _list = value;
         }));
-    _list = widget.list.currentValue;
     super.initState();
   }
 
@@ -58,7 +58,7 @@ class AnimatedListAccessorWidgetState<T extends KeyedListItem>
 
   @override
   Widget build(BuildContext context) {
-    if (widget.list.loaded == false) {
+    if (!widget.list.loaded) {
       return ProgressIndicatorWidget();
     }
     if (_list.isEmpty) {

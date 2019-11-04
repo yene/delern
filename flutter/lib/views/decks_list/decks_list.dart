@@ -12,11 +12,11 @@ import 'package:delern_flutter/view_models/decks_list_bloc.dart';
 import 'package:delern_flutter/views/decks_list/create_deck_widget.dart';
 import 'package:delern_flutter/views/decks_list/deck_menu.dart';
 import 'package:delern_flutter/views/decks_list/navigation_drawer.dart';
-import 'package:delern_flutter/views/helpers/animated_list_accessor_widget.dart';
 import 'package:delern_flutter/views/helpers/arrow_to_fab_widget.dart';
 import 'package:delern_flutter/views/helpers/edit_delete_dismissible_widget.dart';
 import 'package:delern_flutter/views/helpers/empty_list_message_widget.dart';
 import 'package:delern_flutter/views/helpers/learning_method_widget.dart';
+import 'package:delern_flutter/views/helpers/list_accessor_widget.dart';
 import 'package:delern_flutter/views/helpers/save_updates_dialog.dart';
 import 'package:delern_flutter/views/helpers/search_bar_widget.dart';
 import 'package:delern_flutter/views/helpers/sign_in_widget.dart';
@@ -99,43 +99,40 @@ class _DecksListState extends State<DecksList> {
         body: Column(
           children: <Widget>[
             Expanded(
-              child: AnimatedListAccessorWidget<DeckModel>(
+              child: ListAccessorWidget<DeckModel>(
                 list: _bloc.decksList,
-                itemBuilder: (context, item, animation, index) {
+                itemBuilder: (context, item, index) {
                   final itemHeight = max(
                       MediaQuery.of(context).size.height *
                           app_styles.kItemListHeightRatio,
                       app_styles.kMinItemHeight);
-                  return SizeTransition(
-                      sizeFactor: animation,
-                      child: Column(
-                        children: <Widget>[
-                          if (index == 0)
-                            Padding(
-                              padding: EdgeInsets.symmetric(
-                                  vertical: MediaQuery.of(context).size.height *
-                                      app_styles.kItemListPaddingRatio *
-                                      2),
-                            ),
-                          DeckListItemWidget(
-                            deck: item,
-                            bloc: _bloc,
-                            minHeight: itemHeight,
-                          ),
-                          Padding(
-                            padding: EdgeInsets.symmetric(
-                                vertical: MediaQuery.of(context).size.height *
-                                    app_styles.kItemListPaddingRatio),
-                          ),
-                          if (index ==
-                              (_bloc.decksList.currentValue.length - 1))
-                            Padding(
-                              padding: EdgeInsets.symmetric(
-                                  vertical: MediaQuery.of(context).size.height *
-                                      app_styles.kItemListPaddingRatio),
-                            ),
-                        ],
-                      ));
+                  return Column(
+                    children: <Widget>[
+                      if (index == 0)
+                        Padding(
+                          padding: EdgeInsets.symmetric(
+                              vertical: MediaQuery.of(context).size.height *
+                                  app_styles.kItemListPaddingRatio *
+                                  2),
+                        ),
+                      DeckListItemWidget(
+                        deck: item,
+                        bloc: _bloc,
+                        minHeight: itemHeight,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                            vertical: MediaQuery.of(context).size.height *
+                                app_styles.kItemListPaddingRatio),
+                      ),
+                      if (index == (_bloc.decksList.currentValue.length - 1))
+                        Padding(
+                          padding: EdgeInsets.symmetric(
+                              vertical: MediaQuery.of(context).size.height *
+                                  app_styles.kItemListPaddingRatio),
+                        ),
+                    ],
+                  );
                 },
                 emptyMessageBuilder: () => ArrowToFloatingActionButtonWidget(
                     fabKey: fabKey,

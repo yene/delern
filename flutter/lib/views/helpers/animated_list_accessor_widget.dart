@@ -28,7 +28,7 @@ class AnimatedListAccessorWidget<T extends KeyedListItem>
   })  : assert(itemBuilder != null),
         super(key: key);
 
-  final ListAccessor<T> list;
+  final DataListAccessor<T> list;
   final AnimatedListAccessorItemBuilder<T> itemBuilder;
   final WidgetBuilder emptyMessageBuilder;
   final ScrollController controller;

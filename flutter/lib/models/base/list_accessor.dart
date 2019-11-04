@@ -6,7 +6,14 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/foundation.dart';
 import 'package:observable/observable.dart';
 
-abstract class ListAccessor<T extends KeyedListItem> {
+abstract class ListAccessor<T> {
+  bool get loaded;
+  BuiltList<T> get currentValue;
+  Stream<BuiltList<T>> get value;
+}
+
+abstract class DataListAccessor<T extends KeyedListItem>
+    implements ListAccessor<T> {
   final List<T> _currentValue = [];
   bool _loaded = false;
   final _value = StreamController<BuiltList<T>>.broadcast();
@@ -19,7 +26,7 @@ abstract class ListAccessor<T extends KeyedListItem> {
 
   StreamSubscription<Event> _onChildAdded, _onChildChanged, _onChildRemoved;
 
-  ListAccessor(DatabaseReference reference) {
+  DataListAccessor(DatabaseReference reference) {
     _onChildAdded = reference.onChildAdded.listen((data) {
       final newItem = parseItem(data.snapshot.key, data.snapshot.value);
       _currentValue.add(newItem);

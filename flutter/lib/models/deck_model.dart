@@ -132,7 +132,7 @@ abstract class DeckModelBuilder
   DeckModelBuilder._();
 }
 
-class DeckModelListAccessor extends ListAccessor<DeckModel> {
+class DeckModelListAccessor extends DataListAccessor<DeckModel> {
   DeckModelListAccessor(String uid)
       : super(FirebaseDatabase.instance.reference().child('decks').child(uid));
 

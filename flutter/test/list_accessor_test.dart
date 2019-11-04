@@ -189,7 +189,7 @@ class MyModel implements KeyedListItem {
   String toString() => '#<$runtimeType key: $key, value: $value>';
 }
 
-class MyListAccessor extends ListAccessor<MyModel> {
+class MyListAccessor extends DataListAccessor<MyModel> {
   MyListAccessor(DatabaseReference reference) : super(reference);
 
   @override

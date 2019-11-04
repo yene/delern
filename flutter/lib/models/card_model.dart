@@ -71,7 +71,7 @@ abstract class CardModel
               ));
 }
 
-class CardModelListAccessor extends ListAccessor<CardModel> {
+class CardModelListAccessor extends DataListAccessor<CardModel> {
   final String deckId;
 
   CardModelListAccessor(this.deckId)

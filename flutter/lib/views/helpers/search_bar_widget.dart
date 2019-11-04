@@ -56,6 +56,8 @@ class SearchBarWidgetState extends State<SearchBarWidget> {
       actionIcon = const Icon(Icons.close);
       appBarTitle = TextField(
         autofocus: true,
+        showCursor: true,
+        cursorColor: Theme.of(context).cursorColor,
         controller: _searchController,
         style: app_styles.searchBarText,
         decoration: InputDecoration(

@@ -17,9 +17,7 @@ abstract class ListAccessor<T extends KeyedListItem> {
   Stream<BuiltList<T>> get value => _value.stream;
   Stream<ListChangeRecord<T>> get events => _events.stream;
 
-  StreamSubscription<Event> _onChildAdded;
-  StreamSubscription<Event> _onChildChanged;
-  StreamSubscription<Event> _onChildRemoved;
+  StreamSubscription<Event> _onChildAdded, _onChildChanged, _onChildRemoved;
 
   ListAccessor(DatabaseReference reference) {
     _onChildAdded = reference.onChildAdded.listen((data) {

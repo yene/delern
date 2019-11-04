@@ -36,17 +36,26 @@ class DecksListBloc {
 
   /*DelayedInitializationObservableList<DeckModel> get decksList => _decksList;
   final FilteredSortedObservableList<DeckModel> _decksList;*/
-  ListAccessor<DeckModel> get decksList => _decksList;
+  ListAccessor<DeckModel> get decksList => _filteredDecksList;
   final DeckModelListAccessor _decksList;
+  FilteredListAccessor<DeckModel> _filteredDecksList;
 
   // TODO(ksheremet): Implement filter
-  set decksListFilter(Filter<DeckModel> newValue) => null;
+  set decksListFilter(Filter<DeckModel> newValue) =>
+      _filteredDecksList.filter = newValue;
   //_decksList.filter = newValue;
-  Filter<DeckModel> get decksListFilter => null; //_decksList.filter;
+  Filter<DeckModel> get decksListFilter =>
+      _filteredDecksList.filter; //_decksList.filter;
 
   DecksListBloc({@required this.user})
       : assert(user != null),
-        _decksList = user.decks {
+        _decksList = user.decks
+  // Analyzer bug: https://github.com/dart-lang/sdk/issues/35577.
+  // ignore: unnecessary_parenthesis
+  /*(FilteredSortedObservableList(user.decks.currentValue)
+              ..comparator = (c1, c2) => c1.key.compareTo(c2.key))*/
+  {
+    _filteredDecksList = FilteredListAccessor<DeckModel>(_decksList);
     // Delay initial data load. In case we have a significant amount of
     // ScheduledCards, loading them slows down decks list, because of the
     // MethodChannel bottleneck.
@@ -133,6 +142,7 @@ class DecksListBloc {
   // TODO(dotdoom): consider self-disposing map elements for onCancel of stream.
   void dispose() {
     _numberOfCardsDue.values.forEach((c) => c._dispose());
+    _filteredDecksList.close();
     _decksList.close();
   }
 

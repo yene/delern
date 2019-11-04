@@ -150,3 +150,42 @@ abstract class DataListAccessor<T extends KeyedListItem>
     _events?.close();
   }
 }
+
+typedef Filter<T> = bool Function(T item);
+
+/// We use Decorator pattern because _base is an abstract class.
+class FilteredListAccessor<T extends KeyedListItem> implements ListAccessor<T> {
+  final ListAccessor<T> _base;
+  Filter<T> _filter;
+  BuiltList<T> _currentValue;
+  StreamSubscription<BuiltList<T>> _baseValueSubscription;
+  final _value = StreamController<BuiltList<T>>.broadcast();
+
+  FilteredListAccessor(this._base) : _currentValue = _base.currentValue {
+    _baseValueSubscription = _base.value.listen((_) => _updateCurrentValue());
+  }
+
+  Filter<T> get filter => _filter;
+  set filter(Filter<T> value) {
+    _filter = value;
+    _updateCurrentValue();
+  }
+
+  Stream<BuiltList<T>> get value => _value.stream;
+  BuiltList<T> get currentValue => _currentValue;
+  bool get loaded => _base.loaded;
+
+  void close() {
+    _value.close();
+    _baseValueSubscription.cancel();
+  }
+
+  void _updateCurrentValue() {
+    if (_filter == null) {
+      _currentValue = _base.currentValue;
+    } else {
+      _currentValue = BuiltList<T>.of(_base.currentValue.where(_filter));
+    }
+    _value.add(_currentValue);
+  }
+}

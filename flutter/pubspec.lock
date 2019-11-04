@@ -252,10 +252,10 @@ packages:
     description:
       path: "."
       ref: align-content-center
-      resolved-ref: "6acca97f291dd9e1fdc699d9e04964f43fb01609"
+      resolved-ref: a55d2f2402610a3ba34d827c01fba5e192d89b5c
       url: "https://github.com/ksheremet/flutter_markdown.git"
     source: git
-    version: "0.2.0"
+    version: "0.3.0"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -750,5 +750,5 @@ packages:
     source: hosted
     version: "2.2.0"
 sdks:
-  dart: ">=2.4.0 <2.7.0"
+  dart: ">=2.5.0 <2.7.0"
   flutter: ">=1.9.1+hotfix.4 <2.0.0"

@@ -133,6 +133,7 @@ class DecksListBloc {
   // TODO(dotdoom): consider self-disposing map elements for onCancel of stream.
   void dispose() {
     _numberOfCardsDue.values.forEach((c) => c._dispose());
+    _decksList.close();
   }
 
   Future<void> deleteDeck(DeckModel deck) => user.deleteDeck(deck: deck);

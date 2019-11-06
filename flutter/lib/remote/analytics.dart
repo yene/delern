@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:meta/meta.dart';
 
+const deckMimeType = 'application/flashcards-deck';
+
 Future<void> logDeckCreate() =>
     FirebaseAnalytics().logEvent(name: 'deck_create');
 
@@ -31,11 +33,19 @@ Future<void> logStartLearning(String deckId) =>
       'item_id': deckId,
     });
 
-Future<void> logShare(String deckId) => FirebaseAnalytics()
-    .logShare(contentType: 'application/flashcards-deck', itemId: deckId);
+Future<void> logShare({String deckId, String method}) =>
+    FirebaseAnalytics().logShare(
+      contentType: deckMimeType,
+      itemId: deckId,
+      method: method,
+    );
 
-Future<void> logUnshare(String deckId) => FirebaseAnalytics().logShare(
-    contentType: 'application/flashcards-deck', itemId: '[unshared] $deckId');
+Future<void> logUnshare({String deckId, String method}) =>
+    FirebaseAnalytics().logShare(
+      contentType: deckMimeType,
+      itemId: '[unshared] $deckId',
+      method: method,
+    );
 
 Future<void> logCardCreate(String deckId) =>
     FirebaseAnalytics().logEvent(name: 'card_create', parameters: {

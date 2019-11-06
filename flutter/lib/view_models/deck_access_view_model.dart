@@ -26,7 +26,7 @@ class DeckAccessesViewModel {
   Future<void> shareDeck(DeckAccessModel access) {
     assert(deck.key == access.deckKey);
 
-    unawaited(logShare(access.deckKey));
+    unawaited(logShare(deckId: access.deckKey, method: 'email'));
     return user.shareDeck(
         deck: deck,
         access: access.access,
@@ -35,7 +35,7 @@ class DeckAccessesViewModel {
   }
 
   Future<void> unshareDeck(String shareWithUid) {
-    unawaited(logUnshare(deck.key));
+    unawaited(logUnshare(deckId: deck.key, method: 'email'));
     return user.unshareDeck(deck: deck, shareWithUid: shareWithUid);
   }
 }

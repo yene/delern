@@ -48,7 +48,7 @@ class Auth {
     FirebaseUser user;
 
     if (provider == null) {
-      user = await FirebaseAuth.instance.signInAnonymously();
+      user = (await FirebaseAuth.instance.signInAnonymously()).user;
     } else {
       final credential = await credentialProviders[provider]
           .getCredential(forceAccountPicker: forceAccountPicker);
@@ -58,9 +58,11 @@ class Auth {
         return;
       }
 
-      user = await ((_currentUser == null)
-          ? FirebaseAuth.instance.signInWithCredential(credential)
-          : FirebaseAuth.instance.linkWithCredential(credential));
+      user = (await ((_currentUser == null)
+              ? FirebaseAuth.instance.signInWithCredential(credential)
+              : (await FirebaseAuth.instance.currentUser())
+                  .linkWithCredential(credential)))
+          .user;
 
       // After `await`, `_currentUser` is set by `onAuthStateChanged` callback.
       if (await _updateProfileFromProviders(user)) {
@@ -84,7 +86,7 @@ class Auth {
 
       if (credential != null) {
         firebaseUser =
-            await FirebaseAuth.instance.signInWithCredential(credential);
+            (await FirebaseAuth.instance.signInWithCredential(credential)).user;
       }
     }
 

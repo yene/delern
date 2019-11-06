@@ -10,6 +10,7 @@ abstract class ListAccessor<T> {
   bool get loaded;
   BuiltList<T> get currentValue;
   Stream<BuiltList<T>> get value;
+  Stream<ListChangeRecord<T>> get events;
   void close();
 }
 
@@ -142,6 +143,7 @@ class FilteredListAccessor<T extends KeyedListItem> implements ListAccessor<T> {
   Stream<BuiltList<T>> get value => _value.stream;
   BuiltList<T> get currentValue => _currentValue;
   bool get loaded => _base.loaded;
+  Stream<ListChangeRecord<T>> get events => _base.events;
 
   void close() {
     _value.close();

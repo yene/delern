@@ -117,6 +117,13 @@ class _$DeckModelSerializer implements StructuredSerializer<DeckModel> {
             specifiedType: const FullType(
                 ListAccessor, const [const FullType(CardModel)])));
     }
+    if (object.scheduledCards != null) {
+      result
+        ..add('scheduledCards')
+        ..add(serializers.serialize(object.scheduledCards,
+            specifiedType: const FullType(
+                ListAccessor, const [const FullType(ScheduledCardModel)])));
+    }
     return result;
   }
 
@@ -169,6 +176,12 @@ class _$DeckModelSerializer implements StructuredSerializer<DeckModel> {
                       ListAccessor, const [const FullType(CardModel)]))
               as ListAccessor<CardModel>;
           break;
+        case 'scheduledCards':
+          result.scheduledCards = serializers.deserialize(value,
+                  specifiedType: const FullType(
+                      ListAccessor, const [const FullType(ScheduledCardModel)]))
+              as ListAccessor<ScheduledCardModel>;
+          break;
       }
     }
 
@@ -195,6 +208,8 @@ class _$DeckModel extends DeckModel {
   final String category;
   @override
   final ListAccessor<CardModel> cards;
+  @override
+  final ListAccessor<ScheduledCardModel> scheduledCards;
 
   factory _$DeckModel([void Function(DeckModelBuilder) updates]) =>
       (new DeckModelBuilder()..update(updates)).build() as _$DeckModel;
@@ -208,7 +223,8 @@ class _$DeckModel extends DeckModel {
       this.access,
       this.lastSyncAt,
       this.category,
-      this.cards})
+      this.cards,
+      this.scheduledCards})
       : super._() {
     if (markdown == null) {
       throw new BuiltValueNullFieldError('DeckModel', 'markdown');
@@ -240,7 +256,8 @@ class _$DeckModel extends DeckModel {
         access == other.access &&
         lastSyncAt == other.lastSyncAt &&
         category == other.category &&
-        cards == other.cards;
+        cards == other.cards &&
+        scheduledCards == other.scheduledCards;
   }
 
   @override
@@ -251,14 +268,16 @@ class _$DeckModel extends DeckModel {
                 $jc(
                     $jc(
                         $jc(
-                            $jc($jc($jc(0, key.hashCode), name.hashCode),
-                                markdown.hashCode),
-                            type.hashCode),
-                        accepted.hashCode),
-                    access.hashCode),
-                lastSyncAt.hashCode),
-            category.hashCode),
-        cards.hashCode));
+                            $jc(
+                                $jc($jc($jc(0, key.hashCode), name.hashCode),
+                                    markdown.hashCode),
+                                type.hashCode),
+                            accepted.hashCode),
+                        access.hashCode),
+                    lastSyncAt.hashCode),
+                category.hashCode),
+            cards.hashCode),
+        scheduledCards.hashCode));
   }
 
   @override
@@ -272,7 +291,8 @@ class _$DeckModel extends DeckModel {
           ..add('access', access)
           ..add('lastSyncAt', lastSyncAt)
           ..add('category', category)
-          ..add('cards', cards))
+          ..add('cards', cards)
+          ..add('scheduledCards', scheduledCards))
         .toString();
   }
 }
@@ -388,6 +408,18 @@ class _$DeckModelBuilder extends DeckModelBuilder {
     super.cards = cards;
   }
 
+  @override
+  ListAccessor<ScheduledCardModel> get scheduledCards {
+    _$this;
+    return super.scheduledCards;
+  }
+
+  @override
+  set scheduledCards(ListAccessor<ScheduledCardModel> scheduledCards) {
+    _$this;
+    super.scheduledCards = scheduledCards;
+  }
+
   _$DeckModelBuilder() : super._();
 
   DeckModelBuilder get _$this {
@@ -401,6 +433,7 @@ class _$DeckModelBuilder extends DeckModelBuilder {
       super.lastSyncAt = _$v.lastSyncAt;
       super.category = _$v.category;
       super.cards = _$v.cards;
+      super.scheduledCards = _$v.scheduledCards;
       _$v = null;
     }
     return this;
@@ -431,7 +464,8 @@ class _$DeckModelBuilder extends DeckModelBuilder {
             access: access,
             lastSyncAt: lastSyncAt,
             category: category,
-            cards: cards);
+            cards: cards,
+            scheduledCards: scheduledCards);
     replace(_$result);
     return _$result;
   }

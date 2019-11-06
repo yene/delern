@@ -4,8 +4,8 @@ import 'dart:math';
 
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
-import 'package:delern_flutter/models/base/database_observable_list.dart';
 import 'package:delern_flutter/models/base/keyed_list_item.dart';
+import 'package:delern_flutter/models/base/list_accessor.dart';
 import 'package:delern_flutter/models/card_model.dart';
 import 'package:delern_flutter/models/deck_model.dart';
 import 'package:delern_flutter/models/serializers.dart';
@@ -186,25 +186,21 @@ abstract class ScheduledCardModel
       ..repeatAt =
           DateTime.now().toUtc().add(levelDurations[newLevel] + _newJitter()));
   }
+}
 
-  static DatabaseObservableList<ScheduledCardsListModel> listsForUser(
-          String uid) =>
-      DatabaseObservableList(
-          query: FirebaseDatabase.instance
-              .reference()
-              .child('learning')
-              .child(uid),
-          snapshotParser: (deckKey, scheduledCardsOfDeck) {
-            final Map value = scheduledCardsOfDeck ?? {};
-            return ScheduledCardsListModel(
-                key: deckKey,
-                scheduledCards: List.unmodifiable(value.entries
-                    .map((entry) => ScheduledCardModel.fromSnapshot(
-                          key: entry.key,
-                          deckKey: deckKey,
-                          value: entry.value,
-                        ))));
-          },
-          fetchFullValueFirst: false,
-          ordered: false);
+class ScheduledCardModelListAccessor
+    extends DataListAccessor<ScheduledCardModel> {
+  final String uid;
+  final String deckKey;
+
+  ScheduledCardModelListAccessor({this.uid, this.deckKey})
+      : super(FirebaseDatabase.instance
+            .reference()
+            .child('learning')
+            .child(uid)
+            .child(deckKey));
+
+  @override
+  ScheduledCardModel parseItem(String key, value) =>
+      ScheduledCardModel.fromSnapshot(key: key, deckKey: deckKey, value: value);
 }

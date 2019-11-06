@@ -4,11 +4,11 @@ import 'dart:core';
 import 'package:built_collection/built_collection.dart';
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
-import 'package:delern_flutter/models/base/database_observable_list.dart';
 import 'package:delern_flutter/models/base/keyed_list_item.dart';
 import 'package:delern_flutter/models/base/list_accessor.dart';
 import 'package:delern_flutter/models/card_model.dart';
 import 'package:delern_flutter/models/deck_access_model.dart';
+import 'package:delern_flutter/models/scheduled_card_model.dart';
 import 'package:delern_flutter/models/serializers.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/foundation.dart';
@@ -52,6 +52,8 @@ abstract class DeckModel
   String get category;
   @nullable
   ListAccessor<CardModel> get cards;
+  @nullable
+  ListAccessor<ScheduledCardModel> get scheduledCards;
 
   static Serializer<DeckModel> get serializer => _$deckModelSerializer;
 
@@ -81,39 +83,6 @@ abstract class DeckModel
                 key: key,
                 value: evt.snapshot.value,
               ));
-
-  static DatabaseObservableList<DeckModel> getList({@required String uid}) {
-    FirebaseDatabase.instance
-        .reference()
-        .child('decks')
-        .child(uid)
-        .keepSynced(true);
-
-    return DatabaseObservableList(
-        query: FirebaseDatabase.instance
-            .reference()
-            .child('decks')
-            .child(uid)
-            .orderByKey(),
-        snapshotParser: (key, value) {
-          _keepDeckSynced(uid, key);
-          return DeckModel.fromSnapshot(key: key, value: value);
-        });
-  }
-
-  static void _keepDeckSynced(String uid, String deckId) {
-    // Install a background listener on Card. The listener is cancelled
-    // automatically when the deck is deleted or un-shared, because the security
-    // rules will not allow to listen to that node anymore.
-    // ScheduledCard is synced within ScheduledCardsBloc.
-    // TODO(dotdoom): these listeners are gone when we delete the last card
-    //                (Firebase says "Permission denied"). What can we do?
-    FirebaseDatabase.instance
-        .reference()
-        .child('cards')
-        .child(deckId)
-        .keepSynced(true);
-  }
 }
 
 abstract class DeckModelBuilder
@@ -128,26 +97,36 @@ abstract class DeckModelBuilder
   String category;
   @nullable
   ListAccessor<CardModel> cards;
+  @nullable
+  ListAccessor<ScheduledCardModel> scheduledCards;
   factory DeckModelBuilder() = _$DeckModelBuilder;
   DeckModelBuilder._();
 }
 
 class DeckModelListAccessor extends DataListAccessor<DeckModel> {
-  DeckModelListAccessor(String uid)
+  final String uid;
+
+  DeckModelListAccessor(this.uid)
       : super(FirebaseDatabase.instance.reference().child('decks').child(uid));
 
   @override
   DeckModel parseItem(String key, value) {
     final initDeck = DeckModel.fromSnapshot(key: key, value: value);
-    return initDeck.rebuild((d) => d..cards = CardModelListAccessor(d.key));
+    return initDeck.rebuild((d) => d
+      ..cards = CardModelListAccessor(d.key)
+      ..scheduledCards =
+          ScheduledCardModelListAccessor(uid: uid, deckKey: d.key));
   }
 
   @override
   DeckModel updateItem(DeckModel previous, String key, value) {
     final initDeck = DeckModel.fromSnapshot(key: key, value: value);
-    return initDeck.rebuild((d) => d..cards = previous.cards);
+    return initDeck.rebuild((d) => d
+      ..cards = previous.cards
+      ..scheduledCards = previous.scheduledCards);
   }
 
   @override
-  void disposeItem(DeckModel item) => item.cards.close();
+  void disposeItem(DeckModel item) =>
+      item..cards.close()..scheduledCards.close();
 }

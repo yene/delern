@@ -22,12 +22,9 @@ class DeckAccessesViewModel {
   DeckAccessesViewModel({@required this.user, @required this.deck})
       : assert(user != null),
         assert(deck != null),
-        _list =
-            // Analyzer bug: https://github.com/dart-lang/sdk/issues/35577.
-            // ignore: unnecessary_parenthesis
-            (FilteredSortedObservableList(
-                DeckAccessModel.getList(deckKey: deck.key))
-              ..comparator = (c1, c2) => c1.access.compareTo(c2.access));
+        _list = (FilteredSortedObservableList(
+            DeckAccessModel.getList(deckKey: deck.key))
+          ..comparator = (c1, c2) => c1.access.compareTo(c2.access));
 
   Future<void> shareDeck(DeckAccessModel access) {
     assert(deck.key == access.deckKey);

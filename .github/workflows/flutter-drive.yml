@@ -15,12 +15,9 @@ jobs:
         device:
           # Flutter only supports 64-bit simulators:
           # https://flutter.dev/docs/get-started/install/macos.
-          # TODO(dotdoom): find out why this hangs forever:
-          # https://github.com/dasfoo/delern/commit/0383919cfb03c182a79ab624c8a8406bf3967507/checks?check_suite_id=283014770
-          # - "iPhone 5s (8.4)"
-          - "iPhone 7 (10.2)"
-          - "iPhone 7 (12.4)"
-          - "iPhone Xs Max (12.4)"
+          - "iPhone 8 (13.1)"
+          - "iPhone 11 Pro Max (13.1)"
+          - "iPad Pro (12.9-inch) (3rd generation) (13.1)"
     runs-on: macOS-latest
     env:
       FLUTTER_SDK_ROOT: /tmp/flutter

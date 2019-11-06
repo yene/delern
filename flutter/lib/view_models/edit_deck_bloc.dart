@@ -25,8 +25,6 @@ class EditDeckBloc extends ScreenBloc {
       : assert(deck != null),
         _deck = deck,
         _list =
-            // Analyzer bug: https://github.com/dart-lang/sdk/issues/35577.
-            // ignore: unnecessary_parenthesis
             (FilteredSortedObservableList(CardModel.getList(deckKey: deck.key))
               ..comparator = (c1, c2) =>
                   c1.front.toLowerCase().compareTo(c2.front.toLowerCase())),

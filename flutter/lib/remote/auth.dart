@@ -98,8 +98,10 @@ class Auth {
   /// Sign out of Firebase, but without signing out of linked providers.
   Future<void> signOut() => FirebaseAuth.instance.signOut();
 
-  Future<AuthCredential> _getGoogleCredential(
-      {silent = false, signOutFirst = false}) async {
+  Future<AuthCredential> _getGoogleCredential({
+    silent = false,
+    signOutFirst = false,
+  }) async {
     assert(!(silent && signOutFirst),
         'Silent Sign In is meaningless if Sign Out is forced first');
     if (signOutFirst) {
@@ -110,6 +112,8 @@ class Auth {
         ? _googleSignIn.signInSilently()
         : _googleSignIn.signIn());
     if (account == null) {
+      // signInSilently() will suppress any errors and return null, and signIn()
+      // will also return null if the user has cancelled authentication.
       return null;
     }
     final auth = await account.authentication;

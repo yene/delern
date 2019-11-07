@@ -44,9 +44,6 @@ jobs:
         run: |
           bundle exec fastlane install_dependencies
           bundle exec fastlane install_debug_keys
-      - name: "Add Flutter to PATH environment variable (GitHub Actions)"
-        shell: pwsh
-        run: echo "::add-path::${env:FLUTTER_SDK_ROOT}/bin"
 
       - name: "Generate and lint"
         working-directory: flutter
@@ -56,7 +53,7 @@ jobs:
 
       - name: "Run unit tests"
         working-directory: flutter
-        run: flutter test --coverage
+        run: bundle exec fastlane run flutter args:test,--coverage
       - name: "Upload coverage"
         if: matrix.upload_coverage
         uses: codecov/codecov-action@v1.0.3

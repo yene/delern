@@ -45,8 +45,6 @@ class DecksListBloc {
   DecksListBloc({@required this.user})
       : assert(user != null),
         _decksList =
-            // Analyzer bug: https://github.com/dart-lang/sdk/issues/35577.
-            // ignore: unnecessary_parenthesis
             (FilteredSortedObservableList(DeckModel.getList(uid: user.uid))
               ..comparator = (c1, c2) => c1.key.compareTo(c2.key)) {
     // Delay initial data load. In case we have a significant amount of

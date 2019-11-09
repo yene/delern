@@ -39,7 +39,7 @@ class User {
     // Subscribe ourselves to online status immediately because we always want
     // to know the current value. We pass a dummy function to onData parameter
     // because we can always extract the latest data with _isOnline.value.
-    _onlineSubscription = _isOnline.stream.listen((_) {});
+    _onlineSubscription = _isOnline.updates.listen((_) {});
   }
 
   /// Update source of profile information (such as email, displayName etc) for

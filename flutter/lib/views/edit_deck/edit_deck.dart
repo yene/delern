@@ -133,7 +133,7 @@ class _EditDeckState extends State<EditDeck> {
 
   Widget _buildCardsInDeck(EditDeckBloc bloc) =>
       StreamBuilder<BuiltList<CardModel>>(
-          stream: bloc.list.value,
+          stream: bloc.list.updates,
           builder: (context, snapshot) => Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[

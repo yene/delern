@@ -42,8 +42,8 @@ class _ListAccessorWidgetState<T extends KeyedListItem>
 
   @override
   void initState() {
-    _list = widget.list.currentValue;
-    _listValueSubscription = widget.list.value.listen((value) => setState(() {
+    _list = widget.list.value;
+    _listValueSubscription = widget.list.updates.listen((value) => setState(() {
           _list = value;
         }));
     super.initState();
@@ -57,7 +57,7 @@ class _ListAccessorWidgetState<T extends KeyedListItem>
 
   @override
   Widget build(BuildContext context) {
-    if (!widget.list.loaded) {
+    if (!widget.list.hasValue) {
       return ProgressIndicatorWidget();
     }
     if (_list.isEmpty) {

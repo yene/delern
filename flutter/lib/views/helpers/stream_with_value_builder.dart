@@ -13,6 +13,6 @@ StreamBuilder<T> buildStreamBuilderWithValue<T>({
     StreamBuilder<T>(
       key: key,
       initialData: streamWithValue.value,
-      stream: streamWithValue.stream,
+      stream: streamWithValue.updates,
       builder: builder,
     );

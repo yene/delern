@@ -39,7 +39,7 @@ void main() {
   group('Test accessor.value', () {
     test('remove event', () async {
       expect(
-          accessor.value,
+          accessor.updates,
           emitsInOrder([
             BuiltList.of([const MyModel(key: '1')]),
             BuiltList.of(<MyModel>[]),
@@ -50,7 +50,7 @@ void main() {
 
     test('add event', () {
       expect(
-          accessor.value,
+          accessor.updates,
           emitsInOrder([
             BuiltList.of([const MyModel(key: '1')]),
             BuiltList.of([const MyModel(key: '1'), const MyModel(key: '2')]),
@@ -62,7 +62,7 @@ void main() {
 
     test('update event', () {
       expect(
-          accessor.value,
+          accessor.updates,
           emitsInOrder([
             BuiltList.of([const MyModel(key: '1', value: '3')]),
             BuiltList.of([const MyModel(key: '1', value: '1')]),
@@ -77,36 +77,36 @@ void main() {
     test('remove currentValue', () async {
       onChildAdded.add(FakeEvent(snapshot: FakeSnapshot(key: '1')));
       await allEventsDelivered();
-      expect(accessor.currentValue, BuiltList.of([const MyModel(key: '1')]));
+      expect(accessor.value, BuiltList.of([const MyModel(key: '1')]));
       onChildRemoved.add(FakeEvent(snapshot: FakeSnapshot(key: '1')));
       await allEventsDelivered();
-      expect(accessor.currentValue, BuiltList.of(<MyModel>[]));
+      expect(accessor.value, BuiltList.of(<MyModel>[]));
     });
 
     test('add currentValue', () async {
       onChildAdded.add(FakeEvent(snapshot: FakeSnapshot(key: '1')));
       await allEventsDelivered();
-      expect(accessor.currentValue, BuiltList.of([const MyModel(key: '1')]));
+      expect(accessor.value, BuiltList.of([const MyModel(key: '1')]));
       onChildAdded.add(FakeEvent(snapshot: FakeSnapshot(key: '2')));
       await allEventsDelivered();
-      expect(accessor.currentValue,
+      expect(accessor.value,
           BuiltList.of([const MyModel(key: '1'), const MyModel(key: '2')]));
     });
 
     test('update currentValue', () async {
       onChildAdded.add(FakeEvent(snapshot: FakeSnapshot(key: '1', value: '3')));
       await allEventsDelivered();
-      expect(accessor.currentValue,
-          BuiltList.of([const MyModel(key: '1', value: '3')]));
+      expect(
+          accessor.value, BuiltList.of([const MyModel(key: '1', value: '3')]));
       onChildChanged
           .add(FakeEvent(snapshot: FakeSnapshot(key: '1', value: '1')));
       await allEventsDelivered();
-      expect(accessor.currentValue,
-          BuiltList.of([const MyModel(key: '1', value: '1')]));
+      expect(
+          accessor.value, BuiltList.of([const MyModel(key: '1', value: '1')]));
     });
 
     test('empty current value when initialized', () async {
-      expect(accessor.currentValue, const Iterable.empty());
+      expect(accessor.value, const Iterable.empty());
     });
   });
 

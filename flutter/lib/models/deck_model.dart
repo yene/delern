@@ -119,10 +119,10 @@ class _ScheduledCardsDueCounter implements StreamWithValue<int> {
     // _ScheduledCardsDueCounter is the same as that of [scheduledCards] within
     // DeckModel, and ListAccessor will close its streams, cancelling any
     // active subscriptions (and also closing _counter StreamController).
-    scheduledCards.value
+    scheduledCards.updates
         .listen(_findCardsAndResetTimer, onDone: _counter.close);
-    if (scheduledCards.loaded) {
-      _findCardsAndResetTimer(scheduledCards.currentValue);
+    if (scheduledCards.hasValue) {
+      _findCardsAndResetTimer(scheduledCards.value);
     }
   }
 
@@ -130,7 +130,7 @@ class _ScheduledCardsDueCounter implements StreamWithValue<int> {
   bool get hasValue => _latestValue != null;
 
   @override
-  Stream<int> get stream => _counter.stream;
+  Stream<int> get updates => _counter.stream;
 
   @override
   int get value => _latestValue;

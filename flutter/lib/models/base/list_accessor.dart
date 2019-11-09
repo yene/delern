@@ -2,15 +2,14 @@ import 'dart:async';
 
 import 'package:built_collection/built_collection.dart';
 import 'package:delern_flutter/models/base/keyed_list_item.dart';
+import 'package:delern_flutter/models/base/stream_with_latest_value.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/foundation.dart';
 import 'package:observable/observable.dart';
 
-abstract class ListAccessor<T> {
-  bool get loaded;
-  BuiltList<T> get currentValue;
-  Stream<BuiltList<T>> get value;
-  Stream<ListChangeRecord<T>> get events;
+// https://github.com/dart-lang/linter/issues/1826
+// ignore: one_member_abstracts
+abstract class ListAccessor<T> implements StreamWithValue<BuiltList<T>> {
   void close();
 }
 
@@ -20,10 +19,10 @@ abstract class DataListAccessor<T extends KeyedListItem>
   bool _loaded = false;
   final _value = StreamController<BuiltList<T>>.broadcast();
   final _events = StreamController<ListChangeRecord<T>>.broadcast();
-  BuiltList<T> get currentValue =>
+  BuiltList<T> get value =>
       _currentValue == null ? null : BuiltList.from(_currentValue);
-  bool get loaded => _loaded;
-  Stream<BuiltList<T>> get value => _value.stream;
+  bool get hasValue => _loaded;
+  Stream<BuiltList<T>> get updates => _value.stream;
   Stream<ListChangeRecord<T>> get events => _events.stream;
 
   StreamSubscription<Event> _onChildAdded, _onChildChanged, _onChildRemoved;
@@ -130,8 +129,8 @@ class FilteredListAccessor<T extends KeyedListItem> implements ListAccessor<T> {
   StreamSubscription<BuiltList<T>> _baseValueSubscription;
   final _value = StreamController<BuiltList<T>>.broadcast();
 
-  FilteredListAccessor(this._base) : _currentValue = _base.currentValue {
-    _baseValueSubscription = _base.value.listen((_) => _updateCurrentValue());
+  FilteredListAccessor(this._base) : _currentValue = _base.value {
+    _baseValueSubscription = _base.updates.listen((_) => _updateCurrentValue());
   }
 
   Filter<T> get filter => _filter;
@@ -140,10 +139,9 @@ class FilteredListAccessor<T extends KeyedListItem> implements ListAccessor<T> {
     _updateCurrentValue();
   }
 
-  Stream<BuiltList<T>> get value => _value.stream;
-  BuiltList<T> get currentValue => _currentValue;
-  bool get loaded => _base.loaded;
-  Stream<ListChangeRecord<T>> get events => _base.events;
+  Stream<BuiltList<T>> get updates => _value.stream;
+  BuiltList<T> get value => _currentValue;
+  bool get hasValue => _base.hasValue;
 
   void close() {
     _value.close();
@@ -152,9 +150,9 @@ class FilteredListAccessor<T extends KeyedListItem> implements ListAccessor<T> {
 
   void _updateCurrentValue() {
     if (_filter == null) {
-      _currentValue = _base.currentValue;
+      _currentValue = _base.value;
     } else {
-      _currentValue = BuiltList<T>.of(_base.currentValue.where(_filter));
+      _currentValue = BuiltList<T>.of(_base.value.where(_filter));
     }
     _value.add(_currentValue);
   }

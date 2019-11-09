@@ -80,25 +80,23 @@ class AnimatedListAccessorWidgetState<T extends KeyedListItem>
 
   Widget _buildItem(
           BuildContext context, int index, Animation<double> animation) =>
-      widget.itemBuilder(
-          context, widget.list.currentValue[index], animation, index);
+      widget.itemBuilder(context, widget.list.value[index], animation, index);
 
   @override
   Widget build(BuildContext context) => StreamBuilder(
-      stream: widget.list.value,
+      stream: widget.list.updates,
       builder: (context, snapshot) {
-        if (!widget.list.loaded) {
+        if (!widget.list.hasValue) {
           return ProgressIndicatorWidget();
         }
-        if (widget.list.currentValue.isEmpty) {
+        if (widget.list.value.isEmpty) {
           return widget.emptyMessageBuilder();
         }
 
         return AnimatedList(
           key: _animatedListKey,
           itemBuilder: _buildItem,
-          initialItemCount:
-              snapshot.data?.length ?? widget.list.currentValue.length,
+          initialItemCount: snapshot.data?.length ?? widget.list.value.length,
           controller: widget.controller,
         );
       });

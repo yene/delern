@@ -125,7 +125,7 @@ class _DecksListState extends State<DecksList> {
                             vertical: MediaQuery.of(context).size.height *
                                 app_styles.kItemListPaddingRatio),
                       ),
-                      if (index == (_bloc.decksList.currentValue.length - 1))
+                      if (index == (_bloc.decksList.value.length - 1))
                         Padding(
                           padding: EdgeInsets.symmetric(
                               vertical: MediaQuery.of(context).size.height *
@@ -282,7 +282,7 @@ class DeckListItemWidget extends StatelessWidget {
             child: Text(
               localizations.of(context).cardsToLearnLabel(
                   snapshot.data?.toString() ?? 'N/A',
-                  deck.cards.currentValue.length.toString()),
+                  deck.cards.value.length.toString()),
               style: secondaryTextStyle,
             ),
           ),

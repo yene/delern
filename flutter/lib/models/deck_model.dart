@@ -6,6 +6,7 @@ import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
 import 'package:delern_flutter/models/base/keyed_list_item.dart';
 import 'package:delern_flutter/models/base/list_accessor.dart';
+import 'package:delern_flutter/models/base/stream_with_latest_value.dart';
 import 'package:delern_flutter/models/card_model.dart';
 import 'package:delern_flutter/models/deck_access_model.dart';
 import 'package:delern_flutter/models/scheduled_card_model.dart';
@@ -54,6 +55,8 @@ abstract class DeckModel
   ListAccessor<CardModel> get cards;
   @nullable
   ListAccessor<ScheduledCardModel> get scheduledCards;
+  @nullable
+  _ScheduledCardsDueCounter get numberOfCardsDue;
 
   static Serializer<DeckModel> get serializer => _$deckModelSerializer;
 
@@ -99,8 +102,66 @@ abstract class DeckModelBuilder
   ListAccessor<CardModel> cards;
   @nullable
   ListAccessor<ScheduledCardModel> scheduledCards;
+  @nullable
+  _ScheduledCardsDueCounter numberOfCardsDue;
+
   factory DeckModelBuilder() = _$DeckModelBuilder;
   DeckModelBuilder._();
+}
+
+class _ScheduledCardsDueCounter implements StreamWithValue<int> {
+  final _counter = StreamController<int>.broadcast();
+  Timer _refreshTimer;
+  int _latestValue;
+
+  _ScheduledCardsDueCounter(ListAccessor<ScheduledCardModel> scheduledCards) {
+    // We don't need to cancel this subscription because lifecycle of
+    // _ScheduledCardsDueCounter is the same as that of [scheduledCards] within
+    // DeckModel, and ListAccessor will close its streams, cancelling any
+    // active subscriptions (and also closing _counter StreamController).
+    scheduledCards.value
+        .listen(_findCardsAndResetTimer, onDone: _counter.close);
+    if (scheduledCards.loaded) {
+      _findCardsAndResetTimer(scheduledCards.currentValue);
+    }
+  }
+
+  @override
+  bool get hasValue => _latestValue != null;
+
+  @override
+  Stream<int> get stream => _counter.stream;
+
+  @override
+  int get value => _latestValue;
+
+  /// A delay between next scheduled card and our timer trigger, to avoid time
+  /// computation uncertainties, and also avoid timer restart churn if multiple
+  /// cards come with a small interval between them.
+  static const _nextCardTimerDelay = Duration(seconds: 30);
+
+  void _findCardsAndResetTimer(BuiltList<ScheduledCardModel> allCards) {
+    _refreshTimer?.cancel();
+    _refreshTimer = null;
+
+    final now = DateTime.now();
+    final notYetDue = allCards.where((sc) => sc.repeatAt.isAfter(now));
+
+    if (notYetDue.isNotEmpty) {
+      final nextCardForDuePool = notYetDue
+          .reduce((m1, m2) => m1.repeatAt.isBefore(m2.repeatAt) ? m1 : m2);
+      debugPrint('Next card to add to due pool is ${nextCardForDuePool.key} '
+          'for deck ${nextCardForDuePool.deckKey}: '
+          'at ${nextCardForDuePool.repeatAt}');
+      _refreshTimer = Timer(
+          nextCardForDuePool.repeatAt.difference(now) + _nextCardTimerDelay,
+          () => _findCardsAndResetTimer(allCards));
+    }
+
+    _counter.add(_latestValue = allCards.length - notYetDue.length);
+  }
+
+  void close() => _refreshTimer?.cancel();
 }
 
 class DeckModelListAccessor extends DataListAccessor<DeckModel> {
@@ -111,11 +172,14 @@ class DeckModelListAccessor extends DataListAccessor<DeckModel> {
 
   @override
   DeckModel parseItem(String key, value) {
-    final initDeck = DeckModel.fromSnapshot(key: key, value: value);
-    return initDeck.rebuild((d) => d
-      ..cards = CardModelListAccessor(d.key)
-      ..scheduledCards =
-          ScheduledCardModelListAccessor(uid: uid, deckKey: d.key));
+    final initDeck = DeckModel.fromSnapshot(key: key, value: value).rebuild(
+        (d) => d
+          ..cards = CardModelListAccessor(d.key)
+          ..scheduledCards =
+              ScheduledCardModelListAccessor(uid: uid, deckKey: d.key));
+
+    return initDeck.rebuild((d) =>
+        d.numberOfCardsDue = _ScheduledCardsDueCounter(d.scheduledCards));
   }
 
   @override
@@ -128,5 +192,5 @@ class DeckModelListAccessor extends DataListAccessor<DeckModel> {
 
   @override
   void disposeItem(DeckModel item) =>
-      item..cards.close()..scheduledCards.close();
+      item..cards.close()..scheduledCards.close()..numberOfCardsDue.close();
 }

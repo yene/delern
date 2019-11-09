@@ -124,6 +124,12 @@ class _$DeckModelSerializer implements StructuredSerializer<DeckModel> {
             specifiedType: const FullType(
                 ListAccessor, const [const FullType(ScheduledCardModel)])));
     }
+    if (object.numberOfCardsDue != null) {
+      result
+        ..add('numberOfCardsDue')
+        ..add(serializers.serialize(object.numberOfCardsDue,
+            specifiedType: const FullType(_ScheduledCardsDueCounter)));
+    }
     return result;
   }
 
@@ -182,6 +188,11 @@ class _$DeckModelSerializer implements StructuredSerializer<DeckModel> {
                       ListAccessor, const [const FullType(ScheduledCardModel)]))
               as ListAccessor<ScheduledCardModel>;
           break;
+        case 'numberOfCardsDue':
+          result.numberOfCardsDue = serializers.deserialize(value,
+                  specifiedType: const FullType(_ScheduledCardsDueCounter))
+              as _ScheduledCardsDueCounter;
+          break;
       }
     }
 
@@ -210,6 +221,8 @@ class _$DeckModel extends DeckModel {
   final ListAccessor<CardModel> cards;
   @override
   final ListAccessor<ScheduledCardModel> scheduledCards;
+  @override
+  final _ScheduledCardsDueCounter numberOfCardsDue;
 
   factory _$DeckModel([void Function(DeckModelBuilder) updates]) =>
       (new DeckModelBuilder()..update(updates)).build() as _$DeckModel;
@@ -224,7 +237,8 @@ class _$DeckModel extends DeckModel {
       this.lastSyncAt,
       this.category,
       this.cards,
-      this.scheduledCards})
+      this.scheduledCards,
+      this.numberOfCardsDue})
       : super._() {
     if (markdown == null) {
       throw new BuiltValueNullFieldError('DeckModel', 'markdown');
@@ -257,7 +271,8 @@ class _$DeckModel extends DeckModel {
         lastSyncAt == other.lastSyncAt &&
         category == other.category &&
         cards == other.cards &&
-        scheduledCards == other.scheduledCards;
+        scheduledCards == other.scheduledCards &&
+        numberOfCardsDue == other.numberOfCardsDue;
   }
 
   @override
@@ -269,15 +284,19 @@ class _$DeckModel extends DeckModel {
                     $jc(
                         $jc(
                             $jc(
-                                $jc($jc($jc(0, key.hashCode), name.hashCode),
-                                    markdown.hashCode),
-                                type.hashCode),
-                            accepted.hashCode),
-                        access.hashCode),
-                    lastSyncAt.hashCode),
-                category.hashCode),
-            cards.hashCode),
-        scheduledCards.hashCode));
+                                $jc(
+                                    $jc(
+                                        $jc($jc(0, key.hashCode),
+                                            name.hashCode),
+                                        markdown.hashCode),
+                                    type.hashCode),
+                                accepted.hashCode),
+                            access.hashCode),
+                        lastSyncAt.hashCode),
+                    category.hashCode),
+                cards.hashCode),
+            scheduledCards.hashCode),
+        numberOfCardsDue.hashCode));
   }
 
   @override
@@ -292,7 +311,8 @@ class _$DeckModel extends DeckModel {
           ..add('lastSyncAt', lastSyncAt)
           ..add('category', category)
           ..add('cards', cards)
-          ..add('scheduledCards', scheduledCards))
+          ..add('scheduledCards', scheduledCards)
+          ..add('numberOfCardsDue', numberOfCardsDue))
         .toString();
   }
 }
@@ -420,6 +440,18 @@ class _$DeckModelBuilder extends DeckModelBuilder {
     super.scheduledCards = scheduledCards;
   }
 
+  @override
+  _ScheduledCardsDueCounter get numberOfCardsDue {
+    _$this;
+    return super.numberOfCardsDue;
+  }
+
+  @override
+  set numberOfCardsDue(_ScheduledCardsDueCounter numberOfCardsDue) {
+    _$this;
+    super.numberOfCardsDue = numberOfCardsDue;
+  }
+
   _$DeckModelBuilder() : super._();
 
   DeckModelBuilder get _$this {
@@ -434,6 +466,7 @@ class _$DeckModelBuilder extends DeckModelBuilder {
       super.category = _$v.category;
       super.cards = _$v.cards;
       super.scheduledCards = _$v.scheduledCards;
+      super.numberOfCardsDue = _$v.numberOfCardsDue;
       _$v = null;
     }
     return this;
@@ -465,7 +498,8 @@ class _$DeckModelBuilder extends DeckModelBuilder {
             lastSyncAt: lastSyncAt,
             category: category,
             cards: cards,
-            scheduledCards: scheduledCards);
+            scheduledCards: scheduledCards,
+            numberOfCardsDue: numberOfCardsDue);
     replace(_$result);
     return _$result;
   }

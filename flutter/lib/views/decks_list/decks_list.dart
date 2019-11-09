@@ -276,15 +276,13 @@ class DeckListItemWidget extends StatelessWidget {
           deck.name,
           style: primaryTextStyle,
         ),
-        StreamBuilder<ScheduledCardsUpdate>(
-          key: Key(deck.key),
-          stream: bloc.doScheduledCardsUpdates
-              .where((deckFromStream) => deckFromStream.deckKey == deck.key),
+        buildStreamBuilderWithValue<int>(
+          streamWithValue: deck.numberOfCardsDue,
           builder: (context, snapshot) => Container(
             child: Text(
               localizations.of(context).cardsToLearnLabel(
                   snapshot.data?.toString() ?? 'N/A',
-                  deck.cards.currentValue?.length.toString() ?? 'N/A'),
+                  deck.cards.currentValue.length.toString()),
               style: secondaryTextStyle,
             ),
           ),

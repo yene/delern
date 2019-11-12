@@ -57,6 +57,8 @@ abstract class DeckModel
   ListAccessor<ScheduledCardModel> get scheduledCards;
   @nullable
   _ScheduledCardsDueCounter get numberOfCardsDue;
+  @nullable
+  ListAccessor<DeckAccessModel> get usersAccess;
 
   static Serializer<DeckModel> get serializer => _$deckModelSerializer;
 
@@ -104,6 +106,8 @@ abstract class DeckModelBuilder
   ListAccessor<ScheduledCardModel> scheduledCards;
   @nullable
   _ScheduledCardsDueCounter numberOfCardsDue;
+  @nullable
+  ListAccessor<DeckAccessModel> usersAccess;
 
   factory DeckModelBuilder() = _$DeckModelBuilder;
   DeckModelBuilder._();
@@ -176,7 +180,8 @@ class DeckModelListAccessor extends DataListAccessor<DeckModel> {
         (d) => d
           ..cards = CardModelListAccessor(d.key)
           ..scheduledCards =
-              ScheduledCardModelListAccessor(uid: uid, deckKey: d.key));
+              ScheduledCardModelListAccessor(uid: uid, deckKey: d.key)
+          ..usersAccess = DeckAccessListAccessor(deckKey: d.key));
 
     return initDeck.rebuild((d) =>
         d.numberOfCardsDue = _ScheduledCardsDueCounter(d.scheduledCards));
@@ -187,10 +192,14 @@ class DeckModelListAccessor extends DataListAccessor<DeckModel> {
     final initDeck = DeckModel.fromSnapshot(key: key, value: value);
     return initDeck.rebuild((d) => d
       ..cards = previous.cards
-      ..scheduledCards = previous.scheduledCards);
+      ..scheduledCards = previous.scheduledCards
+      ..usersAccess = previous.usersAccess);
   }
 
   @override
-  void disposeItem(DeckModel item) =>
-      item..cards.close()..scheduledCards.close()..numberOfCardsDue.close();
+  void disposeItem(DeckModel item) => item
+    ..cards.close()
+    ..scheduledCards.close()
+    ..numberOfCardsDue.close()
+    ..usersAccess.close();
 }

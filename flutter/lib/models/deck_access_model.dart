@@ -4,8 +4,8 @@ import 'dart:core';
 import 'package:built_collection/built_collection.dart';
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
-import 'package:delern_flutter/models/base/database_observable_list.dart';
 import 'package:delern_flutter/models/base/keyed_list_item.dart';
+import 'package:delern_flutter/models/base/list_accessor.dart';
 import 'package:delern_flutter/models/serializers.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:meta/meta.dart';
@@ -79,17 +79,6 @@ abstract class DeckAccessModel
           ..key = key);
   }
 
-  static DatabaseObservableList<DeckAccessModel> getList(
-          {@required String deckKey}) =>
-      DatabaseObservableList(
-          query: FirebaseDatabase.instance
-              .reference()
-              .child('deck_access')
-              .child(deckKey)
-              .orderByKey(),
-          snapshotParser: (key, value) => DeckAccessModel.fromSnapshot(
-              key: key, deckKey: deckKey, value: value));
-
   static Stream<DeckAccessModel> get(
           {@required String deckKey, @required String key}) =>
       FirebaseDatabase.instance
@@ -100,4 +89,19 @@ abstract class DeckAccessModel
           .onValue
           .map((evt) => DeckAccessModel.fromSnapshot(
               key: key, deckKey: deckKey, value: evt.snapshot.value));
+}
+
+class DeckAccessListAccessor extends DataListAccessor<DeckAccessModel> {
+  final String deckKey;
+
+  DeckAccessListAccessor({@required this.deckKey})
+      : super(FirebaseDatabase.instance
+            .reference()
+            .child('deck_access')
+            .child(deckKey)
+              ..orderByKey());
+
+  @override
+  DeckAccessModel parseItem(String key, value) =>
+      DeckAccessModel.fromSnapshot(key: key, deckKey: deckKey, value: value);
 }

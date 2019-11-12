@@ -143,9 +143,9 @@ class User {
     };
 
     if (deck.access == AccessType.owner) {
-      final accessList = DeckAccessModel.getList(deckKey: deck.key);
-      await accessList.fetchFullValue();
-      accessList.forEach((a) => updates['decks/${a.key}/${deck.key}'] = null);
+      final accessList = deck.usersAccess;
+      accessList.value
+          .forEach((a) => updates['decks/${a.key}/${deck.key}'] = null);
     }
 
     return _write(updates);

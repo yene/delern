@@ -1,11 +1,10 @@
 import 'dart:async';
 
-import 'package:delern_flutter/models/base/delayed_initialization.dart';
+import 'package:delern_flutter/models/base/list_accessor.dart';
 import 'package:delern_flutter/models/deck_access_model.dart';
 import 'package:delern_flutter/models/deck_model.dart';
 import 'package:delern_flutter/models/user.dart';
 import 'package:delern_flutter/remote/analytics.dart';
-import 'package:delern_flutter/view_models/base/filtered_sorted_observable_list.dart';
 import 'package:meta/meta.dart';
 import 'package:pedantic/pedantic.dart';
 
@@ -13,8 +12,8 @@ class DeckAccessesViewModel {
   final DeckModel deck;
   final User user;
 
-  DelayedInitializationObservableList<DeckAccessModel> get list => _list;
-  final FilteredSortedObservableList<DeckAccessModel> _list;
+  ListAccessor<DeckAccessModel> get list => _list;
+  final FilteredListAccessor<DeckAccessModel> _list;
 
   set filter(Filter<DeckAccessModel> newValue) => _list.filter = newValue;
   Filter<DeckAccessModel> get filter => _list.filter;
@@ -22,9 +21,7 @@ class DeckAccessesViewModel {
   DeckAccessesViewModel({@required this.user, @required this.deck})
       : assert(user != null),
         assert(deck != null),
-        _list = (FilteredSortedObservableList(
-            DeckAccessModel.getList(deckKey: deck.key))
-          ..comparator = (c1, c2) => c1.access.compareTo(c2.access));
+        _list = FilteredListAccessor<DeckAccessModel>(deck.usersAccess);
 
   Future<void> shareDeck(DeckAccessModel access) {
     assert(deck.key == access.deckKey);

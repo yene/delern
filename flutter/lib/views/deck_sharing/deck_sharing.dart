@@ -11,7 +11,7 @@ import 'package:delern_flutter/remote/user_lookup.dart';
 import 'package:delern_flutter/view_models/deck_access_view_model.dart';
 import 'package:delern_flutter/views/deck_sharing/deck_access_dropdown.dart';
 import 'package:delern_flutter/views/helpers/empty_list_message_widget.dart';
-import 'package:delern_flutter/views/helpers/observing_animated_list_widget.dart';
+import 'package:delern_flutter/views/helpers/list_accessor_widget.dart';
 import 'package:delern_flutter/views/helpers/progress_indicator_widget.dart';
 import 'package:delern_flutter/views/helpers/save_updates_dialog.dart';
 import 'package:delern_flutter/views/helpers/send_invite.dart';
@@ -173,16 +173,13 @@ class _DeckUsersState extends State<DeckUsersWidget> {
             ),
           ),
           Expanded(
-            child: ObservingAnimatedListWidget<DeckAccessModel>(
+            child: ListAccessorWidget<DeckAccessModel>(
               list: widget.viewModel.list,
-              itemBuilder: (context, item, animation, index) => SizeTransition(
-                sizeFactor: animation,
-                child: _buildUserAccessInfo(item),
-              ),
+              itemBuilder: (context, item, index) => _buildUserAccessInfo(item),
               emptyMessageBuilder: () => EmptyListMessageWidget(
                   localizations.of(context).emptyUserSharingList),
             ),
-          ),
+          )
         ],
       );
 

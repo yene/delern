@@ -3,7 +3,6 @@ import 'dart:core';
 
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
-import 'package:delern_flutter/models/base/database_observable_list.dart';
 import 'package:delern_flutter/models/base/keyed_list_item.dart';
 import 'package:delern_flutter/models/base/list_accessor.dart';
 import 'package:delern_flutter/models/serializers.dart';
@@ -55,20 +54,6 @@ abstract class CardModel
           .onValue
           .map((evt) => CardModel.fromSnapshot(
               deckKey: deckKey, key: key, value: evt.snapshot.value));
-
-  static DatabaseObservableList<CardModel> getList(
-          {@required String deckKey}) =>
-      DatabaseObservableList(
-          query: FirebaseDatabase.instance
-              .reference()
-              .child('cards')
-              .child(deckKey)
-              .orderByKey(),
-          snapshotParser: (key, value) => CardModel.fromSnapshot(
-                deckKey: deckKey,
-                key: key,
-                value: value,
-              ));
 }
 
 class CardModelListAccessor extends DataListAccessor<CardModel> {

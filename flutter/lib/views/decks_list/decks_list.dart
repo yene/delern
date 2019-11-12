@@ -282,6 +282,8 @@ class DeckListItemWidget extends StatelessWidget {
             child: Text(
               localizations.of(context).cardsToLearnLabel(
                   snapshot.data?.toString() ?? 'N/A',
+                  // TODO(ksheremet): Add StreamBuilder to get updates about all
+                  // cards
                   deck.cards.value.length.toString()),
               style: secondaryTextStyle,
             ),

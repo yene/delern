@@ -22,10 +22,7 @@ dependencies:
   shared_preferences: ^0.5.1
   intro_views_flutter: ^2.4.0
   quiver: ">=2.0.0 <3.0.0"
-  observable: #^0.22.1+5
-    git:
-      url: https://github.com/dotdoom/observable.git
-      ref: list-observed-unobserved
+  observable: ^0.22.2
   built_collection: ^4.2.2
   built_value: ^6.6.0
 

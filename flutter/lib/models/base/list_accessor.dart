@@ -19,9 +19,12 @@ abstract class DataListAccessor<T extends KeyedListItem>
   bool _loaded = false;
   final _value = StreamController<BuiltList<T>>.broadcast();
   final _events = StreamController<ListChangeRecord<T>>.broadcast();
+  @override
   BuiltList<T> get value =>
       _currentValue == null ? null : BuiltList.from(_currentValue);
+  @override
   bool get hasValue => _loaded;
+  @override
   Stream<BuiltList<T>> get updates => _value.stream;
   Stream<ListChangeRecord<T>> get events => _events.stream;
 
@@ -139,10 +142,14 @@ class FilteredListAccessor<T extends KeyedListItem> implements ListAccessor<T> {
     _updateCurrentValue();
   }
 
+  @override
   Stream<BuiltList<T>> get updates => _value.stream;
+  @override
   BuiltList<T> get value => _currentValue;
+  @override
   bool get hasValue => _base.hasValue;
 
+  @override
   void close() {
     _value.close();
     _baseValueSubscription.cancel();

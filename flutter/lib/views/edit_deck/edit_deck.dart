@@ -18,6 +18,7 @@ import 'package:delern_flutter/views/helpers/edit_delete_dismissible_widget.dart
 import 'package:delern_flutter/views/helpers/empty_list_message_widget.dart';
 import 'package:delern_flutter/views/helpers/list_accessor_widget.dart';
 import 'package:delern_flutter/views/helpers/search_bar_widget.dart';
+import 'package:delern_flutter/views/helpers/stream_with_value_builder.dart';
 import 'package:delern_flutter/views/helpers/text_overflow_ellipsis_widget.dart';
 import 'package:flutter/material.dart';
 
@@ -132,14 +133,15 @@ class _EditDeckState extends State<EditDeck> {
       );
 
   Widget _buildCardsInDeck(EditDeckBloc bloc) =>
-      StreamBuilder<BuiltList<CardModel>>(
-          stream: bloc.list.updates,
+      buildStreamBuilderWithValue<BuiltList<CardModel>>(
+          streamWithValue: bloc.list,
           builder: (context, snapshot) => Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Text(
-                    localizations.of(context).numberOfCards(
-                        snapshot.hasData ? snapshot.data.length : 0),
+                    localizations
+                        .of(context)
+                        .numberOfCards(snapshot.data.length),
                     style: app_styles.secondaryText,
                   ),
                 ],

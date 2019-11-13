@@ -1,14 +1,30 @@
+import 'package:delern_flutter/flutter/device_info.dart';
 import 'package:delern_flutter/flutter/styles.dart' as app_styles;
 import 'package:delern_flutter/flutter/user_messages.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 
 bool _debugAllowDevMenu = true;
+String _projectId = '';
+String _deviceInfo = '';
+
+void _getProjectData() {
+  FirebaseApp.instance.options.then((options) {
+    _projectId = options.projectID;
+  });
+  DeviceInfo.getDeviceInfo().then((dInfo) {
+    _deviceInfo = dInfo.info.entries
+        .map((entry) => '${entry.key}: ${entry.value}')
+        .join('; \n');
+  });
+}
 
 List<Widget> buildDeveloperMenu(BuildContext context) {
   if (!_debugAllowDevMenu) {
     return [];
   }
+  _getProjectData();
 
   // This code will run only in debug mode. Since dev menu items are not visible
   // to the end user, we do not need to localize them.
@@ -49,6 +65,14 @@ List<Widget> buildDeveloperMenu(BuildContext context) {
           WidgetsApp.debugAllowBannerOverride = false;
         });
       },
+    ),
+    AboutListTile(
+      icon: const Icon(Icons.build),
+      aboutBoxChildren: <Widget>[
+        Text('Firebase id: $_projectId'),
+        Text('$_deviceInfo'),
+      ],
+      child: const Text('About Debug Version'),
     )
   ];
 }

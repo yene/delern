@@ -143,6 +143,9 @@ class User {
     };
 
     if (deck.access == AccessType.owner) {
+      // TODO(ksheremet): There's a possible problem here, which is,
+      // deck.usersAccess is not yet loaded. We should have a mechanism
+      // (perhaps, a Future?) that can wait until the data has arrived.
       final accessList = deck.usersAccess;
       accessList.value
           .forEach((a) => updates['decks/${a.key}/${deck.key}'] = null);

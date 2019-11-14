@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:built_collection/built_collection.dart';
 import 'package:delern_flutter/flutter/localization.dart' as localizations;
 import 'package:delern_flutter/flutter/styles.dart' as app_styles;
 import 'package:delern_flutter/flutter/user_messages.dart';
@@ -15,8 +16,9 @@ import 'package:delern_flutter/views/helpers/arrow_to_fab_widget.dart';
 import 'package:delern_flutter/views/helpers/card_background_specifier.dart';
 import 'package:delern_flutter/views/helpers/edit_delete_dismissible_widget.dart';
 import 'package:delern_flutter/views/helpers/empty_list_message_widget.dart';
-import 'package:delern_flutter/views/helpers/observing_animated_list_widget.dart';
+import 'package:delern_flutter/views/helpers/list_accessor_widget.dart';
 import 'package:delern_flutter/views/helpers/search_bar_widget.dart';
+import 'package:delern_flutter/views/helpers/stream_with_value_builder.dart';
 import 'package:delern_flutter/views/helpers/text_overflow_ellipsis_widget.dart';
 import 'package:flutter/material.dart';
 
@@ -130,25 +132,28 @@ class _EditDeckState extends State<EditDeck> {
         },
       );
 
-  Widget _buildCardsInDeck(EditDeckBloc bloc) => StreamBuilder<List>(
-      stream: bloc.list.listChanges,
-      builder: (context, snapshot) => Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Text(
-                localizations.of(context).numberOfCards(bloc.list.length),
-                style: app_styles.secondaryText,
-              ),
-            ],
-          ));
+  Widget _buildCardsInDeck(EditDeckBloc bloc) =>
+      buildStreamBuilderWithValue<BuiltList<CardModel>>(
+          streamWithValue: bloc.list,
+          builder: (context, snapshot) => Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text(
+                    localizations
+                        .of(context)
+                        .numberOfCards(snapshot.data.length),
+                    style: app_styles.secondaryText,
+                  ),
+                ],
+              ));
 
   Widget _buildCardList(EditDeckBloc bloc) {
     final cardVerticalPadding =
         MediaQuery.of(context).size.height * app_styles.kItemListPaddingRatio;
     return ScrollToBeginningListWidget(
-      builder: (controller) => ObservingAnimatedListWidget<CardModel>(
+      builder: (controller) => ListAccessorWidget<CardModel>(
         list: bloc.list,
-        itemBuilder: (context, item, animation, index) {
+        itemBuilder: (context, item, index) {
           final card = _buildCardItem(item, cardVerticalPadding, bloc);
           if (index == 0) {
             return Padding(

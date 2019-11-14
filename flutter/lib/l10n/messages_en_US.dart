@@ -19,7 +19,7 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'en_US';
 
-  static m0(numberOfCards) => "${numberOfCards} to learn";
+  static m0(numberOfCards, total) => "${numberOfCards} of ${total} to learn";
 
   static m1(date) =>
       "Next card to learn is suggested at ${date}. Would you like to continue learning anyway?";

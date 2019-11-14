@@ -3,7 +3,7 @@ import 'dart:async';
 abstract class StreamWithValue<T> {
   T get value;
   bool get hasValue;
-  Stream<T> get stream;
+  Stream<T> get updates;
 }
 
 // Why not use BehaviorSubject?
@@ -30,7 +30,7 @@ class StreamWithLatestValue<T> implements StreamWithValue<T> {
   }
 
   @override
-  Stream<T> get stream => _stream;
+  Stream<T> get updates => _stream;
 
   @override
   T get value => _latestValue;

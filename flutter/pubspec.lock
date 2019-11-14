@@ -458,12 +458,10 @@ packages:
   observable:
     dependency: "direct main"
     description:
-      path: "."
-      ref: list-observed-unobserved
-      resolved-ref: "04c5b468bd55c37644e6fb7fe43148b15ee72b03"
-      url: "https://github.com/dotdoom/observable.git"
-    source: git
-    version: "0.22.1+5"
+      name: observable
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.22.2"
   package_config:
     dependency: transitive
     description:

@@ -1,6 +1,6 @@
 {
   "@@locale": "en_US",
-  "@@last_modified": "2019-10-30T14:50:58.950406",
+  "@@last_modified": "2019-11-02T14:51:57.530906",
   "navigationDrawerSignOut": "Sign Out",
   "@navigationDrawerSignOut": {
     "description": "Sign Out in Navigation Drawer",
@@ -576,12 +576,14 @@
     "placeholders": {
     }
   },
-  "cardsToLearnLabel": "{numberOfCards} to learn",
+  "cardsToLearnLabel": "{numberOfCards} of {total} to learn",
   "@cardsToLearnLabel": {
     "description": "Cards to learn label",
     "type": "text",
     "placeholders": {
       "numberOfCards": {
+      },
+      "total": {
       }
     }
   },

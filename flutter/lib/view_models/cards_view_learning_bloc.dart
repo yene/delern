@@ -1,21 +1,18 @@
-import 'dart:async';
-
-import 'package:delern_flutter/models/base/database_observable_list.dart';
+import 'package:built_collection/built_collection.dart';
+import 'package:delern_flutter/models/base/list_accessor.dart';
+import 'package:delern_flutter/models/base/stream_with_latest_value.dart';
 import 'package:delern_flutter/models/card_model.dart';
+import 'package:delern_flutter/models/deck_model.dart';
 import 'package:delern_flutter/models/user.dart';
 import 'package:delern_flutter/view_models/base/screen_bloc.dart';
 import 'package:flutter/cupertino.dart';
 
 class CardsViewLearningBloc extends ScreenBloc {
-  final DatabaseObservableList<CardModel> _cardList;
+  final ListAccessor<CardModel> _cardList;
 
-  CardsViewLearningBloc({@required User user, @required deck})
-      : _cardList = CardModel.getList(deckKey: deck.key),
+  CardsViewLearningBloc({@required User user, @required DeckModel deck})
+      : _cardList = deck.cards,
         super(user);
 
-  Stream<List<CardModel>> get doGetCardList =>
-      _cardList.listChanges.map((_) => _cardList);
-
-  Stream<int> get doGetNumberOfCards =>
-      _cardList.listChanges.map((_) => _cardList.length);
+  StreamWithValue<BuiltList<CardModel>> get doGetCardList => _cardList;
 }

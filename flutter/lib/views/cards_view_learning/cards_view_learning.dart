@@ -1,3 +1,4 @@
+import 'package:built_collection/built_collection.dart';
 import 'package:delern_flutter/models/card_model.dart';
 import 'package:delern_flutter/models/deck_model.dart';
 import 'package:delern_flutter/view_models/cards_view_learning_bloc.dart';
@@ -5,6 +6,7 @@ import 'package:delern_flutter/views/base/screen_bloc_view.dart';
 import 'package:delern_flutter/views/helpers/card_background_specifier.dart';
 import 'package:delern_flutter/views/helpers/flip_card_widget.dart';
 import 'package:delern_flutter/views/helpers/progress_indicator_widget.dart';
+import 'package:delern_flutter/views/helpers/stream_with_value_builder.dart';
 import 'package:delern_flutter/views/helpers/text_overflow_ellipsis_widget.dart';
 import 'package:flutter/material.dart';
 
@@ -41,22 +43,27 @@ class _CardsViewLearningState extends State<CardsViewLearning>
   Widget build(BuildContext context) => ScreenBlocView<CardsViewLearningBloc>(
         blocBuilder: (user) =>
             CardsViewLearningBloc(deck: widget.deck, user: user),
+        // TODO(ksheremet): Refactor: listening the same stream;
+        //  when setState called, the whole tree will be rebuild. The aim is
+        // to rebuild widgets which are needed to be rebuild
         appBarBuilder: (bloc) => AppBar(
-            title: StreamBuilder<int>(
-                stream: bloc.doGetNumberOfCards,
+            title: buildStreamBuilderWithValue<BuiltList<CardModel>>(
+                streamWithValue: bloc.doGetCardList,
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
                     return TextOverflowEllipsisWidget(
                       textDetails:
-                          '(${_currentCard + 1}/${snapshot.data}) ${widget.deck.name}',
+                          '(${_currentCard + 1}/${snapshot.data.length}) '
+                          '${widget.deck.name}',
                     );
                   }
                   return TextOverflowEllipsisWidget(
                     textDetails: widget.deck.name,
                   );
                 })),
-        bodyBuilder: (bloc) => StreamBuilder<List<CardModel>>(
-          stream: bloc.doGetCardList,
+        bodyBuilder: (bloc) =>
+            buildStreamBuilderWithValue<BuiltList<CardModel>>(
+          streamWithValue: bloc.doGetCardList,
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
               return ProgressIndicatorWidget();

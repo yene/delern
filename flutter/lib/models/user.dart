@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:delern_flutter/models/base/list_accessor.dart';
 import 'package:delern_flutter/models/base/stream_with_latest_value.dart';
 import 'package:delern_flutter/models/card_model.dart';
 import 'package:delern_flutter/models/card_reply_model.dart';
@@ -25,7 +26,11 @@ class User {
 
   StreamWithValue<bool> get isOnline => _isOnline;
 
-  User(this._dataSource) : assert(_dataSource != null) {
+  final DataListAccessor<DeckModel> decks;
+
+  User(this._dataSource)
+      : assert(_dataSource != null),
+        decks = DeckModelListAccessor(_dataSource.uid) {
     _isOnline = StreamWithLatestValue<bool>(FirebaseDatabase.instance
         .reference()
         .child('.info/connected')
@@ -34,7 +39,7 @@ class User {
     // Subscribe ourselves to online status immediately because we always want
     // to know the current value. We pass a dummy function to onData parameter
     // because we can always extract the latest data with _isOnline.value.
-    _onlineSubscription = _isOnline.stream.listen((_) {});
+    _onlineSubscription = _isOnline.updates.listen((_) {});
   }
 
   /// Update source of profile information (such as email, displayName etc) for
@@ -51,6 +56,7 @@ class User {
 
   void dispose() {
     _onlineSubscription.cancel();
+    decks.close();
   }
 
   /// Unique ID of the user used in Firebase Database and across the app.
@@ -137,9 +143,12 @@ class User {
     };
 
     if (deck.access == AccessType.owner) {
-      final accessList = DeckAccessModel.getList(deckKey: deck.key);
-      await accessList.fetchFullValue();
-      accessList.forEach((a) => updates['decks/${a.key}/${deck.key}'] = null);
+      // TODO(ksheremet): There's a possible problem here, which is,
+      // deck.usersAccess is not yet loaded. We should have a mechanism
+      // (perhaps, a Future?) that can wait until the data has arrived.
+      final accessList = deck.usersAccess;
+      accessList.value
+          .forEach((a) => updates['decks/${a.key}/${deck.key}'] = null);
     }
 
     return _write(updates);

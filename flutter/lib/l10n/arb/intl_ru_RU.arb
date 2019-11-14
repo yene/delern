@@ -568,12 +568,14 @@
     "placeholders": {
     }
   },
-  "cardsToLearnLabel": "{numberOfCards} на изучение",
+  "cardsToLearnLabel": "{numberOfCards} из {total} на изучение",
   "@cardsToLearnLabel": {
     "description": "Cards to learn label",
     "type": "text",
     "placeholders": {
       "numberOfCards": {
+      },
+      "total": {
       }
     }
   },

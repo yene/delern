@@ -1,12 +1,11 @@
 import 'dart:async';
 
-import 'package:delern_flutter/models/base/delayed_initialization.dart';
+import 'package:delern_flutter/models/base/list_accessor.dart';
 import 'package:delern_flutter/models/card_model.dart';
 import 'package:delern_flutter/models/deck_access_model.dart';
 import 'package:delern_flutter/models/deck_model.dart';
 import 'package:delern_flutter/models/user.dart';
 import 'package:delern_flutter/remote/error_reporting.dart' as error_reporting;
-import 'package:delern_flutter/view_models/base/filtered_sorted_observable_list.dart';
 import 'package:delern_flutter/view_models/base/screen_bloc.dart';
 import 'package:flutter/foundation.dart';
 import 'package:meta/meta.dart';
@@ -15,20 +14,18 @@ import 'package:pedantic/pedantic.dart';
 class EditDeckBloc extends ScreenBloc {
   DeckModel _deck;
 
-  DelayedInitializationObservableList<CardModel> get list => _list;
-  final FilteredSortedObservableList<CardModel> _list;
+  ListAccessor<CardModel> get list => _filteredCardsList;
+  FilteredListAccessor<CardModel> _filteredCardsList;
 
-  set filter(Filter<CardModel> newValue) => _list.filter = newValue;
-  Filter<CardModel> get filter => _list.filter;
+  set filter(Filter<CardModel> newValue) =>
+      _filteredCardsList.filter = newValue;
+  Filter<CardModel> get filter => _filteredCardsList.filter;
 
   EditDeckBloc({@required User user, @required DeckModel deck})
       : assert(deck != null),
         _deck = deck,
-        _list =
-            (FilteredSortedObservableList(CardModel.getList(deckKey: deck.key))
-              ..comparator = (c1, c2) =>
-                  c1.front.toLowerCase().compareTo(c2.front.toLowerCase())),
         super(user) {
+    _filteredCardsList = FilteredListAccessor<CardModel>(_deck.cards);
     _doDeckChangedController.add(_deck);
     _initListeners();
   }

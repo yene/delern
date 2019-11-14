@@ -110,6 +110,33 @@ class _$DeckModelSerializer implements StructuredSerializer<DeckModel> {
         ..add(serializers.serialize(object.category,
             specifiedType: const FullType(String)));
     }
+    if (object.cards != null) {
+      result
+        ..add('cards')
+        ..add(serializers.serialize(object.cards,
+            specifiedType: const FullType(
+                ListAccessor, const [const FullType(CardModel)])));
+    }
+    if (object.scheduledCards != null) {
+      result
+        ..add('scheduledCards')
+        ..add(serializers.serialize(object.scheduledCards,
+            specifiedType: const FullType(
+                ListAccessor, const [const FullType(ScheduledCardModel)])));
+    }
+    if (object.numberOfCardsDue != null) {
+      result
+        ..add('numberOfCardsDue')
+        ..add(serializers.serialize(object.numberOfCardsDue,
+            specifiedType: const FullType(_ScheduledCardsDueCounter)));
+    }
+    if (object.usersAccess != null) {
+      result
+        ..add('usersAccess')
+        ..add(serializers.serialize(object.usersAccess,
+            specifiedType: const FullType(
+                ListAccessor, const [const FullType(DeckAccessModel)])));
+    }
     return result;
   }
 
@@ -156,6 +183,29 @@ class _$DeckModelSerializer implements StructuredSerializer<DeckModel> {
           result.category = serializers.deserialize(value,
               specifiedType: const FullType(String)) as String;
           break;
+        case 'cards':
+          result.cards = serializers.deserialize(value,
+                  specifiedType: const FullType(
+                      ListAccessor, const [const FullType(CardModel)]))
+              as ListAccessor<CardModel>;
+          break;
+        case 'scheduledCards':
+          result.scheduledCards = serializers.deserialize(value,
+                  specifiedType: const FullType(
+                      ListAccessor, const [const FullType(ScheduledCardModel)]))
+              as ListAccessor<ScheduledCardModel>;
+          break;
+        case 'numberOfCardsDue':
+          result.numberOfCardsDue = serializers.deserialize(value,
+                  specifiedType: const FullType(_ScheduledCardsDueCounter))
+              as _ScheduledCardsDueCounter;
+          break;
+        case 'usersAccess':
+          result.usersAccess = serializers.deserialize(value,
+                  specifiedType: const FullType(
+                      ListAccessor, const [const FullType(DeckAccessModel)]))
+              as ListAccessor<DeckAccessModel>;
+          break;
       }
     }
 
@@ -180,6 +230,14 @@ class _$DeckModel extends DeckModel {
   final DateTime lastSyncAt;
   @override
   final String category;
+  @override
+  final ListAccessor<CardModel> cards;
+  @override
+  final ListAccessor<ScheduledCardModel> scheduledCards;
+  @override
+  final _ScheduledCardsDueCounter numberOfCardsDue;
+  @override
+  final ListAccessor<DeckAccessModel> usersAccess;
 
   factory _$DeckModel([void Function(DeckModelBuilder) updates]) =>
       (new DeckModelBuilder()..update(updates)).build() as _$DeckModel;
@@ -192,7 +250,11 @@ class _$DeckModel extends DeckModel {
       this.accepted,
       this.access,
       this.lastSyncAt,
-      this.category})
+      this.category,
+      this.cards,
+      this.scheduledCards,
+      this.numberOfCardsDue,
+      this.usersAccess})
       : super._() {
     if (markdown == null) {
       throw new BuiltValueNullFieldError('DeckModel', 'markdown');
@@ -223,7 +285,11 @@ class _$DeckModel extends DeckModel {
         accepted == other.accepted &&
         access == other.access &&
         lastSyncAt == other.lastSyncAt &&
-        category == other.category;
+        category == other.category &&
+        cards == other.cards &&
+        scheduledCards == other.scheduledCards &&
+        numberOfCardsDue == other.numberOfCardsDue &&
+        usersAccess == other.usersAccess;
   }
 
   @override
@@ -233,13 +299,23 @@ class _$DeckModel extends DeckModel {
             $jc(
                 $jc(
                     $jc(
-                        $jc($jc($jc(0, key.hashCode), name.hashCode),
-                            markdown.hashCode),
-                        type.hashCode),
-                    accepted.hashCode),
-                access.hashCode),
-            lastSyncAt.hashCode),
-        category.hashCode));
+                        $jc(
+                            $jc(
+                                $jc(
+                                    $jc(
+                                        $jc(
+                                            $jc($jc(0, key.hashCode),
+                                                name.hashCode),
+                                            markdown.hashCode),
+                                        type.hashCode),
+                                    accepted.hashCode),
+                                access.hashCode),
+                            lastSyncAt.hashCode),
+                        category.hashCode),
+                    cards.hashCode),
+                scheduledCards.hashCode),
+            numberOfCardsDue.hashCode),
+        usersAccess.hashCode));
   }
 
   @override
@@ -252,7 +328,11 @@ class _$DeckModel extends DeckModel {
           ..add('accepted', accepted)
           ..add('access', access)
           ..add('lastSyncAt', lastSyncAt)
-          ..add('category', category))
+          ..add('category', category)
+          ..add('cards', cards)
+          ..add('scheduledCards', scheduledCards)
+          ..add('numberOfCardsDue', numberOfCardsDue)
+          ..add('usersAccess', usersAccess))
         .toString();
   }
 }
@@ -356,6 +436,54 @@ class _$DeckModelBuilder extends DeckModelBuilder {
     super.category = category;
   }
 
+  @override
+  ListAccessor<CardModel> get cards {
+    _$this;
+    return super.cards;
+  }
+
+  @override
+  set cards(ListAccessor<CardModel> cards) {
+    _$this;
+    super.cards = cards;
+  }
+
+  @override
+  ListAccessor<ScheduledCardModel> get scheduledCards {
+    _$this;
+    return super.scheduledCards;
+  }
+
+  @override
+  set scheduledCards(ListAccessor<ScheduledCardModel> scheduledCards) {
+    _$this;
+    super.scheduledCards = scheduledCards;
+  }
+
+  @override
+  _ScheduledCardsDueCounter get numberOfCardsDue {
+    _$this;
+    return super.numberOfCardsDue;
+  }
+
+  @override
+  set numberOfCardsDue(_ScheduledCardsDueCounter numberOfCardsDue) {
+    _$this;
+    super.numberOfCardsDue = numberOfCardsDue;
+  }
+
+  @override
+  ListAccessor<DeckAccessModel> get usersAccess {
+    _$this;
+    return super.usersAccess;
+  }
+
+  @override
+  set usersAccess(ListAccessor<DeckAccessModel> usersAccess) {
+    _$this;
+    super.usersAccess = usersAccess;
+  }
+
   _$DeckModelBuilder() : super._();
 
   DeckModelBuilder get _$this {
@@ -368,6 +496,10 @@ class _$DeckModelBuilder extends DeckModelBuilder {
       super.access = _$v.access;
       super.lastSyncAt = _$v.lastSyncAt;
       super.category = _$v.category;
+      super.cards = _$v.cards;
+      super.scheduledCards = _$v.scheduledCards;
+      super.numberOfCardsDue = _$v.numberOfCardsDue;
+      super.usersAccess = _$v.usersAccess;
       _$v = null;
     }
     return this;
@@ -397,7 +529,11 @@ class _$DeckModelBuilder extends DeckModelBuilder {
             accepted: accepted,
             access: access,
             lastSyncAt: lastSyncAt,
-            category: category);
+            category: category,
+            cards: cards,
+            scheduledCards: scheduledCards,
+            numberOfCardsDue: numberOfCardsDue,
+            usersAccess: usersAccess);
     replace(_$result);
     return _$result;
   }

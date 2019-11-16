@@ -114,7 +114,9 @@ abstract class DataListAccessor<T extends KeyedListItem>
 
   @override
   void close() {
-    _currentValue?.forEach(disposeItem);
+    _currentValue
+      ..forEach(disposeItem)
+      ..clear();
     _onChildAdded?.cancel();
     _onChildChanged?.cancel();
     _onChildRemoved?.cancel();

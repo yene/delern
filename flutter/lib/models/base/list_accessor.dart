@@ -76,9 +76,8 @@ abstract class DataListAccessor<T extends KeyedListItem>
         }
       }
     });
-    // Firstly onChildAdded listener are called. We don't send value, until
-    // it is completely initialized. When it is done, send whole value to
-    // listener
+    // onChildAdded listener will be called first, but we don't send updates
+    // until we get the full list value.
     reference.once().then((val) {
       _loaded = true;
       if (_value.hasListener) {

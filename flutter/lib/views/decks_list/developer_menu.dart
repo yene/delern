@@ -1,30 +1,27 @@
 import 'package:delern_flutter/flutter/device_info.dart';
 import 'package:delern_flutter/flutter/styles.dart' as app_styles;
 import 'package:delern_flutter/flutter/user_messages.dart';
+import 'package:delern_flutter/views/helpers/progress_indicator_widget.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 
 bool _debugAllowDevMenu = true;
-String _projectId = '';
-String _deviceInfo = '';
 
-void _getProjectData() {
-  FirebaseApp.instance.options.then((options) {
-    _projectId = options.projectID;
-  });
-  DeviceInfo.getDeviceInfo().then((dInfo) {
-    _deviceInfo = dInfo.info.entries
-        .map((entry) => '${entry.key}: ${entry.value}')
-        .join('; \n');
-  });
+Future<String> _getDebugInformation() async {
+  final projectID = (await FirebaseApp.instance.options).projectID;
+  final deviceInfo = (await DeviceInfo.getDeviceInfo())
+      .info
+      .entries
+      .map((entry) => '${entry.key}: ${entry.value}')
+      .join('\n');
+  return 'Firebase project ID: $projectID\n\n$deviceInfo';
 }
 
 List<Widget> buildDeveloperMenu(BuildContext context) {
   if (!_debugAllowDevMenu) {
     return [];
   }
-  _getProjectData();
 
   // This code will run only in debug mode. Since dev menu items are not visible
   // to the end user, we do not need to localize them.
@@ -67,12 +64,16 @@ List<Widget> buildDeveloperMenu(BuildContext context) {
       },
     ),
     AboutListTile(
-      icon: const Icon(Icons.build),
+      icon: const Icon(Icons.info),
       aboutBoxChildren: <Widget>[
-        Text('Firebase id: $_projectId'),
-        Text('$_deviceInfo'),
+        FutureBuilder<String>(
+          future: _getDebugInformation(),
+          builder: (context, snapshot) => snapshot.hasData
+              ? SelectableText(snapshot.data)
+              : ProgressIndicatorWidget(),
+        ),
       ],
-      child: const Text('About Debug Version'),
-    )
+      child: const Text('About Debug version'),
+    ),
   ];
 }

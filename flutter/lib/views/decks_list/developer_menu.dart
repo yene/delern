@@ -1,9 +1,22 @@
+import 'package:delern_flutter/flutter/device_info.dart';
 import 'package:delern_flutter/flutter/styles.dart' as app_styles;
 import 'package:delern_flutter/flutter/user_messages.dart';
+import 'package:delern_flutter/views/helpers/progress_indicator_widget.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 
 bool _debugAllowDevMenu = true;
+
+Future<String> _getDebugInformation() async {
+  final projectID = (await FirebaseApp.instance.options).projectID;
+  final deviceInfo = (await DeviceInfo.getDeviceInfo())
+      .info
+      .entries
+      .map((entry) => '${entry.key}: ${entry.value}')
+      .join('\n');
+  return 'Firebase project ID: $projectID\n\n$deviceInfo';
+}
 
 List<Widget> buildDeveloperMenu(BuildContext context) {
   if (!_debugAllowDevMenu) {
@@ -49,6 +62,18 @@ List<Widget> buildDeveloperMenu(BuildContext context) {
           WidgetsApp.debugAllowBannerOverride = false;
         });
       },
-    )
+    ),
+    AboutListTile(
+      icon: const Icon(Icons.info),
+      aboutBoxChildren: <Widget>[
+        FutureBuilder<String>(
+          future: _getDebugInformation(),
+          builder: (context, snapshot) => snapshot.hasData
+              ? SelectableText(snapshot.data)
+              : ProgressIndicatorWidget(),
+        ),
+      ],
+      child: const Text('About Debug version'),
+    ),
   ];
 }

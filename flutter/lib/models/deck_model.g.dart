@@ -115,14 +115,14 @@ class _$DeckModelSerializer implements StructuredSerializer<DeckModel> {
         ..add('cards')
         ..add(serializers.serialize(object.cards,
             specifiedType: const FullType(
-                ListAccessor, const [const FullType(CardModel)])));
+                DataListAccessor, const [const FullType(CardModel)])));
     }
     if (object.scheduledCards != null) {
       result
         ..add('scheduledCards')
         ..add(serializers.serialize(object.scheduledCards,
             specifiedType: const FullType(
-                ListAccessor, const [const FullType(ScheduledCardModel)])));
+                DataListAccessor, const [const FullType(ScheduledCardModel)])));
     }
     if (object.numberOfCardsDue != null) {
       result
@@ -135,7 +135,7 @@ class _$DeckModelSerializer implements StructuredSerializer<DeckModel> {
         ..add('usersAccess')
         ..add(serializers.serialize(object.usersAccess,
             specifiedType: const FullType(
-                ListAccessor, const [const FullType(DeckAccessModel)])));
+                DataListAccessor, const [const FullType(DeckAccessModel)])));
     }
     return result;
   }
@@ -186,14 +186,14 @@ class _$DeckModelSerializer implements StructuredSerializer<DeckModel> {
         case 'cards':
           result.cards = serializers.deserialize(value,
                   specifiedType: const FullType(
-                      ListAccessor, const [const FullType(CardModel)]))
-              as ListAccessor<CardModel>;
+                      DataListAccessor, const [const FullType(CardModel)]))
+              as DataListAccessor<CardModel>;
           break;
         case 'scheduledCards':
           result.scheduledCards = serializers.deserialize(value,
-                  specifiedType: const FullType(
-                      ListAccessor, const [const FullType(ScheduledCardModel)]))
-              as ListAccessor<ScheduledCardModel>;
+              specifiedType: const FullType(DataListAccessor, const [
+                const FullType(ScheduledCardModel)
+              ])) as DataListAccessor<ScheduledCardModel>;
           break;
         case 'numberOfCardsDue':
           result.numberOfCardsDue = serializers.deserialize(value,
@@ -202,9 +202,9 @@ class _$DeckModelSerializer implements StructuredSerializer<DeckModel> {
           break;
         case 'usersAccess':
           result.usersAccess = serializers.deserialize(value,
-                  specifiedType: const FullType(
-                      ListAccessor, const [const FullType(DeckAccessModel)]))
-              as ListAccessor<DeckAccessModel>;
+              specifiedType: const FullType(DataListAccessor, const [
+                const FullType(DeckAccessModel)
+              ])) as DataListAccessor<DeckAccessModel>;
           break;
       }
     }
@@ -231,13 +231,13 @@ class _$DeckModel extends DeckModel {
   @override
   final String category;
   @override
-  final ListAccessor<CardModel> cards;
+  final DataListAccessor<CardModel> cards;
   @override
-  final ListAccessor<ScheduledCardModel> scheduledCards;
+  final DataListAccessor<ScheduledCardModel> scheduledCards;
   @override
   final _ScheduledCardsDueCounter numberOfCardsDue;
   @override
-  final ListAccessor<DeckAccessModel> usersAccess;
+  final DataListAccessor<DeckAccessModel> usersAccess;
 
   factory _$DeckModel([void Function(DeckModelBuilder) updates]) =>
       (new DeckModelBuilder()..update(updates)).build() as _$DeckModel;
@@ -437,25 +437,25 @@ class _$DeckModelBuilder extends DeckModelBuilder {
   }
 
   @override
-  ListAccessor<CardModel> get cards {
+  DataListAccessor<CardModel> get cards {
     _$this;
     return super.cards;
   }
 
   @override
-  set cards(ListAccessor<CardModel> cards) {
+  set cards(DataListAccessor<CardModel> cards) {
     _$this;
     super.cards = cards;
   }
 
   @override
-  ListAccessor<ScheduledCardModel> get scheduledCards {
+  DataListAccessor<ScheduledCardModel> get scheduledCards {
     _$this;
     return super.scheduledCards;
   }
 
   @override
-  set scheduledCards(ListAccessor<ScheduledCardModel> scheduledCards) {
+  set scheduledCards(DataListAccessor<ScheduledCardModel> scheduledCards) {
     _$this;
     super.scheduledCards = scheduledCards;
   }
@@ -473,13 +473,13 @@ class _$DeckModelBuilder extends DeckModelBuilder {
   }
 
   @override
-  ListAccessor<DeckAccessModel> get usersAccess {
+  DataListAccessor<DeckAccessModel> get usersAccess {
     _$this;
     return super.usersAccess;
   }
 
   @override
-  set usersAccess(ListAccessor<DeckAccessModel> usersAccess) {
+  set usersAccess(DataListAccessor<DeckAccessModel> usersAccess) {
     _$this;
     super.usersAccess = usersAccess;
   }

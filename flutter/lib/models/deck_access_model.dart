@@ -28,8 +28,9 @@ class AccessType extends EnumClass implements Comparable<AccessType> {
   static AccessType valueOf(String name) => _$valueOf(name);
 
   // In Dart, default Set implementation is LinkedHashSet, which is ordered.
-  // Convert it to a List here to make the values indexable.
-  static final List<AccessType> orderedValues = _$values.toList();
+  // Convert it to a List here to make the values indexable:
+  // https://github.com/google/built_value.dart/issues/693.
+  static final BuiltList<AccessType> orderedValues = BuiltList.of(_$values);
 
   @override
   int compareTo(AccessType other) =>

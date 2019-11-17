@@ -52,13 +52,13 @@ abstract class DeckModel
   @nullable
   String get category;
   @nullable
-  ListAccessor<CardModel> get cards;
+  DataListAccessor<CardModel> get cards;
   @nullable
-  ListAccessor<ScheduledCardModel> get scheduledCards;
+  DataListAccessor<ScheduledCardModel> get scheduledCards;
   @nullable
   _ScheduledCardsDueCounter get numberOfCardsDue;
   @nullable
-  ListAccessor<DeckAccessModel> get usersAccess;
+  DataListAccessor<DeckAccessModel> get usersAccess;
 
   static Serializer<DeckModel> get serializer => _$deckModelSerializer;
 
@@ -101,13 +101,13 @@ abstract class DeckModelBuilder
   DateTime lastSyncAt = DateTime.fromMillisecondsSinceEpoch(0);
   String category;
   @nullable
-  ListAccessor<CardModel> cards;
+  DataListAccessor<CardModel> cards;
   @nullable
-  ListAccessor<ScheduledCardModel> scheduledCards;
+  DataListAccessor<ScheduledCardModel> scheduledCards;
   @nullable
   _ScheduledCardsDueCounter numberOfCardsDue;
   @nullable
-  ListAccessor<DeckAccessModel> usersAccess;
+  DataListAccessor<DeckAccessModel> usersAccess;
 
   factory DeckModelBuilder() = _$DeckModelBuilder;
   DeckModelBuilder._();
@@ -193,13 +193,14 @@ class DeckModelListAccessor extends DataListAccessor<DeckModel> {
     return initDeck.rebuild((d) => d
       ..cards = previous.cards
       ..scheduledCards = previous.scheduledCards
-      ..usersAccess = previous.usersAccess);
+      ..usersAccess = previous.usersAccess
+      ..numberOfCardsDue = previous.numberOfCardsDue);
   }
 
   @override
   void disposeItem(DeckModel item) => item
     ..cards.close()
     ..scheduledCards.close()
-    ..numberOfCardsDue.close()
-    ..usersAccess.close();
+    ..usersAccess.close()
+    ..numberOfCardsDue.close();
 }

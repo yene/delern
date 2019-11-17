@@ -31,38 +31,10 @@ abstract class DataListAccessor<T extends KeyedListItem>
   StreamSubscription<Event> _onChildAdded, _onChildChanged, _onChildRemoved;
 
   DataListAccessor(DatabaseReference reference) {
-    _onChildAdded = reference.onChildAdded.listen((data) {
-      final newItem = parseItem(data.snapshot.key, data.snapshot.value);
-      _currentValue.add(newItem);
-      if (_loaded) {
-        if (_value.hasListener) {
-          _value.add(BuiltList.from(_currentValue));
-        }
-        if (_events.hasListener) {
-          _events.add(ListChangeRecord<T>.add(
-              _currentValue, _currentValue.length - 1, 1));
-        }
-      }
-    });
-    _onChildChanged = reference.onChildChanged.listen((data) {
-      final newItem = parseItem(data.snapshot.key, data.snapshot.value);
-      final index = _currentValue.indexWhere((item) => item.key == newItem.key);
-      final replacedItem = _currentValue[index];
-      disposeItem(replacedItem);
-      _currentValue[index] = newItem;
-      if (_loaded) {
-        if (_value.hasListener) {
-          _value.add(BuiltList.from(_currentValue));
-        }
-        if (_events.hasListener) {
-          _events.add(ListChangeRecord<T>.replace(
-              _currentValue, index, [replacedItem]));
-        }
-      }
-    });
+    _onChildAdded = reference.onChildAdded.listen(_childAddedOrChanged);
+    _onChildChanged = reference.onChildChanged.listen(_childAddedOrChanged);
     _onChildRemoved = reference.onChildRemoved.listen((data) {
-      final index =
-          _currentValue.indexWhere((item) => item.key == data.snapshot.key);
+      final index = _currentValue.indexOfKey(data.snapshot.key);
       final deletedItem = _currentValue[index];
       _currentValue.removeAt(index);
       disposeItem(deletedItem);
@@ -76,9 +48,8 @@ abstract class DataListAccessor<T extends KeyedListItem>
         }
       }
     });
-    // Firstly onChildAdded listener are called. We don't send value, until
-    // it is completely initialized. When it is done, send whole value to
-    // listener
+    // onChildAdded listener will be called first, but we don't send updates
+    // until we get the full list value.
     reference.once().then((val) {
       _loaded = true;
       if (_value.hasListener) {
@@ -89,6 +60,28 @@ abstract class DataListAccessor<T extends KeyedListItem>
             ListChangeRecord<T>.add(_currentValue, 0, _currentValue.length));
       }
     });
+  }
+
+  void _childAddedOrChanged(Event data) {
+    final existingIndex = _currentValue.indexOfKey(data.snapshot.key);
+    if (existingIndex >= 0) {
+      final replacedItem = _currentValue[existingIndex];
+      _currentValue[existingIndex] =
+          updateItem(replacedItem, data.snapshot.key, data.snapshot.value);
+      if (_loaded && _events.hasListener) {
+        _events.add(ListChangeRecord<T>.replace(
+            _currentValue, existingIndex, [replacedItem]));
+      }
+    } else {
+      _currentValue.add(parseItem(data.snapshot.key, data.snapshot.value));
+      if (_loaded && _events.hasListener) {
+        _events.add(ListChangeRecord<T>.add(
+            _currentValue, _currentValue.length - 1, 1));
+      }
+    }
+    if (_loaded && _value.hasListener) {
+      _value.add(BuiltList.from(_currentValue));
+    }
   }
 
   Stream<T> getItemUpdates(String key) async* {
@@ -114,7 +107,9 @@ abstract class DataListAccessor<T extends KeyedListItem>
 
   @override
   void close() {
-    _currentValue?.forEach(disposeItem);
+    _currentValue
+      ..forEach(disposeItem)
+      ..clear();
     _onChildAdded?.cancel();
     _onChildChanged?.cancel();
     _onChildRemoved?.cancel();

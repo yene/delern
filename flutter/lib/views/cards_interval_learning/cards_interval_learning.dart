@@ -161,13 +161,13 @@ class CardsIntervalLearningState extends State<CardsIntervalLearning> {
         builder: (context) => PopupMenuButton<_CardMenuItemType>(
           tooltip: localizations.of(context).menuTooltip,
           onSelected: (itemType) => _onCardMenuItemSelected(context, itemType),
-          itemBuilder: (context) => _buildMenu(context)
-              .entries
-              .map((entry) => PopupMenuItem<_CardMenuItemType>(
-                    value: entry.key,
-                    child: Text(entry.value),
-                  ))
-              .toList(),
+          itemBuilder: (context) => [
+            for (final entry in _buildMenu(context).entries)
+              PopupMenuItem<_CardMenuItemType>(
+                value: entry.key,
+                child: Text(entry.value),
+              ),
+          ],
         ),
       );
 

@@ -37,9 +37,7 @@ class _DropdownState extends State<DeckAccessDropdownWidget> {
                 ))
             .toList(),
         onChanged: (newValue) {
-          setState(() {
-            widget.valueChanged(newValue);
-          });
+          setState(() => widget.valueChanged(newValue));
         },
       ));
 

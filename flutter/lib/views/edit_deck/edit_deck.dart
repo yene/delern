@@ -256,9 +256,7 @@ class CardItemWidget extends StatelessWidget {
           child: EditDeleteDismissible(
             key: Key(card.key),
             iconSize: iconSize,
-            onEdit: () {
-              bloc.onEditCardIntention.add(card);
-            },
+            onEdit: () => bloc.onEditCardIntention.add(card),
             child: Material(
               elevation: app_styles.kItemElevation,
               child: InkWell(

@@ -156,7 +156,7 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
                     : NetworkImage(user.photoUrl),
               ),
             ),
-            ..._buildUserButtons(user),
+            ...?_buildUserButtons(user),
           ]),
     );
   }

@@ -42,9 +42,7 @@ class _CardPreviewState extends State<CardPreview> {
             IconButton(
                 tooltip: localizations.of(context).deleteCardTooltip,
                 icon: const Icon(Icons.delete),
-                onPressed: () async {
-                  bloc.onDeleteDeckIntention.add(null);
-                }),
+                onPressed: () async => bloc.onDeleteDeckIntention.add(null)),
           ],
         ),
         bodyBuilder: (bloc) => Column(
@@ -65,9 +63,7 @@ class _CardPreviewState extends State<CardPreview> {
         ),
         floatingActionButtonBuilder: (bloc) => FloatingActionButton(
           tooltip: localizations.of(context).editCardTooltip,
-          onPressed: () {
-            bloc.onEditCardIntention.add(null);
-          },
+          onPressed: () => bloc.onEditCardIntention.add(null),
           child: const Icon(Icons.edit),
         ),
       );

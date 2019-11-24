@@ -13,8 +13,8 @@ Future<String> _getDebugInformation() async {
   final projectID = (await FirebaseApp.instance.options).projectID,
       user = await FirebaseAuth.instance.currentUser(),
       keyValueInfo = [
-    ...user.providerData.map((info) => '\t${info.toString()}'),
-    ...(await DeviceInfo.getDeviceInfo())
+    ...?user.providerData.map((info) => '\t${info.toString()}'),
+    ...?(await DeviceInfo.getDeviceInfo())
         .info
         .entries
         .map((entry) => '${entry.key}: ${entry.value}'),

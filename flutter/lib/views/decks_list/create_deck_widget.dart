@@ -68,9 +68,7 @@ class _CreateDeckDialogState extends State<_CreateDeckDialog> {
     );
 
     final cancelButton = FlatButton(
-        onPressed: () {
-          Navigator.of(context).pop(null);
-        },
+        onPressed: () => Navigator.of(context).pop(null),
         child: Text(
           MaterialLocalizations.of(context).cancelButtonLabel.toUpperCase(),
           style: TextStyle(color: Theme.of(context).primaryColor),
@@ -79,9 +77,9 @@ class _CreateDeckDialogState extends State<_CreateDeckDialog> {
     final deckNameTextField = TextField(
       autofocus: true,
       controller: _textController,
-      onChanged: (text) {
-        setState(() {});
-      },
+      // TODO(ksheremet): Call setState to update addDeckButton. Consider
+      // more elegant way
+      onChanged: (text) => setState(() {}),
       style: app_styles.primaryText,
     );
 

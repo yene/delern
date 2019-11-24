@@ -94,71 +94,66 @@ class CardsIntervalLearningState extends State<CardsIntervalLearning> {
         ),
         body: _viewModel.card == null
             ? ProgressIndicatorWidget()
-            : Builder(
-                builder: (context) => Column(
-                  children: <Widget>[
-                    Expanded(
-                        child: Padding(
-                      padding: MediaQuery.of(context).orientation ==
-                              Orientation.portrait
-                          ? EdgeInsets.all(MediaQuery.of(context).size.width *
-                              _kCardPaddingRatio)
-                          : EdgeInsets.only(
-                              top: 10,
-                              left: MediaQuery.of(context).size.width *
-                                  _kCardPaddingRatio,
-                              right: MediaQuery.of(context).size.width *
-                                  _kCardPaddingRatio),
-                      child: StreamBuilder<CardModel>(
-                          initialData: _viewModel.initialCard,
-                          stream: _viewModel.card,
-                          builder: (context, snapshot) {
-                            final card = snapshot.data.key == null
-                                ? _viewModel.initialCard
-                                : snapshot.data;
-                            return FlipCardWidget(
-                              front: card.front,
-                              back: card.back,
-                              gradient: specifyLearnCardBackgroundGradient(
-                                  _viewModel.deck.type, card.back),
-                              onFlip: () {
-                                _showReplyButtons.value = true;
-                              },
-                              key: ValueKey(card.key),
-                            );
-                          }),
-                    )),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 20),
-                      child: ValueListenableBuilder<bool>(
-                        valueListenable: _showReplyButtons,
-                        builder: (context, showReplyButtons, child) =>
-                            showReplyButtons
-                                ? _buildButtons(context)
-                                : ConstrainedBox(
-                                    constraints:
-                                        _kFloatingButtonHeightConstraint,
-                                  ),
-                      ),
+            : Column(
+                children: <Widget>[
+                  Expanded(
+                      child: Padding(
+                    padding: MediaQuery.of(context).orientation ==
+                            Orientation.portrait
+                        ? EdgeInsets.all(MediaQuery.of(context).size.width *
+                            _kCardPaddingRatio)
+                        : EdgeInsets.only(
+                            top: 10,
+                            left: MediaQuery.of(context).size.width *
+                                _kCardPaddingRatio,
+                            right: MediaQuery.of(context).size.width *
+                                _kCardPaddingRatio),
+                    child: StreamBuilder<CardModel>(
+                        initialData: _viewModel.initialCard,
+                        stream: _viewModel.card,
+                        builder: (context, snapshot) {
+                          final card = snapshot.data.key == null
+                              ? _viewModel.initialCard
+                              : snapshot.data;
+                          return FlipCardWidget(
+                            front: card.front,
+                            back: card.back,
+                            gradient: specifyLearnCardBackgroundGradient(
+                                _viewModel.deck.type, card.back),
+                            onFlip: () {
+                              _showReplyButtons.value = true;
+                            },
+                            key: ValueKey(card.key),
+                          );
+                        }),
+                  )),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 20),
+                    child: ValueListenableBuilder<bool>(
+                      valueListenable: _showReplyButtons,
+                      builder: (context, showReplyButtons, child) =>
+                          showReplyButtons
+                              ? _buildButtons(context)
+                              : ConstrainedBox(
+                                  constraints: _kFloatingButtonHeightConstraint,
+                                ),
                     ),
-                    Row(
-                      children: <Widget>[
-                        // Use SafeArea to indent the child by the amount
-                        // necessary to avoid The Notch on the iPhone X,
-                        // or other similar creative physical features of
-                        // the display.
-                        SafeArea(
-                          child: Text(
-                            localizations
-                                .of(context)
-                                .watchedCards(_watchedCount),
-                            style: app_styles.secondaryText,
-                          ),
+                  ),
+                  Row(
+                    children: <Widget>[
+                      // Use SafeArea to indent the child by the amount
+                      // necessary to avoid The Notch on the iPhone X,
+                      // or other similar creative physical features of
+                      // the display.
+                      SafeArea(
+                        child: Text(
+                          localizations.of(context).watchedCards(_watchedCount),
+                          style: app_styles.secondaryText,
                         ),
-                      ],
-                    )
-                  ],
-                ),
+                      ),
+                    ],
+                  )
+                ],
               ),
       );
 
@@ -166,13 +161,13 @@ class CardsIntervalLearningState extends State<CardsIntervalLearning> {
         builder: (context) => PopupMenuButton<_CardMenuItemType>(
           tooltip: localizations.of(context).menuTooltip,
           onSelected: (itemType) => _onCardMenuItemSelected(context, itemType),
-          itemBuilder: (context) => _buildMenu(context)
-              .entries
-              .map((entry) => PopupMenuItem<_CardMenuItemType>(
-                    value: entry.key,
-                    child: Text(entry.value),
-                  ))
-              .toList(),
+          itemBuilder: (context) => [
+            for (final entry in _buildMenu(context).entries)
+              PopupMenuItem<_CardMenuItemType>(
+                value: entry.key,
+                child: Text(entry.value),
+              ),
+          ],
         ),
       );
 

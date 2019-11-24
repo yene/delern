@@ -33,9 +33,7 @@ class _OnboardingState extends State<Onboarding> {
           } else {
             return _OnboardingWidget(callback: () async {
               unawaited((await _prefs).setBool(_introPrefKey, true));
-              setState(() {
-                _isIntroShown = true;
-              });
+              setState(() => _isIntroShown = true);
             });
           }
         }

@@ -89,9 +89,7 @@ class _DecksListState extends State<DecksList> {
                         ? CrossFadeState.showFirst
                         : CrossFadeState.showSecond,
                   ),
-                  onPressed: () {
-                    _scaffoldKey.currentState.openDrawer();
-                  },
+                  onPressed: () => _scaffoldKey.currentState.openDrawer(),
                 );
               }),
         ),

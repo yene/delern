@@ -45,6 +45,9 @@ linter:
     # TODO(ksheremet): Decide whether to use relative imports
     prefer_relative_imports: false
 
+    # TODO(dotdoom): add debugFillProperties.
+    diagnostic_describe_all_properties: false
+
     # Questionable effort-to-gain ratio.
     avoid_catches_without_on_clauses: false
     avoid_function_literals_in_foreach_calls: false

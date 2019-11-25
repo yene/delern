@@ -63,8 +63,8 @@ class _DecksListState extends State<DecksList> {
         d.name.toLowerCase().contains(input);
   }
 
-  GlobalKey fabKey = GlobalKey();
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  final _fabKey = GlobalKey();
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) => Scaffold(
@@ -133,14 +133,14 @@ class _DecksListState extends State<DecksList> {
                   );
                 },
                 emptyMessageBuilder: () => ArrowToFloatingActionButtonWidget(
-                    fabKey: fabKey,
+                    fabKey: _fabKey,
                     child: EmptyListMessageWidget(
                         localizations.of(context).emptyDecksList)),
               ),
             ),
           ],
         ),
-        floatingActionButton: CreateDeckWidget(key: fabKey, bloc: _bloc),
+        floatingActionButton: CreateDeckWidget(key: _fabKey, bloc: _bloc),
       );
 }
 
@@ -276,15 +276,13 @@ class DeckListItemWidget extends StatelessWidget {
         ),
         buildStreamBuilderWithValue<int>(
           streamWithValue: deck.numberOfCardsDue,
-          builder: (context, snapshot) => Container(
-            child: Text(
-              localizations.of(context).cardsToLearnLabel(
-                  snapshot.data?.toString() ?? 'N/A',
-                  // TODO(ksheremet): Add StreamBuilder to get updates about all
-                  // cards
-                  deck.cards.value.length.toString()),
-              style: secondaryTextStyle,
-            ),
+          builder: (context, snapshot) => Text(
+            localizations.of(context).cardsToLearnLabel(
+                snapshot.data?.toString() ?? 'N/A',
+                // TODO(ksheremet): Add StreamBuilder to get updates about all
+                // cards
+                deck.cards.value.length.toString()),
+            style: secondaryTextStyle,
           ),
         ),
       ],

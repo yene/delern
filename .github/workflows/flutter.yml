@@ -8,6 +8,10 @@ on:
     tags:
       - "*.*"
 
+env:
+  GRADLE_OPTS: -Dorg.gradle.daemon=false
+  FLUTTER_SDK_ROOT: /tmp/flutter
+
 jobs:
   build:
     strategy:
@@ -25,9 +29,6 @@ jobs:
             platform: android
             app_artifact_path: "flutter/build/app/outputs/apk/debug/app-debug.apk"
             upload_coverage: true
-    env:
-      GRADLE_OPTS: -Dorg.gradle.daemon=false
-      FLUTTER_SDK_ROOT: /tmp/flutter
     runs-on: ${{ matrix.os }}
     steps:
       - name: "Support >260 characters long paths in Git repositories (Windows)"
@@ -39,7 +40,7 @@ jobs:
       - name: "Install fastlane"
         run: |
           gem install bundler --no-doc
-          bundle install --quiet --clean --deployment
+          bundle install --clean --deployment
       - name: "Install dependencies"
         working-directory: flutter
         run: |
@@ -87,3 +88,77 @@ jobs:
         with:
           name: Podfile.lock
           path: flutter/ios/Podfile.lock
+
+  publish:
+    if: >
+      startsWith(github.repository, 'dasfoo/') &&
+      github.event_name == 'push'
+    needs: build
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macOS-latest, ubuntu-latest]
+        include:
+          - os: macOS-latest
+            platform: ios
+          - os: ubuntu-latest
+            platform: android
+    env:
+      SUPPLY_JSON_KEY: /tmp/gcloud-service-account.json
+      GOOGLE_APPLICATION_CREDENTIALS: /tmp/gcloud-service-account.json
+      ANDROID_KEYSTORE_PATH: /tmp/upload.keystore
+
+      CLOUDSDK_CORE_DISABLE_PROMPTS: 1
+      MATCH_GIT_URL: ${{ secrets.MATCH_GIT_URL }}
+      MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+      FASTLANE_USER: ${{ secrets.FASTLANE_USER }}
+      FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-ruby@v1
+        with:
+          ruby-version: 2.6
+      - name: "Install fastlane"
+        run: |
+          gem install bundler --no-doc
+          bundle install --clean --deployment
+      - name: "Install dependencies"
+        working-directory: flutter
+        run: |
+          bundle exec fastlane install_dependencies
+          bundle exec fastlane install_debug_keys
+
+
+      - if: matrix.platform == 'android'
+        uses: actions/setup-java@v1
+        with:
+          java-version: 1.8
+      - if: matrix.platform == 'android'
+        run: >
+          echo '${{ secrets.ANDROID_KEYSTORE_DATA }}' |
+          base64 -d > "${ANDROID_KEYSTORE_PATH?}"
+
+      - run: >
+          echo '${{ secrets.GOOGLE_APPLICATION_CREDENTIALS_DATA }}' |
+          base64 -d > "${GOOGLE_APPLICATION_CREDENTIALS?}"
+      - name: "Install and configure GCloud to fetch 'fastlane match' repo"
+        if: matrix.platform == 'ios'
+        # Redirect to /dev/null because gcloud installation script instructs
+        # tar to spit out all installed file names, which is a lot!
+        run: >
+          curl -sSL https://sdk.cloud.google.com | bash >/dev/null
+
+          ${HOME?}/google-cloud-sdk/bin/gcloud auth activate-service-account
+          --key-file "${GOOGLE_APPLICATION_CREDENTIALS?}"
+
+          echo "::add-path::${HOME?}/google-cloud-sdk/bin"
+
+          git config --global
+          credential.https://source.developers.google.com.helper
+          gcloud.sh
+
+      - working-directory: flutter
+        run: >
+          bundle exec fastlane ${{ matrix.platform }} publish
+          release:$(sed -n -e 's|^refs/tags/||p' <<<$GITHUB_REF)

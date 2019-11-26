@@ -1,48 +1,8 @@
-# This file contains the fastlane.tools configuration
-# You can find the documentation at https://docs.fastlane.tools
-#
-# For a list of all available actions, check out
-#
-#     https://docs.fastlane.tools/actions
-#
-
-# Uncomment the line if you want fastlane to automatically update itself
-# update_fastlane
-
 fastlane_require 'fileutils'
 
 default_platform(:android)
 
-def cirrus_ci_build_number
-  return ci_build_number unless ENV['CIRRUS_CI']
-
-  # TODO(dotdoom): get rid of this workaround once build number is available:
-  # https://github.com/cirruslabs/cirrus-ci-docs/issues/246.
-
-  fastlane_require 'graphql/client'
-  fastlane_require 'graphql/client/http'
-
-  client = GraphQL::Client::HTTP.new('https://api.cirrus-ci.com/graphql')
-  schema = GraphQL::Client.load_schema(client)
-  client = GraphQL::Client.new(schema: schema, execute: client)
-  Kernel.const_set :GithubRepositoryQuery, client.parse(<<-GRAPHQL)
-    query($owner: String!, $name: String!) {
-      githubRepository(owner: $owner, name: $name) {
-        builds(last: 102400) {
-          edges {
-            node { changeMessage }
-          }
-        }
-      }
-    }
-  GRAPHQL
-  client.query(GithubRepositoryQuery, variables: {
-    owner: ENV['CIRRUS_REPO_OWNER'],
-    name: ENV['CIRRUS_REPO_NAME'],
-  }).data.github_repository.builds.edges.size
-end
-
-before_all do |lane|
+before_all do |lane, options|
   if [:build, :publish].include?(lane)
     commits_since_last_tag = changelog_from_git_commits(
       quiet: true,
@@ -52,11 +12,12 @@ before_all do |lane|
       merge_commit_filtering: 'only_include_merges',
     ).lines.count
 
-    # Add a fixed integer to CI build number, because we drifted away. Outside of
-    # CI, usually on a developer's workstation, just use number of commits.
-    lane_context[SharedValues::BUILD_NUMBER] = is_ci ?
-      Integer(cirrus_ci_build_number) + 5000 :
-      number_of_commits
+    # Keep even numbers for internal releases, and odd numbers for public, to
+    # make sure they do not clash as the number of commits is usually the same.
+    lane_context[SharedValues::BUILD_NUMBER] = number_of_commits * 2 + 1000
+    unless options[:release].to_s.empty?
+      lane_context[SharedValues::BUILD_NUMBER] += 1
+    end
 
     lane_context[SharedValues::VERSION_NUMBER] = '%s.%d' % [
         # First 2 digits of version number are taken from tag (ex.: "2.1").

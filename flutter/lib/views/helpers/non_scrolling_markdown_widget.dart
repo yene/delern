@@ -15,11 +15,13 @@ class NonScrollingMarkdownWidget extends StatelessWidget {
   Widget build(BuildContext context) => Center(
         child: MarkdownBody(
             data: text,
-            styleSheet: MarkdownStyleSheet.fromTheme(Theme.of(context))
-                .copyWith(
-                    p: textStyle,
-                    textScaleFactor: MediaQuery.of(context).textScaleFactor,
-                    pAlignment: WrapAlignment.center),
+            fitContent: true,
+            styleSheet:
+                MarkdownStyleSheet.fromTheme(Theme.of(context)).copyWith(
+              p: textStyle,
+              listBullet: textStyle,
+              textScaleFactor: MediaQuery.of(context).textScaleFactor,
+            ),
             onTapLink: (href) async {
               if (await canLaunch(href)) {
                 await launch(href, forceSafariVC: false);

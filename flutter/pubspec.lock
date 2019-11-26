@@ -243,12 +243,10 @@ packages:
   flutter_markdown:
     dependency: "direct main"
     description:
-      path: "."
-      ref: align-content-center
-      resolved-ref: a55d2f2402610a3ba34d827c01fba5e192d89b5c
-      url: "https://github.com/ksheremet/flutter_markdown.git"
-    source: git
-    version: "0.3.0"
+      name: flutter_markdown
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.3.1"
   flutter_test:
     dependency: "direct dev"
     description: flutter

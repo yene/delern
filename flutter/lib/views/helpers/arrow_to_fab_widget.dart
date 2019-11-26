@@ -7,10 +7,9 @@ class ArrowToFloatingActionButtonWidget extends StatelessWidget {
   const ArrowToFloatingActionButtonWidget({@required this.fabKey, this.child});
 
   @override
-  Widget build(BuildContext context) => Container(
-      child: CustomPaint(
-          painter: _ArrowToFloatingActionButtonState(context, fabKey),
-          child: child));
+  Widget build(BuildContext context) => CustomPaint(
+      painter: _ArrowToFloatingActionButtonState(context, fabKey),
+      child: child);
 }
 
 class _ArrowToFloatingActionButtonState extends CustomPainter {

@@ -4,10 +4,10 @@ import 'package:async/async.dart';
 import 'package:built_collection/built_collection.dart';
 import 'package:delern_flutter/models/base/keyed_list_item.dart';
 import 'package:delern_flutter/models/base/list_accessor.dart';
+import 'package:delern_flutter/models/base/list_change_record.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/foundation.dart';
 import 'package:mockito/mockito.dart';
-import 'package:observable/observable.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -114,20 +114,22 @@ void main() {
     test('remove from event', () async {
       final events = StreamQueue(accessor.events);
       onChildAdded.add(FakeEvent(snapshot: FakeSnapshot(key: '1')));
-      expectListChangeRecord(await events.next, [const MyModel(key: '1')], 0,
+      expectListChangeRecord<MyModel>(
+          await events.next, [const MyModel(key: '1')], 0,
           removed: [], addedCount: 1);
       onChildRemoved.add(FakeEvent(snapshot: FakeSnapshot(key: '1')));
-      expectListChangeRecord(await events.next, [], 0,
+      expectListChangeRecord<MyModel>(await events.next, [], 0,
           removed: [const MyModel(key: '1')]);
     });
 
     test('add to event', () async {
       final events = StreamQueue(accessor.events);
       onChildAdded.add(FakeEvent(snapshot: FakeSnapshot(key: '1')));
-      expectListChangeRecord(await events.next, [const MyModel(key: '1')], 0,
+      expectListChangeRecord<MyModel>(
+          await events.next, [const MyModel(key: '1')], 0,
           removed: [], addedCount: 1);
       onChildAdded.add(FakeEvent(snapshot: FakeSnapshot(key: '2')));
-      expectListChangeRecord(await events.next,
+      expectListChangeRecord<MyModel>(await events.next,
           [const MyModel(key: '1'), const MyModel(key: '2')], 1,
           removed: [], addedCount: 1);
     });
@@ -135,12 +137,12 @@ void main() {
     test('update event', () async {
       final events = StreamQueue(accessor.events);
       onChildAdded.add(FakeEvent(snapshot: FakeSnapshot(key: '1', value: '3')));
-      expectListChangeRecord(
+      expectListChangeRecord<MyModel>(
           await events.next, [const MyModel(key: '1', value: '3')], 0,
           removed: [], addedCount: 1);
       onChildChanged
           .add(FakeEvent(snapshot: FakeSnapshot(key: '1', value: '1')));
-      expectListChangeRecord(
+      expectListChangeRecord<MyModel>(
           await events.next, [const MyModel(key: '1', value: '1')], 0,
           removed: [const MyModel(key: '1', value: '3')], addedCount: 1);
     });
@@ -199,9 +201,9 @@ class MyListAccessor extends DataListAccessor<MyModel> {
 void expectListChangeRecord<T>(
     ListChangeRecord<T> actual, List<T> object, int index,
     {List<T> removed = const [], int addedCount = 0}) {
-  expect(actual.object, object);
+  expect(actual.object, BuiltList<T>.of(object));
   expect(actual.index, index);
-  expect(actual.removed, removed);
+  expect(actual.removed, BuiltList<T>.of(removed));
   expect(actual.addedCount, addedCount);
 }
 

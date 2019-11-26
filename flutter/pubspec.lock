@@ -155,13 +155,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.16.1"
-  dart_internal:
-    dependency: transitive
-    description:
-      name: dart_internal
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.1.7"
   dart_style:
     dependency: transitive
     description:
@@ -182,7 +175,7 @@ packages:
       name: file
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "5.0.10"
+    version: "5.1.0"
   firebase_analytics:
     dependency: "direct main"
     description:
@@ -455,13 +448,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.4.8"
-  observable:
-    dependency: "direct main"
-    description:
-      name: observable
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.22.2"
   package_config:
     dependency: transitive
     description:
@@ -732,7 +718,7 @@ packages:
       name: web_socket_channel
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.15"
+    version: "1.1.0"
   xml:
     dependency: transitive
     description:
@@ -748,5 +734,5 @@ packages:
     source: hosted
     version: "2.2.0"
 sdks:
-  dart: ">=2.5.0 <2.7.0"
+  dart: ">=2.5.0 <3.0.0"
   flutter: ">=1.9.1+hotfix.4 <2.0.0"

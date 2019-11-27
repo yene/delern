@@ -36,3 +36,38 @@ jobs:
       # creates output, redirect it to a temporary file to keep Git tree clean.
       - run: node_modules/.bin/firebase-bolt database.rules.bolt -o ../../../nothing
         working-directory: firebase
+
+  publish:
+    if: >
+      startsWith(github.repository, 'dasfoo/') &&
+      github.event_name == 'push'
+    needs: build
+    env:
+      CLOUDSDK_CORE_DISABLE_PROMPTS: 1
+      FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 8
+      - name: "Configure GCloud to deploy AppEngine"
+        run: >
+          gcloud auth activate-service-account --key-file <(
+            base64 -d <<<'${{ secrets.GOOGLE_APPLICATION_CREDENTIALS_DATA }}'
+          )
+
+      - run: npm ci
+        working-directory: firebase
+      - run: npm ci
+        working-directory: firebase/functions
+
+      - run: npm run deploy
+        working-directory: firebase
+        env:
+          PROJECT: delern-debug
+
+      - run: npm run deploy
+        working-directory: firebase
+        env:
+          PROJECT: delern-e1b33

@@ -18,29 +18,22 @@ Features:
 - Available learning in offline;
 - Markdown support.
 
-[badge/build/firebase]:            https://api.cirrus-ci.com/github/dasfoo/delern.svg?branch=master&task=firebase
-[badge/build/flutter/linux]:       https://api.cirrus-ci.com/github/dasfoo/delern.svg?branch=master&task=flutter+(linux)
-[badge/build/flutter/osx]:         https://api.cirrus-ci.com/github/dasfoo/delern.svg?branch=master&task=flutter+(osx)
-[badge/deploy/firebase]:           https://api.cirrus-ci.com/github/dasfoo/delern.svg?branch=master&task=deploy+(firebase)
-[badge/deploy/flutter/play-store]: https://api.cirrus-ci.com/github/dasfoo/delern.svg?branch=master&task=deploy+(Play+Store)
-[badge/deploy/flutter/app-store]:  https://api.cirrus-ci.com/github/dasfoo/delern.svg?branch=master&task=deploy+(App+Store)
-[badge/build/windows]:             https://ci.appveyor.com/api/projects/status/689esuw57tfyjbkd/branch/master?svg=true
-[badge/test/flutter/coverage]:     https://codecov.io/gh/dasfoo/delern/branch/master/graph/badge.svg
+[badge/firebase]:      https://github.com/dasfoo/delern/workflows/firebase/badge.svg?branch=master&event=push
+[badge/flutter]:       https://github.com/dasfoo/delern/workflows/flutter/badge.svg?branch=master&event=push
+[badge/flutter-drive]: https://github.com/dasfoo/delern/workflows/flutter%20drive/badge.svg?branch=master&event=push
+[badge/codecov]:       https://codecov.io/gh/dasfoo/delern/branch/master/graph/badge.svg
 
-[link/build/cirrus-ci]:            https://cirrus-ci.com/github/dasfoo/delern
-[link/build/appveyor]:             https://ci.appveyor.com/project/dotdoom/delern/branch/master
-[link/test/codecov]:               https://codecov.io/gh/dasfoo/delern
+[link/firebase]:      https://github.com/dasfoo/delern/actions?query=workflow%3Afirebase+branch%3Amaster
+[link/flutter]:       https://github.com/dasfoo/delern/actions?query=workflow%3Aflutter+branch%3Amaster
+[link/flutter-drive]: https://github.com/dasfoo/delern/actions?query=workflow%3A"flutter+drive"+branch%3Amaster
+[link/codecov]:       https://codecov.io/gh/dasfoo/delern
 
-| CI/CD                                         | Status (on master)                                                 |
-| --------------------------------------------- | ------------------------------------------------------------------ |
-| Build Flutter/Android on Linux                | [![build][badge/build/flutter/linux]][link/build/cirrus-ci]        |
-| Build Flutter/iOS on MacOS                    | [![build][badge/build/flutter/osx]][link/build/cirrus-ci]          |
-| Build Flutter/Android and Firebase on Windows | [![build][badge/build/windows]][link/build/appveyor]               |
-| Build Firebase on Linux                       | [![build][badge/build/firebase]][link/build/cirrus-ci]             |
-| Deploy Flutter/Android to Play Store          | [![deploy][badge/deploy/flutter/play-store]][link/build/cirrus-ci] |
-| Deploy Flutter/iOS to App Store               | [![deploy][badge/deploy/flutter/app-store]][link/build/cirrus-ci]  |
-| Deploy Firebase                               | [![deploy][badge/deploy/firebase]][link/build/cirrus-ci]           |
-| Code coverage by unit tests                   | [![coverage][badge/test/flutter/coverage]][link/test/codecov]      |
+| CI/CD                     | Status (on master)                                 |
+| ------------------------- | -------------------------------------------------- |
+| Build and Deploy Flutter  | [![build][badge/flutter]][link/flutter]            |
+| Build and Deploy Firebase | [![build][badge/firebase]][link/firebase]          |
+| Run Flutter Driver tests  | [![test][badge/flutter-drive]][link/flutter-drive] |
+| Flutter code coverage     | [![coverage][badge/codecov]][link/codecov]         |
 
 ## Create your Decks with Cards
 

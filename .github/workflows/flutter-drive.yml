@@ -21,7 +21,7 @@ jobs:
           - "iPad Pro (12.9-inch) (3rd generation) (13.1)"
     runs-on: macOS-latest
     env:
-      FLUTTER_SDK_ROOT: /tmp/flutter
+      FLUTTER_ROOT: /tmp/flutter
     steps:
       - name: "Print a list of simulators and start one"
         run: |
@@ -44,4 +44,4 @@ jobs:
       - name: "Build and run tests"
         working-directory: flutter
         run: |
-          "${FLUTTER_SDK_ROOT?}/bin/flutter" drive --target test_driver/main.dart
+          "${FLUTTER_ROOT?}/bin/flutter" drive --target test_driver/main.dart

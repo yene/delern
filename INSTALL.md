@@ -119,6 +119,11 @@ account (which does not have to be a Developer enabled account). The credentials
 to this account are stored in `FASTLANE_USER` and `FASTLANE_PASSWORD`
 environment variables.
 
+### Automated Fastlane Update
+
+This is implemented via GitHub Actions and requires an OAuth Access token with
+"repo" access.
+
 ### Deploy Website, Security Rules and Cloud Functions
 
 The website is hosted on Firebase, and we use `firebase` command line tool to

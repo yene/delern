@@ -64,7 +64,7 @@ List<Widget> buildDeveloperMenu(BuildContext context) {
         // Get the root state to make sure WidgetsApp (a subwidget of
         // MaterialApp) is restarted. Very hacky, but this code will not even
         // exist in production version of the app.
-        context.rootAncestorStateOfType(const TypeMatcher<State>())
+        context.findRootAncestorStateOfType<State>()
             // ignore: invalid_use_of_protected_member
             .setState(() {
           _debugAllowDevMenu = false;

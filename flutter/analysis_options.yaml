@@ -53,3 +53,6 @@ linter:
     avoid_function_literals_in_foreach_calls: false
     prefer_double_quotes: false
     sort_constructors_first: false
+
+    # TODO(ksheremet): Fix it for local variables
+    unnecessary_final: false

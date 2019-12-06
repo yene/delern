@@ -282,7 +282,7 @@ class CurrentUserWidget extends InheritedWidget {
   final User user;
 
   static CurrentUserWidget of(BuildContext context) =>
-      context.inheritFromWidgetOfExactType(CurrentUserWidget);
+      context.dependOnInheritedWidgetOfExactType<CurrentUserWidget>();
 
   const CurrentUserWidget({@required this.user, Key key, Widget child})
       : assert(user != null),

@@ -16,7 +16,7 @@
     "configstore": "^5.0.0",
     "firebase-admin": "^8.6.0",
     "firebase-bolt": "^0.8.4",
-    "firebase-tools": "^7.4.0"
+    "firebase-tools": "^7.9.0"
   },
   "devDependencies": {
     "gts": "^1.1.0",

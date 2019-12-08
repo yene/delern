@@ -108,7 +108,7 @@ class _DeckSharingState extends State<DeckSharing> {
       final uid = await userLookup(_textController.text.toString());
       if (uid == null) {
         if (await _inviteUser()) {
-          setState(_textController.clear);
+          _clearInputFields();
         }
         // Do not clear the field if user didn't send an invite.
         // Maybe user made a typo in email address and needs to correct it.
@@ -119,6 +119,8 @@ class _DeckSharingState extends State<DeckSharing> {
               ..access = deckAccess
               ..email = _textController.text.toString())
             .build());
+        // Clear input field after sharing the deck
+        _clearInputFields();
       }
     } on SocketException catch (_) {
       UserMessages.showMessage(
@@ -145,6 +147,10 @@ class _DeckSharingState extends State<DeckSharing> {
       return true;
     }
     return false;
+  }
+
+  void _clearInputFields() {
+    _textController.clear();
   }
 }
 

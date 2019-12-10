@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:delern_flutter/models/base/list_accessor.dart';
 import 'package:delern_flutter/models/base/stream_with_latest_value.dart';
@@ -177,7 +178,10 @@ class User {
         // will reject the update.
         '$cardPath/createdAt': ServerValue.timestamp,
         '$scheduledCardPath/level': 0,
-        '$scheduledCardPath/repeatAt': 0,
+        // Set random time to shuffle cards when they are created
+        '$scheduledCardPath/repeatAt':
+            (DateTime.now().millisecondsSinceEpoch * Random().nextDouble())
+                .floor(),
       });
     }
 

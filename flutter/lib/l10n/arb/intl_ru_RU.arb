@@ -781,5 +781,12 @@
     "type": "text",
     "placeholders": {
     }
+  },
+  "shuffleTooltip": "Перемешать карточки",
+  "@shuffleTooltip": {
+    "description": "Shuffle cards tooltip",
+    "type": "text",
+    "placeholders": {
+    }
   }
 }

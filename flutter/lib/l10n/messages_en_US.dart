@@ -175,6 +175,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "shareIntroDescription": MessageLookupByLibrary.simpleMessage(
             "Share decks with friends and colleagues to learn together"),
         "shareIntroTitle": MessageLookupByLibrary.simpleMessage("Share decks"),
+        "shuffleTooltip": MessageLookupByLibrary.simpleMessage("Shuffle cards"),
         "signInAccountExistWithDifferentCredentialWarning":
             MessageLookupByLibrary.simpleMessage(
                 "You have previously signed in to the application using this email, but with a different provider (e.g. Google instead of Facebook). Please sign in with the same provider you have used before."),

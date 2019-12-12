@@ -19,6 +19,7 @@ dependencies:
   quiver: ">=2.0.0 <3.0.0"
   built_collection: ^4.2.2
   built_value: ^6.6.0
+  rxdart: ^0.23.1
 
   firebase_auth: ^0.8.2
   firebase_analytics: ^2.0.3

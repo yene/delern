@@ -189,6 +189,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "Делитесь списками с друзьями и коллегами, чтобы изучать вместе"),
         "shareIntroTitle":
             MessageLookupByLibrary.simpleMessage("Делитесь списками"),
+        "shuffleTooltip":
+            MessageLookupByLibrary.simpleMessage("Перемешать карточки"),
         "signInAccountExistWithDifferentCredentialWarning":
             MessageLookupByLibrary.simpleMessage(
                 "Вы уже регистрировались в приложении с этим адресом электронной почты, но с использованием другого сервиса (например, Google вместо Facebook). Пожалуйста, войдите с использованием того же сервиса, которым вы пользовались раньше"),

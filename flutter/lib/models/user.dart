@@ -270,6 +270,16 @@ class User {
         'learning/$uid/${sc.deckKey}/${sc.key}': null,
       });
 
+  /// Update latest_online_at node immediately, and also schedule an
+  /// onDisconnect handler which will set latest_online_at node to the timestamp
+  /// on the server when a client is disconnected.
+  Future<void> setLastOnlineAt() => (FirebaseDatabase.instance
+          .reference()
+          .child('latest_online_at')
+          .child(uid)
+            ..onDisconnect().set(ServerValue.timestamp))
+      .set(ServerValue.timestamp);
+
   Future<void> _write(Map<String, dynamic> updates) async {
     // Firebase update() does not return until it gets response from the server.
     final updateFuture = FirebaseDatabase.instance.reference().update(updates);

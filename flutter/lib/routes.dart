@@ -6,6 +6,7 @@ import 'package:delern_flutter/views/cards_interval_learning/cards_interval_lear
 import 'package:delern_flutter/views/cards_view_learning/cards_view_learning.dart';
 import 'package:delern_flutter/views/deck_sharing/deck_sharing.dart';
 import 'package:delern_flutter/views/edit_deck/edit_deck.dart';
+import 'package:delern_flutter/views/sign_in/sign_in.dart';
 import 'package:delern_flutter/views/support_dev/support_development.dart';
 import 'package:flutter/material.dart';
 
@@ -84,3 +85,10 @@ Future<void> openPreviewCardScreen(
                   card: card,
                   deck: deck,
                 )));
+
+Future<void> openSignInScreen(BuildContext context) => Navigator.push(
+    context,
+    MaterialPageRoute(
+      settings: const RouteSettings(name: '/sign_in'),
+      builder: (_) => SignIn(),
+    ));

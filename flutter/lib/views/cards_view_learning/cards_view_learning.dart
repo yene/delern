@@ -14,6 +14,8 @@ const _kCardPageRatio = 0.9;
 const double _kCardPadding = 8;
 
 class CardsViewLearning extends StatefulWidget {
+  static const routeName = '/learn-view';
+
   final DeckModel deck;
 
   const CardsViewLearning({@required this.deck}) : assert(deck != null);

@@ -17,6 +17,8 @@ import 'package:pedantic/pedantic.dart';
 
 /// A screen with sign in information and buttons.
 class SignIn extends StatelessWidget {
+  static const routeName = '/signIn';
+
   @override
   Widget build(BuildContext context) => Scaffold(
         key: _scaffoldKey,

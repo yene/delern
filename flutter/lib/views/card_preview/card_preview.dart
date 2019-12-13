@@ -10,6 +10,8 @@ import 'package:delern_flutter/views/helpers/save_updates_dialog.dart';
 import 'package:flutter/material.dart';
 
 class CardPreview extends StatefulWidget {
+  static const routeName = '/cards/preview';
+
   final CardModel card;
   final DeckModel deck;
 

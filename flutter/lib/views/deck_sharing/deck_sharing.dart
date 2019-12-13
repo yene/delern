@@ -21,6 +21,8 @@ import 'package:flutter/material.dart';
 import 'package:pedantic/pedantic.dart';
 
 class DeckSharing extends StatefulWidget {
+  static const routeName = '/share-deck';
+
   final DeckModel _deck;
 
   const DeckSharing(this._deck);

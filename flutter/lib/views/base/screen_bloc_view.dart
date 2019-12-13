@@ -2,7 +2,7 @@ import 'package:delern_flutter/flutter/localization.dart' as localizations;
 import 'package:delern_flutter/flutter/user_messages.dart';
 import 'package:delern_flutter/models/user.dart';
 import 'package:delern_flutter/view_models/base/screen_bloc.dart';
-import 'package:delern_flutter/views/helpers/sign_in_widget.dart';
+import 'package:delern_flutter/views/helpers/auth_widget.dart';
 import 'package:flutter/material.dart';
 
 typedef BlocBuilder<T extends ScreenBloc> = T Function(User user);

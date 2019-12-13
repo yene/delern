@@ -5,7 +5,7 @@ import 'package:delern_flutter/flutter/localization.dart';
 import 'package:delern_flutter/flutter/styles.dart' as app_styles;
 import 'package:delern_flutter/remote/error_reporting.dart' as error_reporting;
 import 'package:delern_flutter/views/decks_list/decks_list.dart';
-import 'package:delern_flutter/views/helpers/sign_in_widget.dart';
+import 'package:delern_flutter/views/helpers/auth_widget.dart';
 import 'package:delern_flutter/views/onboarding/onboarding.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
@@ -41,7 +41,7 @@ class App extends StatelessWidget {
       // SignInWidget must be above Navigator to provide CurrentUserWidget.of().
       builder: (context, child) => Onboarding(
           afterOnboardingBuilder: () =>
-              SignInWidget(afterSignInBuilder: () => child)),
+              AuthWidget(afterSignInBuilder: () => child)),
       theme: ThemeData(
           scaffoldBackgroundColor: app_styles.kScaffoldBackgroundColor,
           primarySwatch: app_styles.kPrimarySwatch,

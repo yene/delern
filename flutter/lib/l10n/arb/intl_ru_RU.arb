@@ -449,13 +449,6 @@
     "placeholders": {
     }
   },
-  "accountExistUserWarning": "У Вас уже есть учетная запись, пожалуйста, войдите в свой аккаунт. Все ваши данные, созданные анонимно, будут потеряны. Желаете ли Вы продолжить?",
-  "@accountExistUserWarning": {
-    "description": "User warning, account already exists",
-    "type": "text",
-    "placeholders": {
-    }
-  },
   "deleteDeckOwnerAccessQuestion": "Список, все карточки и история изучения будут удалены.\n\nЕсли вы поделились списком с другими пользователями, он также будет удален у них. Вы хотите удалить список?",
   "@deleteDeckOwnerAccessQuestion": {
     "description": "Delete deck question to owner of deck",
@@ -764,6 +757,27 @@
   "termsOfServiceSignIn": "Условиями Использования",
   "@termsOfServiceSignIn": {
     "description": "Terms of Service label",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "signInWithFacebook": "Войти с помощью Facebook",
+  "@signInWithFacebook": {
+    "description": "Sign in with Facebook Button",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "signInCredentialAlreadyInUseWarning": "Вы уже регистрировались в приложении с этим аккаунтом. Если Вы продолжите, все данные, которые Вы создали анонимно, будут потеряны. Желаете продолжить?",
+  "@signInCredentialAlreadyInUseWarning": {
+    "description": "Sign in flow: a warning after sign in attempt (anonymous)",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "signInAccountExistWithDifferentCredentialWarning": "Вы уже регистрировались в приложении с этим адресом электронной почты, но с использованием другого сервиса (например, Google вместо Facebook). Пожалуйста, войдите с использованием того же сервиса, которым вы пользовались раньше",
+  "@signInAccountExistWithDifferentCredentialWarning": {
+    "description": "Sign in flow: a warning after sign in attempt (unauthenticated)",
     "type": "text",
     "placeholders": {
     }

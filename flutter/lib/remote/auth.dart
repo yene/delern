@@ -1,11 +1,12 @@
 import 'dart:async';
 
 import 'package:delern_flutter/models/user.dart';
+import 'package:delern_flutter/remote/credential_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:quiver/strings.dart';
 
+/// An abstraction layer on top of FirebaseAuth.
 class Auth {
   static final instance = Auth._();
   Auth._() {
@@ -20,8 +21,6 @@ class Auth {
   final _userChanged = StreamController<User>.broadcast();
   Stream<User> get onUserChanged => _userChanged.stream;
 
-  static final GoogleSignIn _googleSignIn = GoogleSignIn();
-
   bool _authStateKnown = false;
   bool get authStateKnown => _authStateKnown;
 
@@ -31,6 +30,8 @@ class Auth {
   /// Sign in using a specified provider. If the user is currently signed in
   /// anonymously, try to preserve uid. This will work only if the user hasn't
   /// signed in with this provider before, otherwise throws PlatformException.
+  /// For the full list of errors, see both [FirebaseAuth.signInWithCredential]
+  /// and FirebaseUser.linkWithCredential methods.
   ///
   /// Some providers may skip through the account picker window if sign in has
   /// already happened (e.g. after a failed account linking). To give user a
@@ -40,21 +41,17 @@ class Auth {
   /// NOTE: if the user cancels sign in (e.g. presses "Back" when presented an
   /// account picker), the Future will still complete successfully, but no
   /// changes are done.
-  Future<void> signIn(SignInProvider provider,
-      {bool forceAccountPicker = true}) async {
+  Future<void> signIn(
+    String provider, {
+    bool forceAccountPicker = true,
+  }) async {
     FirebaseUser user;
 
     if (provider == null) {
       user = await FirebaseAuth.instance.signInAnonymously();
     } else {
-      AuthCredential credential;
-      switch (provider) {
-        case SignInProvider.google:
-          credential =
-              await _getGoogleCredential(signOutFirst: forceAccountPicker);
-          break;
-        // TODO(dotdoom): handle other providers here (ex.: Facebook) #944.
-      }
+      final credential = await credentialProviders[provider]
+          .getCredential(forceAccountPicker: forceAccountPicker);
 
       // Credential is unset, usually cancelled by user.
       if (credential == null) {
@@ -78,8 +75,12 @@ class Auth {
   Future<void> signInSilently() async {
     var firebaseUser = await FirebaseAuth.instance.currentUser();
     if (firebaseUser == null) {
-      // TODO(dotdoom): chain other _getXXXCredential(silent: true) here #944.
-      final credential = await _getGoogleCredential(silent: true);
+      AuthCredential credential;
+      for (final provider in credentialProviders.values) {
+        if ((credential = await provider.getCredential(silent: true)) != null) {
+          break;
+        }
+      }
 
       if (credential != null) {
         firebaseUser =
@@ -98,41 +99,6 @@ class Auth {
   /// Sign out of Firebase, but without signing out of linked providers.
   Future<void> signOut() => FirebaseAuth.instance.signOut();
 
-  Future<AuthCredential> _getGoogleCredential({
-    silent = false,
-    signOutFirst = false,
-  }) async {
-    assert(!(silent && signOutFirst),
-        'Silent Sign In is meaningless if Sign Out is forced first');
-    if (signOutFirst) {
-      await _googleSignIn.signOut();
-    }
-
-    final account = await (silent
-        ? _googleSignIn.signInSilently()
-        : _googleSignIn.signIn());
-    if (account == null) {
-      // signInSilently() will suppress any errors and return null, and signIn()
-      // will also return null if the user has cancelled authentication.
-      return null;
-    }
-    final auth = await account.authentication;
-    // NOTE: `auth` may contain an access token that is not valid at this point
-    //       anymore, or will expire in a few seconds. There is no guarantee
-    //       that the token is up to date. If this happens, further use of the
-    //       token (e.g. `signInWithCredential`) will fail. To recover from
-    //       this, we can force token re-generation when signIn fails, by using
-    //       `await account.clearAuthCache()`. Note that `getCredential()` call
-    //       below will never fail as it merely copies tokens into a different
-    //       structure without validation.
-    //       Another solution is to always call `clearAuthCache()`, but what are
-    //       the side effects of it?
-    return GoogleAuthProvider.getCredential(
-      accessToken: auth.accessToken,
-      idToken: auth.idToken,
-    );
-  }
-
   void _setCurrentUser(FirebaseUser user) {
     if (user == null || _currentUser?.updateDataSource(user) != true) {
       _currentUser?.dispose();
@@ -141,6 +107,8 @@ class Auth {
     _userChanged.add(_currentUser);
   }
 
+  /// Collect user facing information from providers and fill it into Firebase
+  /// if it was not already there.
   static Future<bool> _updateProfileFromProviders(FirebaseUser user) async {
     final update = UserUpdateInfo();
 

@@ -1,5 +1,8 @@
-# Uncomment this line to define a global platform for your project
-# platform :ios, '9.0'
+platform :ios, '9.0'
+
+# TODO(dotdoom): remove once the following issue is fixed:
+# https://github.com/roughike/flutter_facebook_login/issues/214
+use_modular_headers!
 
 # CocoaPods analytics sends network stats synchronously affecting flutter build latency.
 ENV['COCOAPODS_DISABLE_STATS'] = 'true'

@@ -5,7 +5,7 @@ import 'package:delern_flutter/models/deck_access_model.dart';
 import 'package:delern_flutter/models/deck_model.dart';
 import 'package:delern_flutter/remote/analytics.dart';
 import 'package:delern_flutter/routes.dart';
-import 'package:delern_flutter/views/helpers/sign_in_widget.dart';
+import 'package:delern_flutter/views/helpers/auth_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:pedantic/pedantic.dart';
 

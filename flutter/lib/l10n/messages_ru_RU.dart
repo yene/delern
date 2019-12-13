@@ -32,8 +32,6 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function>{
-        "accountExistUserWarning": MessageLookupByLibrary.simpleMessage(
-            "У Вас уже есть учетная запись, пожалуйста, войдите в свой аккаунт. Все ваши данные, созданные анонимно, будут потеряны. Желаете ли Вы продолжить?"),
         "add": MessageLookupByLibrary.simpleMessage("Добавить"),
         "addCardTooltip":
             MessageLookupByLibrary.simpleMessage("Добавить карточку"),
@@ -191,6 +189,13 @@ class MessageLookup extends MessageLookupByLibrary {
             "Делитесь списками с друзьями и коллегами, чтобы изучать вместе"),
         "shareIntroTitle":
             MessageLookupByLibrary.simpleMessage("Делитесь списками"),
+        "signInAccountExistWithDifferentCredentialWarning":
+            MessageLookupByLibrary.simpleMessage(
+                "Вы уже регистрировались в приложении с этим адресом электронной почты, но с использованием другого сервиса (например, Google вместо Facebook). Пожалуйста, войдите с использованием того же сервиса, которым вы пользовались раньше"),
+        "signInCredentialAlreadyInUseWarning": MessageLookupByLibrary.simpleMessage(
+            "Вы уже регистрировались в приложении с этим аккаунтом. Если Вы продолжите, все данные, которые Вы создали анонимно, будут потеряны. Желаете продолжить?"),
+        "signInWithFacebook":
+            MessageLookupByLibrary.simpleMessage("Войти с помощью Facebook"),
         "signInWithGoogle":
             MessageLookupByLibrary.simpleMessage("Войти с помощью Google"),
         "skip": MessageLookupByLibrary.simpleMessage("Пропустить"),

@@ -10,12 +10,12 @@ import 'package:delern_flutter/remote/auth.dart';
 import 'package:delern_flutter/remote/error_reporting.dart' as error_reporting;
 import 'package:delern_flutter/routes.dart';
 import 'package:delern_flutter/views/decks_list/developer_menu.dart';
+import 'package:delern_flutter/views/helpers/auth_widget.dart';
 import 'package:delern_flutter/views/helpers/email_launcher.dart';
-import 'package:delern_flutter/views/helpers/save_updates_dialog.dart';
 import 'package:delern_flutter/views/helpers/send_invite.dart';
 import 'package:delern_flutter/views/helpers/sign_in_widget.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:package_info/package_info.dart';
 import 'package:pedantic/pedantic.dart';
@@ -161,49 +161,38 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
     );
   }
 
-  Widget _buildProviderImage(SignInProvider provider) {
+  Widget _buildProviderImage(String provider) {
+    Color backgroundColor;
+    String providerImageAsset;
     switch (provider) {
       // TODO(dotdoom): add more providers here #944.
-      case SignInProvider.google:
-        return Container(
-          decoration: const BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.all(Radius.circular(2)),
-          ),
-          padding: const EdgeInsets.all(8),
-          child: Image.asset('images/google_sign_in.png', height: 18),
-        );
+      case GoogleAuthProvider.providerId:
+        backgroundColor = Colors.white;
+        providerImageAsset = 'images/google_sign_in.png';
+        break;
+      case FacebookAuthProvider.providerId:
+        backgroundColor = app_styles.kFacebookBlueColor;
+        providerImageAsset = 'images/facebook_sign_in.png';
+        break;
       default:
         unawaited(error_reporting.report(
             'NavigationDrawer', 'Unknown provider: $provider', null));
-        // For "SignInProvider.facebook" returns Text("facebook").
-        return Text(provider
-            .toString()
-            .substring(provider.runtimeType.toString().length + 1));
+        return Text(provider);
     }
+
+    return Container(
+      decoration: BoxDecoration(
+        color: backgroundColor,
+        borderRadius: const BorderRadius.all(Radius.circular(2)),
+      ),
+      padding: const EdgeInsets.all(8),
+      child: Image.asset(providerImageAsset, height: 18),
+    );
   }
 
   Future<void> _promoteAnonymous(BuildContext context) async {
     unawaited(logPromoteAnonymous());
-    try {
-      await Auth.instance.signIn(SignInProvider.google);
-    } on PlatformException catch (_) {
-      // TODO(ksheremet): Merge data
-      unawaited(logPromoteAnonymousFail());
-      final signIn = await showSaveUpdatesDialog(
-          context: context,
-          changesQuestion: localizations.of(context).accountExistUserWarning,
-          yesAnswer: localizations.of(context).navigationDrawerSignIn,
-          noAnswer: MaterialLocalizations.of(context).cancelButtonLabel);
-      if (signIn) {
-        // Sign out of Firebase but retain the account that has been picked by
-        // user.
-        await Auth.instance.signOut();
-        unawaited(Auth.instance
-            .signIn(SignInProvider.google, forceAccountPicker: false));
-      } else {
-        Navigator.of(context).pop();
-      }
-    }
+    return Navigator.push(
+        context, MaterialPageRoute(builder: (_) => SignInWidget()));
   }
 }

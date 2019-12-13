@@ -10,6 +10,9 @@ const kSecondaryTextDeckItemColor = Color(0xff757575);
 const kEditDismissibleColor = Color(0xFF2196F3);
 const kDeleteDismissibleColor = Color(0xFFFF5252);
 const kHyperlinkColor = Colors.blueAccent;
+// "Facebook brand blue" color per instructions at
+// https://developers.facebook.com/docs/facebook-login/for-devices
+const kFacebookBlueColor = Color(0xFF1877F2);
 
 const double kMinItemHeight = 48;
 const double kMinIconHeight = 24;

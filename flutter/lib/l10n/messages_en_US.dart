@@ -32,8 +32,6 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function>{
-        "accountExistUserWarning": MessageLookupByLibrary.simpleMessage(
-            "You already have an account, please sign in with your credentials. All your data, that was created anonymously, will be lost. Would you like to continue?"),
         "add": MessageLookupByLibrary.simpleMessage("Add"),
         "addCardTooltip": MessageLookupByLibrary.simpleMessage("Add Card"),
         "addCardsDeckMenu": MessageLookupByLibrary.simpleMessage("Add Cards"),
@@ -177,6 +175,13 @@ class MessageLookup extends MessageLookupByLibrary {
         "shareIntroDescription": MessageLookupByLibrary.simpleMessage(
             "Share decks with friends and colleagues to learn together"),
         "shareIntroTitle": MessageLookupByLibrary.simpleMessage("Share decks"),
+        "signInAccountExistWithDifferentCredentialWarning":
+            MessageLookupByLibrary.simpleMessage(
+                "You have previously signed in to the application using this email, but with a different provider (e.g. Google instead of Facebook). Please sign in with the same provider you have used before."),
+        "signInCredentialAlreadyInUseWarning": MessageLookupByLibrary.simpleMessage(
+            "The account you have chosen is already registered with the application. If you continue with sign in, all data that you have created anonymously will be lost. Would you like to continue?"),
+        "signInWithFacebook":
+            MessageLookupByLibrary.simpleMessage("Sign in with Facebook"),
         "signInWithGoogle":
             MessageLookupByLibrary.simpleMessage("Sign in with Google"),
         "skip": MessageLookupByLibrary.simpleMessage("Skip"),

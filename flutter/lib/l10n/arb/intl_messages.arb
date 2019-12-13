@@ -1,6 +1,6 @@
 {
   "@@locale": "en_US",
-  "@@last_modified": "2019-11-02T14:51:57.530906",
+  "@@last_modified": "2019-12-12T19:20:00.332437",
   "navigationDrawerSignOut": "Sign Out",
   "@navigationDrawerSignOut": {
     "description": "Sign Out in Navigation Drawer",
@@ -46,6 +46,13 @@
   "signInWithGoogle": "Sign in with Google",
   "@signInWithGoogle": {
     "description": "Sign in with Google Button",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "signInWithFacebook": "Sign in with Facebook",
+  "@signInWithFacebook": {
+    "description": "Sign in with Facebook Button",
     "type": "text",
     "placeholders": {
     }
@@ -457,9 +464,16 @@
     "placeholders": {
     }
   },
-  "accountExistUserWarning": "You already have an account, please sign in with your credentials. All your data, that was created anonymously, will be lost. Would you like to continue?",
-  "@accountExistUserWarning": {
-    "description": "User warning, account already exists",
+  "signInCredentialAlreadyInUseWarning": "The account you have chosen is already registered with the application. If you continue with sign in, all data that you have created anonymously will be lost. Would you like to continue?",
+  "@signInCredentialAlreadyInUseWarning": {
+    "description": "Sign in flow: a warning after sign in attempt (anonymous)",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "signInAccountExistWithDifferentCredentialWarning": "You have previously signed in to the application using this email, but with a different provider (e.g. Google instead of Facebook). Please sign in with the same provider you have used before.",
+  "@signInAccountExistWithDifferentCredentialWarning": {
+    "description": "Sign in flow: a warning after sign in attempt (unauthenticated)",
     "type": "text",
     "placeholders": {
     }

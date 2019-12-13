@@ -12,12 +12,40 @@
         <!-- Disabling some features of Firebase Analytics:
              https://firebase.google.com/support/guides/disable-analytics -->
         <!-- Disable Advertising ID collection -->
-        <meta-data android:name="google_analytics_adid_collection_enabled" android:value="false" />
-        <!-- We do not want to report Analytics from Firebase Test Lab. The code in Application
-             checks that and re-enables reporting when no Firebase Test Lab is detected. If we
-             leave this ON by default, Analytics code inside the app will start sending events
-             before any code in Application can stop it -->
-        <meta-data android:name="firebase_analytics_collection_enabled" android:value="false" />
+        <meta-data
+            android:name="google_analytics_adid_collection_enabled"
+            android:value="false" />
+        <!-- We do not want to report Analytics from Firebase Test Lab. The code
+             in Application checks that and re-enables reporting when no
+             Firebase Test Lab is detected. If we leave this ON by default,
+             Analytics code inside the app will start sending events before any
+             code in Application can stop it -->
+        <meta-data
+            android:name="firebase_analytics_collection_enabled"
+            android:value="false" />
+
+        <!-- Facebook Sign In -->
+        <meta-data android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id"/>
+        <activity android:name="com.facebook.FacebookActivity"
+            android:configChanges=
+                "keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+            android:label="${appName}" />
+        <activity
+            android:name="com.facebook.CustomTabActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="@string/fb_login_protocol_scheme" />
+            </intent-filter>
+        </activity>
+        <!-- Disable Facebook Analytics collection -->
+        <meta-data android:name="com.facebook.sdk.AutoLogAppEventsEnabled"
+            android:value="false" />
+        <meta-data android:name="com.facebook.sdk.AdvertiserIDCollectionEnabled"
+            android:value="false" />
 
         <!-- Settings for notification icon -->
         <meta-data

@@ -25,7 +25,9 @@ dependencies:
   firebase_database: ^2.0.2
   firebase_messaging: ^4.0.0
   firebase_crashlytics: ^0.1.0
+
   google_sign_in: ^4.0.1
+  flutter_facebook_login: ^3.0.0
 
   flutter:
     sdk: flutter
@@ -51,12 +53,18 @@ flutter:
   uses-material-design: true
 
   assets:
-    - images/ic_launcher.png
-    - images/google_sign_in.png
-    - images/anonymous.jpg
+    # Onboarding.
     - images/card_sharing.png
     - images/child_learning.png
     - images/deck_creation.png
+
+    # Icons for Sign In buttons and Navigation Drawer.
+    - images/anonymous.jpg
+    - images/google_sign_in.png
+    - images/facebook_sign_in.png
+
+    # Logo to display in e.g. About dialog.
+    - images/ic_launcher.png
 
 builders:
   built_value_generator: any

@@ -55,6 +55,12 @@ class AppLocalizations {
         desc: 'Sign in with Google Button',
       );
 
+  String get signInWithFacebook => Intl.message(
+        'Sign in with Facebook',
+        name: 'signInWithFacebook',
+        desc: 'Sign in with Facebook Button',
+      );
+
   String get editCardsDeckMenu => Intl.message(
         'Edit Cards',
         name: 'editCardsDeckMenu',
@@ -429,12 +435,20 @@ To see the source code for this app, please visit the [Delern GitHub repo](https
         desc: 'Sign In',
       );
 
-  String get accountExistUserWarning => Intl.message(
-        'You already have an account, please sign in with your credentials. '
-        'All your data, that was created anonymously, will be lost. '
-        'Would you like to continue?',
-        name: 'accountExistUserWarning',
-        desc: 'User warning, account already exists',
+  String get signInCredentialAlreadyInUseWarning => Intl.message(
+        'The account you have chosen is already registered with the '
+        'application. If you continue with sign in, all data that you have '
+        'created anonymously will be lost. Would you like to continue?',
+        name: 'signInCredentialAlreadyInUseWarning',
+        desc: 'Sign in flow: a warning after sign in attempt (anonymous)',
+      );
+
+  String get signInAccountExistWithDifferentCredentialWarning => Intl.message(
+        'You have previously signed in to the application using this email, '
+        'but with a different provider (e.g. Google instead of Facebook). '
+        'Please sign in with the same provider you have used before.',
+        name: 'signInAccountExistWithDifferentCredentialWarning',
+        desc: 'Sign in flow: a warning after sign in attempt (unauthenticated)',
       );
 
   String get deleteDeckOwnerAccessQuestion => Intl.message(

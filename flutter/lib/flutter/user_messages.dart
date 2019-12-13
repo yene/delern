@@ -1,10 +1,10 @@
 import 'dart:async';
-import 'dart:math';
 
 import 'package:delern_flutter/flutter/localization.dart' as localization;
 import 'package:delern_flutter/l10n/app_localizations.dart';
 import 'package:delern_flutter/remote/error_reporting.dart' as error_reporting;
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class UserMessages {
   // TODO(ksheremet): Get rid of it
@@ -28,11 +28,27 @@ class UserMessages {
   // error.
   static void showMessage(ScaffoldState scaffoldState, String message) =>
       scaffoldState.showSnackBar(SnackBar(
-        content: Text(message),
-        duration: const Duration(seconds: 3),
+        content: Text(message, maxLines: 5, overflow: TextOverflow.ellipsis),
+        duration: const Duration(seconds: 7),
       ));
 
-  static String formUserFriendlyErrorMessage(AppLocalizations locale, e) =>
-      locale.errorUserMessage +
-      e.toString().substring(0, min(e.toString().length, 50));
+  static String formUserFriendlyErrorMessage(AppLocalizations locale, e) {
+    String exceptionSpecificMessage;
+    if (e is PlatformException) {
+      exceptionSpecificMessage = e.message;
+    } else if (e is Exception) {
+      final exceptionString = e.toString();
+      // Taken from exceptions.dart.
+      // Default Exception.toString() will start with this prefix, with the
+      // original message (from Exception() constructor) following. We can cut
+      // out the prefix to save space.
+      const exceptionPrefix = 'Exception: ';
+      if (exceptionString.startsWith(exceptionPrefix)) {
+        exceptionSpecificMessage =
+            exceptionString.substring(exceptionPrefix.length);
+      }
+    }
+    exceptionSpecificMessage ??= e.toString();
+    return locale.errorUserMessage + exceptionSpecificMessage;
+  }
 }

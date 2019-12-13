@@ -16,10 +16,7 @@ import 'package:meta/meta.dart';
 import 'package:pedantic/pedantic.dart';
 import 'package:quiver/strings.dart';
 
-enum SignInProvider {
-  google,
-}
-
+/// An abstraction layer on top of FirebaseUser, plus data writing methods.
 class User {
   StreamWithValue<bool> _isOnline;
   FirebaseUser _dataSource;
@@ -76,21 +73,11 @@ class User {
 
   /// All providers (aka "linked accounts") for the current user. Empty for
   /// anonymously signed in.
-  Iterable<SignInProvider> get providers => _dataSource.providerData
-      .map((p) => _parseSignInProvider(p.providerId))
-      .where((p) => p != null);
+  Iterable<String> get providers => _dataSource.providerData
+      .map((p) => p.providerId)
+      .where((p) => p != 'firebase');
 
   bool get isAnonymous => _dataSource.isAnonymous;
-
-  static SignInProvider _parseSignInProvider(String providerId) {
-    switch (providerId) {
-      case GoogleAuthProvider.providerId:
-        return SignInProvider.google;
-      // TODO(dotdoom): add more providers here #944.
-    }
-    // For anonymous users, providerId == 'firebase'.
-    return null;
-  }
 
   Future<DeckModel> createDeck({
     @required DeckModel deckTemplate,

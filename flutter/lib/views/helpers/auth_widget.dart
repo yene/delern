@@ -66,6 +66,8 @@ class _AuthWidgetState extends State<AuthWidget> {
                 ? 'anonymous'
                 : loginProviders.join(',')));
 
+        unawaited(_currentUser.setLastOnlineAt());
+
         // TODO(dotdoom): register onMessage to show a snack bar with
         //                notification when the app is in foreground.
         // Must be called after each login to obtain a FirebaseMessaging token.

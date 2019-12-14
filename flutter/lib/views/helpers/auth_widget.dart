@@ -6,7 +6,7 @@ import 'package:delern_flutter/models/user.dart';
 import 'package:delern_flutter/remote/auth.dart';
 import 'package:delern_flutter/remote/error_reporting.dart' as error_reporting;
 import 'package:delern_flutter/views/helpers/progress_indicator_widget.dart';
-import 'package:delern_flutter/views/helpers/sign_in_widget.dart';
+import 'package:delern_flutter/views/sign_in/sign_in.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -14,8 +14,8 @@ import 'package:flutter/widgets.dart';
 import 'package:pedantic/pedantic.dart';
 
 /// A widget handling application-wide user authentication and anything
-/// associated with it (FCM, Sign In etc). Renders either as a [SignInWidget],
-/// or [CurrentUserWidget] wrapped around [afterSignInBuilder].
+/// associated with it (FCM, Sign In etc). Renders either as a [SignIn], or
+/// [CurrentUserWidget] wrapped around [afterSignInBuilder].
 class AuthWidget extends StatefulWidget {
   final Widget Function() afterSignInBuilder;
 
@@ -98,7 +98,7 @@ class _AuthWidgetState extends State<AuthWidget> {
       return ProgressIndicatorWidget();
     }
 
-    return SignInWidget();
+    return SignIn();
   }
 }
 

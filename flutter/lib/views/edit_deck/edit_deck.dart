@@ -26,6 +26,8 @@ const int _kUpButtonVisibleRow = 20;
 const double _kDividerPadding = 12;
 
 class EditDeck extends StatefulWidget {
+  static const routeName = '/cards';
+
   final DeckModel deck;
 
   const EditDeck({@required this.deck}) : assert(deck != null);

@@ -13,7 +13,6 @@ import 'package:delern_flutter/views/decks_list/developer_menu.dart';
 import 'package:delern_flutter/views/helpers/auth_widget.dart';
 import 'package:delern_flutter/views/helpers/email_launcher.dart';
 import 'package:delern_flutter/views/helpers/send_invite.dart';
-import 'package:delern_flutter/views/helpers/sign_in_widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -192,7 +191,6 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
 
   Future<void> _promoteAnonymous(BuildContext context) async {
     unawaited(logPromoteAnonymous());
-    return Navigator.push(
-        context, MaterialPageRoute(builder: (_) => SignInWidget()));
+    return openSignInScreen(context);
   }
 }

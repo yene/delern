@@ -26,6 +26,8 @@ const BoxConstraints _kFloatingButtonHeightConstraint = BoxConstraints.tightFor(
 );
 
 class CardsIntervalLearning extends StatefulWidget {
+  static const routeName = '/learn-interval';
+
   final DeckModel deck;
 
   const CardsIntervalLearning({@required this.deck}) : assert(deck != null);

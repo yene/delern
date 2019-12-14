@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 
 class SupportDevelopment extends StatelessWidget {
+  static const routeName = '/support';
+
   @override
   Widget build(BuildContext context) => Scaffold(
       appBar: AppBar(

@@ -16,9 +16,9 @@ import 'package:flutter/widgets.dart';
 import 'package:pedantic/pedantic.dart';
 
 /// A screen with sign in information and buttons.
-// TODO(dotdoom): move into views/sign_in/ and remove "Widget" suffix.
-@immutable
-class SignInWidget extends StatelessWidget {
+class SignIn extends StatelessWidget {
+  static const routeName = '/signIn';
+
   @override
   Widget build(BuildContext context) => Scaffold(
         key: _scaffoldKey,

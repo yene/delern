@@ -6,14 +6,26 @@ import 'package:delern_flutter/views/cards_interval_learning/cards_interval_lear
 import 'package:delern_flutter/views/cards_view_learning/cards_view_learning.dart';
 import 'package:delern_flutter/views/deck_sharing/deck_sharing.dart';
 import 'package:delern_flutter/views/edit_deck/edit_deck.dart';
+import 'package:delern_flutter/views/sign_in/sign_in.dart';
 import 'package:delern_flutter/views/support_dev/support_development.dart';
 import 'package:flutter/material.dart';
+
+// How to specify RouteSettings name parameter:
+// - each sequence of sub-components must be an existing route:
+//   e.g. if your route name is /cards/new, then "/" and "/cards" and
+//   "/cards/new" must all be existing named routes;
+// - when nesting route into subcomponents, think of how the user will navigate
+//   away when opening the route from an external link:
+//   e.g. if the user clicks https://delern.org/cards/edit?deckId=1234abcd, they
+//   will get to the "New card" page, and pressing "Back" will take them to
+//   "Deck 1234abcd" page ("/cards" named route), and pressing "Back" again will
+//   take them to list of decks page ("/" named route).
 
 Future<void> openEditDeckScreen(BuildContext context, DeckModel deck) =>
     Navigator.push(
       context,
       MaterialPageRoute(
-          settings: const RouteSettings(name: '/deck/edit'),
+          settings: const RouteSettings(name: EditDeck.routeName),
           builder: (context) => EditDeck(
                 deck: deck,
               )),
@@ -24,9 +36,7 @@ Future<void> openLearnCardIntervalScreen(
     Navigator.push(
         context,
         MaterialPageRoute(
-          settings: const RouteSettings(name: '/decks/learn-interval'),
-          // TODO(dotdoom): pass scheduled cards list to
-          //  CardsLearning.
+          settings: const RouteSettings(name: CardsIntervalLearning.routeName),
           builder: (context) => CardsIntervalLearning(deck: deck),
         ));
 
@@ -34,9 +44,7 @@ Future<void> openLearnCardViewScreen(BuildContext context, DeckModel deck) =>
     Navigator.push(
         context,
         MaterialPageRoute(
-          settings: const RouteSettings(name: '/decks/learn-view'),
-          // TODO(dotdoom): pass scheduled cards list to
-          //  CardsLearning.
+          settings: const RouteSettings(name: CardsViewLearning.routeName),
           builder: (context) => CardsViewLearning(deck: deck),
         ));
 
@@ -44,7 +52,7 @@ Future<void> openNewCardScreen(BuildContext context, DeckModel deck) =>
     Navigator.push(
         context,
         MaterialPageRoute(
-            settings: const RouteSettings(name: '/cards/new'),
+            settings: const RouteSettings(name: CardCreateUpdate.routeName),
             builder: (context) => CardCreateUpdate(
                 card: (CardModelBuilder()..deckKey = deck.key).build(),
                 deck: deck)));
@@ -54,16 +62,14 @@ Future<void> openEditCardScreen(
     Navigator.push(
         context,
         MaterialPageRoute(
-            // 'name' is used by Firebase Analytics to log events.
-            // TODO(dotdoom): consider better route names.
-            settings: const RouteSettings(name: '/cards/edit'),
+            settings: const RouteSettings(name: CardCreateUpdate.routeName),
             builder: (context) => CardCreateUpdate(card: card, deck: deck)));
 
 Future<void> openShareDeckScreen(BuildContext context, DeckModel deck) =>
     Navigator.push(
       context,
       MaterialPageRoute(
-          settings: const RouteSettings(name: '/decks/share'),
+          settings: const RouteSettings(name: DeckSharing.routeName),
           builder: (context) => DeckSharing(deck)),
     );
 
@@ -71,7 +77,7 @@ Future<void> openSupportDevelopmentScreen(BuildContext context) =>
     Navigator.push(
         context,
         MaterialPageRoute(
-            settings: const RouteSettings(name: '/support'),
+            settings: const RouteSettings(name: SupportDevelopment.routeName),
             builder: (context) => SupportDevelopment()));
 
 Future<void> openPreviewCardScreen(
@@ -79,8 +85,15 @@ Future<void> openPreviewCardScreen(
     Navigator.push(
         context,
         MaterialPageRoute(
-            settings: const RouteSettings(name: '/cards/preview'),
+            settings: const RouteSettings(name: CardPreview.routeName),
             builder: (context) => CardPreview(
                   card: card,
                   deck: deck,
                 )));
+
+Future<void> openSignInScreen(BuildContext context) => Navigator.push(
+    context,
+    MaterialPageRoute(
+      settings: const RouteSettings(name: SignIn.routeName),
+      builder: (_) => SignIn(),
+    ));

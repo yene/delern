@@ -9,7 +9,8 @@ import 'package:delern_flutter/views/helpers/text_overflow_ellipsis_widget.dart'
 import 'package:flutter/material.dart';
 
 class CardCreateUpdate extends StatefulWidget {
-  static const routeName = '/cards/edit';
+  static const routeNameNew = '/cards/new';
+  static const routeNameEdit = '/cards/edit';
 
   final CardModel card;
   final DeckModel deck;

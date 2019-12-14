@@ -27,11 +27,6 @@ const double _kDividerPadding = 12;
 
 class EditDeck extends StatefulWidget {
   static const routeName = '/cards';
-
-  final DeckModel deck;
-
-  const EditDeck({@required this.deck}) : assert(deck != null);
-
   @override
   _EditDeckState createState() => _EditDeckState();
 }
@@ -53,17 +48,14 @@ class _EditDeckState extends State<EditDeck> {
   }
 
   @override
-  void initState() {
-    _deckNameController.text = widget.deck.name;
-    _currentDeckState = widget.deck;
-
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) => ScreenBlocView(
         blocBuilder: (user) {
-          final bloc = EditDeckBloc(deck: _currentDeckState, user: user);
+          final bloc = EditDeckBloc(
+            deckKey: ModalRoute.of(context).settings.arguments,
+            user: user,
+          );
+          _currentDeckState = bloc.deck;
+          _deckNameController.text = _currentDeckState.name;
           bloc.doDeckChanged.listen((deck) {
             setState(() {
               _currentDeckState = deck;

@@ -25,10 +25,11 @@ Future<void> openEditDeckScreen(BuildContext context, DeckModel deck) =>
     Navigator.push(
       context,
       MaterialPageRoute(
-          settings: const RouteSettings(name: EditDeck.routeName),
-          builder: (context) => EditDeck(
-                deck: deck,
-              )),
+          settings: RouteSettings(
+            name: EditDeck.routeName,
+            arguments: deck.key,
+          ),
+          builder: (context) => EditDeck()),
     );
 
 Future<void> openLearnCardIntervalScreen(

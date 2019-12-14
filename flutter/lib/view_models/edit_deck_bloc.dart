@@ -13,6 +13,7 @@ import 'package:pedantic/pedantic.dart';
 
 class EditDeckBloc extends ScreenBloc {
   DeckModel _deck;
+  DeckModel get deck => _deck;
 
   ListAccessor<CardModel> get list => _filteredCardsList;
   FilteredListAccessor<CardModel> _filteredCardsList;
@@ -21,10 +22,10 @@ class EditDeckBloc extends ScreenBloc {
       _filteredCardsList.filter = newValue;
   Filter<CardModel> get filter => _filteredCardsList.filter;
 
-  EditDeckBloc({@required User user, @required DeckModel deck})
-      : assert(deck != null),
-        _deck = deck,
+  EditDeckBloc({@required User user, @required String deckKey})
+      : assert(deckKey != null),
         super(user) {
+    _deck = user.decks.getItem(deckKey).value;
     _filteredCardsList = FilteredListAccessor<CardModel>(_deck.cards);
     _doDeckChangedController.add(_deck);
     _initListeners();

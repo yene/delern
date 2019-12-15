@@ -50,8 +50,8 @@ class CardCreateUpdateBloc extends ScreenBloc {
   Sink<void> get onDiscardChanges => _onDiscardChangesController.sink;
 
   void _initFields() {
-    _frontText = initialCardModel.front ?? '';
-    _backText = initialCardModel.back ?? '';
+    _frontText = initialCardModel.front;
+    _backText = initialCardModel.back;
   }
 
   void _initListeners() {

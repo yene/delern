@@ -17,9 +17,7 @@ abstract class CardModel
   String get deckKey;
   @nullable
   String get key;
-  @nullable
   String get front;
-  @nullable
   String get back;
   @nullable
   DateTime get createdAt;
@@ -43,6 +41,10 @@ abstract class CardModel
           ..deckKey = deckKey
           ..key = key);
   }
+
+  static void _initializeBuilder(CardModelBuilder b) => b
+    ..front = ''
+    ..back = '';
 
   static Stream<CardModel> get(
           {@required String deckKey, @required String key}) =>

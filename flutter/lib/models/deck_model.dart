@@ -77,6 +77,12 @@ abstract class DeckModel
         .rebuild((b) => b..key = key);
   }
 
+  static void _initializeBuilder(DeckModelBuilder b) => b
+    ..lastSyncAt = DateTime.fromMillisecondsSinceEpoch(0)
+    ..markdown = true
+    ..type = DeckType.basic
+    ..accepted = true;
+
   static Stream<DeckModel> get({@required String uid, @required String key}) =>
       FirebaseDatabase.instance
           .reference()
@@ -88,29 +94,6 @@ abstract class DeckModel
                 key: key,
                 value: evt.snapshot.value,
               ));
-}
-
-abstract class DeckModelBuilder
-    implements Builder<DeckModel, DeckModelBuilder> {
-  String key;
-  String name;
-  bool markdown = true;
-  DeckType type = DeckType.basic;
-  bool accepted = true;
-  AccessType access;
-  DateTime lastSyncAt = DateTime.fromMillisecondsSinceEpoch(0);
-  String category;
-  @nullable
-  DataListAccessor<CardModel> cards;
-  @nullable
-  DataListAccessor<ScheduledCardModel> scheduledCards;
-  @nullable
-  _ScheduledCardsDueCounter numberOfCardsDue;
-  @nullable
-  DataListAccessor<DeckAccessModel> usersAccess;
-
-  factory DeckModelBuilder() = _$DeckModelBuilder;
-  DeckModelBuilder._();
 }
 
 class _ScheduledCardsDueCounter implements StreamWithValue<int> {

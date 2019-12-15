@@ -5,6 +5,7 @@ import 'package:delern_flutter/flutter/localization.dart';
 import 'package:delern_flutter/flutter/styles.dart' as app_styles;
 import 'package:delern_flutter/remote/error_reporting.dart' as error_reporting;
 import 'package:delern_flutter/views/decks_list/decks_list.dart';
+import 'package:delern_flutter/views/edit_deck/edit_deck.dart';
 import 'package:delern_flutter/views/helpers/auth_widget.dart';
 import 'package:delern_flutter/views/onboarding/onboarding.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
@@ -46,6 +47,9 @@ class App extends StatelessWidget {
           scaffoldBackgroundColor: app_styles.kScaffoldBackgroundColor,
           primarySwatch: app_styles.kPrimarySwatch,
           accentColor: app_styles.kAccentColor),
+      routes: {
+        EditDeck.routeName: (_) => EditDeck(),
+      },
       home: const DecksList(),
     );
   }

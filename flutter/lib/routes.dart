@@ -22,13 +22,10 @@ import 'package:flutter/material.dart';
 //   take them to list of decks page ("/" named route).
 
 Future<void> openEditDeckScreen(BuildContext context, DeckModel deck) =>
-    Navigator.push(
+    Navigator.pushNamed(
       context,
-      MaterialPageRoute(
-          settings: const RouteSettings(name: EditDeck.routeName),
-          builder: (context) => EditDeck(
-                deck: deck,
-              )),
+      EditDeck.routeName,
+      arguments: deck.key,
     );
 
 Future<void> openLearnCardIntervalScreen(
@@ -52,7 +49,7 @@ Future<void> openNewCardScreen(BuildContext context, DeckModel deck) =>
     Navigator.push(
         context,
         MaterialPageRoute(
-            settings: const RouteSettings(name: CardCreateUpdate.routeName),
+            settings: const RouteSettings(name: CardCreateUpdate.routeNameNew),
             builder: (context) => CardCreateUpdate(
                 card: (CardModelBuilder()..deckKey = deck.key).build(),
                 deck: deck)));
@@ -62,7 +59,7 @@ Future<void> openEditCardScreen(
     Navigator.push(
         context,
         MaterialPageRoute(
-            settings: const RouteSettings(name: CardCreateUpdate.routeName),
+            settings: const RouteSettings(name: CardCreateUpdate.routeNameEdit),
             builder: (context) => CardCreateUpdate(card: card, deck: deck)));
 
 Future<void> openShareDeckScreen(BuildContext context, DeckModel deck) =>

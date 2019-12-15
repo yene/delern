@@ -13,6 +13,43 @@ abstract class ListAccessor<T> implements StreamWithValue<BuiltList<T>> {
   void close();
 }
 
+@immutable
+class _DataListAccessorItem<T extends KeyedListItem>
+    implements StreamWithValue<T> {
+  final DataListAccessor<T> listAccessor;
+  final String key;
+
+  const _DataListAccessorItem(this.listAccessor, this.key);
+
+  @override
+  bool get hasValue =>
+      listAccessor.hasValue && listAccessor.value.indexOfKey(key) >= 0;
+
+  @override
+  Stream<T> get updates async* {
+    await for (final listChangedRecord in listAccessor.events) {
+      final addedItem = listChangedRecord.added
+          .firstWhere((item) => item.key == key, orElse: () => null);
+      final itemWasRemoved =
+          listChangedRecord.removed.any((item) => item.key == key);
+      if (addedItem != null || itemWasRemoved) {
+        yield addedItem;
+      }
+    }
+  }
+
+  @override
+  T get value {
+    if (listAccessor.hasValue) {
+      final index = listAccessor.value.indexOfKey(key);
+      if (index >= 0) {
+        return listAccessor.value[index];
+      }
+    }
+    return null;
+  }
+}
+
 abstract class DataListAccessor<T extends KeyedListItem>
     implements ListAccessor<T> {
   final List<T> _currentValue = [];
@@ -86,17 +123,7 @@ abstract class DataListAccessor<T extends KeyedListItem>
     }
   }
 
-  Stream<T> getItemUpdates(String key) async* {
-    await for (final listChangedRecord in events) {
-      final addedItem = listChangedRecord.added
-          .firstWhere((item) => item.key == key, orElse: () => null);
-      final itemWasRemoved =
-          listChangedRecord.removed.any((item) => item.key == key);
-      if (addedItem != null || itemWasRemoved) {
-        yield addedItem;
-      }
-    }
-  }
+  StreamWithValue<T> getItem(String key) => _DataListAccessorItem(this, key);
 
   @protected
   T parseItem(String key, value);

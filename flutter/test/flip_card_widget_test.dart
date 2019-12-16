@@ -21,7 +21,7 @@ void main() {
         front: frontSide,
         back: backSide,
         gradient: getLearnCardGradientFromGender(Gender.masculine),
-        onFlip: () {
+        onFirstFlip: () {
           _wasFlipped = true;
         },
         key: UniqueKey(),

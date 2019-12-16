@@ -15,20 +15,27 @@ class FlipCardWidget extends StatefulWidget {
   final String front;
   final String back;
   final Gradient gradient;
-  final CardFlipCallback onFlip;
+  final CardFlipCallback onFirstFlip;
 
+  /// The [key] is required and must be unique to the card. E.g.:
+  ///
+  /// ```dart
+  /// FlipCardWidget(
+  ///   key: ValueKey(card.key),
+  ///   ...
+  /// )
+  /// ```
+  ///
+  /// In IntervalLearning, there's a state of the card (e.g. whether it has been
+  /// flipped at least once) that needs to be preserved.
+  /// In ViewLearning PageView, key is necessary to correctly track a list of
+  /// widgets of the same class, even when they change order.
   const FlipCardWidget({
     @required this.front,
     @required this.back,
     @required this.gradient,
-    // Key is needed to compare widgets. One example:
-    // In ViewLearning PageView, oldWidget and widget with the same fields
-    // somehow are different widgets. Therefore we compare keys of the cards
-    // to make sure that they are different before resetting animation.
-    // In IntervalLearning if we omit key, it compares widgets by key (which is
-    // null), therefore answer buttons work incorectly.
     @required Key key,
-    this.onFlip,
+    this.onFirstFlip,
   })  : assert(key != null),
         super(key: key);
 
@@ -41,9 +48,12 @@ class _FlipCardWidgetState extends State<FlipCardWidget>
   Animation<double> _flipAnimation;
   Animation<double> _sizeAnimation;
   AnimationController _controller;
-  // We always see the front side of the card
+
+  /// Specifies whether we should render front (or back) side of the card in
+  /// the next call to [build] method.
   bool _isFront = true;
-  // the card was flipped at least once
+
+  /// Whether the current card was flipped at least once.
   bool _wasFlipped = false;
 
   @override
@@ -58,37 +68,28 @@ class _FlipCardWidgetState extends State<FlipCardWidget>
 
     _flipAnimation = TweenSequence([
       TweenSequenceItem(
-          tween: Tween<double>(begin: 0, end: -pi / 2), weight: 0.5),
+        tween: Tween<double>(begin: 0, end: -pi / 2),
+        weight: 0.5,
+      ),
       TweenSequenceItem(
-          tween: Tween<double>(begin: pi / 2, end: 0), weight: 0.5)
+        tween: Tween<double>(begin: pi / 2, end: 0),
+        weight: 0.5,
+      )
     ]).animate(_controller)
       ..addListener(() {
-        final shouldBeFront = _controller.value <= 0.5;
-        if (_isFront != shouldBeFront) {
+        final shouldRenderFront = _controller.value <= 0.5;
+        if (_isFront != shouldRenderFront) {
           setState(() {
-            _isFront = shouldBeFront;
+            _isFront = shouldRenderFront;
           });
           if (!_wasFlipped && !_isFront) {
             _wasFlipped = true;
-            if (widget.onFlip != null) {
-              widget.onFlip();
+            if (widget.onFirstFlip != null) {
+              widget.onFirstFlip();
             }
           }
         }
       });
-  }
-
-  @override
-  void didUpdateWidget(FlipCardWidget oldWidget) {
-    // In PageView, oldWidget and widget with the same fields somehow are
-    // different widgets. Therefore we compare keys of the cards
-    // to make sure that they are different before resetting animation.
-    if (oldWidget != widget && oldWidget.key != widget.key) {
-      // Reset animation when new card arrived
-      _controller.reset();
-      _wasFlipped = false;
-    }
-    super.didUpdateWidget(oldWidget);
   }
 
   void _startAnimation() {
@@ -132,12 +133,14 @@ class _FlipCardWidgetState extends State<FlipCardWidget>
                   builder: (context, viewportConstraints) =>
                       SingleChildScrollView(
                     child: ConstrainedBox(
-                        constraints: BoxConstraints(
-                          minHeight: viewportConstraints.maxHeight,
-                        ),
-                        child: NonScrollingMarkdownWidget(
-                            text: _isFront ? widget.front : widget.back,
-                            textStyle: app_styles.primaryText)),
+                      constraints: BoxConstraints(
+                        minHeight: viewportConstraints.maxHeight,
+                      ),
+                      child: NonScrollingMarkdownWidget(
+                        text: _isFront ? widget.front : widget.back,
+                        textStyle: app_styles.primaryText,
+                      ),
+                    ),
                   ),
                 ),
               ),

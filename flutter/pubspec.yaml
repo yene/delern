@@ -66,5 +66,10 @@ flutter:
     # Logo to display in e.g. About dialog.
     - images/ic_launcher.png
 
-builders:
-  built_value_generator: any
+# Disable builders for now because it breaks builds (need "flutter clean" all
+# the time) and debug mode (breakpoints are not triggering).
+# This means that after each change to BuiltValue we have to run
+# "bundle exec fastlane generate".
+#
+# builders:
+#   built_value_generator: any

@@ -122,7 +122,7 @@ class CardsIntervalLearningState extends State<CardsIntervalLearning> {
                             back: card.back,
                             gradient: specifyLearnCardBackgroundGradient(
                                 _viewModel.deck.type, card.back),
-                            onFlip: () {
+                            onFirstFlip: () {
                               _showReplyButtons.value = true;
                             },
                             key: ValueKey(card.key),

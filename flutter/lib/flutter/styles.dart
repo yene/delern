@@ -24,7 +24,7 @@ const double kItemListHeightRatio = 0.1;
 const double kItemListPaddingRatio = kItemListHeightRatio * 0.08;
 
 final Map<Gender, List<Color>> cardBackgroundColors = {
-  Gender.noGender: [Colors.green[400], Colors.green[200]],
+  Gender.noGender: [const Color(0xFFB1B1B1), const Color(0xFFD2D2D2)],
   Gender.masculine: [Colors.blue[400], Colors.lightBlue[200]],
   Gender.feminine: [Colors.red[400], Colors.red[200]],
   Gender.neuter: [Colors.amber[400], Colors.yellow[200]],

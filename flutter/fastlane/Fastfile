@@ -107,7 +107,7 @@ platform :ios do
   lane :build do
     flutter_build(
       debug: true,
-      codesign: false,
+      build_args: ['--no-codesign'],
     )
   end
 

@@ -64,13 +64,17 @@ class _CardsViewLearningState extends State<CardsViewLearning>
                 );
               }),
           actions: <Widget>[
-            IconButton(
-              icon: Icon(Icons.shuffle),
-              tooltip: localizations.of(context).shuffleTooltip,
-              onPressed: () {
-                bloc.onShuffleCards.add(null);
-              },
-            ),
+            StreamBuilder<BuiltList<CardModel>>(
+                stream: bloc.doGetCardsList,
+                builder: (context, snapshot) => IconButton(
+                      icon: Icon(Icons.shuffle),
+                      tooltip: localizations.of(context).shuffleTooltip,
+                      onPressed: snapshot.hasData
+                          ? (() {
+                              bloc.onShuffleCards.add(null);
+                            })
+                          : null,
+                    )),
           ],
         ),
         bodyBuilder: (bloc) => StreamBuilder<BuiltList<CardModel>>(

@@ -14,20 +14,27 @@ abstract class ListAccessor<T> implements StreamWithValue<BuiltList<T>> {
 }
 
 @immutable
-class _DataListAccessorItem<T extends KeyedListItem>
+class DataListAccessorItem<T extends KeyedListItem>
     implements StreamWithValue<T> {
-  final DataListAccessor<T> listAccessor;
   final String key;
+  final DataListAccessor<T> _listAccessor;
 
-  const _DataListAccessorItem(this.listAccessor, this.key);
+  const DataListAccessorItem._(this._listAccessor, this.key);
 
+  /// Whether the underlying list is fully loaded and there is currently an item
+  /// with this [key] in the list.
   @override
   bool get hasValue =>
-      listAccessor.hasValue && listAccessor.value.indexOfKey(key) >= 0;
+      _listAccessor.hasValue && _listAccessor.value.indexOfKey(key) >= 0;
 
+  /// There's the following contract to [updates] of a list item:
+  /// - when an item is gone from the list, this stream yields `null`, but the
+  ///   stream itself is not closed. If the item re-appears, it will be yielded;
+  /// - when the list itself is gone (e.g. we are watching a Card in a Deck that
+  ///   has been removed), then nothing is yielded and the stream is closed.
   @override
   Stream<T> get updates async* {
-    await for (final listChangedRecord in listAccessor.events) {
+    await for (final listChangedRecord in _listAccessor.events) {
       final addedItem = listChangedRecord.added
           .firstWhere((item) => item.key == key, orElse: () => null);
       final itemWasRemoved =
@@ -38,12 +45,14 @@ class _DataListAccessorItem<T extends KeyedListItem>
     }
   }
 
+  /// If the underlying list is fully loaded, and there is currently an item
+  /// with this [key] in the list, returns the value. Otherwise, returns `null`.
   @override
   T get value {
-    if (listAccessor.hasValue) {
-      final index = listAccessor.value.indexOfKey(key);
+    if (_listAccessor.hasValue) {
+      final index = _listAccessor.value.indexOfKey(key);
       if (index >= 0) {
-        return listAccessor.value[index];
+        return _listAccessor.value[index];
       }
     }
     return null;
@@ -123,7 +132,8 @@ abstract class DataListAccessor<T extends KeyedListItem>
     }
   }
 
-  StreamWithValue<T> getItem(String key) => _DataListAccessorItem(this, key);
+  DataListAccessorItem<T> getItem(String key) =>
+      DataListAccessorItem._(this, key);
 
   @protected
   T parseItem(String key, value);

@@ -2,8 +2,10 @@ import * as child_process from 'child_process';
 import * as firebase_admin from 'firebase-admin';
 import * as firebase_tools from 'firebase-tools';
 import * as fs from 'fs';
+import * as ini from 'ini';
 import * as os from 'os';
 import * as path from 'path';
+import * as plist from 'plist';
 
 if (process.argv.length !== 3) {
   console.error('This command takes exactly 1 argument: project id');
@@ -14,7 +16,7 @@ const projectId = process.argv[2];
 const displayName = 'Delern DEBUG';
 const packageName = 'org.dasfoo.delern.debug';
 
-console.log(`Terraforming Firebase project: <${projectId}>.`);
+console.log(`Setting up Firebase project: <${projectId}>.`);
 
 const stealFirebaseCredentials = () => {
   const api = require('firebase-tools/lib/api.js'),
@@ -40,9 +42,9 @@ const findOrCreateAndroidApp = async (
   if (androidApp) {
     return androidApp.appId;
   } else {
-    return (await app
-      .projectManagement()
-      .createAndroidApp(packageName, displayName)).appId;
+    return (
+      await app.projectManagement().createAndroidApp(packageName, displayName)
+    ).appId;
   }
 };
 
@@ -56,10 +58,27 @@ const findOrCreateIOSApp = async (
   if (iosApp) {
     return iosApp.appId;
   } else {
-    return (await app
-      .projectManagement()
-      .createIosApp(packageName, displayName)).appId;
+    return (
+      await app.projectManagement().createIosApp(packageName, displayName)
+    ).appId;
   }
+};
+
+const updateLocalAppConfig = async (iosAppConfig: string) => {
+  const iosAppLocalConfigPath =
+    '../flutter/ios/Flutter/FirebaseLocalDeveloper.xcconfig';
+
+  const iosAppLocalConfig = ini.parse(
+    fs.existsSync(iosAppLocalConfigPath)
+      ? fs.readFileSync(iosAppLocalConfigPath).toString()
+      : ''
+  );
+
+  iosAppLocalConfig['GOOGLE_BUNDLE_URL'] = (plist.parse(
+    iosAppConfig
+  ) as plist.PlistObject)['REVERSED_CLIENT_ID'];
+
+  fs.writeFileSync(iosAppLocalConfigPath, ini.encode(iosAppLocalConfig));
 };
 
 (async (): Promise<void> => {
@@ -96,22 +115,31 @@ Please be patient.
       .androidApp(await findOrCreateAndroidApp(app)),
     iosApp = app.projectManagement().iosApp(await findOrCreateIOSApp(app));
 
-  const hashes =
-    child_process
-      .spawnSync('keytool', [
-        '-list',
-        '-v',
-        '-keystore',
-        path.join(os.homedir(), '.android', 'debug.keystore'),
-        '-alias',
-        'androiddebugkey',
-        '-storepass',
-        'android',
-        '-keypass',
-        'android',
-      ])
-      .stdout.toString()
-      .match(/(..:){19,31}..$/gm) || [];
+  const keytool = child_process.spawnSync('keytool', [
+    '-list',
+    '-v',
+    '-keystore',
+    path.join(os.homedir(), '.android', 'debug.keystore'),
+    '-alias',
+    'androiddebugkey',
+    '-storepass',
+    'android',
+    '-keypass',
+    'android',
+  ]);
+
+  const hashes: string[] = [];
+  if (keytool.error) {
+    console.error(
+      `Failed to run keytool: ${keytool.error}. SHA certificate ` +
+        'hashes for Android will not be set up, Firebase API migh not work.'
+    );
+  } else {
+    hashes.push(
+      ...(keytool.stdout.toString().match(/(..:){19,31}..$/gm) || [])
+    );
+  }
+
   for (const sha of hashes) {
     try {
       await androidApp.addShaCertificate(
@@ -128,34 +156,36 @@ Please be patient.
     '../flutter/android/app/google-services.json',
     await androidApp.getConfig()
   );
+
+  const iosAppConfig = await iosApp.getConfig();
   fs.writeFileSync(
     '../flutter/ios/Runner/GoogleService-Info.plist',
-    await iosApp.getConfig()
+    iosAppConfig
   );
+  await updateLocalAppConfig(iosAppConfig);
 
   try {
     await firebase_tools.deploy({
       project: projectId,
-      message: 'Deployed by terraform',
+      message: 'Deployed by "fastlane setup"',
       force: true,
     });
   } catch (e) {
     console.error(
       `️
 ⚠️ Deploy failed! The project will not be properly initialized. Functions,
-                 database security rules, website, AppEngine and other artifacts
-                 will not be available. Please inspect the error below:
+                 database security rules, website, and other artifacts will not
+                 be available. Please inspect the error below:
 
 `,
       e
     );
   }
 
-  // TODO(dotdoom): need to update flutter/ios/Runner.xcodeproj/project.pbxproj
   // TODO(dotdoom): create OAuth2 client ID for Android once it's possible:
   //                https://issuetracker.google.com/issues/116182848
 
-  const sha1 = hashes.find(value => value.length === 59);
+  const sha1 = hashes.find(value => value.length === 59) || 'UNKNOWN';
   console.log(`
 The following steps have to be completed manually if you have not done them yet:
 
@@ -185,6 +215,6 @@ Have a nice day!`);
     process.exit(0);
   })
   .catch(e => {
-    console.error('Terraforming has failed!', e);
+    console.error('Project setup has failed!', e);
     process.exit(1);
   });

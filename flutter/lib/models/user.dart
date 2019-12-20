@@ -33,7 +33,7 @@ class User {
         .reference()
         .child('.info/connected')
         .onValue
-        .map((event) => event.snapshot.value));
+        .mapPerEvent((event) => event.snapshot.value));
     // Subscribe ourselves to online status immediately because we always want
     // to know the current value. We pass a dummy function to onData parameter
     // because we can always extract the latest data with _isOnline.value.

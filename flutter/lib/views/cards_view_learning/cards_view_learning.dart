@@ -7,6 +7,7 @@ import 'package:delern_flutter/views/base/screen_bloc_view.dart';
 import 'package:delern_flutter/views/helpers/card_background_specifier.dart';
 import 'package:delern_flutter/views/helpers/flip_card_widget.dart';
 import 'package:delern_flutter/views/helpers/progress_indicator_widget.dart';
+import 'package:delern_flutter/views/helpers/stream_with_value_builder.dart';
 import 'package:delern_flutter/views/helpers/text_overflow_ellipsis_widget.dart';
 import 'package:flutter/material.dart';
 
@@ -49,8 +50,8 @@ class _CardsViewLearningState extends State<CardsViewLearning>
         //  when setState called, the whole tree will be rebuild. The aim is
         // to rebuild widgets which are needed to be rebuild
         appBarBuilder: (bloc) => AppBar(
-          title: StreamBuilder<BuiltList<CardModel>>(
-              stream: bloc.doGetCardsList,
+          title: buildStreamBuilderWithValue<BuiltList<CardModel>>(
+              streamWithValue: bloc.doSetCardsList,
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   return TextOverflowEllipsisWidget(
@@ -64,8 +65,8 @@ class _CardsViewLearningState extends State<CardsViewLearning>
                 );
               }),
           actions: <Widget>[
-            StreamBuilder<BuiltList<CardModel>>(
-                stream: bloc.doGetCardsList,
+            buildStreamBuilderWithValue<BuiltList<CardModel>>(
+                streamWithValue: bloc.doSetCardsList,
                 builder: (context, snapshot) => IconButton(
                       icon: Icon(Icons.shuffle),
                       tooltip: localizations.of(context).shuffleTooltip,
@@ -77,8 +78,9 @@ class _CardsViewLearningState extends State<CardsViewLearning>
                     )),
           ],
         ),
-        bodyBuilder: (bloc) => StreamBuilder<BuiltList<CardModel>>(
-          stream: bloc.doGetCardsList,
+        bodyBuilder: (bloc) =>
+            buildStreamBuilderWithValue<BuiltList<CardModel>>(
+          streamWithValue: bloc.doSetCardsList,
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
               return ProgressIndicatorWidget();

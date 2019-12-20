@@ -1,4 +1,5 @@
 import 'package:built_collection/built_collection.dart';
+import 'package:delern_flutter/flutter/localization.dart' as localizations;
 import 'package:delern_flutter/models/card_model.dart';
 import 'package:delern_flutter/models/deck_model.dart';
 import 'package:delern_flutter/view_models/cards_view_learning_bloc.dart';
@@ -6,7 +7,6 @@ import 'package:delern_flutter/views/base/screen_bloc_view.dart';
 import 'package:delern_flutter/views/helpers/card_background_specifier.dart';
 import 'package:delern_flutter/views/helpers/flip_card_widget.dart';
 import 'package:delern_flutter/views/helpers/progress_indicator_widget.dart';
-import 'package:delern_flutter/views/helpers/stream_with_value_builder.dart';
 import 'package:delern_flutter/views/helpers/text_overflow_ellipsis_widget.dart';
 import 'package:flutter/material.dart';
 
@@ -49,23 +49,36 @@ class _CardsViewLearningState extends State<CardsViewLearning>
         //  when setState called, the whole tree will be rebuild. The aim is
         // to rebuild widgets which are needed to be rebuild
         appBarBuilder: (bloc) => AppBar(
-            title: buildStreamBuilderWithValue<BuiltList<CardModel>>(
-                streamWithValue: bloc.doGetCardList,
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    return TextOverflowEllipsisWidget(
-                      textDetails:
-                          '(${_currentCard + 1}/${snapshot.data.length}) '
-                          '${widget.deck.name}',
-                    );
-                  }
+          title: StreamBuilder<BuiltList<CardModel>>(
+              stream: bloc.doGetCardsList,
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
                   return TextOverflowEllipsisWidget(
-                    textDetails: widget.deck.name,
+                    textDetails:
+                        '(${_currentCard + 1}/${snapshot.data.length}) '
+                        '${widget.deck.name}',
                   );
-                })),
-        bodyBuilder: (bloc) =>
-            buildStreamBuilderWithValue<BuiltList<CardModel>>(
-          streamWithValue: bloc.doGetCardList,
+                }
+                return TextOverflowEllipsisWidget(
+                  textDetails: widget.deck.name,
+                );
+              }),
+          actions: <Widget>[
+            StreamBuilder<BuiltList<CardModel>>(
+                stream: bloc.doGetCardsList,
+                builder: (context, snapshot) => IconButton(
+                      icon: Icon(Icons.shuffle),
+                      tooltip: localizations.of(context).shuffleTooltip,
+                      onPressed: snapshot.hasData
+                          ? (() {
+                              bloc.onShuffleCards.add(null);
+                            })
+                          : null,
+                    )),
+          ],
+        ),
+        bodyBuilder: (bloc) => StreamBuilder<BuiltList<CardModel>>(
+          stream: bloc.doGetCardsList,
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
               return ProgressIndicatorWidget();

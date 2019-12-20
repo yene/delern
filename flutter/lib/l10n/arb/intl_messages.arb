@@ -1,6 +1,6 @@
 {
   "@@locale": "en_US",
-  "@@last_modified": "2019-12-12T19:20:00.332437",
+  "@@last_modified": "2019-12-17T10:45:25.826110",
   "navigationDrawerSignOut": "Sign Out",
   "@navigationDrawerSignOut": {
     "description": "Sign Out in Navigation Drawer",
@@ -779,6 +779,13 @@
   "termsOfServiceSignIn": "Terms of Service",
   "@termsOfServiceSignIn": {
     "description": "Terms of Service label",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "shuffleTooltip": "Shuffle cards",
+  "@shuffleTooltip": {
+    "description": "Shuffle cards tooltip",
     "type": "text",
     "placeholders": {
     }

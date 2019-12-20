@@ -714,4 +714,10 @@ To see the source code for this app, please visit the [Delern GitHub repo](https
         name: 'termsOfServiceSignIn',
         desc: 'Terms of Service label',
       );
+
+  String get shuffleTooltip => Intl.message(
+        'Shuffle cards',
+        name: 'shuffleTooltip',
+        desc: 'Shuffle cards tooltip',
+      );
 }

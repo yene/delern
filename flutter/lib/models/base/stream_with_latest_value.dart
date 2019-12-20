@@ -6,6 +6,35 @@ abstract class StreamWithValue<T> {
   Stream<T> get updates;
 }
 
+extension MapPerEvent<TInput> on Stream<TInput> {
+  /// Like [map], but calls [convert] once per event, and not per listener.
+  Stream<TOutput> mapPerEvent<TOutput>(TOutput Function(TInput event) convert) {
+    StreamController<TOutput> controller;
+    StreamSubscription<TInput> subscription;
+
+    void onListen() {
+      subscription = listen((event) => controller.add(convert(event)),
+          onError: controller.addError, onDone: controller.close);
+    }
+
+    if (isBroadcast) {
+      controller = StreamController<TOutput>.broadcast(
+          onListen: onListen,
+          onCancel: () => subscription.cancel(),
+          sync: true);
+    } else {
+      controller = StreamController<TOutput>(
+          onListen: onListen,
+          onPause: () => subscription.pause(),
+          onResume: () => subscription.resume(),
+          onCancel: () => subscription.cancel(),
+          sync: true);
+    }
+
+    return controller.stream;
+  }
+}
+
 // Why not use BehaviorSubject?
 // 1. It incapsulates all of: stream, value and add(), i.e. requires another
 //    interface / wrapper to expose read-only properties: stream and value.
@@ -25,8 +54,12 @@ class StreamWithLatestValue<T> implements StreamWithValue<T> {
   bool _hasLatestValue = false;
   T _latestValue;
 
-  StreamWithLatestValue(Stream<T> sourceStream) {
-    _stream = sourceStream.map((value) {
+  StreamWithLatestValue(Stream<T> sourceStream, {T initialValue}) {
+    if (initialValue != null) {
+      _latestValue = initialValue;
+      _hasLatestValue = true;
+    }
+    _stream = sourceStream.mapPerEvent((value) {
       _latestValue = value;
       _hasLatestValue = true;
       return value;

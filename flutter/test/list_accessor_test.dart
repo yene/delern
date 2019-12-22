@@ -14,18 +14,19 @@ void main() {
   StreamController<Event> onChildAdded;
   StreamController<Event> onChildRemoved;
   StreamController<Event> onChildChanged;
-  MockDatabaseReference dbReference;
   MyListAccessor accessor;
 
   setUp(() {
-    dbReference = MockDatabaseReference();
     onChildAdded = StreamController<Event>();
     onChildChanged = StreamController<Event>();
     onChildRemoved = StreamController<Event>();
+
+    final dbReference = MockDatabaseReference();
     when(dbReference.onChildAdded).thenAnswer((_) => onChildAdded.stream);
     when(dbReference.onChildRemoved).thenAnswer((_) => onChildRemoved.stream);
     when(dbReference.onChildChanged).thenAnswer((_) => onChildChanged.stream);
     when(dbReference.once()).thenAnswer((_) => Future.value(FakeSnapshot()));
+
     accessor = MyListAccessor(dbReference);
   });
 
@@ -36,7 +37,7 @@ void main() {
     accessor.close();
   });
 
-  group('Test accessor.value', () {
+  group('ListAccessor.updates', () {
     test('remove event', () async {
       expect(
           accessor.updates,
@@ -73,7 +74,7 @@ void main() {
     });
   });
 
-  group('Test accessor.currentValue', () {
+  group('ListAccessor.value', () {
     test('remove currentValue', () async {
       onChildAdded.add(FakeEvent(snapshot: FakeSnapshot(key: '1')));
       await allEventsDelivered();
@@ -110,7 +111,7 @@ void main() {
     });
   });
 
-  group('Test accessor.event', () {
+  group('DataListAccessor.events', () {
     test('remove from event', () async {
       final events = StreamQueue(accessor.events);
       onChildAdded.add(FakeEvent(snapshot: FakeSnapshot(key: '1')));
@@ -145,6 +146,42 @@ void main() {
       expectListChangeRecord<MyModel>(
           await events.next, [const MyModel(key: '1', value: '1')], 0,
           removed: [const MyModel(key: '1', value: '3')], addedCount: 1);
+    });
+  });
+
+  group('DataListAccessorItem', () {
+    test('DataListAccessorItem.value', () async {
+      final item = accessor.getItem('test');
+      expect(item.hasValue, false);
+      expect(item.value, null);
+
+      onChildAdded.add(FakeEvent(
+        snapshot: FakeSnapshot(key: 'test', value: 'hello'),
+      ));
+      await allEventsDelivered();
+      expect(item.hasValue, true);
+      expect(item.value, const MyModel(key: 'test', value: 'hello'));
+
+      onChildChanged.add(FakeEvent(
+        snapshot: FakeSnapshot(key: 'test', value: 'world'),
+      ));
+      await allEventsDelivered();
+      expect(item.hasValue, true);
+      expect(item.value, const MyModel(key: 'test', value: 'world'));
+
+      onChildRemoved.add(FakeEvent(
+        snapshot: FakeSnapshot(key: 'test'),
+      ));
+      await allEventsDelivered();
+      expect(item.hasValue, false);
+      expect(item.value, null);
+
+      onChildAdded.add(FakeEvent(
+        snapshot: FakeSnapshot(key: 'test', value: 'hello'),
+      ));
+      await allEventsDelivered();
+      expect(item.hasValue, true);
+      expect(item.value, const MyModel(key: 'test', value: 'hello'));
     });
   });
 }

@@ -21,7 +21,8 @@ lane :update do
   Dir.chdir('..') do
     sh %w(bundle update)
     Dir.chdir('flutter') do
-      # This will automatically upgrade flutter, if necessary.
+      # This will automatically upgrade flutter, if necessary. It won't run
+      # "flutter update-packages", but we don't need it.
       flutter_bootstrap
       Dir.chdir('fastlane') do
         # Upgrade current application packages (within pubspec.yaml spec).
@@ -75,7 +76,12 @@ lane :setup do
         'https://nodejs.org/',
       ],
       'keytool from JDK' => [
-        lambda { Helper.backticks("keytool 2>#{File::NULL}") && 'it' },
+        lambda do
+          if Helper.backticks('keytool').include?('Management Tool')
+            # Keytool does not seem to have a flag to print its version.
+            'some version'
+          end
+        end,
         'https://www3.ntu.edu.sg/home/ehchua/programming/howto/JDK_Howto.html',
       ],
     }.map do |software_name, (version_getter, download_url)|

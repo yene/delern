@@ -3,6 +3,10 @@ import 'dart:async';
 abstract class StreamWithValue<T> {
   T get value;
   bool get hasValue;
+
+  /// Any changes to [value], in the form of a stream.
+  /// The current [value] itself typically is not sent upon [Stream.listen] to
+  /// [updates], although this detail is implementation defined.
   Stream<T> get updates;
 }
 
@@ -35,6 +39,10 @@ extension MapPerEvent<TInput> on Stream<TInput> {
   }
 }
 
+/// [StreamWithValue] implementation that wraps a [Stream] and keeps the latest
+/// value that was received from it. Beware that for "push" model, where a
+/// (typically broadcast) stream pushes data even when it's not listened to,
+/// the [value] will not be tracked if there are no listeners on [updates].
 // Why not use BehaviorSubject?
 // 1. It incapsulates all of: stream, value and add(), i.e. requires another
 //    interface / wrapper to expose read-only properties: stream and value.
@@ -45,10 +53,6 @@ extension MapPerEvent<TInput> on Stream<TInput> {
 // 3. It replays the value to all new stream subscribers, which is redundant
 //    when passing value as initialData to StreamBuilder. Passing initialData
 //    if it's available is important to avoid unnecessary blinking.
-/// [StreamWithValue] implementation that wraps a [Stream] and keeps the latest
-/// value that was received from it. Beware that for "push" model, where a
-/// (typically broadcast) stream pushes data even when it's not listened to,
-/// the [value] will not be tracked if there are no listeners on [updates].
 class StreamWithLatestValue<T> implements StreamWithValue<T> {
   Stream<T> _stream;
   bool _hasLatestValue = false;

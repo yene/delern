@@ -17,7 +17,13 @@ class _$CardModelSerializer implements StructuredSerializer<CardModel> {
   @override
   Iterable<Object> serialize(Serializers serializers, CardModel object,
       {FullType specifiedType = FullType.unspecified}) {
-    final result = <Object>[];
+    final result = <Object>[
+      'front',
+      serializers.serialize(object.front,
+          specifiedType: const FullType(String)),
+      'back',
+      serializers.serialize(object.back, specifiedType: const FullType(String)),
+    ];
     if (object.deckKey != null) {
       result
         ..add('deckKey')
@@ -28,18 +34,6 @@ class _$CardModelSerializer implements StructuredSerializer<CardModel> {
       result
         ..add('key')
         ..add(serializers.serialize(object.key,
-            specifiedType: const FullType(String)));
-    }
-    if (object.front != null) {
-      result
-        ..add('front')
-        ..add(serializers.serialize(object.front,
-            specifiedType: const FullType(String)));
-    }
-    if (object.back != null) {
-      result
-        ..add('back')
-        ..add(serializers.serialize(object.back,
             specifiedType: const FullType(String)));
     }
     if (object.createdAt != null) {
@@ -105,7 +99,14 @@ class _$CardModel extends CardModel {
       (new CardModelBuilder()..update(updates)).build();
 
   _$CardModel._({this.deckKey, this.key, this.front, this.back, this.createdAt})
-      : super._();
+      : super._() {
+    if (front == null) {
+      throw new BuiltValueNullFieldError('CardModel', 'front');
+    }
+    if (back == null) {
+      throw new BuiltValueNullFieldError('CardModel', 'back');
+    }
+  }
 
   @override
   CardModel rebuild(void Function(CardModelBuilder) updates) =>
@@ -168,7 +169,9 @@ class CardModelBuilder implements Builder<CardModel, CardModelBuilder> {
   DateTime get createdAt => _$this._createdAt;
   set createdAt(DateTime createdAt) => _$this._createdAt = createdAt;
 
-  CardModelBuilder();
+  CardModelBuilder() {
+    CardModel._initializeBuilder(this);
+  }
 
   CardModelBuilder get _$this {
     if (_$v != null) {

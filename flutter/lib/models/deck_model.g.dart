@@ -240,7 +240,7 @@ class _$DeckModel extends DeckModel {
   final DataListAccessor<DeckAccessModel> usersAccess;
 
   factory _$DeckModel([void Function(DeckModelBuilder) updates]) =>
-      (new DeckModelBuilder()..update(updates)).build() as _$DeckModel;
+      (new DeckModelBuilder()..update(updates)).build();
 
   _$DeckModel._(
       {this.key,
@@ -272,7 +272,7 @@ class _$DeckModel extends DeckModel {
       (toBuilder()..update(updates)).build();
 
   @override
-  _$DeckModelBuilder toBuilder() => new _$DeckModelBuilder()..replace(this);
+  DeckModelBuilder toBuilder() => new DeckModelBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -337,169 +337,79 @@ class _$DeckModel extends DeckModel {
   }
 }
 
-class _$DeckModelBuilder extends DeckModelBuilder {
+class DeckModelBuilder implements Builder<DeckModel, DeckModelBuilder> {
   _$DeckModel _$v;
 
-  @override
-  String get key {
-    _$this;
-    return super.key;
-  }
+  String _key;
+  String get key => _$this._key;
+  set key(String key) => _$this._key = key;
 
-  @override
-  set key(String key) {
-    _$this;
-    super.key = key;
-  }
+  String _name;
+  String get name => _$this._name;
+  set name(String name) => _$this._name = name;
 
-  @override
-  String get name {
-    _$this;
-    return super.name;
-  }
+  bool _markdown;
+  bool get markdown => _$this._markdown;
+  set markdown(bool markdown) => _$this._markdown = markdown;
 
-  @override
-  set name(String name) {
-    _$this;
-    super.name = name;
-  }
+  DeckType _type;
+  DeckType get type => _$this._type;
+  set type(DeckType type) => _$this._type = type;
 
-  @override
-  bool get markdown {
-    _$this;
-    return super.markdown;
-  }
+  bool _accepted;
+  bool get accepted => _$this._accepted;
+  set accepted(bool accepted) => _$this._accepted = accepted;
 
-  @override
-  set markdown(bool markdown) {
-    _$this;
-    super.markdown = markdown;
-  }
+  AccessType _access;
+  AccessType get access => _$this._access;
+  set access(AccessType access) => _$this._access = access;
 
-  @override
-  DeckType get type {
-    _$this;
-    return super.type;
-  }
+  DateTime _lastSyncAt;
+  DateTime get lastSyncAt => _$this._lastSyncAt;
+  set lastSyncAt(DateTime lastSyncAt) => _$this._lastSyncAt = lastSyncAt;
 
-  @override
-  set type(DeckType type) {
-    _$this;
-    super.type = type;
-  }
+  String _category;
+  String get category => _$this._category;
+  set category(String category) => _$this._category = category;
 
-  @override
-  bool get accepted {
-    _$this;
-    return super.accepted;
-  }
+  DataListAccessor<CardModel> _cards;
+  DataListAccessor<CardModel> get cards => _$this._cards;
+  set cards(DataListAccessor<CardModel> cards) => _$this._cards = cards;
 
-  @override
-  set accepted(bool accepted) {
-    _$this;
-    super.accepted = accepted;
-  }
+  DataListAccessor<ScheduledCardModel> _scheduledCards;
+  DataListAccessor<ScheduledCardModel> get scheduledCards =>
+      _$this._scheduledCards;
+  set scheduledCards(DataListAccessor<ScheduledCardModel> scheduledCards) =>
+      _$this._scheduledCards = scheduledCards;
 
-  @override
-  AccessType get access {
-    _$this;
-    return super.access;
-  }
+  _ScheduledCardsDueCounter _numberOfCardsDue;
+  _ScheduledCardsDueCounter get numberOfCardsDue => _$this._numberOfCardsDue;
+  set numberOfCardsDue(_ScheduledCardsDueCounter numberOfCardsDue) =>
+      _$this._numberOfCardsDue = numberOfCardsDue;
 
-  @override
-  set access(AccessType access) {
-    _$this;
-    super.access = access;
-  }
+  DataListAccessor<DeckAccessModel> _usersAccess;
+  DataListAccessor<DeckAccessModel> get usersAccess => _$this._usersAccess;
+  set usersAccess(DataListAccessor<DeckAccessModel> usersAccess) =>
+      _$this._usersAccess = usersAccess;
 
-  @override
-  DateTime get lastSyncAt {
-    _$this;
-    return super.lastSyncAt;
+  DeckModelBuilder() {
+    DeckModel._initializeBuilder(this);
   }
-
-  @override
-  set lastSyncAt(DateTime lastSyncAt) {
-    _$this;
-    super.lastSyncAt = lastSyncAt;
-  }
-
-  @override
-  String get category {
-    _$this;
-    return super.category;
-  }
-
-  @override
-  set category(String category) {
-    _$this;
-    super.category = category;
-  }
-
-  @override
-  DataListAccessor<CardModel> get cards {
-    _$this;
-    return super.cards;
-  }
-
-  @override
-  set cards(DataListAccessor<CardModel> cards) {
-    _$this;
-    super.cards = cards;
-  }
-
-  @override
-  DataListAccessor<ScheduledCardModel> get scheduledCards {
-    _$this;
-    return super.scheduledCards;
-  }
-
-  @override
-  set scheduledCards(DataListAccessor<ScheduledCardModel> scheduledCards) {
-    _$this;
-    super.scheduledCards = scheduledCards;
-  }
-
-  @override
-  _ScheduledCardsDueCounter get numberOfCardsDue {
-    _$this;
-    return super.numberOfCardsDue;
-  }
-
-  @override
-  set numberOfCardsDue(_ScheduledCardsDueCounter numberOfCardsDue) {
-    _$this;
-    super.numberOfCardsDue = numberOfCardsDue;
-  }
-
-  @override
-  DataListAccessor<DeckAccessModel> get usersAccess {
-    _$this;
-    return super.usersAccess;
-  }
-
-  @override
-  set usersAccess(DataListAccessor<DeckAccessModel> usersAccess) {
-    _$this;
-    super.usersAccess = usersAccess;
-  }
-
-  _$DeckModelBuilder() : super._();
 
   DeckModelBuilder get _$this {
     if (_$v != null) {
-      super.key = _$v.key;
-      super.name = _$v.name;
-      super.markdown = _$v.markdown;
-      super.type = _$v.type;
-      super.accepted = _$v.accepted;
-      super.access = _$v.access;
-      super.lastSyncAt = _$v.lastSyncAt;
-      super.category = _$v.category;
-      super.cards = _$v.cards;
-      super.scheduledCards = _$v.scheduledCards;
-      super.numberOfCardsDue = _$v.numberOfCardsDue;
-      super.usersAccess = _$v.usersAccess;
+      _key = _$v.key;
+      _name = _$v.name;
+      _markdown = _$v.markdown;
+      _type = _$v.type;
+      _accepted = _$v.accepted;
+      _access = _$v.access;
+      _lastSyncAt = _$v.lastSyncAt;
+      _category = _$v.category;
+      _cards = _$v.cards;
+      _scheduledCards = _$v.scheduledCards;
+      _numberOfCardsDue = _$v.numberOfCardsDue;
+      _usersAccess = _$v.usersAccess;
       _$v = null;
     }
     return this;

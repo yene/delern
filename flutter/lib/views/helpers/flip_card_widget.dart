@@ -4,6 +4,7 @@ import 'package:delern_flutter/flutter/localization.dart' as localization;
 import 'package:delern_flutter/flutter/styles.dart' as app_styles;
 import 'package:delern_flutter/views/helpers/card_decoration_widget.dart';
 import 'package:delern_flutter/views/helpers/non_scrolling_markdown_widget.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 const _kFlipCardDuration = Duration(milliseconds: 300);
@@ -41,6 +42,17 @@ class FlipCardWidget extends StatefulWidget {
 
   @override
   _FlipCardWidgetState createState() => _FlipCardWidgetState();
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(StringProperty('front', front))
+      ..add(StringProperty('back', back))
+      ..add(DiagnosticsProperty<Gradient>('gradient', gradient))
+      ..add(
+          ObjectFlagProperty<CardFlipCallback>.has('onFirstFlip', onFirstFlip));
+  }
 }
 
 class _FlipCardWidgetState extends State<FlipCardWidget>

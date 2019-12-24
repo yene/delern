@@ -68,9 +68,14 @@ void main() {
     test('learn_card', () async {
       await driver.tap(find.byType('DeckListItemWidget'));
       await driver.tap(find.byTooltip(localizations.intervalLearningTooltip));
+
       // TODO(ksheremet): getText doesn't work with TextSpan which is used
       // in Markdown text https://github.com/flutter/flutter/issues/16013
       //expect(await driver.getText(find.text('front1')), 'front1');
+
+      // TODO(dotdoom): use getWidgetDiagnostics once it's fixed:
+      // https://github.com/flutter/flutter/pull/45985.
+
       await driver.tap(find.byType('CardDecorationWidget'));
       await driver.tap(find.byTooltip(localizations.knowCardTooltip));
     });
@@ -79,9 +84,14 @@ void main() {
       await driver.tap(find.byType('DeckListItemWidget'));
       await driver.tap(find.byTooltip(localizations.viewLearningTooltip));
       await driver.waitFor(find.text('(1/1) My Test Deck'));
+
       // TODO(ksheremet): getText doesn't work with TextSpan which is used
       // in Markdown text https://github.com/flutter/flutter/issues/16013
       //expect(await driver.getText(find.text('front1')), 'front1');
+
+      // TODO(dotdoom): use getWidgetDiagnostics once it's fixed:
+      // https://github.com/flutter/flutter/pull/45985.
+
       await driver.tap(find.byType('CardDecorationWidget'));
       await driver.tap(find.byTooltip(localizations.shuffleTooltip));
       await driver.waitFor(find.text('(1/1) My Test Deck'));

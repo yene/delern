@@ -31,8 +31,8 @@ class _CardPreviewState extends State<CardPreview> {
               CardPreviewBloc(user: user, card: widget.card, deck: widget.deck);
           bloc.doShowDeleteDialog
               .listen((message) => _showDeleteCardDialog(bloc, message));
-          bloc.doEditCard.listen(
-              (_) => openEditCardScreen(context, widget.deck, widget.card));
+          bloc.doEditCard
+              .listen((_) => openEditCardScreen(context, widget.card));
           return bloc;
         },
         appBarBuilder: (bloc) => AppBar(

@@ -54,8 +54,7 @@ Future<void> openNewCardScreen(BuildContext context, DeckModel deck) =>
                   card: (CardModelBuilder()..deckKey = deck.key),
                 )));
 
-Future<void> openEditCardScreen(
-        BuildContext context, DeckModel deck, CardModel card) =>
+Future<void> openEditCardScreen(BuildContext context, CardModel card) =>
     Navigator.push(
         context,
         MaterialPageRoute(

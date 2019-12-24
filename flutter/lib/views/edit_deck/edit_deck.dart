@@ -62,7 +62,7 @@ class _EditDeckState extends State<EditDeck> {
             });
           });
           bloc.doEditCard.listen((card) {
-            openEditCardScreen(context, _currentDeckState, card);
+            openEditCardScreen(context, card);
           });
 
           return bloc;

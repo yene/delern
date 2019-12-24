@@ -1,6 +1,8 @@
 import 'dart:async';
 
+import 'package:delern_flutter/models/base/stream_with_latest_value.dart';
 import 'package:delern_flutter/models/card_model.dart';
+import 'package:delern_flutter/models/deck_model.dart';
 import 'package:delern_flutter/models/user.dart';
 import 'package:delern_flutter/remote/analytics.dart';
 import 'package:delern_flutter/remote/error_reporting.dart' as error_reporting;
@@ -23,6 +25,9 @@ class CardCreateUpdateBloc extends ScreenBloc {
     _initFields();
     _initListeners();
   }
+
+  StreamWithValue<DeckModel> get deck =>
+      user.decks.getItem(initialCardModel.deckKey);
 
   final _onSaveCardController = StreamController<void>();
   Sink<void> get onSaveCard => _onSaveCardController.sink;

@@ -13,7 +13,7 @@ class CardCreateUpdate extends StatefulWidget {
   static const routeNameNew = '/cards/new';
   static const routeNameEdit = '/cards/edit';
 
-  final CardModel card;
+  final CardModelBuilder card;
 
   const CardCreateUpdate({@required this.card}) : assert(card != null);
 
@@ -59,8 +59,7 @@ class _CardCreateUpdateState extends State<CardCreateUpdate> {
   @override
   Widget build(BuildContext context) => ScreenBlocView(
         blocBuilder: (user) {
-          final bloc =
-              CardCreateUpdateBloc(initialCardModel: widget.card, user: user);
+          final bloc = CardCreateUpdateBloc(card: widget.card, user: user);
           bloc.doClearInputFields.listen((_) => _clearInputFields(bloc));
           bloc.doShowConfirmationDialog
               .listen((_) => showCardSaveUpdateDialog(bloc));

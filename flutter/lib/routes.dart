@@ -51,7 +51,7 @@ Future<void> openNewCardScreen(BuildContext context, DeckModel deck) =>
         MaterialPageRoute(
             settings: const RouteSettings(name: CardCreateUpdate.routeNameNew),
             builder: (context) => CardCreateUpdate(
-                  card: (CardModelBuilder()..deckKey = deck.key).build(),
+                  card: (CardModelBuilder()..deckKey = deck.key),
                 )));
 
 Future<void> openEditCardScreen(
@@ -60,7 +60,7 @@ Future<void> openEditCardScreen(
         context,
         MaterialPageRoute(
             settings: const RouteSettings(name: CardCreateUpdate.routeNameEdit),
-            builder: (context) => CardCreateUpdate(card: card)));
+            builder: (context) => CardCreateUpdate(card: card.toBuilder())));
 
 Future<void> openShareDeckScreen(BuildContext context, DeckModel deck) =>
     Navigator.push(

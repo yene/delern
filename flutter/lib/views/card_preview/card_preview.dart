@@ -15,6 +15,10 @@ class CardPreview extends StatefulWidget {
   final CardModel card;
   final DeckModel deck;
 
+  /// [deck] model is required instead of just a deck key for the cases where
+  /// a deck has been modified but not saved yet. E.g. a common scenario is to
+  /// open a card preview from a deck edit screen, where either deck name or
+  /// deck type has changed and therefore need to be reflected on the preview.
   const CardPreview({@required this.card, @required this.deck})
       : assert(card != null),
         assert(deck != null);

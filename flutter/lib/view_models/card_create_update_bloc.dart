@@ -1,6 +1,8 @@
 import 'dart:async';
 
+import 'package:delern_flutter/models/base/stream_with_latest_value.dart';
 import 'package:delern_flutter/models/card_model.dart';
+import 'package:delern_flutter/models/deck_model.dart';
 import 'package:delern_flutter/models/user.dart';
 import 'package:delern_flutter/remote/analytics.dart';
 import 'package:delern_flutter/remote/error_reporting.dart' as error_reporting;
@@ -9,20 +11,21 @@ import 'package:meta/meta.dart';
 import 'package:pedantic/pedantic.dart';
 
 class CardCreateUpdateBloc extends ScreenBloc {
-  String _frontText;
-  String _backText;
   bool _addReversedCard = false;
-  final CardModel initialCardModel;
+  final CardModelBuilder _card;
   final bool isAddOperation;
   bool _isOperationEnabled = true;
 
-  CardCreateUpdateBloc({@required User user, @required this.initialCardModel})
-      : assert(initialCardModel != null),
-        isAddOperation = initialCardModel.key == null,
+  CardCreateUpdateBloc({@required User user, @required CardModelBuilder card})
+      : assert(card != null),
+        assert(card.deckKey != null),
+        _card = card,
+        isAddOperation = card.key == null,
         super(user) {
-    _initFields();
     _initListeners();
   }
+
+  StreamWithValue<DeckModel> get deck => user.decks.getItem(_card.deckKey);
 
   final _onSaveCardController = StreamController<void>();
   Sink<void> get onSaveCard => _onSaveCardController.sink;
@@ -49,19 +52,14 @@ class CardCreateUpdateBloc extends ScreenBloc {
   final _onDiscardChangesController = StreamController<void>();
   Sink<void> get onDiscardChanges => _onDiscardChangesController.sink;
 
-  void _initFields() {
-    _frontText = initialCardModel.front;
-    _backText = initialCardModel.back;
-  }
-
   void _initListeners() {
     _onSaveCardController.stream.listen((_) => _processSavingCard());
     _onFrontSideTextController.stream.listen((frontText) {
-      _frontText = frontText;
+      _card.front = frontText;
       _checkOperationAvailability();
     });
     _onBackSideTextController.stream.listen((backText) {
-      _backText = backText;
+      _card.back = backText;
       _checkOperationAvailability();
     });
     _addReversedCardController.stream.listen((addReversed) {
@@ -74,9 +72,7 @@ class CardCreateUpdateBloc extends ScreenBloc {
   }
 
   Future<void> _createOrUpdateCard() {
-    final card = initialCardModel.rebuild((b) => b
-      ..front = _frontText.trim()
-      ..back = _backText.trim());
+    final card = _card.build();
     if (isAddOperation) {
       logCardCreate(card.deckKey);
       return user.createCard(card: card, addReversed: _addReversedCard);
@@ -116,8 +112,8 @@ class CardCreateUpdateBloc extends ScreenBloc {
   }
 
   bool _isCardValid() => _addReversedCard
-      ? _frontText.trim().isNotEmpty && _backText.trim().isNotEmpty
-      : _frontText.trim().isNotEmpty;
+      ? _card.front.trim().isNotEmpty && _card.back.trim().isNotEmpty
+      : _card.front.trim().isNotEmpty;
 
   void _checkOperationAvailability() {
     _isOperationEnabledController.add(_isOperationEnabled && _isCardValid());

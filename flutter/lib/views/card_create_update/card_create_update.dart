@@ -1,10 +1,11 @@
 import 'package:delern_flutter/flutter/localization.dart' as localizations;
 import 'package:delern_flutter/flutter/styles.dart' as app_styles;
 import 'package:delern_flutter/models/card_model.dart';
-import 'package:delern_flutter/models/deck_model.dart';
 import 'package:delern_flutter/view_models/card_create_update_bloc.dart';
 import 'package:delern_flutter/views/base/screen_bloc_view.dart';
+import 'package:delern_flutter/views/helpers/progress_indicator_widget.dart';
 import 'package:delern_flutter/views/helpers/save_updates_dialog.dart';
+import 'package:delern_flutter/views/helpers/stream_with_value_builder.dart';
 import 'package:delern_flutter/views/helpers/text_overflow_ellipsis_widget.dart';
 import 'package:flutter/material.dart';
 
@@ -12,12 +13,9 @@ class CardCreateUpdate extends StatefulWidget {
   static const routeNameNew = '/cards/new';
   static const routeNameEdit = '/cards/edit';
 
-  final CardModel card;
-  final DeckModel deck;
+  final CardModelBuilder card;
 
-  const CardCreateUpdate({@required this.card, @required this.deck})
-      : assert(card != null),
-        assert(deck != null);
+  const CardCreateUpdate({@required this.card}) : assert(card != null);
 
   @override
   State<StatefulWidget> createState() => _CardCreateUpdateState();
@@ -61,8 +59,7 @@ class _CardCreateUpdateState extends State<CardCreateUpdate> {
   @override
   Widget build(BuildContext context) => ScreenBlocView(
         blocBuilder: (user) {
-          final bloc =
-              CardCreateUpdateBloc(initialCardModel: widget.card, user: user);
+          final bloc = CardCreateUpdateBloc(card: widget.card, user: user);
           bloc.doClearInputFields.listen((_) => _clearInputFields(bloc));
           bloc.doShowConfirmationDialog
               .listen((_) => showCardSaveUpdateDialog(bloc));
@@ -75,8 +72,13 @@ class _CardCreateUpdateState extends State<CardCreateUpdate> {
   AppBar _buildAppBar(CardCreateUpdateBloc bloc) {
     void saveCard() => bloc.onSaveCard.add(null);
     return AppBar(
-      title: TextOverflowEllipsisWidget(
-        textDetails: widget.deck.name,
+      title: buildStreamBuilderWithValue(
+        streamWithValue: bloc.deck,
+        builder: (_, snapshot) => snapshot.hasData
+            ? TextOverflowEllipsisWidget(
+                textDetails: snapshot.data.name,
+              )
+            : ProgressIndicatorWidget(),
       ),
       actions: <Widget>[
         StreamBuilder<bool>(

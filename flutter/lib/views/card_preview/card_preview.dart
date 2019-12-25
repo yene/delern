@@ -14,16 +14,12 @@ import 'package:flutter/material.dart';
 class CardPreview extends StatefulWidget {
   static const routeName = '/cards/preview';
 
-  final CardModel card;
-  final DeckModel deck;
+  final String cardKey;
+  final String deckKey;
 
-  /// [deck] model is required instead of just a deck key for the cases where
-  /// a deck has been modified but not saved yet. E.g. a common scenario is to
-  /// open a card preview from a deck edit screen, where either deck name or
-  /// deck type has changed and therefore need to be reflected on the preview.
-  const CardPreview({@required this.card, @required this.deck})
-      : assert(card != null),
-        assert(deck != null);
+  const CardPreview({@required this.cardKey, @required this.deckKey})
+      : assert(cardKey != null),
+        assert(deckKey != null);
 
   @override
   State<StatefulWidget> createState() => _CardPreviewState();
@@ -33,22 +29,25 @@ class _CardPreviewState extends State<CardPreview> {
   @override
   Widget build(BuildContext context) => ScreenBlocView<CardPreviewBloc>(
         blocBuilder: (user) {
-          final bloc =
-              CardPreviewBloc(user: user, card: widget.card, deck: widget.deck);
+          final bloc = CardPreviewBloc(
+              user: user, cardKey: widget.cardKey, deckKey: widget.deckKey);
           bloc.doShowDeleteDialog
               .listen((message) => _showDeleteCardDialog(bloc, message));
           bloc.doEditCard.listen((_) => openEditCardScreen(
                 context,
-                deckKey: widget.card.deckKey,
-                cardKey: widget.card.key,
+                deckKey: widget.deckKey,
+                cardKey: widget.cardKey,
               ));
           return bloc;
         },
         appBarBuilder: (bloc) => AppBar(
-          title: StreamBuilder<String>(
-              initialData: widget.deck.name,
-              stream: bloc.doDeckNameChanged,
-              builder: (context, snapshot) => Text(snapshot.data)),
+          title: buildStreamBuilderWithValue<DeckModel>(
+            // TODO(dotdoom): better handle deck removal events.
+            streamWithValue: bloc.deck,
+            builder: (context, snapshot) => snapshot.hasData
+                ? Text(snapshot.data.name)
+                : ProgressIndicatorWidget(),
+          ),
           actions: <Widget>[
             IconButton(
               tooltip: localizations.of(context).deleteCardTooltip,
@@ -60,18 +59,24 @@ class _CardPreviewState extends State<CardPreview> {
         bodyBuilder: (bloc) => Column(
           children: <Widget>[
             Expanded(
-              child: buildStreamBuilderWithValue<CardModel>(
-                streamWithValue: bloc.card,
-                // TODO(dotdoom): better handle card removal events.
-                builder: (context, snapshot) => snapshot.hasData
-                    ? CardDisplayWidget(
-                        front: snapshot.data.front,
-                        back: snapshot.data.back,
-                        showBack: true,
-                        gradient: specifyLearnCardBackgroundGradient(
-                          widget.deck.type,
-                          snapshot.data.back,
-                        ),
+              child: buildStreamBuilderWithValue<DeckModel>(
+                streamWithValue: bloc.deck,
+                // TODO(dotdoom): better handle deck removal events.
+                builder: (context, deckSnapshot) => deckSnapshot.hasData
+                    ? buildStreamBuilderWithValue<CardModel>(
+                        streamWithValue: bloc.card,
+                        // TODO(dotdoom): better handle card removal events.
+                        builder: (context, cardSnapshot) => cardSnapshot.hasData
+                            ? CardDisplayWidget(
+                                front: cardSnapshot.data.front,
+                                back: cardSnapshot.data.back,
+                                showBack: true,
+                                gradient: specifyLearnCardBackgroundGradient(
+                                  deckSnapshot.data.type,
+                                  cardSnapshot.data.back,
+                                ),
+                              )
+                            : ProgressIndicatorWidget(),
                       )
                     : ProgressIndicatorWidget(),
               ),

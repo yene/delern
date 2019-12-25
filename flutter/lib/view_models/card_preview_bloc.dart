@@ -10,33 +10,32 @@ import 'package:delern_flutter/view_models/base/screen_bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:pedantic/pedantic.dart';
 
-class CardViewModel {
-  CardModel card;
-  DeckModel deck;
-
-  CardViewModel({@required this.deck, @required this.card})
-      : assert(deck != null),
-        assert(card != null);
-
-  CardViewModel._copyFrom(CardViewModel other)
-      : card = other.card,
-        deck = other.deck;
-}
-
 class CardPreviewBloc extends ScreenBloc {
-  CardPreviewBloc(
-      {@required User user, @required CardModel card, @required DeckModel deck})
-      : assert(card != null),
-        assert(deck != null),
+  final String _cardKey;
+  final String _deckKey;
+
+  CardPreviewBloc({
+    @required User user,
+    @required String cardKey,
+    @required String deckKey,
+  })  : assert(cardKey != null),
+        assert(deckKey != null),
+        _cardKey = cardKey,
+        _deckKey = deckKey,
         super(user) {
-    _cardValue = CardViewModel(card: card, deck: deck);
     _initListeners();
   }
 
   void _initListeners() {
     _onDeleteCardController.stream.listen((_) async {
       try {
-        await user.deleteCard(card: _cardValue.card);
+        await user.deleteCard(
+            card: user.decks
+                .getItem(_deckKey)
+                .value
+                .cards
+                .getItem(_cardKey)
+                .value);
         notifyPop();
       } catch (e, stackTrace) {
         unawaited(error_reporting.report('deleteCard', e, stackTrace));
@@ -74,22 +73,17 @@ class CardPreviewBloc extends ScreenBloc {
   final _doShowDeleteDialogController = StreamController<String>();
   Stream<String> get doShowDeleteDialog => _doShowDeleteDialogController.stream;
 
-  final _doDeckNameChangedController = StreamController<String>();
-  Stream<String> get doDeckNameChanged => _doDeckNameChangedController.stream;
+  StreamWithValue<DeckModel> get deck => user.decks.getItem(_deckKey);
 
-  CardViewModel _cardValue;
+  StreamWithValue<CardModel> get card => deck.value.cards.getItem(_cardKey);
 
-  StreamWithValue<CardModel> get card =>
-      _cardValue.deck.cards.getItem(_cardValue.card.key);
-
-  bool _isEditAllowed() => _cardValue.deck.access != AccessType.read;
+  bool _isEditAllowed() => deck.value.access != AccessType.read;
 
   @override
   void dispose() {
     _onDeleteCardController.close();
     _onDeleteCardIntentionController.close();
     _doShowDeleteDialogController.close();
-    _doDeckNameChangedController.close();
     _onEditCardIntentionController.close();
     _doEditCardController.close();
     super.dispose();

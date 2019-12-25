@@ -1,4 +1,3 @@
-import 'package:delern_flutter/models/card_model.dart';
 import 'package:delern_flutter/models/deck_model.dart';
 import 'package:delern_flutter/views/card_create_update/card_create_update.dart';
 import 'package:delern_flutter/views/card_preview/card_preview.dart';
@@ -85,14 +84,14 @@ Future<void> openSupportDevelopmentScreen(BuildContext context) =>
             builder: (context) => SupportDevelopment()));
 
 Future<void> openPreviewCardScreen(
-        BuildContext context, DeckModel deck, CardModel card) =>
+        BuildContext context, DeckModel deck, String cardKey) =>
     Navigator.push(
         context,
         MaterialPageRoute(
             settings: const RouteSettings(name: CardPreview.routeName),
             builder: (context) => CardPreview(
-                  card: card,
-                  deck: deck,
+                  cardKey: cardKey,
+                  deckKey: deck.key,
                 )));
 
 Future<void> openSignInScreen(BuildContext context) => Navigator.push(

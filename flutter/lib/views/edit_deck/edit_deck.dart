@@ -263,7 +263,7 @@ class CardItemWidget extends StatelessWidget {
               elevation: app_styles.kItemElevation,
               child: InkWell(
                 splashColor: Theme.of(context).splashColor,
-                onTap: () => openPreviewCardScreen(context, deck, card),
+                onTap: () => openPreviewCardScreen(context, deck, card.key),
                 child: Container(
                   padding: const EdgeInsets.all(_kCardBorderPadding),
                   decoration: BoxDecoration(

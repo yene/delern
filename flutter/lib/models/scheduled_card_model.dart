@@ -58,8 +58,11 @@ abstract class ScheduledCardModel
 
   @nullable
   String get deckKey;
+
+  /// [ScheduledCardModel.key] is the key of the card that it represents.
   @nullable
   String get key;
+
   int get level;
   DateTime get repeatAt;
 

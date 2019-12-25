@@ -39,7 +39,7 @@ class AccessType extends EnumClass implements Comparable<AccessType> {
 
 abstract class DeckAccessModel
     implements Built<DeckAccessModel, DeckAccessModelBuilder>, KeyedListItem {
-  /// DeckAccessModel key is uid of the user whose access it holds.
+  /// [DeckAccessModel.key] is uid of the user whose access it holds.
   @nullable
   String get key;
 

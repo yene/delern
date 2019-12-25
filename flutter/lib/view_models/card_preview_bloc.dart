@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:delern_flutter/models/base/stream_with_latest_value.dart';
 import 'package:delern_flutter/models/card_model.dart';
 import 'package:delern_flutter/models/deck_access_model.dart';
 import 'package:delern_flutter/models/deck_model.dart';
@@ -77,23 +78,11 @@ class CardPreviewBloc extends ScreenBloc {
   Stream<String> get doDeckNameChanged => _doDeckNameChangedController.stream;
 
   CardViewModel _cardValue;
-  CardViewModel get cardValue => CardViewModel._copyFrom(_cardValue);
 
-  Stream<CardViewModel> get cardStream =>
-      // TODO(dotdoom): mux in DeckModel updates stream, too.
-      CardModel.get(deckKey: _cardValue.card.deckKey, key: _cardValue.card.key)
-          .transform(StreamTransformer.fromHandlers(
-              handleData: (cardModel, sink) async {
-        if (cardModel.key == null) {
-          // Card doesn't exist anymore. Do not send any events
-          sink.close();
-        } else {
-          sink.add(CardViewModel._copyFrom(_cardValue =
-              CardViewModel(card: cardModel, deck: _cardValue.deck)));
-        }
-      }));
+  StreamWithValue<CardModel> get card =>
+      _cardValue.deck.cards.getItem(_cardValue.card.key);
 
-  bool _isEditAllowed() => cardValue.deck.access != AccessType.read;
+  bool _isEditAllowed() => _cardValue.deck.access != AccessType.read;
 
   @override
   void dispose() {

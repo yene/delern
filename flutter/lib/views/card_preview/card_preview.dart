@@ -6,7 +6,9 @@ import 'package:delern_flutter/view_models/card_preview_bloc.dart';
 import 'package:delern_flutter/views/base/screen_bloc_view.dart';
 import 'package:delern_flutter/views/helpers/card_background_specifier.dart';
 import 'package:delern_flutter/views/helpers/card_display_widget.dart';
+import 'package:delern_flutter/views/helpers/progress_indicator_widget.dart';
 import 'package:delern_flutter/views/helpers/save_updates_dialog.dart';
+import 'package:delern_flutter/views/helpers/stream_with_value_builder.dart';
 import 'package:flutter/material.dart';
 
 class CardPreview extends StatefulWidget {
@@ -55,18 +57,20 @@ class _CardPreviewState extends State<CardPreview> {
         bodyBuilder: (bloc) => Column(
           children: <Widget>[
             Expanded(
-              child: StreamBuilder<CardViewModel>(
-                stream: bloc.cardStream,
-                initialData: bloc.cardValue,
-                builder: (context, snapshot) => CardDisplayWidget(
-                  front: snapshot.requireData.card.front,
-                  back: snapshot.requireData.card.back,
-                  showBack: true,
-                  gradient: specifyLearnCardBackgroundGradient(
-                    snapshot.requireData.deck.type,
-                    snapshot.requireData.card.back,
-                  ),
-                ),
+              child: buildStreamBuilderWithValue<CardModel>(
+                streamWithValue: bloc.card,
+                // TODO(dotdoom): better handle card removal events.
+                builder: (context, snapshot) => snapshot.hasData
+                    ? CardDisplayWidget(
+                        front: snapshot.data.front,
+                        back: snapshot.data.back,
+                        showBack: true,
+                        gradient: specifyLearnCardBackgroundGradient(
+                          widget.deck.type,
+                          snapshot.data.back,
+                        ),
+                      )
+                    : ProgressIndicatorWidget(),
               ),
             ),
             const Padding(padding: EdgeInsets.only(bottom: 100))

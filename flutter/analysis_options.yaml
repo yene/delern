@@ -39,6 +39,15 @@ linter:
     # "Correcting" input parameters is too useful to let go of.
     parameter_assignments: false
 
+    # Final variables are actually quite useful to avoid mistakes.
+    unnecessary_final: false
+
+    # Questionable effort-to-gain ratio.
+    avoid_catches_without_on_clauses: false
+    avoid_function_literals_in_foreach_calls: false
+    prefer_double_quotes: false
+    sort_constructors_first: false
+
     # TODO(dotdoom): add messages to asserts.
     prefer_asserts_with_message: false
 
@@ -47,12 +56,3 @@ linter:
 
     # TODO(dotdoom): add debugFillProperties.
     diagnostic_describe_all_properties: false
-
-    # Questionable effort-to-gain ratio.
-    avoid_catches_without_on_clauses: false
-    avoid_function_literals_in_foreach_calls: false
-    prefer_double_quotes: false
-    sort_constructors_first: false
-
-    # TODO(ksheremet): Fix it for local variables
-    unnecessary_final: false

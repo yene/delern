@@ -81,6 +81,7 @@ abstract class DeckModel
   static void _initializeBuilder(DeckModelBuilder b) => b
     ..lastSyncAt = DateTime.fromMillisecondsSinceEpoch(0)
     ..markdown = true
+    ..access = AccessType.owner
     ..type = DeckType.basic
     ..accepted = true;
 

@@ -25,7 +25,7 @@ class CardPreview extends StatefulWidget {
 
 class _CardPreviewState extends State<CardPreview> {
   @override
-  Widget build(BuildContext context) => ScreenBlocView(
+  Widget build(BuildContext context) => ScreenBlocView<CardPreviewBloc>(
         blocBuilder: (user) {
           final bloc =
               CardPreviewBloc(user: user, card: widget.card, deck: widget.deck);

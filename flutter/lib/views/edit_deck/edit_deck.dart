@@ -48,7 +48,7 @@ class _EditDeckState extends State<EditDeck> {
   }
 
   @override
-  Widget build(BuildContext context) => ScreenBlocView(
+  Widget build(BuildContext context) => ScreenBlocView<EditDeckBloc>(
         blocBuilder: (user) {
           final bloc = EditDeckBloc(
             deckKey: ModalRoute.of(context).settings.arguments,

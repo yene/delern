@@ -42,7 +42,6 @@ class CardPreviewBloc extends ScreenBloc {
         notifyErrorOccurred(e);
       }
     });
-    _onDeckNameController.stream.listen(_doDeckNameChangedController.add);
     _onDeleteCardIntentionController.stream.listen((_) {
       if (_isEditAllowed()) {
         _doShowDeleteDialogController.add(locale.deleteCardQuestion);
@@ -74,9 +73,6 @@ class CardPreviewBloc extends ScreenBloc {
   final _doShowDeleteDialogController = StreamController<String>();
   Stream<String> get doShowDeleteDialog => _doShowDeleteDialogController.stream;
 
-  final _onDeckNameController = StreamController<String>();
-  Sink<String> get onDeckName => _onDeckNameController.sink;
-
   final _doDeckNameChangedController = StreamController<String>();
   Stream<String> get doDeckNameChanged => _doDeckNameChangedController.stream;
 
@@ -104,7 +100,6 @@ class CardPreviewBloc extends ScreenBloc {
     _onDeleteCardController.close();
     _onDeleteCardIntentionController.close();
     _doShowDeleteDialogController.close();
-    _onDeckNameController.close();
     _doDeckNameChangedController.close();
     _onEditCardIntentionController.close();
     _doEditCardController.close();

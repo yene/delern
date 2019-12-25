@@ -176,7 +176,10 @@ class _EditDeckState extends State<EditDeck> {
   }
 
   Column _buildCardItem(
-          CardModel item, double verticalPadding, EditDeckBloc bloc) =>
+    CardModel item,
+    double verticalPadding,
+    EditDeckBloc bloc,
+  ) =>
       Column(
         children: <Widget>[
           Padding(
@@ -259,8 +262,11 @@ class CardItemWidget extends StatelessWidget {
                 child: Container(
                   padding: const EdgeInsets.all(_kCardBorderPadding),
                   decoration: BoxDecoration(
-                      gradient: specifyEditCardBackgroundGradient(
-                          deck.type, card.back)),
+                    gradient: specifyEditCardBackgroundGradient(
+                      deck.type,
+                      card.back,
+                    ),
+                  ),
                   // Use row to expand content to all available space
                   child: Row(
                     children: <Widget>[

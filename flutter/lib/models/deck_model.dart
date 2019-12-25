@@ -41,6 +41,7 @@ abstract class DeckModel
   String get key;
   @nullable
   String get name;
+  @nullable
   bool get markdown;
   @BuiltValueField(wireName: 'deckType')
   DeckType get type;

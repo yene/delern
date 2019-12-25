@@ -70,9 +70,6 @@ class _$DeckModelSerializer implements StructuredSerializer<DeckModel> {
   Iterable<Object> serialize(Serializers serializers, DeckModel object,
       {FullType specifiedType = FullType.unspecified}) {
     final result = <Object>[
-      'markdown',
-      serializers.serialize(object.markdown,
-          specifiedType: const FullType(bool)),
       'deckType',
       serializers.serialize(object.type,
           specifiedType: const FullType(DeckType)),
@@ -91,6 +88,12 @@ class _$DeckModelSerializer implements StructuredSerializer<DeckModel> {
         ..add('name')
         ..add(serializers.serialize(object.name,
             specifiedType: const FullType(String)));
+    }
+    if (object.markdown != null) {
+      result
+        ..add('markdown')
+        ..add(serializers.serialize(object.markdown,
+            specifiedType: const FullType(bool)));
     }
     if (object.accepted != null) {
       result
@@ -256,9 +259,6 @@ class _$DeckModel extends DeckModel {
       this.numberOfCardsDue,
       this.usersAccess})
       : super._() {
-    if (markdown == null) {
-      throw new BuiltValueNullFieldError('DeckModel', 'markdown');
-    }
     if (type == null) {
       throw new BuiltValueNullFieldError('DeckModel', 'type');
     }

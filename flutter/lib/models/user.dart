@@ -92,9 +92,7 @@ class User {
   Future<DeckModel> createDeck({
     @required DeckModel deckTemplate,
   }) async {
-    final deck = deckTemplate.rebuild((b) => b
-      ..key = _newKey()
-      ..access = AccessType.owner);
+    final deck = deckTemplate.rebuild((b) => b..key = _newKey());
     final deckPath = 'decks/$uid/${deck.key}';
     final deckAccessPath = 'deck_access/${deck.key}/$uid';
     await _write({

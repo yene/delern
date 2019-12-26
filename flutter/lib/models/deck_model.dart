@@ -41,6 +41,7 @@ abstract class DeckModel
   String get key;
   @nullable
   String get name;
+  @nullable
   bool get markdown;
   @BuiltValueField(wireName: 'deckType')
   DeckType get type;
@@ -80,6 +81,7 @@ abstract class DeckModel
   static void _initializeBuilder(DeckModelBuilder b) => b
     ..lastSyncAt = DateTime.fromMillisecondsSinceEpoch(0)
     ..markdown = true
+    ..access = AccessType.owner
     ..type = DeckType.basic
     ..accepted = true;
 

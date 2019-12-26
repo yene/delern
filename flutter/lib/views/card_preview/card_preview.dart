@@ -25,7 +25,7 @@ class CardPreview extends StatefulWidget {
 
 class _CardPreviewState extends State<CardPreview> {
   @override
-  Widget build(BuildContext context) => ScreenBlocView(
+  Widget build(BuildContext context) => ScreenBlocView<CardPreviewBloc>(
         blocBuilder: (user) {
           final bloc =
               CardPreviewBloc(user: user, card: widget.card, deck: widget.deck);
@@ -42,24 +42,29 @@ class _CardPreviewState extends State<CardPreview> {
               builder: (context, snapshot) => Text(snapshot.data)),
           actions: <Widget>[
             IconButton(
-                tooltip: localizations.of(context).deleteCardTooltip,
-                icon: const Icon(Icons.delete),
-                onPressed: () async => bloc.onDeleteDeckIntention.add(null)),
+              tooltip: localizations.of(context).deleteCardTooltip,
+              icon: const Icon(Icons.delete),
+              onPressed: () async => bloc.onDeleteDeckIntention.add(null),
+            ),
           ],
         ),
         bodyBuilder: (bloc) => Column(
           children: <Widget>[
             Expanded(
-                child: StreamBuilder<CardViewModel>(
-                    stream: bloc.cardStream,
-                    initialData: bloc.cardValue,
-                    builder: (context, snapshot) => CardDisplayWidget(
-                        front: snapshot.requireData.card.front,
-                        back: snapshot.requireData.card.back,
-                        showBack: true,
-                        gradient: specifyLearnCardBackgroundGradient(
-                            snapshot.requireData.deck.type,
-                            snapshot.requireData.card.back)))),
+              child: StreamBuilder<CardViewModel>(
+                stream: bloc.cardStream,
+                initialData: bloc.cardValue,
+                builder: (context, snapshot) => CardDisplayWidget(
+                  front: snapshot.requireData.card.front,
+                  back: snapshot.requireData.card.back,
+                  showBack: true,
+                  gradient: specifyLearnCardBackgroundGradient(
+                    snapshot.requireData.deck.type,
+                    snapshot.requireData.card.back,
+                  ),
+                ),
+              ),
+            ),
             const Padding(padding: EdgeInsets.only(bottom: 100))
           ],
         ),

@@ -83,12 +83,12 @@ class CardCreateUpdateBloc extends ScreenBloc {
 
   Future<void> _disableUI(Future<void> Function() f) async {
     _isOperationEnabled = false;
-    _isOperationEnabledController.add(_isOperationEnabled);
+    _checkOperationAvailability();
     try {
       await f();
     } finally {
       _isOperationEnabled = true;
-      _isOperationEnabledController.add(_isOperationEnabled);
+      _checkOperationAvailability();
     }
   }
 

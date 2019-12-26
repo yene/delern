@@ -323,9 +323,13 @@ class DeckListItemWidget extends StatelessWidget {
 
   Future<bool> _deleteDeck(BuildContext context) async {
     try {
+      // Keep instance of Scaffold context. If deck is disposed and deleted
+      // from widget tree it throws an exception that not possible to search
+      // for Scaffold.
+      final scaffoldContext = Scaffold.of(context);
       await bloc.deleteDeck(deck);
-      UserMessages.showMessage(Scaffold.of(context),
-          localizations.of(context).deckDeletedUserMessage);
+      UserMessages.showMessage(
+          scaffoldContext, localizations.of(context).deckDeletedUserMessage);
       return true;
     } catch (e, stackTrace) {
       unawaited(

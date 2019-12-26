@@ -23,6 +23,8 @@ class CardCreateUpdateBloc extends ScreenBloc {
         isAddOperation = card.key == null,
         super(user) {
     _initListeners();
+    _doFrontSideTextController.add(card.front);
+    _doBackSideTextController.add(card.back);
   }
 
   StreamWithValue<DeckModel> get deck => user.decks.getItem(_card.deckKey);
@@ -38,6 +40,14 @@ class CardCreateUpdateBloc extends ScreenBloc {
 
   final _addReversedCardController = StreamController<bool>();
   Sink<bool> get onAddReversedCard => _addReversedCardController.sink;
+
+  final _doFrontSideTextController = StreamController<String>();
+  Stream<String> get doFrontSideTextController =>
+      _doFrontSideTextController.stream;
+
+  final _doBackSideTextController = StreamController<String>();
+  Stream<String> get doBackSideTextController =>
+      _doBackSideTextController.stream;
 
   final _doClearInputFieldsController = StreamController<void>();
   Stream<void> get doClearInputFields => _doClearInputFieldsController.stream;
@@ -83,12 +93,12 @@ class CardCreateUpdateBloc extends ScreenBloc {
 
   Future<void> _disableUI(Future<void> Function() f) async {
     _isOperationEnabled = false;
-    _isOperationEnabledController.add(_isOperationEnabled);
+    _checkOperationAvailability();
     try {
       await f();
     } finally {
       _isOperationEnabled = true;
-      _isOperationEnabledController.add(_isOperationEnabled);
+      _checkOperationAvailability();
     }
   }
 

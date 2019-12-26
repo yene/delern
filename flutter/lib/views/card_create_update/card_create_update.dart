@@ -29,15 +29,10 @@ class _CardCreateUpdateState extends State<CardCreateUpdate> {
   final FocusNode _frontSideFocus = FocusNode();
 
   @override
-  void initState() {
-    _frontTextController.text = widget.card.front;
-    _backTextController.text = widget.card.back;
-    super.initState();
-  }
-
-  @override
   void dispose() {
     _frontSideFocus.dispose();
+    _frontTextController.dispose();
+    _backTextController.dispose();
     super.dispose();
   }
 
@@ -60,6 +55,10 @@ class _CardCreateUpdateState extends State<CardCreateUpdate> {
   Widget build(BuildContext context) => ScreenBlocView<CardCreateUpdateBloc>(
         blocBuilder: (user) {
           final bloc = CardCreateUpdateBloc(card: widget.card, user: user);
+          bloc.doFrontSideTextController
+              .listen((text) => _frontTextController.text = text);
+          bloc.doBackSideTextController
+              .listen((text) => _backTextController.text = text);
           bloc.doClearInputFields.listen((_) => _clearInputFields(bloc));
           bloc.doShowConfirmationDialog
               .listen((_) => showCardSaveUpdateDialog(bloc));
@@ -121,8 +120,9 @@ class _CardCreateUpdateState extends State<CardCreateUpdate> {
           });
         },
         style: app_styles.primaryText,
-        decoration:
-            InputDecoration(hintText: localizations.of(context).frontSideHint),
+        decoration: InputDecoration(
+          hintText: localizations.of(context).frontSideHint,
+        ),
       ),
       TextField(
         key: const Key('backCardInput'),
@@ -142,7 +142,7 @@ class _CardCreateUpdateState extends State<CardCreateUpdate> {
       ),
     ];
 
-    // Add reversed card widget it it is adding cards
+    // Add reversed card widget if it is adding cards
     if (bloc.isAddOperation) {
       // https://github.com/flutter/flutter/issues/254 suggests using
       // CheckboxListTile to have a clickable checkbox label.

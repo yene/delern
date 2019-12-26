@@ -6,14 +6,17 @@ import 'package:flutter/material.dart';
 class CardDisplayWidget extends StatelessWidget {
   final String front;
   final String back;
+  final List<String> tags;
   final bool showBack;
   final Gradient gradient;
 
-  const CardDisplayWidget(
-      {@required this.front,
-      @required this.back,
-      @required this.showBack,
-      @required this.gradient});
+  const CardDisplayWidget({
+    @required this.front,
+    @required this.back,
+    @required this.tags,
+    @required this.showBack,
+    @required this.gradient,
+  });
 
   @override
   Widget build(BuildContext context) => Padding(
@@ -29,6 +32,14 @@ class CardDisplayWidget extends StatelessWidget {
 
   List<Widget> _buildCardBody(BuildContext context) {
     final widgetList = <Widget>[
+      Wrap(
+        children: tags
+            .map((tag) => Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 3),
+                  child: Chip(label: Text(tag)),
+                ))
+            .toList(),
+      ),
       NonScrollingMarkdownWidget(
           text: front, textStyle: app_styles.primaryText),
     ];

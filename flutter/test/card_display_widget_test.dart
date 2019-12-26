@@ -15,14 +15,17 @@ void main() {
       home: CardDisplayWidget(
         front: frontSide,
         back: backSide,
+        tags: const ['#family', '#feminine', '#german'],
         gradient: getLearnCardGradientFromGender(Gender.feminine),
         showBack: true,
       ),
     ));
 
+    // We have 3 tags displayed as chips
+    expect(find.byType(Chip), findsNWidgets(3));
+
     // Make sure that we have 2 Markdown widgets
-    expect(find.byWidgetPredicate((widget) => widget is MarkdownBody),
-        findsNWidgets(2));
+    expect(find.byType(MarkdownBody), findsNWidgets(2));
 
     // Iterate all widgets. Compare first Markdown with front side and the
     // second Markdown with the back side

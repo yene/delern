@@ -29,13 +29,6 @@ class _CardCreateUpdateState extends State<CardCreateUpdate> {
   final FocusNode _frontSideFocus = FocusNode();
 
   @override
-  void initState() {
-    _frontTextController.text = widget.card.front;
-    _backTextController.text = widget.card.back;
-    super.initState();
-  }
-
-  @override
   void dispose() {
     _frontSideFocus.dispose();
     _frontTextController.dispose();
@@ -62,6 +55,10 @@ class _CardCreateUpdateState extends State<CardCreateUpdate> {
   Widget build(BuildContext context) => ScreenBlocView<CardCreateUpdateBloc>(
         blocBuilder: (user) {
           final bloc = CardCreateUpdateBloc(card: widget.card, user: user);
+          bloc.doFrontSideTextController
+              .listen((text) => _frontTextController.text = text);
+          bloc.doBackSideTextController
+              .listen((text) => _backTextController.text = text);
           bloc.doClearInputFields.listen((_) => _clearInputFields(bloc));
           bloc.doShowConfirmationDialog
               .listen((_) => showCardSaveUpdateDialog(bloc));

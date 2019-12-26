@@ -120,8 +120,9 @@ class _CardCreateUpdateState extends State<CardCreateUpdate> {
           });
         },
         style: app_styles.primaryText,
-        decoration:
-            InputDecoration(hintText: localizations.of(context).frontSideHint),
+        decoration: InputDecoration(
+          hintText: localizations.of(context).frontSideHint,
+        ),
       ),
       TextField(
         key: const Key('backCardInput'),
@@ -141,7 +142,7 @@ class _CardCreateUpdateState extends State<CardCreateUpdate> {
       ),
     ];
 
-    // Add reversed card widget it it is adding cards
+    // Add reversed card widget if it is adding cards
     if (bloc.isAddOperation) {
       // https://github.com/flutter/flutter/issues/254 suggests using
       // CheckboxListTile to have a clickable checkbox label.

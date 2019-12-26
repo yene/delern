@@ -34,7 +34,7 @@ class CreateDeckWidget extends StatelessWidget {
                   () => Scaffold.of(context), e, stackTrace));
               return;
             }
-            unawaited(openNewCardScreen(context, newDeck));
+            unawaited(openNewCardScreen(context, deckKey: newDeck.key));
           }
         },
         child: const Icon(Icons.add),

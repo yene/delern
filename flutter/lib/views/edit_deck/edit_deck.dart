@@ -199,7 +199,7 @@ class _EditDeckState extends State<EditDeck> {
           key: fabKey,
           onPressed: () {
             if (_currentDeckState.access != AccessType.read) {
-              openNewCardScreen(context, _currentDeckState);
+              openNewCardScreen(context, deckKey: _currentDeckState.key);
             } else {
               UserMessages.showMessage(Scaffold.of(context),
                   localizations.of(context).noAddingWithReadAccessUserMessage);

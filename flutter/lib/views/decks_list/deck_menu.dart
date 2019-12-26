@@ -71,7 +71,7 @@ class _DeckMenuState extends State<DeckMenu>
     switch (item) {
       case _DeckMenuItemType.add:
         if (allowEdit) {
-          openNewCardScreen(context, widget.deck);
+          openNewCardScreen(context, deckKey: widget.deck.key);
         } else {
           UserMessages.showMessage(Scaffold.of(context),
               localizations.of(context).noAddingWithReadAccessUserMessage);

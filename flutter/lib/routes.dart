@@ -45,13 +45,16 @@ Future<void> openLearnCardViewScreen(BuildContext context, DeckModel deck) =>
           builder: (context) => CardsViewLearning(deck: deck),
         ));
 
-Future<void> openNewCardScreen(BuildContext context, DeckModel deck) =>
+Future<void> openNewCardScreen(
+  BuildContext context, {
+  @required String deckKey,
+}) =>
     Navigator.push(
         context,
         MaterialPageRoute(
             settings: const RouteSettings(name: CardCreateUpdate.routeNameNew),
             builder: (context) => CardCreateUpdate(
-                  card: (CardModelBuilder()..deckKey = deck.key),
+                  card: (CardModelBuilder()..deckKey = deckKey),
                 )));
 
 Future<void> openEditCardScreen(BuildContext context, CardModel card) =>

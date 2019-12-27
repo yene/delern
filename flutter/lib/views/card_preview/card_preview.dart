@@ -6,7 +6,9 @@ import 'package:delern_flutter/view_models/card_preview_bloc.dart';
 import 'package:delern_flutter/views/base/screen_bloc_view.dart';
 import 'package:delern_flutter/views/helpers/card_background_specifier.dart';
 import 'package:delern_flutter/views/helpers/card_display_widget.dart';
+import 'package:delern_flutter/views/helpers/progress_indicator_widget.dart';
 import 'package:delern_flutter/views/helpers/save_updates_dialog.dart';
+import 'package:delern_flutter/views/helpers/stream_with_value_builder.dart';
 import 'package:flutter/material.dart';
 
 class CardPreview extends StatefulWidget {
@@ -15,6 +17,10 @@ class CardPreview extends StatefulWidget {
   final CardModel card;
   final DeckModel deck;
 
+  /// [deck] model is required instead of just a deck key for the cases where
+  /// a deck has been modified but not saved yet. E.g. a common scenario is to
+  /// open a card preview from a deck edit screen, where either deck name or
+  /// deck type has changed and therefore need to be reflected on the preview.
   const CardPreview({@required this.card, @required this.deck})
       : assert(card != null),
         assert(deck != null);
@@ -51,18 +57,20 @@ class _CardPreviewState extends State<CardPreview> {
         bodyBuilder: (bloc) => Column(
           children: <Widget>[
             Expanded(
-              child: StreamBuilder<CardViewModel>(
-                stream: bloc.cardStream,
-                initialData: bloc.cardValue,
-                builder: (context, snapshot) => CardDisplayWidget(
-                  front: snapshot.requireData.card.front,
-                  back: snapshot.requireData.card.back,
-                  showBack: true,
-                  gradient: specifyLearnCardBackgroundGradient(
-                    snapshot.requireData.deck.type,
-                    snapshot.requireData.card.back,
-                  ),
-                ),
+              child: buildStreamBuilderWithValue<CardModel>(
+                streamWithValue: bloc.card,
+                // TODO(dotdoom): better handle card removal events.
+                builder: (context, snapshot) => snapshot.hasData
+                    ? CardDisplayWidget(
+                        front: snapshot.data.front,
+                        back: snapshot.data.back,
+                        showBack: true,
+                        gradient: specifyLearnCardBackgroundGradient(
+                          widget.deck.type,
+                          snapshot.data.back,
+                        ),
+                      )
+                    : ProgressIndicatorWidget(),
               ),
             ),
             const Padding(padding: EdgeInsets.only(bottom: 100))

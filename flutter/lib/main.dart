@@ -4,6 +4,7 @@ import 'dart:isolate';
 import 'package:delern_flutter/flutter/localization.dart';
 import 'package:delern_flutter/flutter/styles.dart' as app_styles;
 import 'package:delern_flutter/remote/error_reporting.dart' as error_reporting;
+import 'package:delern_flutter/views/card_create_update/card_create_update.dart';
 import 'package:delern_flutter/views/decks_list/decks_list.dart';
 import 'package:delern_flutter/views/edit_deck/edit_deck.dart';
 import 'package:delern_flutter/views/helpers/auth_widget.dart';
@@ -48,7 +49,9 @@ class App extends StatelessWidget {
           primarySwatch: app_styles.kPrimarySwatch,
           accentColor: app_styles.kAccentColor),
       routes: {
-        EditDeck.routeName: (_) => EditDeck(),
+        EditDeck.routeName: (_) => const EditDeck(),
+        CardCreateUpdate.routeNameNew: (_) => const CardCreateUpdate(),
+        CardCreateUpdate.routeNameEdit: (_) => const CardCreateUpdate(),
       },
       home: const DecksList(),
     );

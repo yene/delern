@@ -215,7 +215,11 @@ class CardsIntervalLearningState extends State<CardsIntervalLearning> {
     switch (item) {
       case _CardMenuItemType.edit:
         if (widget.deck.access != AccessType.read) {
-          openEditCardScreen(context, _viewModel.initialCard);
+          openEditCardScreen(
+            context,
+            deckKey: _viewModel.initialCard.deckKey,
+            cardKey: _viewModel.initialCard.key,
+          );
         } else {
           UserMessages.showMessage(Scaffold.of(context),
               localizations.of(context).noEditingWithReadAccessUserMessage);

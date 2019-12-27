@@ -49,20 +49,25 @@ Future<void> openNewCardScreen(
   BuildContext context, {
   @required String deckKey,
 }) =>
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-            settings: const RouteSettings(name: CardCreateUpdate.routeNameNew),
-            builder: (context) => CardCreateUpdate(
-                  card: (CardModelBuilder()..deckKey = deckKey),
-                )));
+    Navigator.pushNamed(
+      context,
+      CardCreateUpdate.routeNameNew,
+      arguments: CardCreateUpdate.buildArguments(deckKey: deckKey),
+    );
 
-Future<void> openEditCardScreen(BuildContext context, CardModel card) =>
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-            settings: const RouteSettings(name: CardCreateUpdate.routeNameEdit),
-            builder: (context) => CardCreateUpdate(card: card.toBuilder())));
+Future<void> openEditCardScreen(
+  BuildContext context, {
+  @required String deckKey,
+  @required String cardKey,
+}) =>
+    Navigator.pushNamed(
+      context,
+      CardCreateUpdate.routeNameEdit,
+      arguments: CardCreateUpdate.buildArguments(
+        deckKey: deckKey,
+        cardKey: cardKey,
+      ),
+    );
 
 Future<void> openShareDeckScreen(BuildContext context, DeckModel deck) =>
     Navigator.push(

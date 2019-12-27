@@ -55,13 +55,15 @@ class EditDeckBloc extends ScreenBloc {
   Stream<CardModel> get doEditCard => _doEditCardController.stream;
 
   void _initListeners() {
-    _onDeckNameController.stream.listen((name) {
+    _onDeckNameController.stream.listen((name) async {
       _deck = _deck.rebuild((b) => b.name = name);
+      await _saveDeckSettings();
       _doDeckChangedController.add(_deck);
     });
 
-    _onDeckTypeController.stream.listen((deckType) {
+    _onDeckTypeController.stream.listen((deckType) async {
       _deck = _deck.rebuild((b) => b.type = deckType);
+      await _saveDeckSettings();
       _doDeckChangedController.add(_deck);
     });
 
@@ -75,10 +77,6 @@ class EditDeckBloc extends ScreenBloc {
   }
 
   bool _isEditAllowed() => _deck.access != AccessType.read;
-
-  @override
-  @protected
-  Future<bool> userClosesScreen() => _saveDeckSettings();
 
   Future<bool> _saveDeckSettings() async {
     try {

@@ -121,9 +121,7 @@ class _EditDeckState extends State<EditDeck> {
         keyboardType: TextInputType.multiline,
         controller: _deckNameController,
         style: app_styles.editDeckText,
-        onChanged: (text) {
-          bloc.onDeckName.add(text);
-        },
+        onChanged: bloc.onDeckName.add,
       );
 
   Widget _buildCardsInDeck(EditDeckBloc bloc) =>

@@ -180,7 +180,7 @@ class DeckListItemWidget extends StatelessWidget {
             },
             onEdit: () {
               unawaited(logDeckEditSwipe(deck.key));
-              unawaited(openEditDeckScreen(context, deck));
+              unawaited(openEditDeckScreen(context, deckKey: deck.key));
             },
             child: Material(
               elevation: app_styles.kItemElevation,

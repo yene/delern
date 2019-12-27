@@ -20,11 +20,14 @@ import 'package:flutter/material.dart';
 //   "Deck 1234abcd" page ("/cards" named route), and pressing "Back" again will
 //   take them to list of decks page ("/" named route).
 
-Future<void> openEditDeckScreen(BuildContext context, DeckModel deck) =>
+Future<void> openEditDeckScreen(
+  BuildContext context, {
+  @required String deckKey,
+}) =>
     Navigator.pushNamed(
       context,
       EditDeck.routeName,
-      arguments: deck.key,
+      arguments: EditDeck.buildArguments(deckKey: deckKey),
     );
 
 Future<void> openLearnCardIntervalScreen(

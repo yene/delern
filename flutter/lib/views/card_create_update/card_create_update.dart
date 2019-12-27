@@ -1,6 +1,5 @@
 import 'package:delern_flutter/flutter/localization.dart' as localizations;
 import 'package:delern_flutter/flutter/styles.dart' as app_styles;
-import 'package:delern_flutter/models/card_model.dart';
 import 'package:delern_flutter/view_models/card_create_update_bloc.dart';
 import 'package:delern_flutter/views/base/screen_bloc_view.dart';
 import 'package:delern_flutter/views/helpers/progress_indicator_widget.dart';
@@ -13,9 +12,16 @@ class CardCreateUpdate extends StatefulWidget {
   static const routeNameNew = '/cards/new';
   static const routeNameEdit = '/cards/edit';
 
-  final CardModelBuilder card;
+  static Map<String, String> buildArguments({
+    @required String deckKey,
+    String cardKey,
+  }) =>
+      {
+        'deckKey': deckKey,
+        'cardKey': cardKey,
+      };
 
-  const CardCreateUpdate({@required this.card}) : assert(card != null);
+  const CardCreateUpdate() : super();
 
   @override
   State<StatefulWidget> createState() => _CardCreateUpdateState();
@@ -52,21 +58,30 @@ class _CardCreateUpdateState extends State<CardCreateUpdate> {
   }
 
   @override
-  Widget build(BuildContext context) => ScreenBlocView<CardCreateUpdateBloc>(
-        blocBuilder: (user) {
-          final bloc = CardCreateUpdateBloc(card: widget.card, user: user);
-          bloc.doFrontSideTextController
-              .listen((text) => _frontTextController.text = text);
-          bloc.doBackSideTextController
-              .listen((text) => _backTextController.text = text);
-          bloc.doClearInputFields.listen((_) => _clearInputFields(bloc));
-          bloc.doShowConfirmationDialog
-              .listen((_) => showCardSaveUpdateDialog(bloc));
-          return bloc;
-        },
-        appBarBuilder: _buildAppBar,
-        bodyBuilder: _buildUserInput,
-      );
+  Widget build(BuildContext context) {
+    final Map<String, String> arguments =
+        ModalRoute.of(context).settings.arguments;
+
+    return ScreenBlocView<CardCreateUpdateBloc>(
+      blocBuilder: (user) {
+        final bloc = CardCreateUpdateBloc(
+          deckKey: arguments['deckKey'],
+          cardKey: arguments['cardKey'],
+          user: user,
+        );
+        bloc.doFrontSideTextController
+            .listen((text) => _frontTextController.text = text);
+        bloc.doBackSideTextController
+            .listen((text) => _backTextController.text = text);
+        bloc.doClearInputFields.listen((_) => _clearInputFields(bloc));
+        bloc.doShowConfirmationDialog
+            .listen((_) => showCardSaveUpdateDialog(bloc));
+        return bloc;
+      },
+      appBarBuilder: _buildAppBar,
+      bodyBuilder: _buildUserInput,
+    );
+  }
 
   AppBar _buildAppBar(CardCreateUpdateBloc bloc) {
     void saveCard() => bloc.onSaveCard.add(null);

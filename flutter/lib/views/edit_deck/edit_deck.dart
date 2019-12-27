@@ -27,6 +27,9 @@ const double _kDividerPadding = 12;
 
 class EditDeck extends StatefulWidget {
   static const routeName = '/cards';
+
+  const EditDeck() : super();
+
   @override
   _EditDeckState createState() => _EditDeckState();
 }
@@ -62,7 +65,11 @@ class _EditDeckState extends State<EditDeck> {
             });
           });
           bloc.doEditCard.listen((card) {
-            openEditCardScreen(context, card);
+            openEditCardScreen(
+              context,
+              deckKey: card.deckKey,
+              cardKey: card.key,
+            );
           });
 
           return bloc;

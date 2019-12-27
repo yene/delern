@@ -11,20 +11,33 @@ import 'package:meta/meta.dart';
 import 'package:pedantic/pedantic.dart';
 
 class CardCreateUpdateBloc extends ScreenBloc {
-  bool _addReversedCard = false;
-  final CardModelBuilder _card;
   final bool isAddOperation;
+  bool _addReversedCard = false;
+  CardModelBuilder _card;
   bool _isOperationEnabled = true;
 
-  CardCreateUpdateBloc({@required User user, @required CardModelBuilder card})
-      : assert(card != null),
-        assert(card.deckKey != null),
-        _card = card,
-        isAddOperation = card.key == null,
+  CardCreateUpdateBloc({
+    @required User user,
+    @required String deckKey,
+    String cardKey,
+  })  : assert(deckKey != null),
+        isAddOperation = cardKey == null,
         super(user) {
+    if (cardKey == null) {
+      _card = CardModelBuilder()..deckKey = deckKey;
+    } else {
+      // TODO(dotdoom): wait until the values arrive.
+      _card = user.decks
+          .getItem(deckKey)
+          .value
+          .cards
+          .getItem(cardKey)
+          .value
+          .toBuilder();
+    }
+    _doFrontSideTextController.add(_card.front);
+    _doBackSideTextController.add(_card.back);
     _initListeners();
-    _doFrontSideTextController.add(card.front);
-    _doBackSideTextController.add(card.back);
   }
 
   StreamWithValue<DeckModel> get deck => user.decks.getItem(_card.deckKey);

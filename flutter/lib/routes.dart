@@ -84,15 +84,18 @@ Future<void> openSupportDevelopmentScreen(BuildContext context) =>
             builder: (context) => SupportDevelopment()));
 
 Future<void> openPreviewCardScreen(
-        BuildContext context, DeckModel deck, String cardKey) =>
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-            settings: const RouteSettings(name: CardPreview.routeName),
-            builder: (context) => CardPreview(
-                  cardKey: cardKey,
-                  deckKey: deck.key,
-                )));
+  BuildContext context, {
+  @required String deckKey,
+  @required String cardKey,
+}) =>
+    Navigator.pushNamed(
+      context,
+      CardPreview.routeName,
+      arguments: CardPreview.buildArguments(
+        deckKey: deckKey,
+        cardKey: cardKey,
+      ),
+    );
 
 Future<void> openSignInScreen(BuildContext context) => Navigator.push(
     context,

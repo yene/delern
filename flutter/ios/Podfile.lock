@@ -95,6 +95,9 @@ PODS:
     - FBSDKCoreKit (~> 5.5)
     - FBSDKLoginKit (~> 5.5)
     - Flutter
+  - flutter_sentry (0.0.1):
+    - Flutter
+    - Sentry (~> 4.4)
   - google_sign_in (0.0.1):
     - Flutter
     - GoogleSignIn (~> 5.0)
@@ -145,6 +148,9 @@ PODS:
   - package_info (0.0.1):
     - Flutter
   - Protobuf (3.11.2)
+  - Sentry (4.4.3):
+    - Sentry/Core (= 4.4.3)
+  - Sentry/Core (4.4.3)
   - share (0.5.2):
     - Flutter
   - shared_preferences (0.0.1):
@@ -170,6 +176,7 @@ DEPENDENCIES:
   - firebase_messaging (from `.symlinks/plugins/firebase_messaging/ios`)
   - Flutter (from `Flutter`)
   - flutter_facebook_login (from `.symlinks/plugins/flutter_facebook_login/ios`)
+  - flutter_sentry (from `.symlinks/plugins/flutter_sentry/ios`)
   - google_sign_in (from `.symlinks/plugins/google_sign_in/ios`)
   - google_sign_in_web (from `.symlinks/plugins/google_sign_in_web/ios`)
   - package_info (from `.symlinks/plugins/package_info/ios`)
@@ -205,6 +212,7 @@ SPEC REPOS:
     - leveldb-library
     - nanopb
     - Protobuf
+    - Sentry
 
 EXTERNAL SOURCES:
   device_info:
@@ -225,6 +233,8 @@ EXTERNAL SOURCES:
     :path: Flutter
   flutter_facebook_login:
     :path: ".symlinks/plugins/flutter_facebook_login/ios"
+  flutter_sentry:
+    :path: ".symlinks/plugins/flutter_sentry/ios"
   google_sign_in:
     :path: ".symlinks/plugins/google_sign_in/ios"
   google_sign_in_web:
@@ -270,6 +280,7 @@ SPEC CHECKSUMS:
   FirebaseMessaging: 4235f949ce1c4e827aeb19705ba5c53f9b85aa10
   Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
   flutter_facebook_login: cfb5659f686b1c575ef205c6b6fd20db9679d3c4
+  flutter_sentry: 811022a26ad49240191d2317b8d605a5c1f752fb
   google_sign_in: decaf71f56e22fb1dc179de062177ae6df415716
   google_sign_in_web: 52deb24929ac0992baff65c57956031c44ed44c3
   GoogleAppMeasurement: ffe513e90551844a739e7bcbb1d2aca1c28a4338
@@ -281,6 +292,7 @@ SPEC CHECKSUMS:
   nanopb: 18003b5e52dab79db540fe93fe9579f399bd1ccd
   package_info: 48b108e75b8802c2d5e126f208ef540561c98aef
   Protobuf: dd1aaea7140debfe4dd0683fb8ef208e527ae153
+  Sentry: 14bdd673870e8cf64932b149fad5bbbf39a9b390
   share: bae0a282aab4483288913fc4dc0b935d4b491f2e
   shared_preferences: 430726339841afefe5142b9c1f50cb6bd7793e01
   shared_preferences_macos: f3f29b71ccbb56bf40c9dd6396c9acf15e214087

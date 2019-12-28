@@ -55,6 +55,11 @@
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/colorPrimaryLight" />
 
+        <!-- Sentry settings -->
+        <meta-data
+            android:name="io.sentry.dsn"
+            android:value="https://e6b5021448e14a49803b2c734621deae@sentry.io/1867466" />
+
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"

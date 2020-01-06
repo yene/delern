@@ -20,7 +20,7 @@ dependencies:
   built_collection: ^4.2.2
   built_value: ^6.6.0
   rxdart: ^0.23.1
-  flutter_sentry: ^0.0.1
+  flutter_sentry: ^0.1.0
 
   firebase_auth: ^0.8.2
   firebase_analytics: ^2.0.3

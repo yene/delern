@@ -4,8 +4,8 @@ import 'package:delern_flutter/flutter/user_messages.dart';
 import 'package:delern_flutter/views/helpers/progress_indicator_widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_sentry/flutter_sentry.dart';
 
 bool _debugAllowDevMenu = true;
 
@@ -49,10 +49,7 @@ List<Widget> buildDeveloperMenu(BuildContext context) {
       onTap: () {
         UserMessages.showMessage(Scaffold.of(context), 'Crashing...');
 
-        // TODO(dotdoom): https://github.com/flutter/flutter/issues/41540
-        FlutterError.onError = Crashlytics.instance.recordFlutterError;
-
-        Crashlytics().crash();
+        FlutterSentry.nativeCrash();
         UserMessages.showMessage(Scaffold.of(context), 'Failed to crash!');
       },
     ),

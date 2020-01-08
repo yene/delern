@@ -29,6 +29,25 @@ before_all do |lane, options|
   end
 end
 
+def retry_on_exception(extra_attempts=2, initial_delay=1)
+  extra_attempts -= 1
+  yield
+rescue => e
+  raise if extra_attempts < 0
+
+  UI.error(e)
+  if extra_attempts > 0
+    UI.important("Retrying after #{initial_delay}s, " \
+                 "#{extra_attempts + 1} attempts left!")
+  else
+    UI.important("Retrying after #{initial_delay}s, last attempt!")
+  end
+
+  sleep(initial_delay)
+  initial_delay *= 2
+  retry
+end
+
 desc 'Install or upgrade Flutter and Android SDK licenses'
 lane :install_dependencies do
   bootstrap_options = {
@@ -95,10 +114,12 @@ platform :android do
   desc 'Set "release" lane key to non-empty value to upload to "alpha" track.'
   lane :publish do |options|
     aab = flutter_build(build: 'appbundle')
-    supply(
-      track: options[:release].to_s.empty? ? 'internal' : 'alpha',
-      aab: aab,
-    )
+    retry_on_exception do
+      supply(
+        track: options[:release].to_s.empty? ? 'internal' : 'alpha',
+        aab: aab,
+      )
+    end
   end
 end
 
@@ -134,35 +155,43 @@ platform :ios do
     flutter_build
     gym(silent: true, suppress_xcode_output: true)
 
-    upload_to_testflight(
-      distribute_external: true,
-      groups: ['fastlane_testers'],
-    )
+    retry_on_exception do
+      # It's important to retry this step either, because we don't know whether
+      # the other upload (e.g. Play Store) has succeeded, and there's no way to
+      # retry a specific build with GitHub Actions:
+      # https://github.community/t5/GitHub-Actions/How-to-retry-a-build-that-failed/m-p/32785#M1248
+      upload_to_testflight(
+        distribute_external: true,
+        groups: ['fastlane_testers'],
+      )
+    end
 
     unless options[:release].to_s.empty?
-      upload_to_app_store(
-        app_identifier: app_identifier,
-        overwrite_screenshots: true,
-        submit_for_review: true,
-        submission_information: {
-          add_id_info_uses_idfa: false,
-        },
+      retry_on_exception do
+        upload_to_app_store(
+          app_identifier: app_identifier,
+          overwrite_screenshots: true,
+          submit_for_review: true,
+          submission_information: {
+            add_id_info_uses_idfa: false,
+          },
 
-        # Skip the HTML report file verification.
-        force: true,
+          # Skip the HTML report file verification.
+          force: true,
 
-        # Binary is already uploaded by upload_to_testflight, just use it.
-        skip_binary_upload: true,
-        build_number: lane_context[SharedValues::BUILD_NUMBER].to_s,
+          # Binary is already uploaded by upload_to_testflight, just use it.
+          skip_binary_upload: true,
+          build_number: lane_context[SharedValues::BUILD_NUMBER].to_s,
 
-        # Override because defaults make directory layout messy.
-        # Default is: "screenshots".
-        screenshots_path: File.join(Dir.pwd, 'metadata/ios/screenshots'),
-        # Default is: "metadata". Also have to bury it into additional directory
-        # because storing metadata in "metadata/ios" complains about
-        # unrecognized subdirectory "screenshots".
-        metadata_path: File.join(Dir.pwd, 'metadata/ios/metadata'),
-      )
+          # Override because defaults make directory layout messy.
+          # Default is: "screenshots".
+          screenshots_path: File.join(Dir.pwd, 'metadata/ios/screenshots'),
+          # Default is: "metadata". Also have to bury it into additional directory
+          # because storing metadata in "metadata/ios" complains about
+          # unrecognized subdirectory "screenshots".
+          metadata_path: File.join(Dir.pwd, 'metadata/ios/metadata'),
+        )
+      end
     end
   end
 end

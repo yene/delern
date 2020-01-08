@@ -80,6 +80,10 @@ jobs:
 
       - run: bundle exec fastlane ${{ matrix.platform }} build
         working-directory: flutter
+      - name: "Update Podfile.lock in case iOS build failed"
+        if: failure() && matrix.platform == 'ios'
+        working-directory: flutter/ios
+        run: pod update
       - name: "Check that no source files were modified during build"
         run: bundle exec fastlane ensure_clean_git
 

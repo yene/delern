@@ -40,9 +40,8 @@ class App extends StatelessWidget {
       navigatorObservers: [_analyticsNavigatorObserver],
       title: title,
       // SignInWidget must be above Navigator to provide CurrentUserWidget.of().
-      builder: (context, child) => Onboarding(
-          afterOnboardingBuilder: () =>
-              AuthWidget(afterSignInBuilder: () => child)),
+      builder: (context, child) =>
+          Onboarding(afterOnboardingBuilder: () => AuthWidget(child: child)),
       theme: ThemeData(
           scaffoldBackgroundColor: app_styles.kScaffoldBackgroundColor,
           primarySwatch: app_styles.kPrimarySwatch,

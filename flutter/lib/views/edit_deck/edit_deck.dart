@@ -28,6 +28,13 @@ const double _kDividerPadding = 12;
 class EditDeck extends StatefulWidget {
   static const routeName = '/cards';
 
+  static Map<String, String> buildArguments({
+    @required String deckKey,
+  }) =>
+      {
+        'deckKey': deckKey,
+      };
+
   const EditDeck() : super();
 
   @override
@@ -51,49 +58,53 @@ class _EditDeckState extends State<EditDeck> {
   }
 
   @override
-  Widget build(BuildContext context) => ScreenBlocView<EditDeckBloc>(
-        blocBuilder: (user) {
-          final bloc = EditDeckBloc(
-            deckKey: ModalRoute.of(context).settings.arguments,
-            user: user,
+  Widget build(BuildContext context) {
+    final Map<String, String> arguments =
+        ModalRoute.of(context).settings.arguments;
+    return ScreenBlocView<EditDeckBloc>(
+      blocBuilder: (user) {
+        final bloc = EditDeckBloc(
+          deckKey: arguments['deckKey'],
+          user: user,
+        );
+        _currentDeckState = bloc.deck;
+        _deckNameController.text = _currentDeckState.name;
+        bloc.doDeckChanged.listen((deck) {
+          setState(() {
+            _currentDeckState = deck;
+          });
+        });
+        bloc.doEditCard.listen((card) {
+          openEditCardScreen(
+            context,
+            deckKey: card.deckKey,
+            cardKey: card.key,
           );
-          _currentDeckState = bloc.deck;
-          _deckNameController.text = _currentDeckState.name;
-          bloc.doDeckChanged.listen((deck) {
-            setState(() {
-              _currentDeckState = deck;
-            });
-          });
-          bloc.doEditCard.listen((card) {
-            openEditCardScreen(
-              context,
-              deckKey: card.deckKey,
-              cardKey: card.key,
-            );
-          });
+        });
 
-          return bloc;
-        },
-        appBarBuilder: (bloc) => SearchBarWidget(
-          title: localizations.of(context).edit,
-          search: (input) => _searchTextChanged(bloc, input),
-          actions: _buildActions(bloc),
-        ),
-        bodyBuilder: (bloc) => Column(
-          children: <Widget>[
-            _buildEditDeck(bloc),
-            _buildCardsInDeck(bloc),
-            const Padding(
-              padding: EdgeInsets.only(bottom: _kDividerPadding),
-            ),
-            const Divider(
-              height: 0,
-            ),
-            Expanded(child: _buildCardList(bloc)),
-          ],
-        ),
-        floatingActionButtonBuilder: _buildAddCard,
-      );
+        return bloc;
+      },
+      appBarBuilder: (bloc) => SearchBarWidget(
+        title: localizations.of(context).edit,
+        search: (input) => _searchTextChanged(bloc, input),
+        actions: _buildActions(bloc),
+      ),
+      bodyBuilder: (bloc) => Column(
+        children: <Widget>[
+          _buildEditDeck(bloc),
+          _buildCardsInDeck(bloc),
+          const Padding(
+            padding: EdgeInsets.only(bottom: _kDividerPadding),
+          ),
+          const Divider(
+            height: 0,
+          ),
+          Expanded(child: _buildCardList(bloc)),
+        ],
+      ),
+      floatingActionButtonBuilder: _buildAddCard,
+    );
+  }
 
   List<Widget> _buildActions(EditDeckBloc bloc) {
     final menuAction = IconButton(
@@ -263,7 +274,11 @@ class CardItemWidget extends StatelessWidget {
               elevation: app_styles.kItemElevation,
               child: InkWell(
                 splashColor: Theme.of(context).splashColor,
-                onTap: () => openPreviewCardScreen(context, deck, card),
+                onTap: () => openPreviewCardScreen(
+                  context,
+                  deckKey: deck.key,
+                  cardKey: card.key,
+                ),
                 child: Container(
                   padding: const EdgeInsets.all(_kCardBorderPadding),
                   decoration: BoxDecoration(

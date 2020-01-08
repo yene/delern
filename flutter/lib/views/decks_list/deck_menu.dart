@@ -79,7 +79,7 @@ class _DeckMenuState extends State<DeckMenu>
         break;
       case _DeckMenuItemType.edit:
         unawaited(logDeckEditMenu(widget.deck.key));
-        openEditDeckScreen(context, widget.deck);
+        openEditDeckScreen(context, deckKey: widget.deck.key);
         break;
       case _DeckMenuItemType.share:
         if (widget.deck.access == AccessType.owner) {

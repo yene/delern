@@ -73,8 +73,10 @@ class CardPreviewBloc extends ScreenBloc {
   final _doShowDeleteDialogController = StreamController<String>();
   Stream<String> get doShowDeleteDialog => _doShowDeleteDialogController.stream;
 
+  // TODO(dotdoom): make this a field initialized only once, in constructor?
   StreamWithValue<DeckModel> get deck => user.decks.getItem(_deckKey);
 
+  // TODO(dotdoom): make this a field initialized only once, in constructor?
   StreamWithValue<CardModel> get card => deck.value.cards.getItem(_cardKey);
 
   bool _isEditAllowed() => deck.value.access != AccessType.read;

@@ -80,6 +80,7 @@ class _CardCreateUpdateState extends State<CardCreateUpdate> {
       },
       appBarBuilder: _buildAppBar,
       bodyBuilder: _buildUserInput,
+      resizeToAvoidBottomInset: true,
     );
   }
 

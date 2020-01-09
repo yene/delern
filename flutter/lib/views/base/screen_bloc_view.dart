@@ -14,12 +14,14 @@ class ScreenBlocView<T extends ScreenBloc> extends StatefulWidget {
   final WidgetBuilderWithBloc<T, Widget> bodyBuilder;
   final BlocBuilder<T> blocBuilder;
   final WidgetBuilderWithBloc<T, Widget> floatingActionButtonBuilder;
+  final bool resizeToAvoidBottomInset;
 
   const ScreenBlocView({
     @required this.blocBuilder,
     @required this.appBarBuilder,
     @required this.bodyBuilder,
     this.floatingActionButtonBuilder,
+    this.resizeToAvoidBottomInset = false,
   })  : assert(appBarBuilder != null),
         assert(bodyBuilder != null),
         assert(blocBuilder != null);
@@ -67,7 +69,7 @@ class _ScreenBlocViewState<T extends ScreenBloc>
         floatingActionButton: widget.floatingActionButtonBuilder == null
             ? null
             : widget.floatingActionButtonBuilder(_bloc),
-        resizeToAvoidBottomInset: false,
+        resizeToAvoidBottomInset: widget.resizeToAvoidBottomInset,
       ));
 
   void _showUserMessage(String message) {

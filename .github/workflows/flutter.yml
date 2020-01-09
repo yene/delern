@@ -71,8 +71,19 @@ jobs:
         if: matrix.platform == 'android'
         with:
           java-version: 1.8
+      - name: "Install and configure CocoaPods"
+        if: matrix.platform == 'ios'
+        run: |
+          bundle exec pod repo update
+          bundle binstubs cocoapods --force --path "${HOME?}/bin"
+          echo "::add-path::${HOME?}/bin"
+
       - run: bundle exec fastlane ${{ matrix.platform }} build
         working-directory: flutter
+      - name: "Update Podfile.lock in case iOS build failed"
+        if: failure() && matrix.platform == 'ios'
+        working-directory: flutter/ios
+        run: pod update
       - name: "Check that no source files were modified during build"
         run: bundle exec fastlane ensure_clean_git
 
@@ -128,7 +139,6 @@ jobs:
         run: |
           bundle exec fastlane install_dependencies
           bundle exec fastlane install_debug_keys
-
 
       - if: matrix.platform == 'android'
         uses: actions/setup-java@v1

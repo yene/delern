@@ -12,12 +12,14 @@ void main() {
     // Widget must be wrapped in MaterialApp widget because it uses material
     // related classes.
     await tester.pumpWidget(MaterialApp(
-      home: CardDisplayWidget(
-        front: frontSide,
-        back: backSide,
-        tags: const ['#family', '#feminine', '#german'],
-        gradient: getLearnCardGradientFromGender(Gender.feminine),
-        showBack: true,
+      home: Scaffold(
+        body: CardDisplayWidget(
+          front: frontSide,
+          back: backSide,
+          tags: const ['#family', '#feminine', '#german'],
+          gradient: getLearnCardGradientFromGender(Gender.feminine),
+          showBack: true,
+        ),
       ),
     ));
 
@@ -27,21 +29,22 @@ void main() {
     // Make sure that we have 2 Markdown widgets
     expect(find.byType(MarkdownBody), findsNWidgets(2));
 
-    // Iterate all widgets. Compare first Markdown with front side and the
-    // second Markdown with the back side
-    var markdownWidgetCount = 0;
+    // Iterate all widgets. Compare 4th RichText (after 3 tag chips) with front
+    // side and 5th RichText with the back side.
+    var richTextWidgetCount = 0;
     for (final widget in tester.allWidgets) {
       if (widget is RichText) {
+        richTextWidgetCount++;
         final TextSpan span = widget.text;
         final text = _extractTextFromTextSpan(span);
-        if (markdownWidgetCount == 0) {
+        if (richTextWidgetCount == 4) {
           expect(text, equals(frontSide));
-          markdownWidgetCount++;
-        } else {
+        } else if (richTextWidgetCount == 5) {
           expect(text, equals(backSide));
         }
       }
     }
+    expect(richTextWidgetCount, 5);
   });
 }
 

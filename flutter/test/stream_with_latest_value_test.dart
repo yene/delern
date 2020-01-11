@@ -99,4 +99,22 @@ void main() {
       expect(sv.value, null);
     });
   });
+
+  group('StreamWithValue.map extension', () {
+    test('relays hasValue and value', () async {
+      final swv = StreamWithLatestValue(Stream.fromIterable([1, 2, 3])),
+          mapped = swv.map((x) => x + 1);
+      expect(mapped.hasValue, false);
+
+      await swv.updates.first;
+      expect(mapped.hasValue, true);
+      expect(mapped.value, swv.value + 1);
+    });
+
+    test('relays updates', () async {
+      final swv = StreamWithLatestValue(Stream.fromIterable([1, 2, 3])),
+          mapped = swv.map((x) => x + 1);
+      expect(await mapped.updates.toList(), [2, 3, 4]);
+    });
+  });
 }

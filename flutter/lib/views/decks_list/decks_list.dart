@@ -18,9 +18,11 @@ import 'package:delern_flutter/views/helpers/edit_delete_dismissible_widget.dart
 import 'package:delern_flutter/views/helpers/empty_list_message_widget.dart';
 import 'package:delern_flutter/views/helpers/learning_method_widget.dart';
 import 'package:delern_flutter/views/helpers/list_accessor_widget.dart';
+import 'package:delern_flutter/views/helpers/progress_indicator_widget.dart';
 import 'package:delern_flutter/views/helpers/save_updates_dialog.dart';
 import 'package:delern_flutter/views/helpers/search_bar_widget.dart';
 import 'package:delern_flutter/views/helpers/stream_with_value_builder.dart';
+import 'package:delern_flutter/views/helpers/tags_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:pedantic/pedantic.dart';
@@ -221,6 +223,12 @@ class DeckListItemWidget extends StatelessWidget {
                       localizations.of(context).learning,
                       style: Theme.of(context).textTheme.title,
                     ),
+                  ),
+                  buildStreamBuilderWithValue<Set<String>>(
+                    streamWithValue: deck.tags,
+                    builder: (_, snapshot) => snapshot.hasData
+                        ? TagsWidget(tags: snapshot.data)
+                        : ProgressIndicatorWidget(),
                   ),
                   SingleChildScrollView(
                     scrollDirection: Axis.horizontal,

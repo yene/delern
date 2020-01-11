@@ -1,6 +1,7 @@
 import 'package:delern_flutter/flutter/styles.dart' as app_styles;
 import 'package:delern_flutter/views/helpers/card_decoration_widget.dart';
 import 'package:delern_flutter/views/helpers/non_scrolling_markdown_widget.dart';
+import 'package:delern_flutter/views/helpers/tags_widget.dart';
 import 'package:flutter/material.dart';
 
 class CardDisplayWidget extends StatelessWidget {
@@ -32,14 +33,7 @@ class CardDisplayWidget extends StatelessWidget {
 
   List<Widget> _buildCardBody(BuildContext context) {
     final widgetList = <Widget>[
-      Wrap(
-        children: tags
-            .map((tag) => Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 3),
-                  child: Chip(label: Text(tag)),
-                ))
-            .toList(),
-      ),
+      TagsWidget(tags: tags),
       NonScrollingMarkdownWidget(
           text: front, textStyle: app_styles.primaryText),
     ];

@@ -96,6 +96,9 @@ abstract class DeckModel
                 key: key,
                 value: evt.snapshot.value,
               ));
+
+  StreamWithValue<Set<String>> get tags => cards
+      ?.map<Set<String>>((cards) => cards.expand((card) => card.tags).toSet());
 }
 
 class _ScheduledCardsDueCounter implements StreamWithValue<int> {

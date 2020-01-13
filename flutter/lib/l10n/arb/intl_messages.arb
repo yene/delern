@@ -1,6 +1,6 @@
 {
   "@@locale": "en_US",
-  "@@last_modified": "2020-01-13T13:51:27.942070",
+  "@@last_modified": "2020-01-13T21:07:23.602054",
   "navigationDrawerSignOut": "Sign Out",
   "@navigationDrawerSignOut": {
     "description": "Sign Out in Navigation Drawer",
@@ -629,11 +629,13 @@
     "placeholders": {
     }
   },
-  "learning": "Learning",
+  "learning": "Learning: {deckName}",
   "@learning": {
     "description": "Learning Type",
     "type": "text",
     "placeholders": {
+      "deckName": {
+      }
     }
   },
   "intervalLearning": "Interval",

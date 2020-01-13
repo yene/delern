@@ -583,8 +583,9 @@ To see the source code for this app, please visit the [Delern GitHub repo](https
         desc: 'flip',
       );
 
-  String get learning => Intl.message(
-        'Learning',
+  String learning(String deckName) => Intl.message(
+        'Learning: $deckName',
+        args: [deckName],
         name: 'learning',
         desc: 'Learning Type',
       );

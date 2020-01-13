@@ -1,0 +1,3 @@
+ignore:
+  - "**/*.g.dart"
+  - "**/l10n/messages_*.dart"

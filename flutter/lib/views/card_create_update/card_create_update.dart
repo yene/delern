@@ -156,7 +156,7 @@ class _CardCreateUpdateState extends State<CardCreateUpdate> {
       widgetsList.add(CheckboxListTile(
         title: Text(
           localizations.of(context).reversedCardLabel,
-          style: app_styles.secondaryText,
+          style: app_styles.primaryText,
         ),
         value: _addReversedCard,
         onChanged: (newValue) {

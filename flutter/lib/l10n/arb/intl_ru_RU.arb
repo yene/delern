@@ -607,11 +607,13 @@
     "placeholders": {
     }
   },
-  "learning": "Изучение",
+  "learning": "Изучение: {deckName}",
   "@learning": {
     "description": "Learning Type",
     "type": "text",
     "placeholders": {
+      "deckName": {
+      }
     }
   },
   "intervalLearningTooltip": "Начать изучение карточек в порядке интервального обучения",

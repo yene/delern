@@ -26,9 +26,11 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static m2(url) => "Could not launch url ${url}";
 
-  static m3(number) => "Cards in the deck: ${number}";
+  static m3(deckName) => "Learning: ${deckName}";
 
-  static m4(number) => "Watched: ${number}";
+  static m4(number) => "Cards in the deck: ${number}";
+
+  static m5(number) => "Watched: ${number}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function>{
@@ -111,7 +113,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "learnIntroDescription": MessageLookupByLibrary.simpleMessage(
             "Learn in any place and offline as well"),
         "learnIntroTitle": MessageLookupByLibrary.simpleMessage("Learn"),
-        "learning": MessageLookupByLibrary.simpleMessage("Learning"),
+        "learning": m3,
         "legacyAcceptanceLabel": MessageLookupByLibrary.simpleMessage(
             "By using this app you accept the "),
         "legacyPartsConnector":
@@ -146,7 +148,7 @@ class MessageLookup extends MessageLookupByLibrary {
                 "You cannot edit card with a read access."),
         "noSharingAccessUserMessage": MessageLookupByLibrary.simpleMessage(
             "Only owner of deck can share it."),
-        "numberOfCards": m3,
+        "numberOfCards": m4,
         "offlineProfileTooltip":
             MessageLookupByLibrary.simpleMessage("Profile (you are offline)"),
         "offlineUserMessage": MessageLookupByLibrary.simpleMessage(
@@ -199,7 +201,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "viewLearning": MessageLookupByLibrary.simpleMessage("View"),
         "viewLearningTooltip": MessageLookupByLibrary.simpleMessage(
             "Start learning all cards in any order"),
-        "watchedCards": m4,
+        "watchedCards": m5,
         "whoHasAccessLabel":
             MessageLookupByLibrary.simpleMessage("Who has access"),
         "yes": MessageLookupByLibrary.simpleMessage("Yes")

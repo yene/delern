@@ -220,7 +220,7 @@ class DeckListItemWidget extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.all(8),
                     child: Text(
-                      '${localizations.of(context).learning} ${deck.name}',
+                      localizations.of(context).learning(deck.name),
                       style: Theme.of(context).textTheme.title,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,

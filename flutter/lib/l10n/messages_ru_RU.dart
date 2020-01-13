@@ -26,9 +26,11 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static m2(url) => "Не удалось запустить ссылку ${url}";
 
-  static m3(number) => "Карточек в списке: ${number}";
+  static m3(deckName) => "Изучение: ${deckName}";
 
-  static m4(number) => "Просмотрено: ${number}";
+  static m4(number) => "Карточек в списке: ${number}";
+
+  static m5(number) => "Просмотрено: ${number}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function>{
@@ -123,7 +125,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "learnIntroDescription": MessageLookupByLibrary.simpleMessage(
             "Изучайте в любом месте, а также без сети"),
         "learnIntroTitle": MessageLookupByLibrary.simpleMessage("Изучайте"),
-        "learning": MessageLookupByLibrary.simpleMessage("Изучение"),
+        "learning": m3,
         "legacyAcceptanceLabel": MessageLookupByLibrary.simpleMessage(
             "При использовании приложения Вы соглашаетесь с  "),
         "legacyPartsConnector": MessageLookupByLibrary.simpleMessage(" и  "),
@@ -157,7 +159,7 @@ class MessageLookup extends MessageLookupByLibrary {
                 "Вы не можете редактировать карточки с доступом на чтение."),
         "noSharingAccessUserMessage": MessageLookupByLibrary.simpleMessage(
             "Только владелец может поделиться списком."),
-        "numberOfCards": m3,
+        "numberOfCards": m4,
         "offlineProfileTooltip":
             MessageLookupByLibrary.simpleMessage("Профиль (Вы не в сети)"),
         "offlineUserMessage": MessageLookupByLibrary.simpleMessage(
@@ -214,7 +216,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "viewLearning": MessageLookupByLibrary.simpleMessage("Просмотр"),
         "viewLearningTooltip": MessageLookupByLibrary.simpleMessage(
             "Начать изучение всех карточек в любом порядке"),
-        "watchedCards": m4,
+        "watchedCards": m5,
         "whoHasAccessLabel":
             MessageLookupByLibrary.simpleMessage("У кого есть доступ"),
         "yes": MessageLookupByLibrary.simpleMessage("Да")

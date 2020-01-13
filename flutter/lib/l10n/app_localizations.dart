@@ -141,7 +141,7 @@ class AppLocalizations {
       );
 
   String get reversedCardLabel => Intl.message(
-        'Add reversed card',
+        'Add a reversed copy of this card',
         name: 'reversedCardLabel',
         desc: 'Add reversed card',
       );

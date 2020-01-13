@@ -158,8 +158,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "privacyPolicySignIn":
             MessageLookupByLibrary.simpleMessage("Privacy Policy"),
         "profileTooltip": MessageLookupByLibrary.simpleMessage("Profile"),
-        "reversedCardLabel":
-            MessageLookupByLibrary.simpleMessage("Add reversed card"),
+        "reversedCardLabel": MessageLookupByLibrary.simpleMessage(
+            "Add a reversed copy of this card"),
         "save": MessageLookupByLibrary.simpleMessage("Save"),
         "saveChangesQuestion": MessageLookupByLibrary.simpleMessage(
             "Do you want to save changes?"),

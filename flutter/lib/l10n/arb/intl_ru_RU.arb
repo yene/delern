@@ -142,7 +142,7 @@
     "placeholders": {
     }
   },
-  "reversedCardLabel": "Добавить обратную карточку",
+  "reversedCardLabel": "Добавить обратную копию этой карточки",
   "@reversedCardLabel": {
     "description": "Add reversed card",
     "type": "text",

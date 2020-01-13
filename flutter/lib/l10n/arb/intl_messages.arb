@@ -1,6 +1,6 @@
 {
   "@@locale": "en_US",
-  "@@last_modified": "2019-12-17T10:45:25.826110",
+  "@@last_modified": "2020-01-13T12:49:08.200909",
   "navigationDrawerSignOut": "Sign Out",
   "@navigationDrawerSignOut": {
     "description": "Sign Out in Navigation Drawer",
@@ -150,7 +150,7 @@
     "placeholders": {
     }
   },
-  "reversedCardLabel": "Add reversed card",
+  "reversedCardLabel": "Add a reversed copy of this card",
   "@reversedCardLabel": {
     "description": "Add reversed card",
     "type": "text",

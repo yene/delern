@@ -128,14 +128,14 @@
     "placeholders": {
     }
   },
-  "frontSideHint": "Передняя сторона",
+  "frontSideHint": "Передняя сторона:",
   "@frontSideHint": {
     "description": "front side",
     "type": "text",
     "placeholders": {
     }
   },
-  "backSideHint": "Обратная сторона",
+  "backSideHint": "Обратная сторона:",
   "@backSideHint": {
     "description": "back side",
     "type": "text",

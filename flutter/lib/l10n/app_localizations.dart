@@ -129,13 +129,13 @@ class AppLocalizations {
       );
 
   String get frontSideHint => Intl.message(
-        'Front side',
+        'Front side:',
         name: 'frontSideHint',
         desc: 'front side',
       );
 
   String get backSideHint => Intl.message(
-        'Back side',
+        'Back side:',
         name: 'backSideHint',
         desc: 'back side',
       );

@@ -41,7 +41,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Delern Flashcards"),
         "appNotInstalledSharingDeck": MessageLookupByLibrary.simpleMessage(
             "This user hasn\'t installed Delern yet. Do you want to sent an invite?"),
-        "backSideHint": MessageLookupByLibrary.simpleMessage("Back side"),
+        "backSideHint": MessageLookupByLibrary.simpleMessage("Back side:"),
         "basicDeckType": MessageLookupByLibrary.simpleMessage("Basic"),
         "canEdit": MessageLookupByLibrary.simpleMessage("Can Edit"),
         "canView": MessageLookupByLibrary.simpleMessage("Can View"),
@@ -98,7 +98,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Share your deck"),
         "errorUserMessage": MessageLookupByLibrary.simpleMessage("Error: "),
         "flip": MessageLookupByLibrary.simpleMessage("flip"),
-        "frontSideHint": MessageLookupByLibrary.simpleMessage("Front side"),
+        "frontSideHint": MessageLookupByLibrary.simpleMessage("Front side:"),
         "germanDeckType": MessageLookupByLibrary.simpleMessage("German"),
         "installEmailApp":
             MessageLookupByLibrary.simpleMessage("Please install Email App"),

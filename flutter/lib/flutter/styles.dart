@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 const kPrimarySwatch = Colors.green;
 const kLightPrimaryColor = Color(0xFFC8E6C9);
 const kAccentColor = Colors.redAccent;
-final kScaffoldBackgroundColor = Colors.grey[350];
+final kScaffoldBackgroundColor = Colors.grey[200];
 final kIconColor = Colors.grey[600];
 const kSecondaryTextDeckItemColor = Color(0xff757575);
 const kEditDismissibleColor = Color(0xFF2196F3);

@@ -181,9 +181,10 @@ class _EditDeckState extends State<EditDeck> {
           }
         },
         emptyMessageBuilder: () => ArrowToFloatingActionButtonWidget(
-            fabKey: fabKey,
-            child: EmptyListMessageWidget(
-                localizations.of(context).emptyCardsList)),
+          fabKey: fabKey,
+          child:
+              EmptyListMessageWidget(localizations.of(context).emptyCardsList),
+        ),
         controller: controller,
       ),
       minItemHeight: app_styles.kMinItemHeight + 2 * cardVerticalPadding,
@@ -296,7 +297,7 @@ class CardItemWidget extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
                             TextOverflowEllipsisWidget(
-                              textDetails: card.front,
+                              textDetails: card.frontWithoutTags,
                               textStyle: primaryTextStyle,
                             ),
                             Container(

@@ -76,8 +76,9 @@ class _CardPreviewState extends State<CardPreview> {
                       // TODO(dotdoom): better handle card removal events.
                       builder: (context, cardSnapshot) => cardSnapshot.hasData
                           ? CardDisplayWidget(
-                              front: cardSnapshot.data.front,
+                              front: cardSnapshot.data.frontWithoutTags,
                               back: cardSnapshot.data.back,
+                              tags: cardSnapshot.data.tags.toList(),
                               showBack: true,
                               gradient: specifyLearnCardBackgroundGradient(
                                 deckSnapshot.data.type,

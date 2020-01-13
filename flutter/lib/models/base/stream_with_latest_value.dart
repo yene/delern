@@ -10,9 +10,30 @@ abstract class StreamWithValue<T> {
   Stream<T> get updates;
 }
 
+typedef _Converter<TInput, TOutput> = TOutput Function(TInput event);
+
+class _MappedStreamWithValue<TInput, TOutput>
+    implements StreamWithValue<TOutput> {
+  final StreamWithValue<TInput> _inputStream;
+  final _Converter<TInput, TOutput> _convert;
+
+  _MappedStreamWithValue(this._inputStream, this._convert);
+
+  TOutput get value =>
+      _inputStream.hasValue ? _convert(_inputStream.value) : null;
+  bool get hasValue => _inputStream.hasValue;
+
+  Stream<TOutput> get updates => _inputStream.updates.mapPerEvent(_convert);
+}
+
+extension StreamWithValueMap<TInput> on StreamWithValue<TInput> {
+  StreamWithValue<TOutput> map<TOutput>(_Converter<TInput, TOutput> convert) =>
+      _MappedStreamWithValue(this, convert);
+}
+
 extension MapPerEvent<TInput> on Stream<TInput> {
   /// Like [map], but calls [convert] once per event, and not per listener.
-  Stream<TOutput> mapPerEvent<TOutput>(TOutput Function(TInput event) convert) {
+  Stream<TOutput> mapPerEvent<TOutput>(_Converter<TInput, TOutput> convert) {
     StreamController<TOutput> controller;
     StreamSubscription<TInput> subscription;
 

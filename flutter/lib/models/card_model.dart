@@ -46,6 +46,22 @@ abstract class CardModel
     ..front = ''
     ..back = '';
 
+  // Tags are non-empty sequences of non-separator characters that start with
+  // "#". The list of separator characters should include space, punctuation and
+  // is subject to changes.
+  //
+  // Also the regex will "eat" any space after the tag to avoid turning a set of
+  // consequent tags into meaningless spaces.
+  static final _tagExtractorRegExp = RegExp(r'#[^\s.,!]+\s*');
+
+  Set<String> get tags => _tagExtractorRegExp
+      .allMatches(front)
+      // Since the _tagExtractorRegExp includes spaces, trim them away.
+      .map((match) => match.group(0).trim())
+      .toSet();
+
+  String get frontWithoutTags => front.replaceAll(_tagExtractorRegExp, '');
+
   static Stream<CardModel> get(
           {@required String deckKey, @required String key}) =>
       FirebaseDatabase.instance

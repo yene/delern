@@ -10,14 +10,14 @@ class CardSideInputWidget extends StatelessWidget {
   final bool autofocus;
   final String hint;
 
-  const CardSideInputWidget(
-      {@required Key key,
-      @required this.controller,
-      @required this.onTextChanged,
-      @required this.hint,
-      this.focusNode,
-      this.autofocus = false})
-      : super(key: key);
+  const CardSideInputWidget({
+    @required Key key,
+    @required this.controller,
+    @required this.onTextChanged,
+    @required this.hint,
+    this.focusNode,
+    this.autofocus = false,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) => Card(
@@ -30,7 +30,6 @@ class CardSideInputWidget extends StatelessWidget {
                   Text(
                     hint,
                     style: app_styles.primaryText
-                        // Bold
                         .copyWith(fontWeight: FontWeight.w700),
                   ),
                 ],

@@ -20,16 +20,32 @@ class CardSideInputWidget extends StatelessWidget {
       : super(key: key);
 
   @override
-  Widget build(BuildContext context) => TextField(
-        autofocus: autofocus,
-        focusNode: focusNode,
-        maxLines: null,
-        keyboardType: TextInputType.multiline,
-        controller: controller,
-        onChanged: onTextChanged,
-        style: app_styles.primaryText,
-        decoration: InputDecoration(
-          hintText: hint,
+  Widget build(BuildContext context) => Card(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            children: <Widget>[
+              Row(
+                children: <Widget>[
+                  Text(
+                    hint,
+                    style: app_styles.primaryText
+                        // Bold
+                        .copyWith(fontWeight: FontWeight.w700),
+                  ),
+                ],
+              ),
+              TextField(
+                autofocus: autofocus,
+                focusNode: focusNode,
+                maxLines: null,
+                keyboardType: TextInputType.multiline,
+                controller: controller,
+                onChanged: onTextChanged,
+                style: app_styles.primaryText,
+              ),
+            ],
+          ),
         ),
       );
 }

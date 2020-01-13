@@ -2,6 +2,7 @@ import 'package:delern_flutter/flutter/localization.dart' as localizations;
 import 'package:delern_flutter/flutter/styles.dart' as app_styles;
 import 'package:delern_flutter/view_models/card_create_update_bloc.dart';
 import 'package:delern_flutter/views/base/screen_bloc_view.dart';
+import 'package:delern_flutter/views/card_create_update/card_side_input_widget.dart';
 import 'package:delern_flutter/views/helpers/progress_indicator_widget.dart';
 import 'package:delern_flutter/views/helpers/save_updates_dialog.dart';
 import 'package:delern_flutter/views/helpers/stream_with_value_builder.dart';
@@ -122,39 +123,29 @@ class _CardCreateUpdateState extends State<CardCreateUpdate> {
   Widget _buildUserInput(CardCreateUpdateBloc bloc) {
     final widgetsList = <Widget>[
       // TODO(ksheremet): limit lines in TextField
-      TextField(
+      CardSideInputWidget(
         key: const Key('frontCardInput'),
-        autofocus: true,
-        focusNode: _frontSideFocus,
-        maxLines: null,
-        keyboardType: TextInputType.multiline,
         controller: _frontTextController,
-        onChanged: (text) {
+        onTextChanged: (text) {
           setState(() {
             bloc.onFrontSideText.add(text);
             _isChanged = true;
           });
         },
-        style: app_styles.primaryText,
-        decoration: InputDecoration(
-          hintText: localizations.of(context).frontSideHint,
-        ),
+        hint: localizations.of(context).frontSideHint,
+        autofocus: true,
+        focusNode: _frontSideFocus,
       ),
-      TextField(
+      CardSideInputWidget(
         key: const Key('backCardInput'),
-        maxLines: null,
-        keyboardType: TextInputType.multiline,
         controller: _backTextController,
-        onChanged: (text) {
+        onTextChanged: (text) {
           setState(() {
             bloc.onBackSideText.add(text);
             _isChanged = true;
           });
         },
-        style: app_styles.primaryText,
-        decoration: InputDecoration(
-          hintText: localizations.of(context).backSideHint,
-        ),
+        hint: localizations.of(context).backSideHint,
       ),
     ];
 
@@ -165,7 +156,7 @@ class _CardCreateUpdateState extends State<CardCreateUpdate> {
       widgetsList.add(CheckboxListTile(
         title: Text(
           localizations.of(context).reversedCardLabel,
-          style: app_styles.secondaryText,
+          style: app_styles.primaryText,
         ),
         value: _addReversedCard,
         onChanged: (newValue) {

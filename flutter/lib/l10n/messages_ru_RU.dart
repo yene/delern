@@ -46,7 +46,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "appNotInstalledSharingDeck": MessageLookupByLibrary.simpleMessage(
             "Данный пользователь еще не установил Delern. Отправить приглашение?"),
         "backSideHint":
-            MessageLookupByLibrary.simpleMessage("Обратная сторона"),
+            MessageLookupByLibrary.simpleMessage("Обратная сторона:"),
         "basicDeckType": MessageLookupByLibrary.simpleMessage("Базовый"),
         "canEdit": MessageLookupByLibrary.simpleMessage("Может редактировать"),
         "canView": MessageLookupByLibrary.simpleMessage("Может просматривать"),
@@ -109,7 +109,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Произошла ошибка: "),
         "flip": MessageLookupByLibrary.simpleMessage("перевернуть"),
         "frontSideHint":
-            MessageLookupByLibrary.simpleMessage("Передняя сторона"),
+            MessageLookupByLibrary.simpleMessage("Передняя сторона:"),
         "germanDeckType": MessageLookupByLibrary.simpleMessage("Немецкий"),
         "installEmailApp": MessageLookupByLibrary.simpleMessage(
             "Пожалуйста установите приложение Электронной Почты"),
@@ -170,8 +170,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "privacyPolicySignIn": MessageLookupByLibrary.simpleMessage(
             "Политикой Конфиденциальности"),
         "profileTooltip": MessageLookupByLibrary.simpleMessage("Профиль"),
-        "reversedCardLabel":
-            MessageLookupByLibrary.simpleMessage("Добавить обратную карточку"),
+        "reversedCardLabel": MessageLookupByLibrary.simpleMessage(
+            "Добавить обратную копию этой карточки"),
         "save": MessageLookupByLibrary.simpleMessage("Сохранить"),
         "saveChangesQuestion": MessageLookupByLibrary.simpleMessage(
             "Вы хотите сохранить изменения?"),

@@ -1,6 +1,6 @@
 {
   "@@locale": "en_US",
-  "@@last_modified": "2019-12-17T10:45:25.826110",
+  "@@last_modified": "2020-01-13T13:51:27.942070",
   "navigationDrawerSignOut": "Sign Out",
   "@navigationDrawerSignOut": {
     "description": "Sign Out in Navigation Drawer",
@@ -136,21 +136,21 @@
     "placeholders": {
     }
   },
-  "frontSideHint": "Front side",
+  "frontSideHint": "Front side:",
   "@frontSideHint": {
     "description": "front side",
     "type": "text",
     "placeholders": {
     }
   },
-  "backSideHint": "Back side",
+  "backSideHint": "Back side:",
   "@backSideHint": {
     "description": "back side",
     "type": "text",
     "placeholders": {
     }
   },
-  "reversedCardLabel": "Add reversed card",
+  "reversedCardLabel": "Add a reversed copy of this card",
   "@reversedCardLabel": {
     "description": "Add reversed card",
     "type": "text",

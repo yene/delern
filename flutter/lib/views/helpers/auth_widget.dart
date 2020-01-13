@@ -15,12 +15,11 @@ import 'package:pedantic/pedantic.dart';
 
 /// A widget handling application-wide user authentication and anything
 /// associated with it (FCM, Sign In etc). Renders either as a [SignIn], or
-/// [CurrentUserWidget] wrapped around [afterSignInBuilder].
+/// [CurrentUserWidget] wrapped around [child].
 class AuthWidget extends StatefulWidget {
-  final Widget Function() afterSignInBuilder;
+  final Widget child;
 
-  const AuthWidget({@required this.afterSignInBuilder})
-      : assert(afterSignInBuilder != null);
+  const AuthWidget({@required this.child}) : assert(child != null);
 
   @override
   State<StatefulWidget> createState() => _AuthWidgetState();
@@ -89,8 +88,7 @@ class _AuthWidgetState extends State<AuthWidget> {
   @override
   Widget build(BuildContext context) {
     if (_currentUser != null) {
-      return CurrentUserWidget(_currentUser,
-          child: widget.afterSignInBuilder());
+      return CurrentUserWidget(_currentUser, child: widget.child);
     }
     if (!Auth.instance.authStateKnown) {
       return ProgressIndicatorWidget();

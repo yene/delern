@@ -176,6 +176,9 @@ platform :ios do
       # https://github.community/t5/GitHub-Actions/How-to-retry-a-build-that-failed/m-p/32785#M1248
       upload_to_testflight(
         distribute_external: true,
+        # Changelog is required for TestFlight.
+        changelog: 'Look for latest changes at ' +
+                   'https://github.com/dasfoo/delern/commits/master',
         groups: lane_context[SharedValues::PROMOTE_RELEASE] ? ['alpha']
                                                             : ['internal'],
       )

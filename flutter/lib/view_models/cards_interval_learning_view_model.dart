@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:delern_flutter/models/base/stream_muxer.dart';
 import 'package:delern_flutter/models/base/stream_with_latest_value.dart';
 import 'package:delern_flutter/models/card_model.dart';
 import 'package:delern_flutter/models/deck_model.dart';
@@ -10,12 +9,12 @@ import 'package:delern_flutter/remote/analytics.dart';
 import 'package:meta/meta.dart';
 
 enum LearningUpdateType {
-  deckUpdate,
   scheduledCardUpdate,
 }
 
 class LearningViewModel {
   final User user;
+  final StreamWithValue<DeckModel> deck;
 
   ScheduledCardModel get scheduledCard => _scheduledCard;
   ScheduledCardModel _scheduledCard;
@@ -23,33 +22,22 @@ class LearningViewModel {
   StreamWithValue<CardModel> get card => _card;
   StreamWithValue<CardModel> _card;
 
-  DeckModel get deck => _deck;
-  DeckModel _deck;
-
   LearningViewModel({@required this.user, @required String deckKey})
       : assert(user != null),
         assert(deckKey != null),
-        _deck = user.decks.getItem(deckKey).value;
+        deck = user.decks.getItem(deckKey);
 
-  Stream<LearningUpdateType> get updates {
-    logStartLearning(deck.key);
-    return StreamMuxer({
-      LearningUpdateType.deckUpdate:
-          user.decks.getItem(deck.key).updates.map((d) => _deck = d),
-      LearningUpdateType.scheduledCardUpdate:
-          ScheduledCardModel.next(user, deck).map((casc) {
-        _card = deck.cards.getItem(casc.scheduledCard.key);
-        _scheduledCard = casc.scheduledCard;
-      }),
-      // We deliberately do not subscribe to Card updates (i.e. we only watch
-      // ScheduledCard). If the card that the user is looking at right now is
-      // updated live, it can result in bad user experience.
-    }).map((muxerEvent) => muxerEvent.key);
+  Stream<void> get updates {
+    logStartLearning(deck.value.key);
+    return ScheduledCardModel.next(user, deck.value).map((casc) {
+      _card = deck.value.cards.getItem(casc.scheduledCard.key);
+      _scheduledCard = casc.scheduledCard;
+    });
   }
 
   Future<void> answer(
       {@required bool knows, @required bool learnBeyondHorizon}) {
-    logCardResponse(deckId: deck.key, knows: knows);
+    logCardResponse(deckId: deck.value.key, knows: knows);
     return user.learnCard(
         unansweredScheduledCard: _scheduledCard,
         knows: knows,

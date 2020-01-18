@@ -64,16 +64,11 @@ class CardsIntervalLearningState extends State<CardsIntervalLearning> {
       _viewModel = LearningViewModel(user: user, deckKey: widget.deck.key);
       _updates?.cancel();
 
-      _updates ??= _viewModel.updates.listen((updateType) {
+      _updates ??= _viewModel.updates.listen((_) {
         if (!mounted) {
           return;
         }
-        if (updateType == LearningUpdateType.scheduledCardUpdate) {
-          _nextCardArrived();
-        } else {
-          // Usually a deck update.
-          setState(() {});
-        }
+        _nextCardArrived();
       },
           // Tell caller that no cards were available,
           onDone: () => Navigator.of(context).pop());
@@ -90,8 +85,13 @@ class CardsIntervalLearningState extends State<CardsIntervalLearning> {
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
-          title: TextOverflowEllipsisWidget(
-            textDetails: _viewModel.deck.name,
+          title: buildStreamBuilderWithValue<DeckModel>(
+            streamWithValue: _viewModel.deck,
+            builder: (context, snapshot) => snapshot.hasData
+                ? TextOverflowEllipsisWidget(
+                    textDetails: snapshot.data.name,
+                  )
+                : ProgressIndicatorWidget(),
           ),
           actions: _viewModel.card == null ? null : <Widget>[_buildPopupMenu()],
         ),
@@ -119,11 +119,12 @@ class CardsIntervalLearningState extends State<CardsIntervalLearning> {
                             return ProgressIndicatorWidget();
                           }
                           final card = snapshot.data;
+                          // TODO(dotdoom): handle card updates.
                           return FlipCardWidget(
                             front: card.front,
                             back: card.back,
                             gradient: specifyLearnCardBackgroundGradient(
-                                _viewModel.deck.type, card.back),
+                                _viewModel.deck.value.type, card.back),
                             onFirstFlip: () {
                               _showReplyButtons.value = true;
                             },
@@ -219,7 +220,7 @@ class CardsIntervalLearningState extends State<CardsIntervalLearning> {
         if (widget.deck.access != AccessType.read) {
           openEditCardScreen(
             context,
-            deckKey: _viewModel.deck.key,
+            deckKey: _viewModel.deck.value.key,
             cardKey: _viewModel.card.value.key,
           );
         } else {

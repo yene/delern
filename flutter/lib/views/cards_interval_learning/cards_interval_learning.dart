@@ -52,7 +52,7 @@ class CardsIntervalLearningState extends State<CardsIntervalLearning> {
   // TODO(ksheremet): rename to "Answers", also in the UI.
   int _watchedCount = 0;
 
-  LearningViewModel _viewModel;
+  CardsIntervalLearningViewModel _viewModel;
   StreamSubscription<void> _updates;
 
   final _showReplyButtons = ValueNotifier<bool>(false);
@@ -61,7 +61,8 @@ class CardsIntervalLearningState extends State<CardsIntervalLearning> {
   void didChangeDependencies() {
     final user = CurrentUserWidget.of(context).user;
     if (_viewModel?.user != user) {
-      _viewModel = LearningViewModel(user: user, deckKey: widget.deck.key);
+      _viewModel =
+          CardsIntervalLearningViewModel(user: user, deckKey: widget.deck.key);
       _updates?.cancel();
 
       _updates ??= _viewModel.updates.listen((_) {

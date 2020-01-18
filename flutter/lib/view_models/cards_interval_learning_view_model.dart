@@ -8,11 +8,7 @@ import 'package:delern_flutter/models/user.dart';
 import 'package:delern_flutter/remote/analytics.dart';
 import 'package:meta/meta.dart';
 
-enum LearningUpdateType {
-  scheduledCardUpdate,
-}
-
-class LearningViewModel {
+class CardsIntervalLearningViewModel {
   final User user;
   final StreamWithValue<DeckModel> deck;
 
@@ -22,8 +18,10 @@ class LearningViewModel {
   StreamWithValue<CardModel> get card => _card;
   StreamWithValue<CardModel> _card;
 
-  LearningViewModel({@required this.user, @required String deckKey})
-      : assert(user != null),
+  CardsIntervalLearningViewModel({
+    @required this.user,
+    @required String deckKey,
+  })  : assert(user != null),
         assert(deckKey != null),
         deck = user.decks.getItem(deckKey);
 

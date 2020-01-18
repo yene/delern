@@ -15,6 +15,9 @@ before_all do |lane, options|
       # We push to "master" only when merging a PR, so increment with each merge.
       merge_commit_filtering: 'only_include_merges',
     ).lines.count
+    # changelog_from_git_commits populates this context, causing some actions
+    # (e.g. upload_to_testflight) to pick it up instead of our text files.
+    lane_context.delete(SharedValues::FL_CHANGELOG)
 
     # Keep even numbers for internal releases, and odd numbers for public, to
     # make sure they do not clash as the number of commits is usually the same.

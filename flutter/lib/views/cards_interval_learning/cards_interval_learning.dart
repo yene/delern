@@ -61,7 +61,7 @@ class CardsIntervalLearningState extends State<CardsIntervalLearning> {
   void didChangeDependencies() {
     final user = CurrentUserWidget.of(context).user;
     if (_viewModel?.user != user) {
-      _viewModel = LearningViewModel(user: user, deck: widget.deck);
+      _viewModel = LearningViewModel(user: user, deckKey: widget.deck.key);
       _updates?.cancel();
 
       _updates ??= _viewModel.updates.listen((updateType) {

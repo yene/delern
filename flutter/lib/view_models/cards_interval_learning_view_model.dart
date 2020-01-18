@@ -26,10 +26,10 @@ class LearningViewModel {
   DeckModel get deck => _deck;
   DeckModel _deck;
 
-  LearningViewModel({@required this.user, @required DeckModel deck})
+  LearningViewModel({@required this.user, @required String deckKey})
       : assert(user != null),
-        assert(deck != null),
-        _deck = deck;
+        assert(deckKey != null),
+        _deck = user.decks.getItem(deckKey).value;
 
   Stream<LearningUpdateType> get updates {
     logStartLearning(deck.key);

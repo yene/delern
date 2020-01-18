@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:delern_flutter/models/base/stream_muxer.dart';
+import 'package:delern_flutter/models/base/stream_with_latest_value.dart';
 import 'package:delern_flutter/models/card_model.dart';
 import 'package:delern_flutter/models/deck_model.dart';
 import 'package:delern_flutter/models/scheduled_card_model.dart';
@@ -19,11 +20,8 @@ class LearningViewModel {
   ScheduledCardModel get scheduledCard => _scheduledCard;
   ScheduledCardModel _scheduledCard;
 
-  Stream<CardModel> get card => _card;
-  Stream<CardModel> _card;
-
-  CardModel get initialCard => _initialCard;
-  CardModel _initialCard;
+  StreamWithValue<CardModel> get card => _card;
+  StreamWithValue<CardModel> _card;
 
   DeckModel get deck => _deck;
   DeckModel _deck;
@@ -40,8 +38,7 @@ class LearningViewModel {
           user.decks.getItem(deck.key).updates.map((d) => _deck = d),
       LearningUpdateType.scheduledCardUpdate:
           ScheduledCardModel.next(user, deck).map((casc) {
-        _initialCard = casc.initialCard;
-        _card = casc.card;
+        _card = deck.cards.getItem(casc.scheduledCard.key);
         _scheduledCard = casc.scheduledCard;
       }),
       // We deliberately do not subscribe to Card updates (i.e. we only watch
@@ -59,5 +56,5 @@ class LearningViewModel {
         learnBeyondHorizon: learnBeyondHorizon);
   }
 
-  Future<void> deleteCard() => user.deleteCard(card: initialCard);
+  Future<void> deleteCard() => user.deleteCard(card: _card.value);
 }

@@ -14,6 +14,7 @@ import 'package:delern_flutter/views/helpers/flip_card_widget.dart';
 import 'package:delern_flutter/views/helpers/progress_indicator_widget.dart';
 import 'package:delern_flutter/views/helpers/save_updates_dialog.dart';
 import 'package:delern_flutter/views/helpers/slow_operation_widget.dart';
+import 'package:delern_flutter/views/helpers/stream_with_value_builder.dart';
 import 'package:delern_flutter/views/helpers/text_overflow_ellipsis_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -110,13 +111,14 @@ class CardsIntervalLearningState extends State<CardsIntervalLearning> {
                                 _kCardPaddingRatio,
                             right: MediaQuery.of(context).size.width *
                                 _kCardPaddingRatio),
-                    child: StreamBuilder<CardModel>(
-                        initialData: _viewModel.initialCard,
-                        stream: _viewModel.card,
+                    child: buildStreamBuilderWithValue<CardModel>(
+                        streamWithValue: _viewModel.card,
                         builder: (context, snapshot) {
-                          final card = snapshot.data.key == null
-                              ? _viewModel.initialCard
-                              : snapshot.data;
+                          // TODO(dotdoom): handle removed data (in model).
+                          if (!snapshot.hasData) {
+                            return ProgressIndicatorWidget();
+                          }
+                          final card = snapshot.data;
                           return FlipCardWidget(
                             front: card.front,
                             back: card.back,
@@ -217,8 +219,8 @@ class CardsIntervalLearningState extends State<CardsIntervalLearning> {
         if (widget.deck.access != AccessType.read) {
           openEditCardScreen(
             context,
-            deckKey: _viewModel.initialCard.deckKey,
-            cardKey: _viewModel.initialCard.key,
+            deckKey: _viewModel.deck.key,
+            cardKey: _viewModel.card.value.key,
           );
         } else {
           UserMessages.showMessage(Scaffold.of(context),

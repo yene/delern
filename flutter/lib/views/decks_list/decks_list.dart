@@ -287,10 +287,11 @@ class DeckListItemWidget extends StatelessWidget {
           streamWithValue: deck.numberOfCardsDue,
           builder: (context, snapshot) => Text(
             localizations.of(context).cardsToLearnLabel(
-                snapshot.data?.toString() ?? 'N/A',
-                // TODO(ksheremet): Add StreamBuilder to get updates about all
-                // cards
-                deck.cards.value.length.toString()),
+                  snapshot.data?.toString() ?? 'N/A',
+                  // TODO(ksheremet): Add StreamBuilder to get updates about all
+                  // cards
+                  deck.cards.value?.length?.toString() ?? 'N/A',
+                ),
             style: secondaryTextStyle,
           ),
         ),

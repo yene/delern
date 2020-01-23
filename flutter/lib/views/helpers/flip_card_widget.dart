@@ -144,6 +144,8 @@ class _FlipCardWidgetState extends State<FlipCardWidget>
                 child: LayoutBuilder(
                   builder: (context, viewportConstraints) =>
                       SingleChildScrollView(
+                    // Keep scroll position separate for front and back.
+                    key: ValueKey(_isFront),
                     child: ConstrainedBox(
                       constraints: BoxConstraints(
                         minHeight: viewportConstraints.maxHeight,

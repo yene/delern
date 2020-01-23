@@ -11,6 +11,9 @@ void main() {
     FlutterDriver driver;
     AppLocalizations localizations;
 
+    Future<void> tapMaterialButton(String text) =>
+        driver.tap(find.text(text.toUpperCase()));
+
     setUpAll(() async {
       driver = await FlutterDriver.connect();
       localizations = AppLocalizations();
@@ -69,7 +72,12 @@ void main() {
       await addCard('front1', 'back1');
       await addCard('front2', 'back2');
 
+      // Make some changes without saving them.
+      await driver.enterText('something');
+
       await driver.tap(find.pageBack());
+      // Dismiss the confirmation dialog for saving changes.
+      await tapMaterialButton(localizations.discard);
     });
 
     test('learn_cards', () async {
@@ -107,12 +115,12 @@ void main() {
       await driver.tap(find.byTooltip(localizations.intervalLearningTooltip));
       // Since we replied "does no know" to front2, it should be the first in
       // the queue. But before that, dismiss the "learn beyond horizon" dialog.
-      await driver.tap(find.text(localizations.yes.toUpperCase()));
+      await tapMaterialButton(localizations.yes);
       // Menu does not have text, use tooltip to find it.
       await driver.tap(find.byTooltip(localizations.menuTooltip));
       await driver.tap(find.text(localizations.delete));
       // And once again in the confirmation dialog.
-      await driver.tap(find.text(localizations.delete.toUpperCase()));
+      await tapMaterialButton(localizations.delete);
       // Since we earlier confirmed learning beyond horizon, the learning screen
       // will not close automatically.
       await driver.tap(find.pageBack());

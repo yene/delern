@@ -1,5 +1,6 @@
 import 'package:delern_flutter/l10n/app_localizations.dart';
 import 'package:flutter_driver/flutter_driver.dart';
+import 'package:meta/meta.dart';
 import 'package:pedantic/pedantic.dart';
 import 'package:test/test.dart';
 
@@ -49,37 +50,72 @@ void main() {
       await driver.tap(add, timeout: timeoutDuration);
     });
 
-    test('create_card', () async {
-      final frontInput = find.byValueKey('frontCardInput');
-      await driver.waitFor(frontInput, timeout: timeoutDuration);
-      await driver.enterText('front1');
+    test('create_cards', () async {
+      Future<void> addCard(String front, String back) async {
+        final frontInput = find.byValueKey('frontCardInput');
+        await driver.waitFor(frontInput, timeout: timeoutDuration);
+        await driver.enterText(front);
 
-      await driver.tap(find.byValueKey('backCardInput'),
-          timeout: timeoutDuration);
-      await driver.enterText('back1');
-      await driver.tap(find.byTooltip(localizations.addCardTooltip),
-          timeout: timeoutDuration);
+        await driver.tap(find.byValueKey('backCardInput'),
+            timeout: timeoutDuration);
+        await driver.enterText(back);
+        await driver.tap(find.byTooltip(localizations.addCardTooltip),
+            timeout: timeoutDuration);
 
-      await driver.waitFor(find.text(localizations.cardAddedUserMessage),
-          timeout: timeoutDuration);
+        await driver.waitFor(find.text(localizations.cardAddedUserMessage),
+            timeout: timeoutDuration);
+      }
+
+      await addCard('front1', 'back1');
+      await addCard('front2', 'back2');
+
       await driver.tap(find.pageBack());
     });
 
-    test('learn_card', () async {
+    test('learn_cards', () async {
       await driver.tap(find.byType('DeckListItemWidget'));
       await driver.tap(find.byTooltip(localizations.intervalLearningTooltip));
 
-      // TODO(ksheremet): getText doesn't work with TextSpan which is used
-      // in Markdown text https://github.com/flutter/flutter/issues/16013
-      //expect(await driver.getText(find.text('front1')), 'front1');
+      Future<void> learnCard({
+        @required String expectFront,
+        @required String expectBack,
+        @required bool knows,
+      }) async {
+        // TODO(ksheremet): getText doesn't work with TextSpan which is used
+        // in Markdown text https://github.com/flutter/flutter/issues/16013
+        //expect(await driver.getText(find.text('front1')), 'front1');
 
-      final card =
-          await driver.getWidgetDiagnostics(find.byType('FlipCardWidget'));
-      assert(card['front'], 'front1');
-      assert(card['back'], 'back1');
+        final card =
+            await driver.getWidgetDiagnostics(find.byType('FlipCardWidget'));
+        assert(card['front'], expectFront);
+        assert(card['back'], expectBack);
 
-      await driver.tap(find.byType('CardDecorationWidget'));
-      await driver.tap(find.byTooltip(localizations.knowCardTooltip));
+        await driver.tap(find.byType('CardDecorationWidget'));
+        await driver.tap(find.byTooltip(knows
+            ? localizations.knowCardTooltip
+            : localizations.doNotKnowCardTooltip));
+      }
+
+      await learnCard(expectFront: 'front1', expectBack: 'back1', knows: true);
+      await learnCard(expectFront: 'front2', expectBack: 'back2', knows: false);
+      // At this point the learning screen should automatically close because
+      // there are no more cards to learn.
+    });
+
+    test('delete_card', () async {
+      await driver.tap(find.byType('DeckListItemWidget'));
+      await driver.tap(find.byTooltip(localizations.intervalLearningTooltip));
+      // Since we replied "does no know" to front2, it should be the first in
+      // the queue. But before that, dismiss the "learn beyond horizon" dialog.
+      await driver.tap(find.text(localizations.yes.toUpperCase()));
+      // Menu does not have text, use tooltip to find it.
+      await driver.tap(find.byTooltip(localizations.menuTooltip));
+      await driver.tap(find.text(localizations.delete));
+      // And once again in the confirmation dialog.
+      await driver.tap(find.text(localizations.delete.toUpperCase()));
+      // Since we earlier confirmed learning beyond horizon, the learning screen
+      // will not close automatically.
+      await driver.tap(find.pageBack());
     });
 
     test('view_learn_card', () async {

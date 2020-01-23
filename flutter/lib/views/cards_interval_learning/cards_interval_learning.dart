@@ -85,6 +85,7 @@ class CardsIntervalLearningState extends State<CardsIntervalLearning> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
+        // TODO(dotdoom): find out why build triggers twice for next card.
         appBar: AppBar(
           title: buildStreamBuilderWithValue<DeckModel>(
             streamWithValue: _viewModel.deck,
@@ -113,6 +114,9 @@ class CardsIntervalLearningState extends State<CardsIntervalLearning> {
                             right: MediaQuery.of(context).size.width *
                                 _kCardPaddingRatio),
                     child: buildStreamBuilderWithValue<CardModel>(
+                        // TODO(dotdoom): find a prettier way to trigger the
+                        //                builder() when initialData changes.
+                        key: ValueKey(_viewModel.card.value?.key),
                         streamWithValue: _viewModel.card,
                         builder: (context, snapshot) {
                           // TODO(dotdoom): handle removed data (in model).

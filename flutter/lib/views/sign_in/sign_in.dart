@@ -11,6 +11,8 @@ import 'package:flutter/material.dart';
 class SignIn extends StatelessWidget {
   static const routeName = '/signIn';
 
+  const SignIn() : super();
+
   @override
   Widget build(BuildContext context) => Scaffold(
         backgroundColor: app_styles.signInBackgroundColor,

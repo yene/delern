@@ -30,6 +30,7 @@ class SignInButton extends StatelessWidget {
             buttonText: Text(
               localizations.of(context).signInWithGoogle,
               style: app_styles.primaryText,
+              overflow: TextOverflow.ellipsis,
             ));
       case FacebookAuthProvider.providerId:
         return _buildButton(context,
@@ -39,6 +40,7 @@ class SignInButton extends StatelessWidget {
               localizations.of(context).signInWithFacebook,
               style: app_styles.primaryText
                   .merge(const TextStyle(color: Colors.white)),
+              overflow: TextOverflow.ellipsis,
             ));
       default:
         return RaisedButton(
@@ -52,6 +54,7 @@ class SignInButton extends StatelessWidget {
               child: Text(
                 localizations.of(context).continueAnonymously,
                 style: app_styles.primaryText,
+                overflow: TextOverflow.ellipsis,
               ),
             ),
           ),
@@ -82,9 +85,11 @@ class SignInButton extends StatelessWidget {
                   padding: const EdgeInsets.all(5),
                   child: Image.asset(providerIconAsset),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 10),
-                  child: buttonText,
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 10),
+                    child: buttonText,
+                  ),
                 ),
               ],
             ),

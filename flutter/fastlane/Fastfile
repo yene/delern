@@ -7,7 +7,7 @@ module SharedValues
 end
 
 before_all do |lane, options|
-  if [:build, :publish].include?(lane)
+  if [:build, :distribute, :publish].include?(lane)
     commits_since_last_tag = changelog_from_git_commits(
       quiet: true,
       # One line per commit, which allows us to easily count them.
@@ -123,6 +123,40 @@ platform :android do
     # Occasionally build may fail due to a network error.
     retry_on_exception do
       flutter_build(debug: true)
+    end
+  end
+
+  desc 'Build current source tree in debug mode and distribute it via Firebase'
+  desc 'App Distribution'
+  lane :distribute do |options|
+    config = JSON.parse(File.read('../android/app/google-services.json'))
+    project_id = config['project_info']['project_id']
+    app_id = config['client'][0]['client_info']['mobilesdk_app_id']
+    UI.message("Building APK to distribute to application #{app_id.inspect}")
+    flutter_build(build: 'apk', debug: true)
+    distribute_to_groups = options[:groups] || 'fastlane'
+    begin
+      firebase_app_distribution(
+        app: app_id,
+        firebase_cli_path:
+          File.expand_path('../../firebase/node_modules/.bin/firebase'),
+        release_notes: changelog_from_git_commits(
+          quiet: true,
+          merge_commit_filtering: 'exclude_merges',
+        ),
+        groups: distribute_to_groups,
+      )
+    rescue FastlaneCore::Interface::FastlaneShellError => e
+      if e.message.include?('failed to add testers/groups: invalid groups')
+        UI.error(
+          "Failed to distribute the app. Make sure you have created group(s) " \
+          "#{distribute_to_groups.inspect} at https://" \
+          "console.firebase.google.com/project/#{project_id}/appdistribution " \
+          "on the 'Testers and Groups' tab."
+        )
+      else
+        raise
+      end
     end
   end
 

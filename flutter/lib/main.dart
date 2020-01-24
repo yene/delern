@@ -37,7 +37,11 @@ class App extends StatelessWidget {
         Locale('en', 'US'),
         Locale('ru', 'RU'),
       ],
-      navigatorObservers: [_analyticsNavigatorObserver],
+      navigatorObservers: [
+        _analyticsNavigatorObserver,
+        FlutterSentryNavigatorObserver(
+            breadcrumbs: FlutterSentry.instance.breadcrumbs),
+      ],
       title: title,
       // SignInWidget must be above Navigator to provide CurrentUserWidget.of().
       builder: (context, child) =>

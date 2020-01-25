@@ -19,6 +19,22 @@ void main() {
       );
     });
 
+    test('L(0) beyond horizon', () {
+      final scheduledCard = (ScheduledCardModelBuilder()
+            ..level = 0
+            ..repeatAt = DateTime.now().add(const Duration(days: 1)))
+          .build();
+
+      expect(
+        scheduledCard.answer(knows: true, learnBeyondHorizon: true).level,
+        0,
+      );
+      expect(
+        scheduledCard.answer(knows: false, learnBeyondHorizon: true).level,
+        0,
+      );
+    });
+
     test('L(max)', () {
       final scheduledCard = (ScheduledCardModelBuilder()
             ..level = ScheduledCardModel.levelDurations.length - 1

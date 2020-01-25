@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:delern_flutter/models/base/stream_with_latest_value.dart';
-import 'package:delern_flutter/models/card_model.dart';
 import 'package:delern_flutter/models/deck_model.dart';
 import 'package:delern_flutter/models/scheduled_card_model.dart';
 import 'package:delern_flutter/models/user.dart';
@@ -14,7 +13,6 @@ class CardsIntervalLearningViewModel {
 
   ScheduledCardModel _scheduledCard;
   bool _learningStarted = false;
-  StreamWithValue<CardModel> _card;
 
   CardsIntervalLearningViewModel({
     @required this.user,
@@ -24,10 +22,8 @@ class CardsIntervalLearningViewModel {
         deck = user.decks.getItem(deckKey);
 
   Stream<ScheduledCardModel> get updates =>
-      ScheduledCardModel.next(user, deck.value).map((casc) {
-        _card = deck.value.cards.getItem(casc.scheduledCard.key);
-        return _scheduledCard = casc.scheduledCard;
-      });
+      ScheduledCardModel.next(user, deck.value)
+          .map((casc) => _scheduledCard = casc.scheduledCard);
 
   Future<void> answer({
     @required bool knows,
@@ -42,6 +38,4 @@ class CardsIntervalLearningViewModel {
       knows: knows,
     );
   }
-
-  Future<void> deleteCard() => user.deleteCard(card: _card.value);
 }

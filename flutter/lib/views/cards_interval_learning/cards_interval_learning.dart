@@ -255,7 +255,7 @@ class CardsIntervalLearningState extends State<CardsIntervalLearning> {
         noAnswer: MaterialLocalizations.of(context).cancelButtonLabel);
     if (saveChanges) {
       try {
-        await _viewModel.deleteCard();
+        await _viewModel.user.deleteCard(card: _card.value);
         UserMessages.showMessage(Scaffold.of(context),
             localizations.of(context).cardDeletedUserMessage);
       } catch (e, stackTrace) {

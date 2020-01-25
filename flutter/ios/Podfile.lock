@@ -9,15 +9,15 @@ PODS:
   - device_info (0.0.1):
     - Flutter
   - Fabric (1.10.2)
-  - FBSDKCoreKit (5.14.0):
-    - FBSDKCoreKit/Basics (= 5.14.0)
-    - FBSDKCoreKit/Core (= 5.14.0)
-  - FBSDKCoreKit/Basics (5.14.0)
-  - FBSDKCoreKit/Core (5.14.0):
+  - FBSDKCoreKit (5.15.0):
+    - FBSDKCoreKit/Basics (= 5.15.0)
+    - FBSDKCoreKit/Core (= 5.15.0)
+  - FBSDKCoreKit/Basics (5.15.0)
+  - FBSDKCoreKit/Core (5.15.0):
     - FBSDKCoreKit/Basics
-  - FBSDKLoginKit (5.14.0):
-    - FBSDKLoginKit/Login (= 5.14.0)
-  - FBSDKLoginKit/Login (5.14.0):
+  - FBSDKLoginKit (5.15.0):
+    - FBSDKLoginKit/Login (= 5.15.0)
+  - FBSDKLoginKit/Login (5.15.0):
     - FBSDKCoreKit (~> 5.0)
   - Firebase/Analytics (6.15.0):
     - Firebase/Core
@@ -301,10 +301,10 @@ SPEC CHECKSUMS:
   Crashlytics: 540b7e5f5da5a042647227a5e3ac51d85eed06df
   device_info: cbf09d2ec12aa7110e0b09fabe54b5bd6c8efe74
   Fabric: 706c8b8098fff96c33c0db69cbf81f9c551d0d74
-  FBSDKCoreKit: a72c8d2c42aa4c4d5eaa5f160be9580750f70d2e
-  FBSDKLoginKit: 89f3c2f8be892ec8a5359619a8ff657578d47604
+  FBSDKCoreKit: 083ba8c8e37939c0b4c84250654c9be0aef0c2f8
+  FBSDKLoginKit: bd40354a96e4718765713ef225bc368f10dc395d
   Firebase: 5d77105d9740a07ca6b16927ca971db7e860faaf
-  firebase_analytics: d83001d25b9a58ca5eda8db0ef566c02d7af5258
+  firebase_analytics: 077331cde46ef3df84b4a98662c49201927dd6db
   firebase_auth: 697625863042c7af7a01b5f1a4cfff37d30743b4
   firebase_auth_web: 0955c07bcc06e84af76b9d4e32e6f31518f2d7de
   firebase_core: 9bd2e66a276153e219a87ff39dfecb6b671f524a

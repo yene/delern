@@ -13,6 +13,7 @@ class CardsIntervalLearningViewModel {
   final StreamWithValue<DeckModel> deck;
 
   ScheduledCardModel _scheduledCard;
+  bool _learningStarted = false;
 
   StreamWithValue<CardModel> get card => _card;
   StreamWithValue<CardModel> _card;
@@ -24,16 +25,20 @@ class CardsIntervalLearningViewModel {
         assert(deckKey != null),
         deck = user.decks.getItem(deckKey);
 
-  Stream<ScheduledCardModel> get updates {
-    logStartLearning(deck.value.key);
-    return ScheduledCardModel.next(user, deck.value).map((casc) {
-      _card = deck.value.cards.getItem(casc.scheduledCard.key);
-      return _scheduledCard = casc.scheduledCard;
-    });
-  }
+  Stream<ScheduledCardModel> get updates =>
+      ScheduledCardModel.next(user, deck.value).map((casc) {
+        _card = deck.value.cards.getItem(casc.scheduledCard.key);
+        return _scheduledCard = casc.scheduledCard;
+      });
 
-  Future<void> answer(
-      {@required bool knows, @required bool learnBeyondHorizon}) {
+  Future<void> answer({
+    @required bool knows,
+    @required bool learnBeyondHorizon,
+  }) {
+    if (!_learningStarted) {
+      logStartLearning(deck.value.key);
+      _learningStarted = true;
+    }
     logCardResponse(deckId: deck.value.key, knows: knows);
     return user.learnCard(
         unansweredScheduledCard: _scheduledCard,

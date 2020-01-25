@@ -8,6 +8,7 @@ import 'package:delern_flutter/models/card_model.dart';
 import 'package:delern_flutter/models/deck_access_model.dart';
 import 'package:delern_flutter/models/deck_model.dart';
 import 'package:delern_flutter/models/scheduled_card_model.dart';
+import 'package:delern_flutter/remote/analytics.dart';
 import 'package:delern_flutter/routes.dart';
 import 'package:delern_flutter/view_models/cards_interval_learning_view_model.dart';
 import 'package:delern_flutter/views/helpers/auth_widget.dart';
@@ -57,6 +58,7 @@ class CardsIntervalLearningState extends State<CardsIntervalLearning> {
   CardsIntervalLearningViewModel _viewModel;
   StreamSubscription<void> _updates;
   StreamWithValue<CardModel> _card;
+  ScheduledCardModel _scheduledCard;
 
   final _showReplyButtons = ValueNotifier<bool>(false);
 
@@ -206,8 +208,16 @@ class CardsIntervalLearningState extends State<CardsIntervalLearning> {
       ));
 
   Future<void> _answerCard(bool answer, BuildContext context) async {
+    final deckKey = _viewModel.deck.value.key;
+    if (_watchedCount == 0) {
+      unawaited(logStartLearning(deckKey));
+    }
+    unawaited(logCardResponse(deckId: deckKey, knows: answer));
     try {
-      await _viewModel.answer(knows: answer);
+      await _viewModel.user.learnCard(
+        unansweredScheduledCard: _scheduledCard,
+        knows: answer,
+      );
     } catch (e, stacktrace) {
       unawaited(
           UserMessages.showError(() => Scaffold.of(context), e, stacktrace));
@@ -271,6 +281,7 @@ class CardsIntervalLearningState extends State<CardsIntervalLearning> {
     setState(() {
       // New card arrived, do not show reply buttons.
       _showReplyButtons.value = false;
+      _scheduledCard = scheduledCard;
       _card = _viewModel.deck.value.cards.getItem(scheduledCard.key);
     });
 

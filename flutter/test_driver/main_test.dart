@@ -11,6 +11,9 @@ void main() {
     FlutterDriver driver;
     AppLocalizations localizations;
 
+    Future<void> tapDialogButton(String text) =>
+        driver.tap(find.text(text.toUpperCase()));
+
     setUpAll(() async {
       driver = await FlutterDriver.connect();
       localizations = AppLocalizations();
@@ -69,7 +72,17 @@ void main() {
       await addCard('front1', 'back1');
       await addCard('front2', 'back2');
 
+      // Make some changes without saving them.
+      await driver.enterText('something');
+
+      // Tapping back should trigger a confirmation dialog for saving changes.
       await driver.tap(find.pageBack());
+      await driver.waitFor(find.text(localizations.continueEditingQuestion));
+      // Tapping Back "physical" button while the dialog is shown should be
+      // ignored, but we can't test it because Flutter Driver does not have that
+      // functionality (probably due to Back button not present on iOS devices).
+      // Dismiss the confirmation dialog.
+      await tapDialogButton(localizations.discard);
     });
 
     test('learn_cards', () async {
@@ -107,12 +120,12 @@ void main() {
       await driver.tap(find.byTooltip(localizations.intervalLearningTooltip));
       // Since we replied "does no know" to front2, it should be the first in
       // the queue. But before that, dismiss the "learn beyond horizon" dialog.
-      await driver.tap(find.text(localizations.yes.toUpperCase()));
+      await tapDialogButton(localizations.yes);
       // Menu does not have text, use tooltip to find it.
       await driver.tap(find.byTooltip(localizations.menuTooltip));
       await driver.tap(find.text(localizations.delete));
       // And once again in the confirmation dialog.
-      await driver.tap(find.text(localizations.delete.toUpperCase()));
+      await tapDialogButton(localizations.delete);
       // Since we earlier confirmed learning beyond horizon, the learning screen
       // will not close automatically.
       await driver.tap(find.pageBack());

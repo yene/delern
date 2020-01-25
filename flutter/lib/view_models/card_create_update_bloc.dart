@@ -68,8 +68,8 @@ class CardCreateUpdateBloc extends ScreenBloc {
   final _isOperationEnabledController = StreamController<bool>();
   Stream<bool> get isOperationEnabled => _isOperationEnabledController.stream;
 
-  final _doShowConfirmationDialogController = StreamController<void>();
-  Stream<void> get doShowConfirmationDialog =>
+  final _doShowConfirmationDialogController = StreamController<bool>();
+  Stream<bool> get doShowConfirmationDialog =>
       _doShowConfirmationDialogController.stream;
 
   final _onDiscardChangesController = StreamController<void>();
@@ -144,7 +144,7 @@ class CardCreateUpdateBloc extends ScreenBloc {
 
   @override
   Future<bool> userClosesScreen() async {
-    _doShowConfirmationDialogController.add(null);
+    _doShowConfirmationDialogController.add(true);
     return Future.value(false);
   }
 

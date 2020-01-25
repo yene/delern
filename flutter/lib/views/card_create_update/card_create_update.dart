@@ -43,19 +43,24 @@ class _CardCreateUpdateState extends State<CardCreateUpdate> {
     super.dispose();
   }
 
-  Future<void> showCardSaveUpdateDialog(CardCreateUpdateBloc bloc) async {
+  Future<void> showCardSaveUpdateDialog({
+    @required Sink<void> onDiscardChanges,
+    @required bool defaultDiscard,
+  }) async {
     if (_isChanged) {
       final locale = localizations.of(context);
-      final continueEditingDialog = await showSaveUpdatesDialog(
-          context: context,
-          changesQuestion: locale.continueEditingQuestion,
-          yesAnswer: locale.yes,
-          noAnswer: locale.discard);
-      if (continueEditingDialog) {
+      final continueEditing = await showSaveUpdatesDialog(
+        context: context,
+        changesQuestion: locale.continueEditingQuestion,
+        yesAnswer: locale.yes,
+        noAnswer: locale.discard,
+        defaultIsYes: !defaultDiscard,
+      );
+      if (continueEditing) {
         return false;
       }
     }
-    bloc.onDiscardChanges.add(null);
+    onDiscardChanges.add(null);
   }
 
   @override
@@ -76,7 +81,10 @@ class _CardCreateUpdateState extends State<CardCreateUpdate> {
             .listen((text) => _backTextController.text = text);
         bloc.doClearInputFields.listen((_) => _clearInputFields(bloc));
         bloc.doShowConfirmationDialog
-            .listen((_) => showCardSaveUpdateDialog(bloc));
+            .listen((userClosesScreen) => showCardSaveUpdateDialog(
+                  onDiscardChanges: bloc.onDiscardChanges,
+                  defaultDiscard: userClosesScreen,
+                ));
         return bloc;
       },
       appBarBuilder: _buildAppBar,

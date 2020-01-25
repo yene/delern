@@ -208,12 +208,10 @@ class User {
   Future<void> learnCard({
     @required ScheduledCardModel unansweredScheduledCard,
     @required bool knows,
-    @required bool learnBeyondHorizon,
   }) {
     final cardReply =
         CardReplyModel.fromScheduledCard(unansweredScheduledCard, reply: knows);
-    final scheduledCard = unansweredScheduledCard.answer(
-        knows: knows, learnBeyondHorizon: learnBeyondHorizon);
+    final scheduledCard = unansweredScheduledCard.answer(knows: knows);
     final scheduledCardPath =
         'learning/$uid/${scheduledCard.deckKey}/${scheduledCard.key}';
     final cardViewPath =

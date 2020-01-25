@@ -10,11 +10,11 @@ void main() {
           .build();
 
       expect(
-        scheduledCard.answer(knows: true, learnBeyondHorizon: false).level,
+        scheduledCard.answer(knows: true).level,
         1,
       );
       expect(
-        scheduledCard.answer(knows: false, learnBeyondHorizon: false).level,
+        scheduledCard.answer(knows: false).level,
         0,
       );
     });
@@ -26,11 +26,11 @@ void main() {
           .build();
 
       expect(
-        scheduledCard.answer(knows: true, learnBeyondHorizon: true).level,
+        scheduledCard.answer(knows: true).level,
         0,
       );
       expect(
-        scheduledCard.answer(knows: false, learnBeyondHorizon: true).level,
+        scheduledCard.answer(knows: false).level,
         0,
       );
     });
@@ -42,11 +42,11 @@ void main() {
           .build();
 
       expect(
-        scheduledCard.answer(knows: true, learnBeyondHorizon: false).level,
+        scheduledCard.answer(knows: true).level,
         ScheduledCardModel.levelDurations.length - 1,
       );
       expect(
-        scheduledCard.answer(knows: false, learnBeyondHorizon: false).level,
+        scheduledCard.answer(knows: false).level,
         0,
       );
     });
@@ -58,11 +58,11 @@ void main() {
           .build();
 
       expect(
-        scheduledCard.answer(knows: true, learnBeyondHorizon: false).level,
+        scheduledCard.answer(knows: true).level,
         ScheduledCardModel.levelDurations.length - 1,
       );
       expect(
-        scheduledCard.answer(knows: false, learnBeyondHorizon: false).level,
+        scheduledCard.answer(knows: false).level,
         0,
       );
     });

@@ -14,8 +14,6 @@ class CardsIntervalLearningViewModel {
 
   ScheduledCardModel _scheduledCard;
   bool _learningStarted = false;
-
-  StreamWithValue<CardModel> get card => _card;
   StreamWithValue<CardModel> _card;
 
   CardsIntervalLearningViewModel({
@@ -33,7 +31,6 @@ class CardsIntervalLearningViewModel {
 
   Future<void> answer({
     @required bool knows,
-    @required bool learnBeyondHorizon,
   }) {
     if (!_learningStarted) {
       logStartLearning(deck.value.key);
@@ -41,9 +38,9 @@ class CardsIntervalLearningViewModel {
     }
     logCardResponse(deckId: deck.value.key, knows: knows);
     return user.learnCard(
-        unansweredScheduledCard: _scheduledCard,
-        knows: knows,
-        learnBeyondHorizon: learnBeyondHorizon);
+      unansweredScheduledCard: _scheduledCard,
+      knows: knows,
+    );
   }
 
   Future<void> deleteCard() => user.deleteCard(card: _card.value);

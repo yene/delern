@@ -173,11 +173,11 @@ abstract class ScheduledCardModel
             scheduledCard: scheduledCard));
       }));
 
-  ScheduledCardModel answer(
-      {@required bool knows, @required bool learnBeyondHorizon}) {
+  ScheduledCardModel answer({@required bool knows}) {
     var newLevel = level;
 
-    if (knows && !learnBeyondHorizon) {
+    final now = DateTime.now();
+    if (knows && (repeatAt == now || repeatAt.isBefore(now))) {
       newLevel = min(level + 1, levelDurations.length - 1);
     }
     if (!knows) {
@@ -186,8 +186,7 @@ abstract class ScheduledCardModel
 
     return rebuild((b) => b
       ..level = newLevel
-      ..repeatAt =
-          DateTime.now().toUtc().add(levelDurations[newLevel] + _newJitter()));
+      ..repeatAt = now.toUtc().add(levelDurations[newLevel] + _newJitter()));
   }
 }
 

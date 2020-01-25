@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:delern_flutter/flutter/localization.dart' as localizations;
 import 'package:delern_flutter/flutter/styles.dart' as app_styles;
 import 'package:delern_flutter/flutter/user_messages.dart';
+import 'package:delern_flutter/models/base/stream_with_latest_value.dart';
 import 'package:delern_flutter/models/card_model.dart';
 import 'package:delern_flutter/models/deck_access_model.dart';
 import 'package:delern_flutter/models/deck_model.dart';
@@ -55,6 +56,7 @@ class CardsIntervalLearningState extends State<CardsIntervalLearning> {
 
   CardsIntervalLearningViewModel _viewModel;
   StreamSubscription<void> _updates;
+  StreamWithValue<CardModel> _card;
 
   final _showReplyButtons = ValueNotifier<bool>(false);
 
@@ -96,9 +98,9 @@ class CardsIntervalLearningState extends State<CardsIntervalLearning> {
                   )
                 : ProgressIndicatorWidget(),
           ),
-          actions: _viewModel.card == null ? null : <Widget>[_buildPopupMenu()],
+          actions: _card == null ? null : <Widget>[_buildPopupMenu()],
         ),
-        body: _viewModel.card == null
+        body: _card == null
             ? ProgressIndicatorWidget()
             : Column(
                 children: <Widget>[
@@ -117,8 +119,8 @@ class CardsIntervalLearningState extends State<CardsIntervalLearning> {
                     child: buildStreamBuilderWithValue<CardModel>(
                         // TODO(dotdoom): find a prettier way to trigger the
                         //                builder() when initialData changes.
-                        key: ValueKey(_viewModel.card.value?.key),
-                        streamWithValue: _viewModel.card,
+                        key: ValueKey(_card.value?.key),
+                        streamWithValue: _card,
                         builder: (context, snapshot) {
                           // TODO(dotdoom): handle removed data (in model).
                           if (!snapshot.hasData) {
@@ -205,8 +207,7 @@ class CardsIntervalLearningState extends State<CardsIntervalLearning> {
 
   Future<void> _answerCard(bool answer, BuildContext context) async {
     try {
-      await _viewModel.answer(
-          knows: answer, learnBeyondHorizon: _learnBeyondHorizon);
+      await _viewModel.answer(knows: answer);
     } catch (e, stacktrace) {
       unawaited(
           UserMessages.showError(() => Scaffold.of(context), e, stacktrace));
@@ -227,7 +228,7 @@ class CardsIntervalLearningState extends State<CardsIntervalLearning> {
           openEditCardScreen(
             context,
             deckKey: _viewModel.deck.value.key,
-            cardKey: _viewModel.card.value.key,
+            cardKey: _card.value.key,
           );
         } else {
           UserMessages.showMessage(Scaffold.of(context),
@@ -270,10 +271,11 @@ class CardsIntervalLearningState extends State<CardsIntervalLearning> {
     setState(() {
       // New card arrived, do not show reply buttons.
       _showReplyButtons.value = false;
+      _card = _viewModel.deck.value.cards.getItem(scheduledCard.key);
     });
 
     if (!_learnBeyondHorizon &&
-        scheduledCard.repeatAt.isAfter(DateTime.now().toUtc())) {
+        scheduledCard.repeatAt.isAfter(DateTime.now())) {
       if (!_atLeastOneCardShown) {
         _learnBeyondHorizon = await showSaveUpdatesDialog(
                 context: context,

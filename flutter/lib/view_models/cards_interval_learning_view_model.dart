@@ -12,7 +12,6 @@ class CardsIntervalLearningViewModel {
   final User user;
   final StreamWithValue<DeckModel> deck;
 
-  ScheduledCardModel get scheduledCard => _scheduledCard;
   ScheduledCardModel _scheduledCard;
 
   StreamWithValue<CardModel> get card => _card;
@@ -25,11 +24,11 @@ class CardsIntervalLearningViewModel {
         assert(deckKey != null),
         deck = user.decks.getItem(deckKey);
 
-  Stream<void> get updates {
+  Stream<ScheduledCardModel> get updates {
     logStartLearning(deck.value.key);
     return ScheduledCardModel.next(user, deck.value).map((casc) {
       _card = deck.value.cards.getItem(casc.scheduledCard.key);
-      _scheduledCard = casc.scheduledCard;
+      return _scheduledCard = casc.scheduledCard;
     });
   }
 

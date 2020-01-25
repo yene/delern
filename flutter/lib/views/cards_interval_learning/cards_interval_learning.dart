@@ -6,6 +6,7 @@ import 'package:delern_flutter/flutter/user_messages.dart';
 import 'package:delern_flutter/models/card_model.dart';
 import 'package:delern_flutter/models/deck_access_model.dart';
 import 'package:delern_flutter/models/deck_model.dart';
+import 'package:delern_flutter/models/scheduled_card_model.dart';
 import 'package:delern_flutter/routes.dart';
 import 'package:delern_flutter/view_models/cards_interval_learning_view_model.dart';
 import 'package:delern_flutter/views/helpers/auth_widget.dart';
@@ -65,11 +66,11 @@ class CardsIntervalLearningState extends State<CardsIntervalLearning> {
           CardsIntervalLearningViewModel(user: user, deckKey: widget.deck.key);
       _updates?.cancel();
 
-      _updates ??= _viewModel.updates.listen((_) {
+      _updates ??= _viewModel.updates.listen((scheduledCard) {
         if (!mounted) {
           return;
         }
-        _nextCardArrived();
+        _nextCardArrived(scheduledCard);
       },
           // Tell caller that no cards were available,
           onDone: () => Navigator.of(context).pop());
@@ -263,7 +264,7 @@ class CardsIntervalLearningState extends State<CardsIntervalLearning> {
     }
   }
 
-  Future<void> _nextCardArrived() async {
+  Future<void> _nextCardArrived(ScheduledCardModel scheduledCard) async {
     // We call setState because the next card has arrived and we have to
     // display it.
     setState(() {
@@ -272,7 +273,7 @@ class CardsIntervalLearningState extends State<CardsIntervalLearning> {
     });
 
     if (!_learnBeyondHorizon &&
-        _viewModel.scheduledCard.repeatAt.isAfter(DateTime.now().toUtc())) {
+        scheduledCard.repeatAt.isAfter(DateTime.now().toUtc())) {
       if (!_atLeastOneCardShown) {
         _learnBeyondHorizon = await showSaveUpdatesDialog(
                 context: context,
@@ -280,7 +281,7 @@ class CardsIntervalLearningState extends State<CardsIntervalLearning> {
                     .of(context)
                     .continueLearningQuestion(DateFormat.yMMMd()
                         .add_jm()
-                        .format(_viewModel.scheduledCard.repeatAt)),
+                        .format(scheduledCard.repeatAt)),
                 noAnswer: localizations.of(context).no,
                 yesAnswer: localizations.of(context).yes) ==
             true;

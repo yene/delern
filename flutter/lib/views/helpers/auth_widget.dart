@@ -94,7 +94,7 @@ class _AuthWidgetState extends State<AuthWidget> {
       return ProgressIndicatorWidget();
     }
 
-    return SignIn();
+    return const SignIn();
   }
 }
 

@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:core';
 
 import 'package:built_value/built_value.dart';
@@ -31,16 +30,10 @@ abstract class CardModel
     @required String deckKey,
     @required String key,
     @required Map value,
-  }) {
-    if (value == null) {
-      return (CardModelBuilder()..deckKey = deckKey).build();
-    }
-    return serializers
-        .deserializeWith(CardModel.serializer, value)
-        .rebuild((b) => b
-          ..deckKey = deckKey
-          ..key = key);
-  }
+  }) =>
+      serializers.deserializeWith(CardModel.serializer, value).rebuild((b) => b
+        ..deckKey = deckKey
+        ..key = key);
 
   static void _initializeBuilder(CardModelBuilder b) => b
     ..front = ''
@@ -61,17 +54,6 @@ abstract class CardModel
       .toSet();
 
   String get frontWithoutTags => front.replaceAll(_tagExtractorRegExp, '');
-
-  static Stream<CardModel> get(
-          {@required String deckKey, @required String key}) =>
-      FirebaseDatabase.instance
-          .reference()
-          .child('cards')
-          .child(deckKey)
-          .child(key)
-          .onValue
-          .map((evt) => CardModel.fromSnapshot(
-              deckKey: deckKey, key: key, value: evt.snapshot.value));
 }
 
 class CardModelListAccessor extends DataListAccessor<CardModel> {

@@ -6,7 +6,6 @@ import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
 import 'package:delern_flutter/models/base/keyed_list_item.dart';
 import 'package:delern_flutter/models/base/list_accessor.dart';
-import 'package:delern_flutter/models/card_model.dart';
 import 'package:delern_flutter/models/deck_model.dart';
 import 'package:delern_flutter/models/serializers.dart';
 import 'package:delern_flutter/models/user.dart';
@@ -17,18 +16,6 @@ import 'package:meta/meta.dart';
 import 'package:pedantic/pedantic.dart';
 
 part 'scheduled_card_model.g.dart';
-
-@immutable
-class CardAndScheduledCard {
-  final CardModel initialCard;
-  final Stream<CardModel> card;
-  final ScheduledCardModel scheduledCard;
-  const CardAndScheduledCard({
-    @required this.initialCard,
-    @required this.card,
-    @required this.scheduledCard,
-  });
-}
 
 @immutable
 class ScheduledCardsListModel implements KeyedListItem {
@@ -107,7 +94,7 @@ abstract class ScheduledCardModel
   static final _jitterRandom = Random();
   Duration _newJitter() => Duration(minutes: _jitterRandom.nextInt(180));
 
-  static Stream<CardAndScheduledCard> next(User user, DeckModel deck) =>
+  static Stream<ScheduledCardModel> next(User user, DeckModel deck) =>
       FirebaseDatabase.instance
           .reference()
           .child('learning')
@@ -151,26 +138,19 @@ abstract class ScheduledCardModel
               }))
             .first;
 
-        final card =
-            await CardModel.get(deckKey: deck.key, key: latestScheduledCard.key)
-                .first;
         final scheduledCard = ScheduledCardModel.fromSnapshot(
             key: latestScheduledCard.key,
             deckKey: deck.key,
             value: latestScheduledCard.value);
 
-        if (card.key == null) {
+        if (!deck.cards.getItem(latestScheduledCard.key).hasValue) {
           // Card has been removed but we still have ScheduledCard for it.
           debugPrint('Removing dangling ScheduledCard ${scheduledCard.key}');
           unawaited(user.cleanupDanglingScheduledCard(scheduledCard));
           return;
         }
 
-        sink.add(CardAndScheduledCard(
-            initialCard: card,
-            card:
-                CardModel.get(deckKey: deck.key, key: latestScheduledCard.key),
-            scheduledCard: scheduledCard));
+        sink.add(scheduledCard);
       }));
 
   ScheduledCardModel answer({@required bool knows}) {

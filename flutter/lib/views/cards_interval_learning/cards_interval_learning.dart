@@ -79,14 +79,10 @@ class CardsIntervalLearningState extends State<CardsIntervalLearning> {
       final deckKey = arguments['deckKey'];
       _deck = _user.decks.getItem(deckKey);
 
-      _updates ??= ScheduledCardModel.next(_user, _deck.value).listen((casc) {
-        if (!mounted) {
-          return;
-        }
-        _nextCardArrived(casc.scheduledCard);
-      },
-          // Tell caller that no cards were available,
-          onDone: () => Navigator.of(context).pop());
+      _updates ??=
+          ScheduledCardModel.next(_user, _deck.value).listen(_nextCardArrived,
+              // Tell caller that no cards were available,
+              onDone: () => Navigator.of(context).pop());
     }
     super.didChangeDependencies();
   }
@@ -285,6 +281,9 @@ class CardsIntervalLearningState extends State<CardsIntervalLearning> {
   }
 
   Future<void> _nextCardArrived(ScheduledCardModel scheduledCard) async {
+    if (!mounted) {
+      return;
+    }
     // We call setState because the next card has arrived and we have to
     // display it.
     setState(() {

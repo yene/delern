@@ -141,7 +141,7 @@ class CardsIntervalLearningState extends State<CardsIntervalLearning> {
                           final card = snapshot.data;
                           // TODO(dotdoom): handle card updates.
                           return FlipCardWidget(
-                            front: card.front,
+                            front: card.frontWithoutTags,
                             back: card.back,
                             gradient: specifyLearnCardBackgroundGradient(
                                 _deck.value.type, card.back),

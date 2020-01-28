@@ -32,10 +32,14 @@ const BoxConstraints _kFloatingButtonHeightConstraint = BoxConstraints.tightFor(
 class CardsIntervalLearning extends StatefulWidget {
   static const routeName = '/learn-interval';
 
-  final String deckKey;
+  const CardsIntervalLearning();
 
-  const CardsIntervalLearning({@required this.deckKey})
-      : assert(deckKey != null);
+  static Map<String, String> buildArguments({
+    @required String deckKey,
+  }) =>
+      {
+        'deckKey': deckKey,
+      };
 
   @override
   State<StatefulWidget> createState() => CardsIntervalLearningState();
@@ -70,7 +74,11 @@ class CardsIntervalLearningState extends State<CardsIntervalLearning> {
     if (_user != user) {
       _user = user;
       _updates?.cancel();
-      _deck = _user.decks.getItem(widget.deckKey);
+
+      final Map<String, String> arguments =
+          ModalRoute.of(context).settings.arguments;
+      final deckKey = arguments['deckKey'];
+      _deck = _user.decks.getItem(deckKey);
 
       _updates ??= ScheduledCardModel.next(_user, _deck.value).listen((casc) {
         if (!mounted) {

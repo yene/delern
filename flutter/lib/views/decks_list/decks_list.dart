@@ -246,7 +246,10 @@ class DeckListItemWidget extends StatelessWidget {
                           onTap: () {
                             // Close dialog
                             Navigator.pop(context);
-                            openLearnCardIntervalScreen(context, deck);
+                            openLearnCardIntervalScreen(
+                              context,
+                              deckKey: deck.key,
+                            );
                           },
                         ),
                         LearningMethodWidget(

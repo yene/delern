@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:core';
 
 import 'package:built_collection/built_collection.dart';
@@ -69,27 +68,12 @@ abstract class DeckAccessModel
     @required String key,
     @required String deckKey,
     @required Map value,
-  }) {
-    if (value == null) {
-      return (DeckAccessModelBuilder()..deckKey = deckKey).build();
-    }
-    return serializers
-        .deserializeWith(DeckAccessModel.serializer, value)
-        .rebuild((b) => b
-          ..deckKey = deckKey
-          ..key = key);
-  }
-
-  static Stream<DeckAccessModel> get(
-          {@required String deckKey, @required String key}) =>
-      FirebaseDatabase.instance
-          .reference()
-          .child('deck_access')
-          .child(deckKey)
-          .child(key)
-          .onValue
-          .map((evt) => DeckAccessModel.fromSnapshot(
-              key: key, deckKey: deckKey, value: evt.snapshot.value));
+  }) =>
+      serializers
+          .deserializeWith(DeckAccessModel.serializer, value)
+          .rebuild((b) => b
+            ..deckKey = deckKey
+            ..key = key);
 }
 
 class DeckAccessListAccessor extends DataListAccessor<DeckAccessModel> {

@@ -147,27 +147,21 @@ class DeckModelListAccessor extends DataListAccessor<DeckModel> {
       : super(FirebaseDatabase.instance.reference().child('decks').child(uid));
 
   @override
-  DeckModel parseItem(String key, value) {
-    final initDeck = DeckModel.fromSnapshot(key: key, value: value).rebuild(
-        (d) => d
-          ..cards = CardModelListAccessor(d.key)
-          ..scheduledCards =
-              ScheduledCardModelListAccessor(uid: uid, deckKey: d.key)
-          ..usersAccess = DeckAccessListAccessor(deckKey: d.key));
-
-    return initDeck.rebuild((d) =>
-        d.numberOfCardsDue = _ScheduledCardsDueCounter(d.scheduledCards));
-  }
+  DeckModel parseItem(String key, value) =>
+      DeckModel.fromSnapshot(key: key, value: value).rebuild((d) => d
+        ..cards = CardModelListAccessor(d.key)
+        ..scheduledCards =
+            ScheduledCardModelListAccessor(uid: uid, deckKey: d.key)
+        ..usersAccess = DeckAccessListAccessor(deckKey: d.key)
+        ..numberOfCardsDue = _ScheduledCardsDueCounter(d.scheduledCards));
 
   @override
-  DeckModel updateItem(DeckModel previous, String key, value) {
-    final initDeck = DeckModel.fromSnapshot(key: key, value: value);
-    return initDeck.rebuild((d) => d
-      ..cards = previous.cards
-      ..scheduledCards = previous.scheduledCards
-      ..usersAccess = previous.usersAccess
-      ..numberOfCardsDue = previous.numberOfCardsDue);
-  }
+  DeckModel updateItem(DeckModel previous, String key, value) =>
+      DeckModel.fromSnapshot(key: key, value: value).rebuild((d) => d
+        ..cards = previous.cards
+        ..scheduledCards = previous.scheduledCards
+        ..usersAccess = previous.usersAccess
+        ..numberOfCardsDue = previous.numberOfCardsDue);
 
   @override
   void disposeItem(DeckModel item) => item

@@ -66,10 +66,6 @@ abstract class ScheduledCardModel
     @required String deckKey,
     @required Map value,
   }) {
-    if (value == null) {
-      return (ScheduledCardModelBuilder()..deckKey = deckKey).build();
-    }
-
     // Below is a hack to translate legacy values (i.e. strings starting with
     // 'L') into something that BuiltValue understands.
     var levelString = value['level'].toString();

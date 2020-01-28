@@ -248,9 +248,7 @@ class User {
       '$deckAccessPath/access': access.toString(),
       '$deckPath/access': access.toString(),
     };
-    if ((await DeckAccessModel.get(deckKey: deck.key, key: shareWithUid).first)
-            .key ==
-        null) {
+    if (!deck.usersAccess.getItem(shareWithUid).hasValue) {
       // If there's no DeckAccess, assume the deck hasn't been shared yet, as
       // opposed to changing access level for a previously shared deck.
       updates.addAll({

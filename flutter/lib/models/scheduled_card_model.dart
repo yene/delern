@@ -17,18 +17,6 @@ import 'package:pedantic/pedantic.dart';
 
 part 'scheduled_card_model.g.dart';
 
-@immutable
-class ScheduledCardsListModel implements KeyedListItem {
-  final String key;
-  final List<ScheduledCardModel> scheduledCards;
-
-  const ScheduledCardsListModel({
-    @required this.key,
-    @required this.scheduledCards,
-  })  : assert(key != null),
-        assert(scheduledCards != null);
-}
-
 abstract class ScheduledCardModel
     implements
         Built<ScheduledCardModel, ScheduledCardModelBuilder>,

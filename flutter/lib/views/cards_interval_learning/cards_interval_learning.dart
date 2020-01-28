@@ -57,8 +57,7 @@ class CardsIntervalLearningState extends State<CardsIntervalLearning> {
 
   /// Number of cards the user has answered (either positively or negatively) to
   /// in this session.
-  // TODO(ksheremet): rename to "Answers", also in the UI.
-  int _watchedCount = 0;
+  int _answersCount = 0;
 
   User _user;
   StreamSubscription<void> _updates;
@@ -172,7 +171,7 @@ class CardsIntervalLearningState extends State<CardsIntervalLearning> {
                       // the display.
                       SafeArea(
                         child: Text(
-                          localizations.of(context).watchedCards(_watchedCount),
+                          localizations.of(context).watchedCards(_answersCount),
                           style: app_styles.secondaryText,
                         ),
                       ),
@@ -219,7 +218,7 @@ class CardsIntervalLearningState extends State<CardsIntervalLearning> {
 
   Future<void> _answerCard(bool answer, BuildContext context) async {
     final deckKey = _deck.value.key;
-    if (_watchedCount == 0) {
+    if (_answersCount == 0) {
       unawaited(logStartLearning(deckKey));
     }
     unawaited(logCardResponse(deckId: deckKey, knows: answer));
@@ -236,7 +235,7 @@ class CardsIntervalLearningState extends State<CardsIntervalLearning> {
 
     if (mounted) {
       setState(() {
-        _watchedCount++;
+        _answersCount++;
       });
     }
   }

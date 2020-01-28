@@ -32,9 +32,10 @@ const BoxConstraints _kFloatingButtonHeightConstraint = BoxConstraints.tightFor(
 class CardsIntervalLearning extends StatefulWidget {
   static const routeName = '/learn-interval';
 
-  final DeckModel deck;
+  final String deckKey;
 
-  const CardsIntervalLearning({@required this.deck}) : assert(deck != null);
+  const CardsIntervalLearning({@required this.deckKey})
+      : assert(deckKey != null);
 
   @override
   State<StatefulWidget> createState() => CardsIntervalLearningState();
@@ -69,7 +70,7 @@ class CardsIntervalLearningState extends State<CardsIntervalLearning> {
     if (_user != user) {
       _user = user;
       _updates?.cancel();
-      _deck = _user.decks.getItem(widget.deck.key);
+      _deck = _user.decks.getItem(widget.deckKey);
 
       _updates ??= ScheduledCardModel.next(_user, _deck.value).listen((casc) {
         if (!mounted) {
@@ -235,7 +236,7 @@ class CardsIntervalLearningState extends State<CardsIntervalLearning> {
   void _onCardMenuItemSelected(BuildContext context, _CardMenuItemType item) {
     switch (item) {
       case _CardMenuItemType.edit:
-        if (widget.deck.access != AccessType.read) {
+        if (_deck.value.access != AccessType.read) {
           openEditCardScreen(
             context,
             deckKey: _deck.value.key,
@@ -247,7 +248,7 @@ class CardsIntervalLearningState extends State<CardsIntervalLearning> {
         }
         break;
       case _CardMenuItemType.delete:
-        if (widget.deck.access != AccessType.read) {
+        if (_deck.value.access != AccessType.read) {
           _deleteCard(context);
         } else {
           UserMessages.showMessage(Scaffold.of(context),

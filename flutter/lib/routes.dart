@@ -36,7 +36,7 @@ Future<void> openLearnCardIntervalScreen(
         context,
         MaterialPageRoute(
           settings: const RouteSettings(name: CardsIntervalLearning.routeName),
-          builder: (context) => CardsIntervalLearning(deck: deck),
+          builder: (context) => CardsIntervalLearning(deckKey: deck.key),
         ));
 
 Future<void> openLearnCardViewScreen(BuildContext context, DeckModel deck) =>

@@ -8,9 +8,9 @@ import 'package:delern_flutter/models/card_model.dart';
 import 'package:delern_flutter/models/deck_access_model.dart';
 import 'package:delern_flutter/models/deck_model.dart';
 import 'package:delern_flutter/models/scheduled_card_model.dart';
+import 'package:delern_flutter/models/user.dart';
 import 'package:delern_flutter/remote/analytics.dart';
 import 'package:delern_flutter/routes.dart';
-import 'package:delern_flutter/view_models/cards_interval_learning_view_model.dart';
 import 'package:delern_flutter/views/helpers/auth_widget.dart';
 import 'package:delern_flutter/views/helpers/card_background_specifier.dart';
 import 'package:delern_flutter/views/helpers/flip_card_widget.dart';
@@ -55,8 +55,9 @@ class CardsIntervalLearningState extends State<CardsIntervalLearning> {
   // TODO(ksheremet): rename to "Answers", also in the UI.
   int _watchedCount = 0;
 
-  CardsIntervalLearningViewModel _viewModel;
+  User _user;
   StreamSubscription<void> _updates;
+  StreamWithValue<DeckModel> _deck;
   StreamWithValue<CardModel> _card;
   ScheduledCardModel _scheduledCard;
 
@@ -65,16 +66,16 @@ class CardsIntervalLearningState extends State<CardsIntervalLearning> {
   @override
   void didChangeDependencies() {
     final user = CurrentUserWidget.of(context).user;
-    if (_viewModel?.user != user) {
-      _viewModel =
-          CardsIntervalLearningViewModel(user: user, deckKey: widget.deck.key);
+    if (_user != user) {
+      _user = user;
       _updates?.cancel();
+      _deck = _user.decks.getItem(widget.deck.key);
 
-      _updates ??= _viewModel.updates.listen((scheduledCard) {
+      _updates ??= ScheduledCardModel.next(_user, _deck.value).listen((casc) {
         if (!mounted) {
           return;
         }
-        _nextCardArrived(scheduledCard);
+        _nextCardArrived(casc.scheduledCard);
       },
           // Tell caller that no cards were available,
           onDone: () => Navigator.of(context).pop());
@@ -93,7 +94,7 @@ class CardsIntervalLearningState extends State<CardsIntervalLearning> {
         // TODO(dotdoom): find out why build triggers twice for next card.
         appBar: AppBar(
           title: buildStreamBuilderWithValue<DeckModel>(
-            streamWithValue: _viewModel.deck,
+            streamWithValue: _deck,
             builder: (context, snapshot) => snapshot.hasData
                 ? TextOverflowEllipsisWidget(
                     textDetails: snapshot.data.name,
@@ -134,7 +135,7 @@ class CardsIntervalLearningState extends State<CardsIntervalLearning> {
                             front: card.front,
                             back: card.back,
                             gradient: specifyLearnCardBackgroundGradient(
-                                _viewModel.deck.value.type, card.back),
+                                _deck.value.type, card.back),
                             onFirstFlip: () {
                               _showReplyButtons.value = true;
                             },
@@ -208,13 +209,13 @@ class CardsIntervalLearningState extends State<CardsIntervalLearning> {
       ));
 
   Future<void> _answerCard(bool answer, BuildContext context) async {
-    final deckKey = _viewModel.deck.value.key;
+    final deckKey = _deck.value.key;
     if (_watchedCount == 0) {
       unawaited(logStartLearning(deckKey));
     }
     unawaited(logCardResponse(deckId: deckKey, knows: answer));
     try {
-      await _viewModel.user.learnCard(
+      await _user.learnCard(
         unansweredScheduledCard: _scheduledCard,
         knows: answer,
       );
@@ -237,7 +238,7 @@ class CardsIntervalLearningState extends State<CardsIntervalLearning> {
         if (widget.deck.access != AccessType.read) {
           openEditCardScreen(
             context,
-            deckKey: _viewModel.deck.value.key,
+            deckKey: _deck.value.key,
             cardKey: _card.value.key,
           );
         } else {
@@ -265,7 +266,7 @@ class CardsIntervalLearningState extends State<CardsIntervalLearning> {
         noAnswer: MaterialLocalizations.of(context).cancelButtonLabel);
     if (saveChanges) {
       try {
-        await _viewModel.user.deleteCard(card: _card.value);
+        await _user.deleteCard(card: _card.value);
         UserMessages.showMessage(Scaffold.of(context),
             localizations.of(context).cardDeletedUserMessage);
       } catch (e, stackTrace) {
@@ -282,7 +283,7 @@ class CardsIntervalLearningState extends State<CardsIntervalLearning> {
       // New card arrived, do not show reply buttons.
       _showReplyButtons.value = false;
       _scheduledCard = scheduledCard;
-      _card = _viewModel.deck.value.cards.getItem(scheduledCard.key);
+      _card = _deck.value.cards.getItem(scheduledCard.key);
     });
 
     if (!_learnBeyondHorizon &&

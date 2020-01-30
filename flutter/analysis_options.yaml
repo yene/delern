@@ -13,11 +13,10 @@ analyzer:
     # keep this list in sync with codecov.yml file.
     - "**/messages_*.dart"
     - "**/*.g.dart"
-  # TODO(dotdoom): Disable strong mode for now. When app state management is
-  #                changed, consider fixing issues.
-  #strong-mode:
-  # implicit-casts: false
-  # implicit-dynamic: false
+  strong-mode:
+    implicit-dynamic: false
+    # TODO(dotdoom): disable implicit casts.
+    # implicit-casts: false
   # TODO(dotdoom): Enable this option once it becomes mature enough.
   # Right now:
   # - complains about android.hardware.touchscreen even though the default does

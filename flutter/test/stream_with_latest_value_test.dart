@@ -65,7 +65,7 @@ void main() {
     });
 
     test('does not update value when there is no listener', () async {
-      final source = StreamController.broadcast();
+      final source = StreamController<int>.broadcast();
       final sv = StreamWithLatestValue(source.stream);
       expect(sv.hasValue, false);
       source.add(0);

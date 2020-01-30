@@ -192,7 +192,7 @@ class _DeckUsersState extends State<DeckUsersWidget> {
       );
 
   Widget _buildUserAccessInfo(DeckAccessModel accessViewModel) {
-    Function filter;
+    bool Function(AccessType) filter;
     if (accessViewModel.access == AccessType.owner) {
       filter = (access) => access == AccessType.owner;
     } else {

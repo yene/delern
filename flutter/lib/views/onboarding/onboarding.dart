@@ -23,7 +23,7 @@ class _OnboardingState extends State<Onboarding> {
   bool _isIntroShown;
 
   @override
-  Widget build(BuildContext context) => FutureBuilder(
+  Widget build(BuildContext context) => FutureBuilder<SharedPreferences>(
       future: _prefs,
       builder: (context, pref) {
         if (pref.connectionState == ConnectionState.done) {
@@ -43,7 +43,7 @@ class _OnboardingState extends State<Onboarding> {
 
 class _OnboardingWidget extends StatelessWidget {
   static const _textStyle = TextStyle(color: Colors.white);
-  final Function callback;
+  final void Function() callback;
 
   const _OnboardingWidget({@required this.callback}) : assert(callback != null);
 

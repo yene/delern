@@ -100,8 +100,8 @@ void main() {
 
         final card =
             await driver.getWidgetDiagnostics(find.byType('FlipCardWidget'));
-        assert(card['front'], expectFront);
-        assert(card['back'], expectBack);
+        expect(card['front'], expectFront);
+        expect(card['back'], expectBack);
 
         await driver.tap(find.byType('CardDecorationWidget'));
         await driver.tap(find.byTooltip(knows
@@ -142,8 +142,8 @@ void main() {
 
       var card =
           await driver.getWidgetDiagnostics(find.byType('FlipCardWidget'));
-      assert(card['front'], 'front1');
-      assert(card['back'], 'back1');
+      expect(card['front'], 'front1');
+      expect(card['back'], 'back1');
 
       await driver.tap(find.byType('CardDecorationWidget'));
       await driver.tap(find.byTooltip(localizations.shuffleTooltip));
@@ -151,8 +151,8 @@ void main() {
       await driver.tap(find.byType('CardDecorationWidget'));
 
       card = await driver.getWidgetDiagnostics(find.byType('FlipCardWidget'));
-      assert(card['front'], 'front1');
-      assert(card['back'], 'back1');
+      expect(card['front'], 'front1');
+      expect(card['back'], 'back1');
     });
   });
 }

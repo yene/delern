@@ -105,7 +105,9 @@ class CardsIntervalLearningState extends State<CardsIntervalLearning> {
                   )
                 : ProgressIndicatorWidget(),
           ),
-          actions: _card == null ? null : <Widget>[_buildPopupMenu()],
+          actions: _card == null
+              ? null
+              : <Widget>[_buildPopupMenu(deck: _deck.value)],
         ),
         body: _card == null
             ? ProgressIndicatorWidget()
@@ -153,7 +155,10 @@ class CardsIntervalLearningState extends State<CardsIntervalLearning> {
                       valueListenable: _showReplyButtons,
                       builder: (context, showReplyButtons, child) =>
                           showReplyButtons
-                              ? _buildButtons(context)
+                              ? _buildButtons(
+                                  context: context,
+                                  deck: _deck.value,
+                                )
                               : ConstrainedBox(
                                   constraints: _kFloatingButtonHeightConstraint,
                                 ),
@@ -177,10 +182,14 @@ class CardsIntervalLearningState extends State<CardsIntervalLearning> {
               ),
       );
 
-  Widget _buildPopupMenu() => Builder(
+  Widget _buildPopupMenu({
+    @required DeckModel deck,
+  }) =>
+      Builder(
         builder: (context) => PopupMenuButton<_CardMenuItemType>(
           tooltip: localizations.of(context).menuTooltip,
-          onSelected: (itemType) => _onCardMenuItemSelected(context, itemType),
+          onSelected: (itemType) => _onCardMenuItemSelected(
+              context: context, deck: deck, item: itemType),
           itemBuilder: (context) => [
             for (final entry in _buildMenu(context).entries)
               PopupMenuItem<_CardMenuItemType>(
@@ -191,29 +200,45 @@ class CardsIntervalLearningState extends State<CardsIntervalLearning> {
         ),
       );
 
-  Widget _buildButtons(BuildContext context) => SlowOperationWidget((cb) => Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          FloatingActionButton(
-            // heroTag - https://stackoverflow.com/questions/46509553/
-            tooltip: localizations.of(context).doNotKnowCardTooltip,
-            heroTag: 'dontknow',
-            backgroundColor: Colors.red,
-            onPressed: cb(() => _answerCard(false, context)),
-            child: const Icon(Icons.clear),
-          ),
-          FloatingActionButton(
-            tooltip: localizations.of(context).knowCardTooltip,
-            heroTag: 'know',
-            backgroundColor: Colors.green,
-            onPressed: cb(() => _answerCard(true, context)),
-            child: const Icon(Icons.check),
-          ),
-        ],
-      ));
+  Widget _buildButtons({
+    @required BuildContext context,
+    @required DeckModel deck,
+  }) =>
+      SlowOperationWidget((cb) => Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              FloatingActionButton(
+                // heroTag - https://stackoverflow.com/questions/46509553/
+                tooltip: localizations.of(context).doNotKnowCardTooltip,
+                heroTag: 'dontknow',
+                backgroundColor: Colors.red,
+                onPressed: cb(() => _answerCard(
+                      context: context,
+                      deck: deck,
+                      answer: false,
+                    )),
+                child: const Icon(Icons.clear),
+              ),
+              FloatingActionButton(
+                tooltip: localizations.of(context).knowCardTooltip,
+                heroTag: 'know',
+                backgroundColor: Colors.green,
+                onPressed: cb(() => _answerCard(
+                      context: context,
+                      deck: deck,
+                      answer: true,
+                    )),
+                child: const Icon(Icons.check),
+              ),
+            ],
+          ));
 
-  Future<void> _answerCard(bool answer, BuildContext context) async {
-    final deckKey = _deck.value.key;
+  Future<void> _answerCard({
+    @required BuildContext context,
+    @required DeckModel deck,
+    @required bool answer,
+  }) async {
+    final deckKey = deck.key;
     if (_answersCount == 0) {
       unawaited(logStartLearning(deckKey));
     }
@@ -236,13 +261,17 @@ class CardsIntervalLearningState extends State<CardsIntervalLearning> {
     }
   }
 
-  void _onCardMenuItemSelected(BuildContext context, _CardMenuItemType item) {
+  void _onCardMenuItemSelected({
+    @required BuildContext context,
+    @required DeckModel deck,
+    @required _CardMenuItemType item,
+  }) {
     switch (item) {
       case _CardMenuItemType.edit:
-        if (_deck.value.access != AccessType.read) {
+        if (deck.access != AccessType.read) {
           openEditCardScreen(
             context,
-            deckKey: _deck.value.key,
+            deckKey: deck.key,
             cardKey: _card.value.key,
           );
         } else {
@@ -251,7 +280,7 @@ class CardsIntervalLearningState extends State<CardsIntervalLearning> {
         }
         break;
       case _CardMenuItemType.delete:
-        if (_deck.value.access != AccessType.read) {
+        if (deck.access != AccessType.read) {
           _deleteCard(context);
         } else {
           UserMessages.showMessage(Scaffold.of(context),

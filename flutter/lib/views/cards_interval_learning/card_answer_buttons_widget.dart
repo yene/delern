@@ -50,6 +50,7 @@ class CardAnswerButtonsWidget extends StatelessWidget {
       ));
 
   Future<void> _answerCard({
+    // TODO(dotdoom): do not pass context in stateless widget.
     @required BuildContext context,
     @required bool knows,
   }) async {

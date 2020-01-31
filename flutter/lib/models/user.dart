@@ -160,6 +160,12 @@ class User {
       final cardKey = _newKey();
       final cardPath = 'cards/${card.deckKey}/$cardKey';
       final scheduledCardPath = 'learning/$uid/${card.deckKey}/$cardKey';
+      var repeatAt = DateTime.now().millisecondsSinceEpoch.toDouble();
+      if (reverse) {
+        // Put reversed card into a random position behind to avoid it showing
+        // right next to the forward card.
+        repeatAt *= Random().nextDouble();
+      }
       updates.addAll({
         '$cardPath/front': reverse ? card.back : card.front,
         '$cardPath/back': reverse ? card.front : card.back,
@@ -174,9 +180,7 @@ class User {
         '$cardPath/createdAt': ServerValue.timestamp,
         '$scheduledCardPath/level': 0,
         // Set random time to shuffle cards when they are created
-        '$scheduledCardPath/repeatAt':
-            (DateTime.now().millisecondsSinceEpoch * Random().nextDouble())
-                .floor(),
+        '$scheduledCardPath/repeatAt': repeatAt.floor(),
       });
     }
 

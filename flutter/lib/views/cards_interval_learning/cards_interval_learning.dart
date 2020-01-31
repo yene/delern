@@ -158,6 +158,7 @@ class CardsIntervalLearningState extends State<CardsIntervalLearning> {
                               ? _buildButtons(
                                   context: context,
                                   deck: _deck.value,
+                                  scheduledCard: _scheduledCard,
                                 )
                               : ConstrainedBox(
                                   constraints: _kFloatingButtonHeightConstraint,
@@ -208,6 +209,7 @@ class CardsIntervalLearningState extends State<CardsIntervalLearning> {
   Widget _buildButtons({
     @required BuildContext context,
     @required DeckModel deck,
+    @required ScheduledCardModel scheduledCard,
   }) =>
       SlowOperationWidget((cb) => Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -220,6 +222,7 @@ class CardsIntervalLearningState extends State<CardsIntervalLearning> {
                 onPressed: cb(() => _answerCard(
                       context: context,
                       deck: deck,
+                      scheduledCard: scheduledCard,
                       answer: false,
                     )),
                 child: const Icon(Icons.clear),
@@ -231,6 +234,7 @@ class CardsIntervalLearningState extends State<CardsIntervalLearning> {
                 onPressed: cb(() => _answerCard(
                       context: context,
                       deck: deck,
+                      scheduledCard: scheduledCard,
                       answer: true,
                     )),
                 child: const Icon(Icons.check),
@@ -241,6 +245,7 @@ class CardsIntervalLearningState extends State<CardsIntervalLearning> {
   Future<void> _answerCard({
     @required BuildContext context,
     @required DeckModel deck,
+    @required ScheduledCardModel scheduledCard,
     @required bool answer,
   }) async {
     final deckKey = deck.key;
@@ -250,7 +255,7 @@ class CardsIntervalLearningState extends State<CardsIntervalLearning> {
     unawaited(logCardResponse(deckId: deckKey, knows: answer));
     try {
       await _user.learnCard(
-        unansweredScheduledCard: _scheduledCard,
+        unansweredScheduledCard: scheduledCard,
         knows: answer,
       );
     } catch (e, stacktrace) {

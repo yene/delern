@@ -107,7 +107,13 @@ class CardsIntervalLearningState extends State<CardsIntervalLearning> {
           ),
           actions: _card == null
               ? null
-              : <Widget>[_buildPopupMenu(deck: _deck.value, card: _card.value)],
+              : <Widget>[
+                  _buildPopupMenu(
+                    user: _user,
+                    deck: _deck.value,
+                    card: _card.value,
+                  ),
+                ],
         ),
         body: _card == null
             ? ProgressIndicatorWidget()
@@ -157,6 +163,7 @@ class CardsIntervalLearningState extends State<CardsIntervalLearning> {
                           showReplyButtons
                               ? _buildButtons(
                                   context: context,
+                                  user: _user,
                                   deck: _deck.value,
                                   scheduledCard: _scheduledCard,
                                 )
@@ -184,6 +191,7 @@ class CardsIntervalLearningState extends State<CardsIntervalLearning> {
       );
 
   Widget _buildPopupMenu({
+    @required User user,
     @required DeckModel deck,
     @required CardModel card,
   }) =>
@@ -192,6 +200,7 @@ class CardsIntervalLearningState extends State<CardsIntervalLearning> {
           tooltip: localizations.of(context).menuTooltip,
           onSelected: (itemType) => _onCardMenuItemSelected(
             context: context,
+            user: user,
             deck: deck,
             card: card,
             menuItem: itemType,
@@ -208,6 +217,7 @@ class CardsIntervalLearningState extends State<CardsIntervalLearning> {
 
   Widget _buildButtons({
     @required BuildContext context,
+    @required User user,
     @required DeckModel deck,
     @required ScheduledCardModel scheduledCard,
   }) =>
@@ -221,6 +231,7 @@ class CardsIntervalLearningState extends State<CardsIntervalLearning> {
                 backgroundColor: Colors.red,
                 onPressed: cb(() => _answerCard(
                       context: context,
+                      user: user,
                       deck: deck,
                       scheduledCard: scheduledCard,
                       answer: false,
@@ -233,6 +244,7 @@ class CardsIntervalLearningState extends State<CardsIntervalLearning> {
                 backgroundColor: Colors.green,
                 onPressed: cb(() => _answerCard(
                       context: context,
+                      user: user,
                       deck: deck,
                       scheduledCard: scheduledCard,
                       answer: true,
@@ -244,6 +256,7 @@ class CardsIntervalLearningState extends State<CardsIntervalLearning> {
 
   Future<void> _answerCard({
     @required BuildContext context,
+    @required User user,
     @required DeckModel deck,
     @required ScheduledCardModel scheduledCard,
     @required bool answer,
@@ -254,7 +267,7 @@ class CardsIntervalLearningState extends State<CardsIntervalLearning> {
     }
     unawaited(logCardResponse(deckId: deckKey, knows: answer));
     try {
-      await _user.learnCard(
+      await user.learnCard(
         unansweredScheduledCard: scheduledCard,
         knows: answer,
       );
@@ -273,6 +286,7 @@ class CardsIntervalLearningState extends State<CardsIntervalLearning> {
 
   void _onCardMenuItemSelected({
     @required BuildContext context,
+    @required User user,
     @required DeckModel deck,
     @required CardModel card,
     @required _CardMenuItemType menuItem,
@@ -292,7 +306,7 @@ class CardsIntervalLearningState extends State<CardsIntervalLearning> {
         break;
       case _CardMenuItemType.delete:
         if (deck.access != AccessType.read) {
-          _deleteCard(context: context, card: card);
+          _deleteCard(context: context, user: user, card: card);
         } else {
           UserMessages.showMessage(Scaffold.of(context),
               localizations.of(context).noDeletingWithReadAccessUserMessage);
@@ -302,8 +316,9 @@ class CardsIntervalLearningState extends State<CardsIntervalLearning> {
   }
 
   Future<void> _deleteCard({
-    BuildContext context,
-    CardModel card,
+    @required BuildContext context,
+    @required CardModel card,
+    @required User user,
   }) async {
     final locale = localizations.of(context);
     final saveChanges = await showSaveUpdatesDialog(
@@ -313,7 +328,7 @@ class CardsIntervalLearningState extends State<CardsIntervalLearning> {
         noAnswer: MaterialLocalizations.of(context).cancelButtonLabel);
     if (saveChanges) {
       try {
-        await _user.deleteCard(card: card);
+        await user.deleteCard(card: card);
         UserMessages.showMessage(Scaffold.of(context),
             localizations.of(context).cardDeletedUserMessage);
       } catch (e, stackTrace) {

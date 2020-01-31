@@ -107,7 +107,7 @@ class CardsIntervalLearningState extends State<CardsIntervalLearning> {
           ),
           actions: _card == null
               ? null
-              : <Widget>[_buildPopupMenu(deck: _deck.value)],
+              : <Widget>[_buildPopupMenu(deck: _deck.value, card: _card.value)],
         ),
         body: _card == null
             ? ProgressIndicatorWidget()
@@ -184,12 +184,17 @@ class CardsIntervalLearningState extends State<CardsIntervalLearning> {
 
   Widget _buildPopupMenu({
     @required DeckModel deck,
+    @required CardModel card,
   }) =>
       Builder(
         builder: (context) => PopupMenuButton<_CardMenuItemType>(
           tooltip: localizations.of(context).menuTooltip,
           onSelected: (itemType) => _onCardMenuItemSelected(
-              context: context, deck: deck, item: itemType),
+            context: context,
+            deck: deck,
+            card: card,
+            menuItem: itemType,
+          ),
           itemBuilder: (context) => [
             for (final entry in _buildMenu(context).entries)
               PopupMenuItem<_CardMenuItemType>(
@@ -264,15 +269,16 @@ class CardsIntervalLearningState extends State<CardsIntervalLearning> {
   void _onCardMenuItemSelected({
     @required BuildContext context,
     @required DeckModel deck,
-    @required _CardMenuItemType item,
+    @required CardModel card,
+    @required _CardMenuItemType menuItem,
   }) {
-    switch (item) {
+    switch (menuItem) {
       case _CardMenuItemType.edit:
         if (deck.access != AccessType.read) {
           openEditCardScreen(
             context,
             deckKey: deck.key,
-            cardKey: _card.value.key,
+            cardKey: card.key,
           );
         } else {
           UserMessages.showMessage(Scaffold.of(context),
@@ -281,7 +287,7 @@ class CardsIntervalLearningState extends State<CardsIntervalLearning> {
         break;
       case _CardMenuItemType.delete:
         if (deck.access != AccessType.read) {
-          _deleteCard(context);
+          _deleteCard(context: context, card: card);
         } else {
           UserMessages.showMessage(Scaffold.of(context),
               localizations.of(context).noDeletingWithReadAccessUserMessage);
@@ -290,7 +296,10 @@ class CardsIntervalLearningState extends State<CardsIntervalLearning> {
     }
   }
 
-  Future<void> _deleteCard(BuildContext context) async {
+  Future<void> _deleteCard({
+    BuildContext context,
+    CardModel card,
+  }) async {
     final locale = localizations.of(context);
     final saveChanges = await showSaveUpdatesDialog(
         context: context,
@@ -299,7 +308,7 @@ class CardsIntervalLearningState extends State<CardsIntervalLearning> {
         noAnswer: MaterialLocalizations.of(context).cancelButtonLabel);
     if (saveChanges) {
       try {
-        await _user.deleteCard(card: _card.value);
+        await _user.deleteCard(card: card);
         UserMessages.showMessage(Scaffold.of(context),
             localizations.of(context).cardDeletedUserMessage);
       } catch (e, stackTrace) {

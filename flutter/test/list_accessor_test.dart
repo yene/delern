@@ -14,174 +14,236 @@ void main() {
   StreamController<Event> onChildAdded;
   StreamController<Event> onChildRemoved;
   StreamController<Event> onChildChanged;
-  MyListAccessor accessor;
+  DatabaseReference dbReference;
 
   setUp(() {
     onChildAdded = StreamController<Event>();
     onChildChanged = StreamController<Event>();
     onChildRemoved = StreamController<Event>();
 
-    final dbReference = MockDatabaseReference();
+    dbReference = MockDatabaseReference();
     when(dbReference.onChildAdded).thenAnswer((_) => onChildAdded.stream);
     when(dbReference.onChildRemoved).thenAnswer((_) => onChildRemoved.stream);
     when(dbReference.onChildChanged).thenAnswer((_) => onChildChanged.stream);
     when(dbReference.once()).thenAnswer((_) => Future.value(FakeSnapshot()));
-
-    accessor = MyListAccessor(dbReference);
   });
 
   tearDown(() async {
     await onChildAdded.close();
     await onChildRemoved.close();
     await onChildChanged.close();
+  });
+
+  test('ListAccessor (first set)', () async {
+    // Since there's an unavoidable async gap between setUp and first test, we
+    // extract tests for the very first accessor.updates and accessor.events
+    // stream events (coming from dbReference.once) here.
+    final accessor = MyListAccessor(dbReference);
+
+    expect(
+        accessor.updates,
+        emitsInOrder([
+          BuiltList.of(<MyModel>[]),
+        ]));
+    expectListChangeRecord<MyModel>(await accessor.events.first, [], 0,
+        removed: [], addedCount: 0);
+
     accessor.close();
   });
 
-  group('ListAccessor.updates', () {
-    test('remove event', () async {
-      expect(
-          accessor.updates,
-          emitsInOrder([
-            BuiltList.of([const MyModel(key: '1')]),
-            BuiltList.of(<MyModel>[]),
-          ]));
-      onChildAdded.add(FakeEvent(snapshot: FakeSnapshot(key: '1')));
-      onChildRemoved.add(FakeEvent(snapshot: FakeSnapshot(key: '1')));
+  group('ListAccessor (subsequent changes)', () {
+    MyListAccessor accessor;
+
+    setUp(() {
+      accessor = MyListAccessor(dbReference);
     });
 
-    test('add event', () {
-      expect(
-          accessor.updates,
-          emitsInOrder([
-            BuiltList.of([const MyModel(key: '1')]),
-            BuiltList.of([const MyModel(key: '1'), const MyModel(key: '2')]),
-          ]));
-      onChildAdded
-        ..add(FakeEvent(snapshot: FakeSnapshot(key: '1')))
-        ..add(FakeEvent(snapshot: FakeSnapshot(key: '2')));
+    tearDown(() {
+      accessor.close();
     });
 
-    test('update event', () {
-      expect(
-          accessor.updates,
-          emitsInOrder([
-            BuiltList.of([const MyModel(key: '1', value: '3')]),
-            BuiltList.of([const MyModel(key: '1', value: '1')]),
-          ]));
-      onChildAdded.add(FakeEvent(snapshot: FakeSnapshot(key: '1', value: '3')));
-      onChildChanged
-          .add(FakeEvent(snapshot: FakeSnapshot(key: '1', value: '1')));
-    });
-  });
+    group('updates', () {
+      test('remove', () async {
+        final updates = StreamQueue(accessor.updates);
+        onChildAdded.add(FakeEvent(snapshot: FakeSnapshot(key: '1')));
+        expect(await updates.next, BuiltList.of([const MyModel(key: '1')]));
+        onChildRemoved.add(FakeEvent(snapshot: FakeSnapshot(key: '1')));
+        expect(await updates.next, BuiltList.of(<MyModel>[]));
+      });
 
-  group('ListAccessor.value', () {
-    test('remove currentValue', () async {
-      onChildAdded.add(FakeEvent(snapshot: FakeSnapshot(key: '1')));
-      await allEventsDelivered();
-      expect(accessor.value, BuiltList.of([const MyModel(key: '1')]));
-      onChildRemoved.add(FakeEvent(snapshot: FakeSnapshot(key: '1')));
-      await allEventsDelivered();
-      expect(accessor.value, BuiltList.of(<MyModel>[]));
-    });
+      test('add', () async {
+        final updates = StreamQueue(accessor.updates);
+        onChildAdded.add(FakeEvent(snapshot: FakeSnapshot(key: '1')));
+        expect(await updates.next, BuiltList.of([const MyModel(key: '1')]));
+        onChildAdded.add(FakeEvent(snapshot: FakeSnapshot(key: '2')));
+        expect(
+          await updates.next,
+          BuiltList.of([const MyModel(key: '1'), const MyModel(key: '2')]),
+        );
+      });
 
-    test('add currentValue', () async {
-      onChildAdded.add(FakeEvent(snapshot: FakeSnapshot(key: '1')));
-      await allEventsDelivered();
-      expect(accessor.value, BuiltList.of([const MyModel(key: '1')]));
-      onChildAdded.add(FakeEvent(snapshot: FakeSnapshot(key: '2')));
-      await allEventsDelivered();
-      expect(accessor.value,
-          BuiltList.of([const MyModel(key: '1'), const MyModel(key: '2')]));
-    });
-
-    test('update currentValue', () async {
-      onChildAdded.add(FakeEvent(snapshot: FakeSnapshot(key: '1', value: '3')));
-      await allEventsDelivered();
-      expect(
-          accessor.value, BuiltList.of([const MyModel(key: '1', value: '3')]));
-      onChildChanged
-          .add(FakeEvent(snapshot: FakeSnapshot(key: '1', value: '1')));
-      await allEventsDelivered();
-      expect(
-          accessor.value, BuiltList.of([const MyModel(key: '1', value: '1')]));
+      test('update', () async {
+        final updates = StreamQueue(accessor.updates);
+        onChildAdded
+            .add(FakeEvent(snapshot: FakeSnapshot(key: '1', value: '3')));
+        expect(
+          await updates.next,
+          BuiltList.of([const MyModel(key: '1', value: '3')]),
+        );
+        onChildChanged
+            .add(FakeEvent(snapshot: FakeSnapshot(key: '1', value: '1')));
+        expect(
+          await updates.next,
+          BuiltList.of([const MyModel(key: '1', value: '1')]),
+        );
+      });
     });
 
-    test('empty current value when initialized', () async {
-      expect(accessor.value, const Iterable.empty());
+    group('value', () {
+      test('remove', () async {
+        onChildAdded.add(FakeEvent(snapshot: FakeSnapshot(key: '1')));
+        await allEventsDelivered();
+        expect(accessor.value, BuiltList.of([const MyModel(key: '1')]));
+        onChildRemoved.add(FakeEvent(snapshot: FakeSnapshot(key: '1')));
+        await allEventsDelivered();
+        expect(accessor.value, BuiltList.of(<MyModel>[]));
+      });
+
+      test('add', () async {
+        onChildAdded.add(FakeEvent(snapshot: FakeSnapshot(key: '1')));
+        await allEventsDelivered();
+        expect(accessor.value, BuiltList.of([const MyModel(key: '1')]));
+        onChildAdded.add(FakeEvent(snapshot: FakeSnapshot(key: '2')));
+        await allEventsDelivered();
+        expect(accessor.value,
+            BuiltList.of([const MyModel(key: '1'), const MyModel(key: '2')]));
+      });
+
+      test('update', () async {
+        onChildAdded
+            .add(FakeEvent(snapshot: FakeSnapshot(key: '1', value: '3')));
+        await allEventsDelivered();
+        expect(accessor.value,
+            BuiltList.of([const MyModel(key: '1', value: '3')]));
+        onChildChanged
+            .add(FakeEvent(snapshot: FakeSnapshot(key: '1', value: '1')));
+        await allEventsDelivered();
+        expect(accessor.value,
+            BuiltList.of([const MyModel(key: '1', value: '1')]));
+      });
+
+      test('initial (empty)', () async {
+        expect(accessor.value, const Iterable.empty());
+      });
     });
-  });
 
-  group('DataListAccessor.events', () {
-    test('remove from event', () async {
-      final events = StreamQueue(accessor.events);
-      onChildAdded.add(FakeEvent(snapshot: FakeSnapshot(key: '1')));
-      expectListChangeRecord<MyModel>(
-          await events.next, [const MyModel(key: '1')], 0,
-          removed: [], addedCount: 1);
-      onChildRemoved.add(FakeEvent(snapshot: FakeSnapshot(key: '1')));
-      expectListChangeRecord<MyModel>(await events.next, [], 0,
-          removed: [const MyModel(key: '1')]);
+    group('events', () {
+      test('remove', () async {
+        final events = StreamQueue(accessor.events);
+        onChildAdded.add(FakeEvent(snapshot: FakeSnapshot(key: '1')));
+        expectListChangeRecord<MyModel>(
+            await events.next, [const MyModel(key: '1')], 0,
+            removed: [], addedCount: 1);
+        onChildRemoved.add(FakeEvent(snapshot: FakeSnapshot(key: '1')));
+        expectListChangeRecord<MyModel>(await events.next, [], 0,
+            removed: [const MyModel(key: '1')]);
+      });
+
+      test('add', () async {
+        final events = StreamQueue(accessor.events);
+        onChildAdded.add(FakeEvent(snapshot: FakeSnapshot(key: '1')));
+        expectListChangeRecord<MyModel>(
+            await events.next, [const MyModel(key: '1')], 0,
+            removed: [], addedCount: 1);
+        onChildAdded.add(FakeEvent(snapshot: FakeSnapshot(key: '2')));
+        expectListChangeRecord<MyModel>(await events.next,
+            [const MyModel(key: '1'), const MyModel(key: '2')], 1,
+            removed: [], addedCount: 1);
+      });
+
+      test('update', () async {
+        final events = StreamQueue(accessor.events);
+        onChildAdded
+            .add(FakeEvent(snapshot: FakeSnapshot(key: '1', value: '3')));
+        expectListChangeRecord<MyModel>(
+            await events.next, [const MyModel(key: '1', value: '3')], 0,
+            removed: [], addedCount: 1);
+        onChildChanged
+            .add(FakeEvent(snapshot: FakeSnapshot(key: '1', value: '1')));
+        expectListChangeRecord<MyModel>(
+            await events.next, [const MyModel(key: '1', value: '1')], 0,
+            removed: [const MyModel(key: '1', value: '3')], addedCount: 1);
+      });
     });
 
-    test('add to event', () async {
-      final events = StreamQueue(accessor.events);
-      onChildAdded.add(FakeEvent(snapshot: FakeSnapshot(key: '1')));
-      expectListChangeRecord<MyModel>(
-          await events.next, [const MyModel(key: '1')], 0,
-          removed: [], addedCount: 1);
-      onChildAdded.add(FakeEvent(snapshot: FakeSnapshot(key: '2')));
-      expectListChangeRecord<MyModel>(await events.next,
-          [const MyModel(key: '1'), const MyModel(key: '2')], 1,
-          removed: [], addedCount: 1);
-    });
+    group('getItem', () {
+      test('value', () async {
+        final item = accessor.getItem('test');
+        expect(item.hasValue, false);
+        expect(item.value, null);
 
-    test('update event', () async {
-      final events = StreamQueue(accessor.events);
-      onChildAdded.add(FakeEvent(snapshot: FakeSnapshot(key: '1', value: '3')));
-      expectListChangeRecord<MyModel>(
-          await events.next, [const MyModel(key: '1', value: '3')], 0,
-          removed: [], addedCount: 1);
-      onChildChanged
-          .add(FakeEvent(snapshot: FakeSnapshot(key: '1', value: '1')));
-      expectListChangeRecord<MyModel>(
-          await events.next, [const MyModel(key: '1', value: '1')], 0,
-          removed: [const MyModel(key: '1', value: '3')], addedCount: 1);
-    });
-  });
+        onChildAdded.add(FakeEvent(
+          snapshot: FakeSnapshot(key: 'test', value: 'hello'),
+        ));
+        await allEventsDelivered();
+        expect(item.hasValue, true);
+        expect(item.value, const MyModel(key: 'test', value: 'hello'));
 
-  group('DataListAccessorItem', () {
-    test('DataListAccessorItem.value', () async {
-      final item = accessor.getItem('test');
-      expect(item.hasValue, false);
-      expect(item.value, null);
+        onChildChanged.add(FakeEvent(
+          snapshot: FakeSnapshot(key: 'test', value: 'world'),
+        ));
+        await allEventsDelivered();
+        expect(item.hasValue, true);
+        expect(item.value, const MyModel(key: 'test', value: 'world'));
 
-      onChildAdded.add(FakeEvent(
-        snapshot: FakeSnapshot(key: 'test', value: 'hello'),
-      ));
-      await allEventsDelivered();
-      expect(item.hasValue, true);
-      expect(item.value, const MyModel(key: 'test', value: 'hello'));
+        onChildRemoved.add(FakeEvent(
+          snapshot: FakeSnapshot(key: 'test'),
+        ));
+        await allEventsDelivered();
+        expect(item.hasValue, false);
+        expect(item.value, null);
 
-      onChildChanged.add(FakeEvent(
-        snapshot: FakeSnapshot(key: 'test', value: 'world'),
-      ));
-      await allEventsDelivered();
-      expect(item.hasValue, true);
-      expect(item.value, const MyModel(key: 'test', value: 'world'));
+        onChildAdded.add(FakeEvent(
+          snapshot: FakeSnapshot(key: 'test', value: 'hello'),
+        ));
+        await allEventsDelivered();
+        expect(item.hasValue, true);
+        expect(item.value, const MyModel(key: 'test', value: 'hello'));
+      });
 
-      onChildRemoved.add(FakeEvent(
-        snapshot: FakeSnapshot(key: 'test'),
-      ));
-      await allEventsDelivered();
-      expect(item.hasValue, false);
-      expect(item.value, null);
-
-      onChildAdded.add(FakeEvent(
-        snapshot: FakeSnapshot(key: 'test', value: 'hello'),
-      ));
-      await allEventsDelivered();
-      expect(item.hasValue, true);
-      expect(item.value, const MyModel(key: 'test', value: 'hello'));
+      test('updates', () async {
+        final item = accessor.getItem('test');
+        // Test stream at least a couple times to ensure that multiple
+        // subscriptions work.
+        for (var i = 0; i < 2; ++i) {
+          // Can't use StreamQueue here because subscription to accessor.events
+          // from item.updates is indirect and happens after the first onChild*
+          // event is processed.
+          expect(
+              item.updates,
+              emitsInOrder([
+                const MyModel(key: 'test', value: 'hello'),
+                const MyModel(key: 'test', value: 'world'),
+                null,
+                const MyModel(key: 'test', value: 'hello'),
+                emitsDone,
+              ]));
+        }
+        onChildAdded.add(FakeEvent(
+          snapshot: FakeSnapshot(key: 'test', value: 'hello'),
+        ));
+        onChildChanged.add(FakeEvent(
+          snapshot: FakeSnapshot(key: 'test', value: 'world'),
+        ));
+        onChildRemoved.add(FakeEvent(
+          snapshot: FakeSnapshot(key: 'test'),
+        ));
+        onChildAdded.add(FakeEvent(
+          snapshot: FakeSnapshot(key: 'test', value: 'hello'),
+        ));
+        await allEventsDelivered();
+        accessor.close();
+      });
     });
   });
 }

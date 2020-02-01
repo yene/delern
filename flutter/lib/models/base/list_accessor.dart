@@ -32,6 +32,7 @@ class DataListAccessorItem<T extends KeyedListItem>
   ///   stream itself is not closed. If the item re-appears, it will be yielded;
   /// - when the list itself is gone (e.g. we are watching a Card in a Deck that
   ///   has been removed), then nothing is yielded and the stream is closed.
+  // TODO(dotdoom): make it broadcast and initialize once, at creation time.
   @override
   Stream<T> get updates async* {
     await for (final listChangedRecord in _listAccessor.events) {
@@ -83,8 +84,9 @@ abstract class DataListAccessor<T extends KeyedListItem>
   @override
   Stream<BuiltList<T>> get updates => _value.stream;
 
-  /// Updates to the current [value] described in the form of
-  /// [ListChangeRecord]. This stream is closed when this object is  [close]d.
+  /// Updates to the current [value] delivered in the form of
+  /// [ListChangeRecord]. This stream is closed when this [DataListAccessor] is
+  /// [close]d.
   Stream<ListChangeRecord<T>> get events => _events.stream;
 
   StreamSubscription<Event> _onChildAdded, _onChildChanged, _onChildRemoved;

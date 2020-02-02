@@ -13,13 +13,29 @@ abstract class ListAccessor<T> implements StreamWithValue<BuiltList<T>> {
   void close();
 }
 
-@immutable
 class DataListAccessorItem<T extends KeyedListItem>
     implements StreamWithValue<T> {
   final String key;
   final DataListAccessor<T> _listAccessor;
+  StreamController<T> _updates;
+  StreamSubscription<ListChangeRecord<T>> _eventsSubscription;
 
-  const DataListAccessorItem._(this._listAccessor, this.key);
+  DataListAccessorItem._(this._listAccessor, this.key) {
+    _updates = StreamController<T>.broadcast(
+      onListen: () {
+        _eventsSubscription = _listAccessor.events.listen((listChangedRecord) {
+          final addedItem = listChangedRecord.added
+              .firstWhere((item) => item.key == key, orElse: () => null);
+          final itemWasRemoved =
+              listChangedRecord.removed.any((item) => item.key == key);
+          if (addedItem != null || itemWasRemoved) {
+            _updates.add(addedItem);
+          }
+        }, onDone: () => _updates.close());
+      },
+      onCancel: () => _eventsSubscription.cancel(),
+    );
+  }
 
   /// Whether the underlying list is fully loaded and there is currently an item
   /// with this [key] in the list.
@@ -32,19 +48,8 @@ class DataListAccessorItem<T extends KeyedListItem>
   ///   stream itself is not closed. If the item re-appears, it will be yielded;
   /// - when the list itself is gone (e.g. we are watching a Card in a Deck that
   ///   has been removed), then nothing is yielded and the stream is closed.
-  // TODO(dotdoom): make it broadcast and initialize once, at creation time.
   @override
-  Stream<T> get updates async* {
-    await for (final listChangedRecord in _listAccessor.events) {
-      final addedItem = listChangedRecord.added
-          .firstWhere((item) => item.key == key, orElse: () => null);
-      final itemWasRemoved =
-          listChangedRecord.removed.any((item) => item.key == key);
-      if (addedItem != null || itemWasRemoved) {
-        yield addedItem;
-      }
-    }
-  }
+  Stream<T> get updates => _updates.stream;
 
   /// If the underlying list is fully loaded, and there is currently an item
   /// with this [key] in the list, returns the value. Otherwise, returns `null`.

@@ -65,7 +65,6 @@ class SignIn extends StatelessWidget {
 
   Widget _buildSignInControls(BuildContext context) => LayoutBuilder(
         builder: (_, viewportConstraints) => SingleChildScrollView(
-          scrollDirection: Axis.vertical,
           child: ConstrainedBox(
             // SingleChildScrollView will shrink-wrap the content, even when
             // there's enough room on the viewport (screen) to provide

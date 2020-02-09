@@ -246,7 +246,6 @@ class CardItemWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final emptyExpanded = Expanded(
-      flex: 1,
       child: Container(
         color: Colors.transparent,
       ),

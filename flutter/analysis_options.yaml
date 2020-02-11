@@ -57,3 +57,6 @@ linter:
 
     # TODO(dotdoom): add debugFillProperties.
     diagnostic_describe_all_properties: false
+
+    # TODO(dotdoom): support key parameter in widget constructors.
+    use_key_in_widget_constructors: false

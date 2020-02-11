@@ -45,8 +45,12 @@ void main() {
         emitsInOrder([
           BuiltList.of(<MyModel>[]),
         ]));
-    expectListChangeRecord<MyModel>(await accessor.events.first, [], 0,
-        removed: [], addedCount: 0);
+    expectListChangeRecord<MyModel>(
+      await accessor.events.first,
+      [],
+      0,
+      removed: [],
+    );
 
     accessor.close();
   });

@@ -16,9 +16,9 @@ jobs:
         device:
           # Flutter only supports 64-bit simulators:
           # https://flutter.dev/docs/get-started/install/macos.
-          - "iPhone 8 (13.2.2)"
-          - "iPhone 11 Pro Max (13.2.2)"
-          - "iPad Pro (12.9-inch) (3rd generation) (13.2.2)"
+          - "iPhone 8 (13.3)"
+          - "iPhone 11 Pro Max (13.3)"
+          - "iPad Pro (12.9-inch) (3rd generation) (13.3)"
     runs-on: macOS-latest
     env:
       FLUTTER_ROOT: /tmp/flutter
@@ -30,6 +30,13 @@ jobs:
           echo "$DEVICES"
           SIMULATOR_UDID=$(grep -F '${{ matrix.device }} [' <<<"${DEVICES?}" | \
               awk -F '[][]' '{ print $2 }')
+          echo '
+            If the following command fails, update the matrix -> device in
+            GitHub Actions workflow configuration (.yml file) to match one of
+            the existing devices listed above. This usually happens when GitHub
+            Actions OS X environment gets updated and is missing runtime
+            profile, which requires an Apple account credentials to download.
+          '
           xcrun simctl boot "${SIMULATOR_UDID?}"
       - uses: actions/checkout@v1
       - name: "Install dependencies"

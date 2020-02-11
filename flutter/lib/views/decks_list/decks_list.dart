@@ -156,7 +156,6 @@ class DeckListItemWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final emptyExpanded = Expanded(
-      flex: 1,
       child: Container(
         color: Colors.transparent,
       ),
@@ -220,6 +219,8 @@ class DeckListItemWidget extends StatelessWidget {
                     padding: const EdgeInsets.all(8),
                     child: Text(
                       localizations.of(context).learning(deck.name),
+                      // TODO(ksheremet): fix this to use non-deprecated value.
+                      // ignore: deprecated_member_use
                       style: Theme.of(context).textTheme.title,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,

@@ -14,6 +14,25 @@ void main() {
     Future<void> tapDialogButton(String text) =>
         driver.tap(find.text(text.toUpperCase()));
 
+    Future<void> expectCard(String front, String back) async {
+      // TODO(ksheremet): getText doesn't work with TextSpan which is used
+      // in Markdown text https://github.com/flutter/flutter/pull/48809.
+      //await driver.getText(find.text('front1'))
+
+      final card =
+          await driver.getWidgetDiagnostics(find.byType('FlipCardWidget'));
+
+      final properties = List<Map<String, dynamic>>.from(card['properties']);
+      expect(
+        properties.firstWhere((p) => p['name'] == 'front')['value'],
+        front,
+      );
+      expect(
+        properties.firstWhere((p) => p['name'] == 'back')['value'],
+        back,
+      );
+    }
+
     setUpAll(() async {
       driver = await FlutterDriver.connect();
       localizations = AppLocalizations();
@@ -94,15 +113,7 @@ void main() {
         @required String expectBack,
         @required bool knows,
       }) async {
-        // TODO(ksheremet): getText doesn't work with TextSpan which is used
-        // in Markdown text https://github.com/flutter/flutter/issues/16013
-        //expect(await driver.getText(find.text('front1')), 'front1');
-
-        final card =
-            await driver.getWidgetDiagnostics(find.byType('FlipCardWidget'));
-        assert(card['front'], expectFront);
-        assert(card['back'], expectBack);
-
+        await expectCard(expectFront, expectBack);
         await driver.tap(find.byType('CardDecorationWidget'));
         await driver.tap(find.byTooltip(knows
             ? localizations.knowCardTooltip
@@ -136,23 +147,14 @@ void main() {
       await driver.tap(find.byTooltip(localizations.viewLearningTooltip));
       await driver.waitFor(find.text('(1/1) My Test Deck'));
 
-      // TODO(ksheremet): getText doesn't work with TextSpan which is used
-      // in Markdown text https://github.com/flutter/flutter/issues/16013
-      //expect(await driver.getText(find.text('front1')), 'front1');
-
-      var card =
-          await driver.getWidgetDiagnostics(find.byType('FlipCardWidget'));
-      assert(card['front'], 'front1');
-      assert(card['back'], 'back1');
+      await expectCard('front1', 'back1');
 
       await driver.tap(find.byType('CardDecorationWidget'));
       await driver.tap(find.byTooltip(localizations.shuffleTooltip));
       await driver.waitFor(find.text('(1/1) My Test Deck'));
       await driver.tap(find.byType('CardDecorationWidget'));
 
-      card = await driver.getWidgetDiagnostics(find.byType('FlipCardWidget'));
-      assert(card['front'], 'front1');
-      assert(card['back'], 'back1');
+      await expectCard('front1', 'back1');
     });
   });
 }

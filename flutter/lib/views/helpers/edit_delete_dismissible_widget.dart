@@ -2,7 +2,7 @@ import 'package:delern_flutter/flutter/styles.dart' as app_styles;
 import 'package:flutter/material.dart';
 
 typedef DeleteCallback = Future<bool> Function();
-typedef EditCallback = Function();
+typedef EditCallback = void Function();
 
 class EditDeleteDismissible extends StatelessWidget {
   final Widget child;
@@ -13,7 +13,7 @@ class EditDeleteDismissible extends StatelessWidget {
   const EditDeleteDismissible({
     @required this.child,
     @required this.iconSize,
-    @required key,
+    @required Key key,
     this.onDelete,
     this.onEdit,
   })  : assert(child != null),

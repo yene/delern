@@ -103,7 +103,7 @@ class _CardsViewLearningState extends State<CardsViewLearning>
                           final value = (1 - ((page - index).abs() * 0.3))
                               .clamp(0.0, 1.0);
                           final transformValue =
-                              Curves.easeOut.transform(value);
+                              Curves.easeOut.transform(value.toDouble());
                           return Center(
                               child: SizedBox(
                                   width: transformValue *

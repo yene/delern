@@ -35,7 +35,7 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
         }));
   }
 
-  Widget _buildTextLink(String text, Function onTap) => GestureDetector(
+  Widget _buildTextLink(String text, void Function() onTap) => GestureDetector(
         onTap: onTap,
         child: Padding(
           padding: const EdgeInsets.only(top: 8),

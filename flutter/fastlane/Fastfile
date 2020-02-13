@@ -120,7 +120,10 @@ end
 platform :android do
   desc 'Build a debug APK'
   lane :build do
-    flutter_build(debug: true)
+    # Occasionally build may fail due to a network error.
+    retry_on_exception do
+      flutter_build(debug: true)
+    end
   end
 
   desc 'Build a release AAB and publish it (including Store artifacts).'

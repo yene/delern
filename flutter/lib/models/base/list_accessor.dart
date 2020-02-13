@@ -6,6 +6,7 @@ import 'package:delern_flutter/models/base/list_change_record.dart';
 import 'package:delern_flutter/models/base/stream_with_latest_value.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/foundation.dart';
+import 'package:meta/meta.dart';
 
 // https://github.com/dart-lang/linter/issues/1826
 // ignore: one_member_abstracts
@@ -157,12 +158,15 @@ abstract class DataListAccessor<T extends KeyedListItem>
       DataListAccessorItem._(this, key);
 
   @protected
+  @visibleForOverriding
   T parseItem(String key, value);
 
   @protected
+  @visibleForOverriding
   T updateItem(T previous, String key, value) => parseItem(key, value);
 
   @protected
+  @visibleForOverriding
   void disposeItem(T item) {}
 
   /// Close this object and release associated resources. Typically used only

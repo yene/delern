@@ -13,7 +13,7 @@ part 'serializers.g.dart';
 class FirebaseDateTimeSerializer implements PrimitiveSerializer<DateTime> {
   final bool structured = false;
   @override
-  final Iterable<Type> types = BuiltList<Type>([DateTime]);
+  final Iterable<Type> types = BuiltList(<Type>[DateTime]);
   @override
   final String wireName = 'DateTime';
 

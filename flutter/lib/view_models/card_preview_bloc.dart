@@ -68,7 +68,7 @@ class CardPreviewBloc extends ScreenBloc {
   Sink<void> get onEditCardIntention => _onEditCardIntentionController.sink;
 
   final _doEditCardController = StreamController<void>();
-  Stream get doEditCard => _doEditCardController.stream;
+  Stream<void> get doEditCard => _doEditCardController.stream;
 
   final _doShowDeleteDialogController = StreamController<String>();
   Stream<String> get doShowDeleteDialog => _doShowDeleteDialogController.stream;

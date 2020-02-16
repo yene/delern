@@ -208,12 +208,10 @@ class User {
   Future<void> learnCard({
     @required ScheduledCardModel unansweredScheduledCard,
     @required bool knows,
-    @required bool learnBeyondHorizon,
   }) {
     final cardReply =
         CardReplyModel.fromScheduledCard(unansweredScheduledCard, reply: knows);
-    final scheduledCard = unansweredScheduledCard.answer(
-        knows: knows, learnBeyondHorizon: learnBeyondHorizon);
+    final scheduledCard = unansweredScheduledCard.answer(knows: knows);
     final scheduledCardPath =
         'learning/$uid/${scheduledCard.deckKey}/${scheduledCard.key}';
     final cardViewPath =
@@ -250,9 +248,7 @@ class User {
       '$deckAccessPath/access': access.toString(),
       '$deckPath/access': access.toString(),
     };
-    if ((await DeckAccessModel.get(deckKey: deck.key, key: shareWithUid).first)
-            .key ==
-        null) {
+    if (!deck.usersAccess.getItem(shareWithUid).hasValue) {
       // If there's no DeckAccess, assume the deck hasn't been shared yet, as
       // opposed to changing access level for a previously shared deck.
       updates.addAll({

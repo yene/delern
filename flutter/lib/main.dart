@@ -4,6 +4,7 @@ import 'package:delern_flutter/flutter/localization.dart';
 import 'package:delern_flutter/flutter/styles.dart' as app_styles;
 import 'package:delern_flutter/views/card_create_update/card_create_update.dart';
 import 'package:delern_flutter/views/card_preview/card_preview.dart';
+import 'package:delern_flutter/views/cards_interval_learning/cards_interval_learning.dart';
 import 'package:delern_flutter/views/decks_list/decks_list.dart';
 import 'package:delern_flutter/views/edit_deck/edit_deck.dart';
 import 'package:delern_flutter/views/helpers/auth_widget.dart';
@@ -55,6 +56,7 @@ class App extends StatelessWidget {
         CardCreateUpdate.routeNameNew: (_) => const CardCreateUpdate(),
         CardCreateUpdate.routeNameEdit: (_) => const CardCreateUpdate(),
         CardPreview.routeName: (_) => const CardPreview(),
+        CardsIntervalLearning.routeName: (_) => const CardsIntervalLearning(),
       },
       home: const DecksList(),
     );

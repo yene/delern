@@ -223,6 +223,7 @@ Twitter: https://twitter.com/dasdelern''',
         desc: 'Edit',
       );
 
+  // TODO(ksheremet): rename and changed to "Answered:".
   String watchedCards(int number) => Intl.message(
         'Watched: $number',
         args: [number],

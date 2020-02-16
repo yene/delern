@@ -30,6 +30,7 @@ class CardPreviewBloc extends ScreenBloc {
     _onDeleteCardController.stream.listen((_) async {
       try {
         await user.deleteCard(
+            // TODO(dotdoom): confirm that data (deck, card) exists.
             card: user.decks
                 .getItem(_deckKey)
                 .value

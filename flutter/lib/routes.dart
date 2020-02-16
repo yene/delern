@@ -31,13 +31,14 @@ Future<void> openEditDeckScreen(
     );
 
 Future<void> openLearnCardIntervalScreen(
-        BuildContext context, DeckModel deck) =>
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-          settings: const RouteSettings(name: CardsIntervalLearning.routeName),
-          builder: (context) => CardsIntervalLearning(deck: deck),
-        ));
+  BuildContext context, {
+  @required String deckKey,
+}) =>
+    Navigator.pushNamed(
+      context,
+      CardsIntervalLearning.routeName,
+      arguments: CardsIntervalLearning.buildArguments(deckKey: deckKey),
+    );
 
 Future<void> openLearnCardViewScreen(BuildContext context, DeckModel deck) =>
     Navigator.push(

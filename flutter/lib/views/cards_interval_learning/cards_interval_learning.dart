@@ -2,21 +2,19 @@ import 'dart:async';
 
 import 'package:delern_flutter/flutter/localization.dart' as localizations;
 import 'package:delern_flutter/flutter/styles.dart' as app_styles;
-import 'package:delern_flutter/flutter/user_messages.dart';
 import 'package:delern_flutter/models/base/stream_with_latest_value.dart';
 import 'package:delern_flutter/models/card_model.dart';
-import 'package:delern_flutter/models/deck_access_model.dart';
 import 'package:delern_flutter/models/deck_model.dart';
 import 'package:delern_flutter/models/scheduled_card_model.dart';
 import 'package:delern_flutter/models/user.dart';
 import 'package:delern_flutter/remote/analytics.dart';
-import 'package:delern_flutter/routes.dart';
+import 'package:delern_flutter/views/cards_interval_learning/card_actions_menu_widget.dart';
+import 'package:delern_flutter/views/cards_interval_learning/card_answer_buttons_widget.dart';
 import 'package:delern_flutter/views/helpers/auth_widget.dart';
 import 'package:delern_flutter/views/helpers/card_background_specifier.dart';
 import 'package:delern_flutter/views/helpers/flip_card_widget.dart';
 import 'package:delern_flutter/views/helpers/progress_indicator_widget.dart';
 import 'package:delern_flutter/views/helpers/save_updates_dialog.dart';
-import 'package:delern_flutter/views/helpers/slow_operation_widget.dart';
 import 'package:delern_flutter/views/helpers/stream_with_value_builder.dart';
 import 'package:delern_flutter/views/helpers/text_overflow_ellipsis_widget.dart';
 import 'package:flutter/material.dart';
@@ -105,7 +103,15 @@ class CardsIntervalLearningState extends State<CardsIntervalLearning> {
                   )
                 : ProgressIndicatorWidget(),
           ),
-          actions: _card == null ? null : <Widget>[_buildPopupMenu()],
+          actions: _card == null
+              ? null
+              : <Widget>[
+                  CardActionsMenuWidget(
+                    user: _user,
+                    deck: _deck.value,
+                    card: _card.value,
+                  ),
+                ],
         ),
         body: _card == null
             ? ProgressIndicatorWidget()
@@ -153,7 +159,26 @@ class CardsIntervalLearningState extends State<CardsIntervalLearning> {
                       valueListenable: _showReplyButtons,
                       builder: (context, showReplyButtons, child) =>
                           showReplyButtons
-                              ? _buildButtons(context)
+                              ? CardAnswerButtonsWidget(
+                                  user: _user,
+                                  scheduledCard: _scheduledCard,
+                                  onAnswer: (knows) {
+                                    if (_answersCount == 0) {
+                                      unawaited(
+                                          logStartLearning(_deck.value.key));
+                                    }
+                                    unawaited(logCardResponse(
+                                      deckId: _deck.value.key,
+                                      knows: knows,
+                                    ));
+
+                                    if (mounted) {
+                                      setState(() {
+                                        _answersCount++;
+                                      });
+                                    }
+                                  },
+                                )
                               : ConstrainedBox(
                                   constraints: _kFloatingButtonHeightConstraint,
                                 ),
@@ -176,109 +201,6 @@ class CardsIntervalLearningState extends State<CardsIntervalLearning> {
                 ],
               ),
       );
-
-  Widget _buildPopupMenu() => Builder(
-        builder: (context) => PopupMenuButton<_CardMenuItemType>(
-          tooltip: localizations.of(context).menuTooltip,
-          onSelected: (itemType) => _onCardMenuItemSelected(context, itemType),
-          itemBuilder: (context) => [
-            for (final entry in _buildMenu(context).entries)
-              PopupMenuItem<_CardMenuItemType>(
-                value: entry.key,
-                child: Text(entry.value),
-              ),
-          ],
-        ),
-      );
-
-  Widget _buildButtons(BuildContext context) => SlowOperationWidget((cb) => Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          FloatingActionButton(
-            // heroTag - https://stackoverflow.com/questions/46509553/
-            tooltip: localizations.of(context).doNotKnowCardTooltip,
-            heroTag: 'dontknow',
-            backgroundColor: Colors.red,
-            onPressed: cb(() => _answerCard(false, context)),
-            child: const Icon(Icons.clear),
-          ),
-          FloatingActionButton(
-            tooltip: localizations.of(context).knowCardTooltip,
-            heroTag: 'know',
-            backgroundColor: Colors.green,
-            onPressed: cb(() => _answerCard(true, context)),
-            child: const Icon(Icons.check),
-          ),
-        ],
-      ));
-
-  Future<void> _answerCard(bool answer, BuildContext context) async {
-    final deckKey = _deck.value.key;
-    if (_answersCount == 0) {
-      unawaited(logStartLearning(deckKey));
-    }
-    unawaited(logCardResponse(deckId: deckKey, knows: answer));
-    try {
-      await _user.learnCard(
-        unansweredScheduledCard: _scheduledCard,
-        knows: answer,
-      );
-    } catch (e, stacktrace) {
-      unawaited(
-          UserMessages.showError(() => Scaffold.of(context), e, stacktrace));
-      return;
-    }
-
-    if (mounted) {
-      setState(() {
-        _answersCount++;
-      });
-    }
-  }
-
-  void _onCardMenuItemSelected(BuildContext context, _CardMenuItemType item) {
-    switch (item) {
-      case _CardMenuItemType.edit:
-        if (_deck.value.access != AccessType.read) {
-          openEditCardScreen(
-            context,
-            deckKey: _deck.value.key,
-            cardKey: _card.value.key,
-          );
-        } else {
-          UserMessages.showMessage(Scaffold.of(context),
-              localizations.of(context).noEditingWithReadAccessUserMessage);
-        }
-        break;
-      case _CardMenuItemType.delete:
-        if (_deck.value.access != AccessType.read) {
-          _deleteCard(context);
-        } else {
-          UserMessages.showMessage(Scaffold.of(context),
-              localizations.of(context).noDeletingWithReadAccessUserMessage);
-        }
-        break;
-    }
-  }
-
-  Future<void> _deleteCard(BuildContext context) async {
-    final locale = localizations.of(context);
-    final saveChanges = await showSaveUpdatesDialog(
-        context: context,
-        changesQuestion: locale.deleteCardQuestion,
-        yesAnswer: locale.delete,
-        noAnswer: MaterialLocalizations.of(context).cancelButtonLabel);
-    if (saveChanges) {
-      try {
-        await _user.deleteCard(card: _card.value);
-        UserMessages.showMessage(Scaffold.of(context),
-            localizations.of(context).cardDeletedUserMessage);
-      } catch (e, stackTrace) {
-        unawaited(
-            UserMessages.showError(() => Scaffold.of(context), e, stackTrace));
-      }
-    }
-  }
 
   Future<void> _nextCardArrived(ScheduledCardModel scheduledCard) async {
     if (!mounted) {
@@ -315,10 +237,3 @@ class CardsIntervalLearningState extends State<CardsIntervalLearning> {
     _atLeastOneCardShown = true;
   }
 }
-
-enum _CardMenuItemType { edit, delete }
-
-Map<_CardMenuItemType, String> _buildMenu(BuildContext context) => {
-      _CardMenuItemType.edit: localizations.of(context).edit,
-      _CardMenuItemType.delete: localizations.of(context).delete,
-    };

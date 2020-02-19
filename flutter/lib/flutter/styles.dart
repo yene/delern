@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 const kPrimarySwatch = Colors.green;
 const kLightPrimaryColor = Color(0xFFC8E6C9);
 const kAccentColor = Colors.redAccent;
-final kScaffoldBackgroundColor = Colors.grey[200];
+const kScaffoldBackgroundColor = Colors.white;
 final kIconColor = Colors.grey[600];
 const kSecondaryTextDeckItemColor = Color(0xff757575);
 const kEditDismissibleColor = Color(0xFF2196F3);
@@ -13,6 +13,7 @@ const kHyperlinkColor = Colors.blueAccent;
 // "Facebook brand blue" color per instructions at
 // https://developers.facebook.com/docs/facebook-login/for-devices
 const kFacebookBlueColor = Color(0xFF1877F2);
+const kDeckItemColor = Colors.white;
 
 const double kMinItemHeight = 48;
 const double kMinIconHeight = 24;

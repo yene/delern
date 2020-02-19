@@ -1,3 +1,4 @@
+import 'package:delern_flutter/flutter/styles.dart' as app_styles;
 import 'package:flutter/material.dart';
 
 class CardDecorationWidget extends StatelessWidget {
@@ -9,11 +10,14 @@ class CardDecorationWidget extends StatelessWidget {
         assert(child != null);
 
   @override
-  Widget build(BuildContext context) => DecoratedBox(
-        decoration: BoxDecoration(
-          borderRadius: const BorderRadius.all(Radius.circular(4)),
-          gradient: gradient,
+  Widget build(BuildContext context) => Card(
+        elevation: app_styles.kCardElevation,
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            borderRadius: const BorderRadius.all(Radius.circular(4)),
+            gradient: gradient,
+          ),
+          child: child,
         ),
-        child: child,
       );
 }

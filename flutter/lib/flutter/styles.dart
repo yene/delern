@@ -23,12 +23,13 @@ const double kIconDeckPadding = 15;
 const double kItemElevation = 4;
 const double kItemListHeightRatio = 0.1;
 const double kItemListPaddingRatio = kItemListHeightRatio * 0.08;
+const double kCardElevation = 6;
 
 final Map<Gender, List<Color>> cardBackgroundColors = {
-  Gender.noGender: [Colors.green[400], Colors.green[200]],
-  Gender.masculine: [Colors.blue[400], Colors.lightBlue[200]],
-  Gender.feminine: [Colors.red[400], Colors.red[200]],
-  Gender.neuter: [Colors.amber[400], Colors.yellow[200]],
+  Gender.noGender: [Colors.white70, Colors.white],
+  Gender.masculine: [Colors.blueAccent[100], Colors.blue[100]],
+  Gender.feminine: [Colors.pinkAccent[100], Colors.pink[100]],
+  Gender.neuter: [Colors.amberAccent[100], Colors.amber[100]],
 };
 
 final Color signInBackgroundColor = Colors.greenAccent[100];

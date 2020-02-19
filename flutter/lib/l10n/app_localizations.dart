@@ -223,12 +223,11 @@ Twitter: https://twitter.com/dasdelern''',
         desc: 'Edit',
       );
 
-  // TODO(ksheremet): rename and changed to "Answered:".
-  String watchedCards(int number) => Intl.message(
-        'Watched: $number',
+  String answeredCards(int number) => Intl.message(
+        'Answered: $number',
         args: [number],
-        name: 'watchedCards',
-        desc: 'watchedCards',
+        name: 'answeredCards',
+        desc: 'Label for number of answered cards',
       );
 
   String get basicDeckType => Intl.message(

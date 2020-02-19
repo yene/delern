@@ -1,6 +1,6 @@
 {
   "@@locale": "en_US",
-  "@@last_modified": "2020-01-13T21:07:23.602054",
+  "@@last_modified": "2020-02-19T11:08:17.675674",
   "navigationDrawerSignOut": "Sign Out",
   "@navigationDrawerSignOut": {
     "description": "Sign Out in Navigation Drawer",
@@ -234,9 +234,9 @@
     "placeholders": {
     }
   },
-  "watchedCards": "Watched: {number}",
-  "@watchedCards": {
-    "description": "watchedCards",
+  "answeredCards": "Answered: {number}",
+  "@answeredCards": {
+    "description": "Label for number of answered cards",
     "type": "text",
     "placeholders": {
       "number": {

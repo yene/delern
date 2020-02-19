@@ -192,7 +192,9 @@ class CardsIntervalLearningState extends State<CardsIntervalLearning> {
                       // the display.
                       SafeArea(
                         child: Text(
-                          localizations.of(context).watchedCards(_answersCount),
+                          localizations
+                              .of(context)
+                              .answeredCards(_answersCount),
                           style: app_styles.secondaryText,
                         ),
                       ),

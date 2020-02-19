@@ -19,18 +19,18 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'en_US';
 
-  static m0(numberOfCards, total) => "${numberOfCards} of ${total} to learn";
+  static m0(number) => "Answered: ${number}";
 
-  static m1(date) =>
+  static m1(numberOfCards, total) => "${numberOfCards} of ${total} to learn";
+
+  static m2(date) =>
       "Next card to learn is suggested at ${date}. Would you like to continue learning anyway?";
 
-  static m2(url) => "Could not launch url ${url}";
+  static m3(url) => "Could not launch url ${url}";
 
-  static m3(deckName) => "Learning: ${deckName}";
+  static m4(deckName) => "Learning: ${deckName}";
 
-  static m4(number) => "Cards in the deck: ${number}";
-
-  static m5(number) => "Watched: ${number}";
+  static m5(number) => "Cards in the deck: ${number}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function>{
@@ -39,6 +39,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "addCardsDeckMenu": MessageLookupByLibrary.simpleMessage("Add Cards"),
         "addDeckTooltip": MessageLookupByLibrary.simpleMessage("Add Deck"),
         "anonymous": MessageLookupByLibrary.simpleMessage("Anonymous"),
+        "answeredCards": m0,
         "appLogoName":
             MessageLookupByLibrary.simpleMessage("Delern Flashcards"),
         "appNotInstalledSharingDeck": MessageLookupByLibrary.simpleMessage(
@@ -53,13 +54,13 @@ class MessageLookup extends MessageLookupByLibrary {
             "Card and reversed card were added"),
         "cardDeletedUserMessage":
             MessageLookupByLibrary.simpleMessage("Card was deleted"),
-        "cardsToLearnLabel": m0,
+        "cardsToLearnLabel": m1,
         "continueAnonymously":
             MessageLookupByLibrary.simpleMessage("Continue Anonymously"),
         "continueEditingQuestion": MessageLookupByLibrary.simpleMessage(
             "You have unsaved changes. Would you like to continue editing?"),
-        "continueLearningQuestion": m1,
-        "couldNotLaunchUrl": m2,
+        "continueLearningQuestion": m2,
+        "couldNotLaunchUrl": m3,
         "createDeckTooltip":
             MessageLookupByLibrary.simpleMessage("Create deck"),
         "deck": MessageLookupByLibrary.simpleMessage("Deck"),
@@ -113,7 +114,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "learnIntroDescription": MessageLookupByLibrary.simpleMessage(
             "Learn in any place and offline as well"),
         "learnIntroTitle": MessageLookupByLibrary.simpleMessage("Learn"),
-        "learning": m3,
+        "learning": m4,
         "legacyAcceptanceLabel": MessageLookupByLibrary.simpleMessage(
             "By using this app you accept the "),
         "legacyPartsConnector":
@@ -148,7 +149,7 @@ class MessageLookup extends MessageLookupByLibrary {
                 "You cannot edit card with a read access."),
         "noSharingAccessUserMessage": MessageLookupByLibrary.simpleMessage(
             "Only owner of deck can share it."),
-        "numberOfCards": m4,
+        "numberOfCards": m5,
         "offlineProfileTooltip":
             MessageLookupByLibrary.simpleMessage("Profile (you are offline)"),
         "offlineUserMessage": MessageLookupByLibrary.simpleMessage(
@@ -201,7 +202,6 @@ class MessageLookup extends MessageLookupByLibrary {
         "viewLearning": MessageLookupByLibrary.simpleMessage("View"),
         "viewLearningTooltip": MessageLookupByLibrary.simpleMessage(
             "Start learning all cards in any order"),
-        "watchedCards": m5,
         "whoHasAccessLabel":
             MessageLookupByLibrary.simpleMessage("Who has access"),
         "yes": MessageLookupByLibrary.simpleMessage("Yes")

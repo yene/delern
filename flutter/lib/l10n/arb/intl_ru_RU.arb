@@ -226,9 +226,9 @@
     "placeholders": {
     }
   },
-  "watchedCards": "Просмотрено: {number}",
-  "@watchedCards": {
-    "description": "watchedCards",
+  "answeredCards": "Отвечено: {number}",
+  "@answeredCards": {
+    "description": "Label for number of answered cards",
     "type": "text",
     "placeholders": {
       "number": {

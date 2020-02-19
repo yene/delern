@@ -19,18 +19,18 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'ru_RU';
 
-  static m0(numberOfCards, total) => "${numberOfCards} из ${total} на изучение";
+  static m0(number) => "Отвечено: ${number}";
 
-  static m1(date) =>
+  static m1(numberOfCards, total) => "${numberOfCards} из ${total} на изучение";
+
+  static m2(date) =>
       "Следующая карточка рекомендуется к повторению ${date}. Вы хотите продолжить изучение?";
 
-  static m2(url) => "Не удалось запустить ссылку ${url}";
+  static m3(url) => "Не удалось запустить ссылку ${url}";
 
-  static m3(deckName) => "Изучение: ${deckName}";
+  static m4(deckName) => "Изучение: ${deckName}";
 
-  static m4(number) => "Карточек в списке: ${number}";
-
-  static m5(number) => "Просмотрено: ${number}";
+  static m5(number) => "Карточек в списке: ${number}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function>{
@@ -43,6 +43,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Добавить список"),
         "anonymous":
             MessageLookupByLibrary.simpleMessage("Анонимный пользователь"),
+        "answeredCards": m0,
         "appLogoName":
             MessageLookupByLibrary.simpleMessage("Delern Флэшкарточки"),
         "appNotInstalledSharingDeck": MessageLookupByLibrary.simpleMessage(
@@ -58,13 +59,13 @@ class MessageLookup extends MessageLookupByLibrary {
             "Карточка и обратная карточка были добавлены"),
         "cardDeletedUserMessage":
             MessageLookupByLibrary.simpleMessage("Карточка удалена"),
-        "cardsToLearnLabel": m0,
+        "cardsToLearnLabel": m1,
         "continueAnonymously":
             MessageLookupByLibrary.simpleMessage("Продолжить Анонимно"),
         "continueEditingQuestion": MessageLookupByLibrary.simpleMessage(
             "У Вас есть несохраненные изменения. Хотите продолжить редактирование?"),
-        "continueLearningQuestion": m1,
-        "couldNotLaunchUrl": m2,
+        "continueLearningQuestion": m2,
+        "couldNotLaunchUrl": m3,
         "createDeckTooltip":
             MessageLookupByLibrary.simpleMessage("Создать список"),
         "deck": MessageLookupByLibrary.simpleMessage("Список"),
@@ -125,7 +126,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "learnIntroDescription": MessageLookupByLibrary.simpleMessage(
             "Изучайте в любом месте, а также без сети"),
         "learnIntroTitle": MessageLookupByLibrary.simpleMessage("Изучайте"),
-        "learning": m3,
+        "learning": m4,
         "legacyAcceptanceLabel": MessageLookupByLibrary.simpleMessage(
             "При использовании приложения Вы соглашаетесь с  "),
         "legacyPartsConnector": MessageLookupByLibrary.simpleMessage(" и  "),
@@ -159,7 +160,7 @@ class MessageLookup extends MessageLookupByLibrary {
                 "Вы не можете редактировать карточки с доступом на чтение."),
         "noSharingAccessUserMessage": MessageLookupByLibrary.simpleMessage(
             "Только владелец может поделиться списком."),
-        "numberOfCards": m4,
+        "numberOfCards": m5,
         "offlineProfileTooltip":
             MessageLookupByLibrary.simpleMessage("Профиль (Вы не в сети)"),
         "offlineUserMessage": MessageLookupByLibrary.simpleMessage(
@@ -216,7 +217,6 @@ class MessageLookup extends MessageLookupByLibrary {
         "viewLearning": MessageLookupByLibrary.simpleMessage("Просмотр"),
         "viewLearningTooltip": MessageLookupByLibrary.simpleMessage(
             "Начать изучение всех карточек в любом порядке"),
-        "watchedCards": m5,
         "whoHasAccessLabel":
             MessageLookupByLibrary.simpleMessage("У кого есть доступ"),
         "yes": MessageLookupByLibrary.simpleMessage("Да")

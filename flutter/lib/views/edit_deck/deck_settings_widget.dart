@@ -115,8 +115,8 @@ class _DeckSettingsWidgetState extends State<DeckSettingsWidget> {
 
   Widget _buildDeckType(DeckType deckType, List<Widget> ruleList) => Material(
         color: _currentDeckType == deckType
-            ? Colors.grey
-            : app_styles.kScaffoldBackgroundColor,
+            ? app_styles.kCurrentDeckTypeColor
+            : app_styles.kGeneralDeckTypeColor,
         borderRadius: const BorderRadius.all(Radius.circular(4)),
         child: InkWell(
           splashColor: Theme.of(context).splashColor,

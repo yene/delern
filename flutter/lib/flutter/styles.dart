@@ -14,6 +14,8 @@ const kHyperlinkColor = Colors.blueAccent;
 // https://developers.facebook.com/docs/facebook-login/for-devices
 const kFacebookBlueColor = Color(0xFF1877F2);
 const kDeckItemColor = Colors.white;
+const kCurrentDeckTypeColor = Colors.grey;
+final kGeneralDeckTypeColor = Colors.grey[200];
 
 const double kMinItemHeight = 48;
 const double kMinIconHeight = 24;

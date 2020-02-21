@@ -1,5 +1,4 @@
 import 'package:delern_flutter/flutter/styles.dart' as app_styles;
-import 'package:delern_flutter/views/helpers/card_decoration_widget.dart';
 import 'package:delern_flutter/views/helpers/non_scrolling_markdown_widget.dart';
 import 'package:delern_flutter/views/helpers/tags_widget.dart';
 import 'package:flutter/material.dart';
@@ -22,7 +21,7 @@ class CardDisplayWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Padding(
         padding: const EdgeInsets.all(8),
-        child: CardDecorationWidget(
+        child: Card(
           color: color,
           child: ListView(
             padding: const EdgeInsets.all(20),

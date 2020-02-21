@@ -83,32 +83,34 @@ class _DeckSettingsWidgetState extends State<DeckSettingsWidget> {
   Widget _buildGermanDeckType() {
     final ruleList = [
       // TODO(dotdoom): Refactor: move logic to card_background_specifier
-      _buildRule('der', getEditCardGradientFromGender(Gender.masculine)),
-      _buildRule('die, eine', getEditCardGradientFromGender(Gender.feminine)),
-      _buildRule('das', getEditCardGradientFromGender(Gender.neuter)),
+      _buildRule('der', app_styles.cardBackgroundColors[Gender.masculine][0]),
+      _buildRule(
+          'die, eine', app_styles.cardBackgroundColors[Gender.feminine][0]),
+      _buildRule('das', app_styles.cardBackgroundColors[Gender.neuter][0]),
       _buildRule(localizations.of(context).other,
-          getEditCardGradientFromGender(Gender.noGender)),
+          app_styles.cardBackgroundColors[Gender.noGender][0]),
     ];
     return _buildDeckType(DeckType.german, ruleList);
   }
 
   Widget _buildSwissDeckType() {
     final ruleList = [
-      _buildRule('de, en', getEditCardGradientFromGender(Gender.masculine)),
-      _buildRule('d, e', getEditCardGradientFromGender(Gender.feminine)),
-      _buildRule('s, es', getEditCardGradientFromGender(Gender.neuter)),
+      _buildRule(
+          'de, en', app_styles.cardBackgroundColors[Gender.masculine][0]),
+      _buildRule('d, e', app_styles.cardBackgroundColors[Gender.feminine][0]),
+      _buildRule('s, es', app_styles.cardBackgroundColors[Gender.neuter][0]),
       _buildRule(localizations.of(context).other,
-          getEditCardGradientFromGender(Gender.noGender)),
+          app_styles.cardBackgroundColors[Gender.noGender][0]),
     ];
     return _buildDeckType(DeckType.swiss, ruleList);
   }
 
   Widget _buildBasicDeckType() {
     final ruleList = [
-      _buildRule('', getEditCardGradientFromGender(Gender.noGender)),
-      _buildRule('', getEditCardGradientFromGender(Gender.noGender)),
-      _buildRule('', getEditCardGradientFromGender(Gender.noGender)),
-      _buildRule('', getEditCardGradientFromGender(Gender.noGender)),
+      _buildRule('', app_styles.cardBackgroundColors[Gender.noGender][0]),
+      _buildRule('', app_styles.cardBackgroundColors[Gender.noGender][0]),
+      _buildRule('', app_styles.cardBackgroundColors[Gender.noGender][0]),
+      _buildRule('', app_styles.cardBackgroundColors[Gender.noGender][0]),
     ];
     return _buildDeckType(DeckType.basic, ruleList);
   }
@@ -155,13 +157,13 @@ class _DeckSettingsWidgetState extends State<DeckSettingsWidget> {
     return localizations.of(context).unknownDeckType;
   }
 
-  Widget _buildRule(String text, Gradient gradient) => ConstrainedBox(
+  Widget _buildRule(String text, Color color) => ConstrainedBox(
         constraints: const BoxConstraints(
           minWidth: _kMinDeckTypeWidgetWidth,
           minHeight: app_styles.kMinSecondaryTextSize + _kBorderPadding,
         ),
         child: Container(
-          decoration: BoxDecoration(gradient: gradient),
+          color: color,
           padding: const EdgeInsets.all(_kBorderPadding),
           child: Text(
             text,

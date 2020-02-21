@@ -1,3 +1,4 @@
+import 'package:delern_flutter/flutter/styles.dart' as app_styles;
 import 'package:delern_flutter/models/deck_model.dart';
 import 'package:delern_flutter/views/helpers/card_background_specifier.dart';
 import 'package:test/test.dart';
@@ -7,32 +8,32 @@ void main() {
     const swissDeckType = DeckType.swiss;
 
     test('feminine', () {
-      expect(specifyLearnCardBackgroundGradient(swissDeckType, 'd Muetter'),
-          getLearnCardGradientFromGender(Gender.feminine));
+      expect(specifyCardColors(swissDeckType, 'd Muetter'),
+          app_styles.cardBackgroundColors[Gender.feminine]);
 
-      expect(specifyLearnCardBackgroundGradient(swissDeckType, 'e Mappe'),
-          getLearnCardGradientFromGender(Gender.feminine));
+      expect(specifyCardColors(swissDeckType, 'e Mappe'),
+          app_styles.cardBackgroundColors[Gender.feminine]);
     });
 
     test('masculine', () {
-      expect(specifyLearnCardBackgroundGradient(swissDeckType, 'de Vater'),
-          getLearnCardGradientFromGender(Gender.masculine));
+      expect(specifyCardColors(swissDeckType, 'de Vater'),
+          app_styles.cardBackgroundColors[Gender.masculine]);
 
-      expect(specifyLearnCardBackgroundGradient(swissDeckType, 'en Vater'),
-          getLearnCardGradientFromGender(Gender.masculine));
+      expect(specifyCardColors(swissDeckType, 'en Vater'),
+          app_styles.cardBackgroundColors[Gender.masculine]);
     });
 
     test('neuter', () {
-      expect(specifyLearnCardBackgroundGradient(swissDeckType, 's Madchen'),
-          getLearnCardGradientFromGender(Gender.neuter));
+      expect(specifyCardColors(swissDeckType, 's Madchen'),
+          app_styles.cardBackgroundColors[Gender.neuter]);
 
-      expect(specifyLearnCardBackgroundGradient(swissDeckType, 'es Madchen'),
-          getLearnCardGradientFromGender(Gender.neuter));
+      expect(specifyCardColors(swissDeckType, 'es Madchen'),
+          app_styles.cardBackgroundColors[Gender.neuter]);
     });
 
     test('noGender', () {
-      expect(specifyLearnCardBackgroundGradient(swissDeckType, 'laufen'),
-          getLearnCardGradientFromGender(Gender.noGender));
+      expect(specifyCardColors(swissDeckType, 'laufen'),
+          app_styles.cardBackgroundColors[Gender.noGender]);
     });
   });
 
@@ -40,26 +41,26 @@ void main() {
     const germanDeckType = DeckType.german;
 
     test('feminine', () {
-      expect(specifyLearnCardBackgroundGradient(germanDeckType, 'die Mutter'),
-          getLearnCardGradientFromGender(Gender.feminine));
+      expect(specifyCardColors(germanDeckType, 'die Mutter'),
+          app_styles.cardBackgroundColors[Gender.feminine]);
 
-      expect(specifyLearnCardBackgroundGradient(germanDeckType, 'eine Lampe'),
-          getLearnCardGradientFromGender(Gender.feminine));
+      expect(specifyCardColors(germanDeckType, 'eine Lampe'),
+          app_styles.cardBackgroundColors[Gender.feminine]);
     });
 
     test('masculine', () {
-      expect(specifyLearnCardBackgroundGradient(germanDeckType, 'der Vater'),
-          getLearnCardGradientFromGender(Gender.masculine));
+      expect(specifyCardColors(germanDeckType, 'der Vater'),
+          app_styles.cardBackgroundColors[Gender.masculine]);
     });
 
     test('neuter', () {
-      expect(specifyLearnCardBackgroundGradient(germanDeckType, 'das Madchen'),
-          getLearnCardGradientFromGender(Gender.neuter));
+      expect(specifyCardColors(germanDeckType, 'das Madchen'),
+          app_styles.cardBackgroundColors[Gender.neuter]);
     });
 
     test('noGender', () {
-      expect(specifyLearnCardBackgroundGradient(germanDeckType, 'laufen'),
-          getLearnCardGradientFromGender(Gender.noGender));
+      expect(specifyCardColors(germanDeckType, 'laufen'),
+          app_styles.cardBackgroundColors[Gender.noGender]);
     });
   });
 
@@ -67,8 +68,8 @@ void main() {
     const basicDeckType = DeckType.basic;
 
     test('noColor', () {
-      expect(specifyLearnCardBackgroundGradient(basicDeckType, 'die Mutter'),
-          getLearnCardGradientFromGender(Gender.noGender));
+      expect(specifyCardColors(basicDeckType, 'die Mutter'),
+          app_styles.cardBackgroundColors[Gender.noGender]);
     });
   });
 }

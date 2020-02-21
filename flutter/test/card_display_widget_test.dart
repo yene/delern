@@ -1,3 +1,4 @@
+import 'package:delern_flutter/flutter/styles.dart' as app_styles;
 import 'package:delern_flutter/views/helpers/card_background_specifier.dart';
 import 'package:delern_flutter/views/helpers/card_display_widget.dart';
 import 'package:flutter/material.dart';
@@ -17,7 +18,7 @@ void main() {
           front: frontSide,
           back: backSide,
           tags: const ['#family', '#feminine', '#german'],
-          gradient: getLearnCardGradientFromGender(Gender.feminine),
+          color: app_styles.cardBackgroundColors[Gender.feminine][0],
           showBack: true,
         ),
       ),

@@ -9,17 +9,8 @@ enum Gender {
   noGender,
 }
 
-LinearGradient specifyLearnCardBackgroundGradient(
-    DeckType deckType, String text) {
-  final textGender = _specifyCardGender(deckType, text);
-  return getLearnCardGradientFromGender(textGender);
-}
-
-LinearGradient specifyEditCardBackgroundGradient(
-    DeckType deckType, String text) {
-  final textGender = _specifyCardGender(deckType, text);
-  return getEditCardGradientFromGender(textGender);
-}
+List<Color> specifyCardColors(DeckType deckType, String text) =>
+    app_styles.cardBackgroundColors[_specifyCardGender(deckType, text)];
 
 Gender _specifyCardGender(DeckType deckType, String text) {
   if (deckType == DeckType.basic) {
@@ -34,16 +25,6 @@ Gender _specifyCardGender(DeckType deckType, String text) {
   }
   return textGender;
 }
-
-LinearGradient getEditCardGradientFromGender(Gender gender) => LinearGradient(
-    begin: Alignment.topCenter,
-    end: Alignment.bottomCenter,
-    colors: app_styles.cardBackgroundColors[gender]);
-
-LinearGradient getLearnCardGradientFromGender(Gender gender) => LinearGradient(
-    begin: Alignment.topLeft,
-    end: Alignment.bottomRight,
-    colors: app_styles.cardBackgroundColors[gender]);
 
 Gender _swissCardGender(String text) {
   if (text.startsWith('de ') || text.startsWith('en ')) {

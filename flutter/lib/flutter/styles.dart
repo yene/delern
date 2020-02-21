@@ -27,12 +27,18 @@ const double kItemListHeightRatio = 0.1;
 const double kItemListPaddingRatio = kItemListHeightRatio * 0.08;
 const double kCardElevation = 6;
 
+/// Colors for the cards background. It has 2 colors to make front and back
+/// sides to look a bit different. First color is used for front side of the
+/// card and as a general one. The second color is used for the back side
+/// of cards.
 final Map<Gender, List<Color>> cardBackgroundColors = {
-  Gender.noGender: [Colors.white70, Colors.white],
-  Gender.masculine: [Colors.blueAccent[100], Colors.blue[100]],
-  Gender.feminine: [Colors.pinkAccent[100], Colors.pink[100]],
-  Gender.neuter: [Colors.amberAccent[100], Colors.amber[100]],
+  Gender.noGender: const [Color(0xFFF5F5F5), Colors.white],
+  Gender.masculine: [Colors.blueAccent[100], Colors.blue[200]],
+  Gender.feminine: [Colors.pinkAccent[100], Colors.pink[200]],
+  Gender.neuter: [Colors.amberAccent[100], Colors.amber[200]],
 };
+
+var color = Colors.white;
 
 final Color signInBackgroundColor = Colors.greenAccent[100];
 

@@ -91,6 +91,15 @@ end
 desc 'Run static analysis on Flutter files'
 lane :lint do
   flutter(args: %w(analyze))
+  Dir.chdir('..') do
+    Dir['lib/**/*.dart'].each do |dart_file|
+      if File.read(dart_file).include?('DateTime.now()')
+        UI.error(
+          "- #{dart_file}: use clock.now() instead of DateTime.now()."
+        )
+      end
+    end
+  end
 end
 
 desc 'Replace system-wide Android debug keystore and app-wide GoogleServices'

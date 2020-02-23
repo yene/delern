@@ -1,0 +1,31 @@
+name: backup
+
+on:
+  schedule:
+    # Every day at 4:03 UTC: https://crontab.guru/#3_4_*_*_*
+    - cron: "3 4 * * *"
+
+jobs:
+  firebase-database:
+    if: startsWith(github.repository, 'dasfoo/')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 8
+      - run: npm ci
+        working-directory: firebase
+      - run: >
+          gcloud auth activate-service-account --key-file <(
+            base64 -d <<<'${{ secrets.GOOGLE_APPLICATION_CREDENTIALS_DATA }}'
+          )
+      - run: |
+          firebase/node_modules/.bin/firebase \
+            --project delern-e1b33 \
+            database:get / |
+          gzip |
+          gsutil cp - "${BUCKET?}/firebase-database-$(($(date +%_j) % 100)).gz"
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+          BUCKET: gs://das-foo-delern-backup

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:delern_flutter/flutter/clock.dart';
 import 'package:delern_flutter/flutter/localization.dart' as localizations;
 import 'package:delern_flutter/flutter/styles.dart' as app_styles;
 import 'package:delern_flutter/models/base/stream_with_latest_value.dart';
@@ -217,8 +218,7 @@ class CardsIntervalLearningState extends State<CardsIntervalLearning> {
       _card = _deck.value.cards.getItem(scheduledCard.key);
     });
 
-    if (!_learnBeyondHorizon &&
-        scheduledCard.repeatAt.isAfter(DateTime.now())) {
+    if (!_learnBeyondHorizon && scheduledCard.repeatAt.isAfter(clock.now())) {
       if (!_atLeastOneCardShown) {
         _learnBeyondHorizon = await showSaveUpdatesDialog(
                 context: context,

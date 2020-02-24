@@ -4,6 +4,7 @@ import 'dart:math';
 
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
+import 'package:delern_flutter/flutter/clock.dart';
 import 'package:delern_flutter/models/base/keyed_list_item.dart';
 import 'package:delern_flutter/models/base/list_accessor.dart';
 import 'package:delern_flutter/models/deck_model.dart';
@@ -140,7 +141,7 @@ abstract class ScheduledCardModel
   ScheduledCardModel answer({@required bool knows}) {
     var newLevel = level;
 
-    final now = DateTime.now();
+    final now = clock.now();
     if (knows && (repeatAt == now || repeatAt.isBefore(now))) {
       newLevel = min(level + 1, levelDurations.length - 1);
     }

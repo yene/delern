@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:delern_flutter/flutter/clock.dart';
 import 'package:delern_flutter/models/base/list_accessor.dart';
 import 'package:delern_flutter/models/base/stream_with_latest_value.dart';
 import 'package:delern_flutter/models/card_model.dart';
@@ -160,7 +161,7 @@ class User {
       final cardKey = _newKey();
       final cardPath = 'cards/${card.deckKey}/$cardKey';
       final scheduledCardPath = 'learning/$uid/${card.deckKey}/$cardKey';
-      var repeatAt = DateTime.now().millisecondsSinceEpoch.toDouble();
+      var repeatAt = clock.now().millisecondsSinceEpoch.toDouble();
       if (reverse) {
         // Put reversed card into a random position behind to avoid it showing
         // right next to the forward card.

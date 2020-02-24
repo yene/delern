@@ -1,6 +1,7 @@
 import 'dart:core';
 
 import 'package:built_value/built_value.dart';
+import 'package:delern_flutter/flutter/clock.dart';
 import 'package:delern_flutter/models/base/keyed_list_item.dart';
 import 'package:delern_flutter/models/scheduled_card_model.dart';
 import 'package:meta/meta.dart';
@@ -28,6 +29,6 @@ abstract class CardReplyModel
             ..deckKey = sc.deckKey
             ..reply = reply
             ..levelBefore = sc.level
-            ..timestamp = DateTime.now())
+            ..timestamp = clock.now())
           .build();
 }

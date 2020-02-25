@@ -7,7 +7,7 @@ import 'package:built_value/serializer.dart';
 import 'package:delern_flutter/flutter/clock.dart';
 import 'package:delern_flutter/models/base/keyed_list_item.dart';
 import 'package:delern_flutter/models/base/list_accessor.dart';
-import 'package:delern_flutter/models/base/stream_with_latest_value.dart';
+import 'package:delern_flutter/models/base/stream_with_value.dart';
 import 'package:delern_flutter/models/card_model.dart';
 import 'package:delern_flutter/models/deck_access_model.dart';
 import 'package:delern_flutter/models/scheduled_card_model.dart';

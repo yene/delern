@@ -33,6 +33,13 @@ class _MappedStreamWithValue<TInput, TOutput>
 extension StreamWithValueExtensions<TInput> on StreamWithValue<TInput> {
   StreamWithValue<TOutput> map<TOutput>(_Converter<TInput, TOutput> convert) =>
       _MappedStreamWithValue(this, convert);
+
+  Stream<TInput> get valueWithUpdates async* {
+    if (hasValue) {
+      yield value;
+    }
+    yield* updates;
+  }
 }
 
 extension MapPerEvent<TInput> on Stream<TInput> {

@@ -1,4 +1,4 @@
-import 'package:delern_flutter/models/base/stream_with_latest_value.dart';
+import 'package:delern_flutter/models/base/stream_with_value.dart';
 import 'package:flutter/widgets.dart';
 
 /// Build a StreamBuilder widget with values supplied from StreamWithValue

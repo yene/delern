@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:delern_flutter/flutter/clock.dart';
 import 'package:delern_flutter/flutter/localization.dart' as localizations;
 import 'package:delern_flutter/flutter/styles.dart' as app_styles;
-import 'package:delern_flutter/models/base/stream_with_latest_value.dart';
+import 'package:delern_flutter/models/base/stream_with_value.dart';
 import 'package:delern_flutter/models/card_model.dart';
 import 'package:delern_flutter/models/deck_model.dart';
 import 'package:delern_flutter/models/scheduled_card_model.dart';

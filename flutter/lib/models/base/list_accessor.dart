@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:built_collection/built_collection.dart';
 import 'package:delern_flutter/models/base/keyed_list_item.dart';
 import 'package:delern_flutter/models/base/list_change_record.dart';
-import 'package:delern_flutter/models/base/stream_with_latest_value.dart';
+import 'package:delern_flutter/models/base/stream_with_value.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/foundation.dart';
 import 'package:meta/meta.dart';

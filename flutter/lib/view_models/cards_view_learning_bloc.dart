@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:built_collection/built_collection.dart';
-import 'package:delern_flutter/models/base/stream_with_latest_value.dart';
+import 'package:delern_flutter/models/base/stream_with_value.dart';
 import 'package:delern_flutter/models/card_model.dart';
 import 'package:delern_flutter/models/deck_model.dart';
 import 'package:delern_flutter/models/user.dart';

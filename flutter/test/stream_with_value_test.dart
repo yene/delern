@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:delern_flutter/models/base/stream_with_latest_value.dart';
+import 'package:delern_flutter/models/base/stream_with_value.dart';
 import 'package:test/test.dart';
 
 void main() {

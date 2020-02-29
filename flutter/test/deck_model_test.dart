@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:built_collection/src/list.dart';
+import 'package:delern_flutter/models/base/keyed_list_item.dart';
 import 'package:delern_flutter/models/base/list_accessor.dart';
 import 'package:delern_flutter/models/base/list_change_record.dart';
 import 'package:delern_flutter/models/card_model.dart';
@@ -7,17 +10,23 @@ import 'package:test/test.dart';
 
 void main() {
   group('DeckModel', () {
-    final deck = (DeckModelBuilder()..cards = FakeCardListAccessor()).build();
+    DeckModel deck;
+    Sink<ListChangeRecord<CardModel>> deckCards;
 
-    test('tags', () {
-      expect(deck.tags.value, {'#one', '#two', '#three'});
+    setUp(() {
+      deck = (DeckModelBuilder()
+            ..cards = _DataListAccessor((deckCards =
+                    StreamController<ListChangeRecord<CardModel>>())
+                .stream))
+          .build();
     });
-  });
-}
 
-class FakeCardListAccessor implements DataListAccessor<CardModel> {
-  @override
-  BuiltList<CardModel> get value => BuiltList.of([
+    tearDown(() {
+      deckCards.close();
+    });
+
+    test('tags', () async {
+      final cards = [
         (CardModelBuilder()
               ..front = '#one #two front'
               ..back = '#back back')
@@ -26,31 +35,70 @@ class FakeCardListAccessor implements DataListAccessor<CardModel> {
               ..front = '#three 45'
               ..back = '#not-a-tag')
             .build(),
-      ]);
+      ];
+      deckCards.add(ListChangeRecord.add(cards, 0, cards.length));
+      await null;
+      expect(deck.tags.value, {'#one', '#two', '#three'});
+    });
+  });
+}
+
+class _DataListAccessor<T extends KeyedListItem>
+    with _ListAccessorItemStubsMixin<T>
+    implements DataListAccessor<T> {
+  final _value = StreamController<BuiltList<T>>.broadcast();
+  final _events = StreamController<ListChangeRecord<T>>.broadcast();
+  final _currentValue = <T>[];
+  var _hasValue = false;
+
+  StreamSubscription<ListChangeRecord<T>> _sourceSubscription;
+
+  _DataListAccessor(Stream<ListChangeRecord<T>> source) {
+    _sourceSubscription = source.listen((change) {
+      _hasValue = true;
+      _currentValue
+        ..removeRange(change.index, change.removed.length)
+        ..insertAll(change.index, change.added);
+      _value.add(value);
+      _events.add(change);
+    });
+  }
 
   @override
-  bool get hasValue => true;
+  Stream<ListChangeRecord<T>> get events => _events.stream;
 
   @override
-  Stream<ListChangeRecord<CardModel>> get events => null;
+  DataListAccessorItem<T> getItem(String key) =>
+      DataListAccessorItem(this, key);
 
   @override
-  DataListAccessorItem<CardModel> getItem(String key) => null;
+  bool get hasValue => _hasValue;
 
   @override
-  Stream<BuiltList<CardModel>> get updates => null;
-
-  // The following methods are part of non-public interface, therefore unused.
+  Stream<BuiltList<T>> get updates => _value.stream;
 
   @override
-  CardModel parseItem(String key, value) => null;
+  BuiltList<T> get value => BuiltList<T>.of(_currentValue);
 
   @override
-  CardModel updateItem(CardModel previous, String key, value) => previous;
+  void close() {
+    _sourceSubscription.cancel();
+    _currentValue
+      ..forEach(disposeItem)
+      ..clear();
+    _events.close();
+    _value.close();
+  }
+}
+
+mixin _ListAccessorItemStubsMixin<T extends KeyedListItem>
+    implements DataListAccessor<T> {
+  @override
+  T parseItem(String key, value) => null;
 
   @override
-  void close() {}
+  T updateItem(T previous, String key, value) => parseItem(key, value);
 
   @override
-  void disposeItem(CardModel item) {}
+  void disposeItem(T item) {}
 }

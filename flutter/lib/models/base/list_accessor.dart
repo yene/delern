@@ -174,13 +174,14 @@ abstract class DataListAccessor<T extends KeyedListItem>
   /// looses access to this object.
   @override
   void close() {
-    _currentValue
-      ..forEach(disposeItem)
-      ..clear();
     _onChildAdded?.cancel();
     _onChildChanged?.cancel();
     _onChildRemoved?.cancel();
-    _events?.close();
+    _currentValue
+      ..forEach(disposeItem)
+      ..clear();
+    _events.close();
+    _value.close();
   }
 }
 

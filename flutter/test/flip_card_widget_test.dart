@@ -9,7 +9,7 @@ void main() {
   testWidgets('Flip card', (tester) async {
     const frontSide = 'der Vater';
     const backSide = 'father';
-    var _wasFlipped = false;
+    final hasBeenFlipped = ValueNotifier<bool>(null);
 
     // Widget must be wrapped in MaterialApp widget because it uses material
     // related classes.
@@ -21,21 +21,19 @@ void main() {
         front: frontSide,
         back: backSide,
         colors: app_styles.cardBackgroundColors[Gender.masculine],
-        onFirstFlip: () {
-          _wasFlipped = true;
-        },
+        hasBeenFlipped: hasBeenFlipped,
         key: UniqueKey(),
       ),
     ));
     await tester.pumpAndSettle();
     _expectText(tester.allWidgets, frontSide);
     // Back side wasn't showed
-    assert(!_wasFlipped);
+    assert(hasBeenFlipped.value == false);
     await tester.tap(find.byType(Card));
     await tester.pumpAndSettle();
     _expectText(tester.allWidgets, backSide);
-    // Back side was showed
-    assert(_wasFlipped);
+    // Back side has been shown.
+    assert(hasBeenFlipped.value == true);
   });
 }
 

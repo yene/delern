@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:delern_flutter/flutter/localization.dart' as localization;
@@ -15,7 +16,7 @@ class FlipCardWidget extends StatefulWidget {
   final String front;
   final String back;
   final app_styles.CardColor colors;
-  final CardFlipCallback onFirstFlip;
+  final ValueNotifier<bool> hasBeenFlipped;
 
   /// The [key] is required and must be unique to the card. E.g.:
   ///
@@ -35,7 +36,7 @@ class FlipCardWidget extends StatefulWidget {
     @required this.back,
     @required this.colors,
     @required Key key,
-    this.onFirstFlip,
+    this.hasBeenFlipped,
   })  : assert(key != null),
         super(key: key);
 
@@ -48,9 +49,7 @@ class FlipCardWidget extends StatefulWidget {
     properties
       ..add(StringProperty('front', front))
       ..add(StringProperty('back', back))
-      ..add(DiagnosticsProperty<app_styles.CardColor>('colors', colors))
-      ..add(
-          ObjectFlagProperty<CardFlipCallback>.has('onFirstFlip', onFirstFlip));
+      ..add(DiagnosticsProperty<app_styles.CardColor>('colors', colors));
   }
 }
 
@@ -64,12 +63,14 @@ class _FlipCardWidgetState extends State<FlipCardWidget>
   /// the next call to [build] method.
   bool _isFront = true;
 
-  /// Whether the current card was flipped at least once.
-  bool _wasFlipped = false;
-
   @override
   void initState() {
     super.initState();
+
+    // initState() is called during build, so we can't change value that other
+    // widgets (e.g. ValueListenableBuilder) might depend on.
+    scheduleMicrotask(() => widget.hasBeenFlipped?.value = false);
+
     _controller =
         AnimationController(vsync: this, duration: _kFlipCardDuration);
     _sizeAnimation = TweenSequence([
@@ -93,11 +94,8 @@ class _FlipCardWidgetState extends State<FlipCardWidget>
           setState(() {
             _isFront = shouldRenderFront;
           });
-          if (!_wasFlipped && !_isFront) {
-            _wasFlipped = true;
-            if (widget.onFirstFlip != null) {
-              widget.onFirstFlip();
-            }
+          if (widget.hasBeenFlipped != null && !_isFront) {
+            widget.hasBeenFlipped.value = true;
           }
         }
       });

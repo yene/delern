@@ -186,10 +186,13 @@ end
 platform :ios do
   desc 'Build a debug iOS package'
   lane :build do
-    flutter_build(
-      debug: true,
-      build_args: ['--no-codesign'],
-    )
+    # Occasionally build may fail due to a network error.
+    retry_on_exception do
+      flutter_build(
+        debug: true,
+        build_args: ['--no-codesign'],
+      )
+    end
   end
 
   desc 'Build a release iOS package and publish it (including Store artifacts).'

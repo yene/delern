@@ -40,12 +40,12 @@ abstract class ListChangeRecord<E>
           .build();
 
   factory ListChangeRecord.replace(
-          List<E> list, int index, Iterable<E> newElements) =>
+          List<E> list, int index, Iterable<E> removedElements) =>
       (ListChangeRecordBuilder<E>()
             ..object = ListBuilder<E>(list)
-            ..addedCount = newElements.length
+            ..addedCount = removedElements.length
             ..index = index
-            ..removed = ListBuilder<E>(newElements))
+            ..removed = ListBuilder<E>(removedElements))
           .build();
 
   /// What elements were added to [object].

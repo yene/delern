@@ -21,7 +21,8 @@ class DataListAccessorItem<T extends KeyedListItem>
   StreamController<T> _updates;
   StreamSubscription<ListChangeRecord<T>> _eventsSubscription;
 
-  DataListAccessorItem._(this._listAccessor, this.key) {
+  @visibleForTesting
+  DataListAccessorItem(this._listAccessor, this.key) {
     _updates = StreamController<T>.broadcast(
       onListen: () {
         _eventsSubscription = _listAccessor.events.listen((listChangedRecord) {
@@ -155,7 +156,7 @@ abstract class DataListAccessor<T extends KeyedListItem>
   }
 
   DataListAccessorItem<T> getItem(String key) =>
-      DataListAccessorItem._(this, key);
+      DataListAccessorItem(this, key);
 
   @protected
   @visibleForOverriding
@@ -174,13 +175,14 @@ abstract class DataListAccessor<T extends KeyedListItem>
   /// looses access to this object.
   @override
   void close() {
-    _currentValue
-      ..forEach(disposeItem)
-      ..clear();
     _onChildAdded?.cancel();
     _onChildChanged?.cancel();
     _onChildRemoved?.cancel();
-    _events?.close();
+    _currentValue
+      ..forEach(disposeItem)
+      ..clear();
+    _events.close();
+    _value.close();
   }
 }
 

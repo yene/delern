@@ -78,6 +78,12 @@ class SignIn extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
+                Text(localizations.of(context).signInWithLabel.toUpperCase(),
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w700,
+                    )),
                 const SignInButton(providerId: GoogleAuthProvider.providerId),
                 const SignInButton(providerId: FacebookAuthProvider.providerId),
                 ...?_getFeatures(context),

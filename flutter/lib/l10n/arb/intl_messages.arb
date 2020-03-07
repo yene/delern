@@ -1,6 +1,6 @@
 {
   "@@locale": "en_US",
-  "@@last_modified": "2020-03-07T10:34:29.577855",
+  "@@last_modified": "2020-03-07T11:54:06.470789",
   "navigationDrawerSignOut": "Sign Out",
   "@navigationDrawerSignOut": {
     "description": "Sign Out in Navigation Drawer",
@@ -43,14 +43,21 @@
     "placeholders": {
     }
   },
-  "signInWithGoogle": "Sign in with Google",
+  "signInWithGoogle": "Google",
   "@signInWithGoogle": {
     "description": "Sign in with Google Button",
     "type": "text",
     "placeholders": {
     }
   },
-  "signInWithFacebook": "Sign in with Facebook",
+  "signInWithLabel": "Sign in with:",
+  "@signInWithLabel": {
+    "description": "Sign in with lable before different providers",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "signInWithFacebook": "Facebook",
   "@signInWithFacebook": {
     "description": "Sign in with Facebook Button",
     "type": "text",

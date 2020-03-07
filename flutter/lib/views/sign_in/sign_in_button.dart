@@ -14,6 +14,7 @@ class SignInButton extends StatelessWidget {
   final String providerId;
 
   static const _buttonHeight = 48.0;
+  static const _buttonElevation = 4.0;
 
   const SignInButton({
     @required this.providerId,
@@ -28,7 +29,7 @@ class SignInButton extends StatelessWidget {
             color: Colors.white,
             providerIconAsset: 'images/google_sign_in.png',
             buttonText: Text(
-              localizations.of(context).signInWithGoogle,
+              localizations.of(context).signInWithGoogle.toUpperCase(),
               style: app_styles.primaryText,
               overflow: TextOverflow.ellipsis,
             ));
@@ -37,7 +38,7 @@ class SignInButton extends StatelessWidget {
             color: app_styles.kFacebookBlueColor,
             providerIconAsset: 'images/facebook_sign_in.png',
             buttonText: Text(
-              localizations.of(context).signInWithFacebook,
+              localizations.of(context).signInWithFacebook.toUpperCase(),
               style: app_styles.primaryText
                   .merge(const TextStyle(color: Colors.white)),
               overflow: TextOverflow.ellipsis,
@@ -75,6 +76,7 @@ class SignInButton extends StatelessWidget {
         child: SizedBox(
           height: _buttonHeight,
           child: RaisedButton(
+            elevation: _buttonElevation,
             onPressed: () =>
                 _signInWithProvider(context: context, provider: providerId),
             color: color,
@@ -87,7 +89,7 @@ class SignInButton extends StatelessWidget {
                 ),
                 Expanded(
                   child: Padding(
-                    padding: const EdgeInsets.only(left: 10),
+                    padding: const EdgeInsets.only(left: 24),
                     child: buttonText,
                   ),
                 ),

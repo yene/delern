@@ -52,9 +52,7 @@ final Map<Gender, CardColor> cardBackgroundColors = {
       backSideBackground: Colors.amber[200]),
 };
 
-var color = Colors.white;
-
-final Color signInBackgroundColor = Colors.greenAccent[100];
+final Color signInBackgroundColor = Colors.grey[50];
 
 final TextStyle primaryText = TextStyle(
   fontSize: 19,

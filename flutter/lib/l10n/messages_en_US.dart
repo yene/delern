@@ -184,10 +184,10 @@ class MessageLookup extends MessageLookupByLibrary {
                 "You have previously signed in to the application using this email, but with a different provider (e.g. Google instead of Facebook). Please sign in with the same provider you have used before."),
         "signInCredentialAlreadyInUseWarning": MessageLookupByLibrary.simpleMessage(
             "The account you have chosen is already registered with the application. If you continue with sign in, all data that you have created anonymously will be lost. Would you like to continue?"),
-        "signInWithFacebook":
-            MessageLookupByLibrary.simpleMessage("Sign in with Facebook"),
-        "signInWithGoogle":
-            MessageLookupByLibrary.simpleMessage("Sign in with Google"),
+        "signInWithFacebook": MessageLookupByLibrary.simpleMessage("Facebook"),
+        "signInWithGoogle": MessageLookupByLibrary.simpleMessage("Google"),
+        "signInWithLabel":
+            MessageLookupByLibrary.simpleMessage("Sign in with:"),
         "skip": MessageLookupByLibrary.simpleMessage("Skip"),
         "splashScreenFeatures": MessageLookupByLibrary.simpleMessage(
             "Data and progress are saved in the Cloud\nData and progress are synchronized across all your devices\nShare cards with your friends and colleagues"),

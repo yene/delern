@@ -199,10 +199,10 @@ class MessageLookup extends MessageLookupByLibrary {
                 "Вы уже регистрировались в приложении с этим адресом электронной почты, но с использованием другого сервиса (например, Google вместо Facebook). Пожалуйста, войдите с использованием того же сервиса, которым вы пользовались раньше"),
         "signInCredentialAlreadyInUseWarning": MessageLookupByLibrary.simpleMessage(
             "Вы уже регистрировались в приложении с этим аккаунтом. Если Вы продолжите, все данные, которые Вы создали анонимно, будут потеряны. Желаете продолжить?"),
-        "signInWithFacebook":
-            MessageLookupByLibrary.simpleMessage("Войти с помощью Facebook"),
-        "signInWithGoogle":
-            MessageLookupByLibrary.simpleMessage("Войти с помощью Google"),
+        "signInWithFacebook": MessageLookupByLibrary.simpleMessage("Facebook"),
+        "signInWithGoogle": MessageLookupByLibrary.simpleMessage("Google"),
+        "signInWithLabel":
+            MessageLookupByLibrary.simpleMessage("Войти с помощью:"),
         "skip": MessageLookupByLibrary.simpleMessage("Пропустить"),
         "splashScreenFeatures": MessageLookupByLibrary.simpleMessage(
             "Данные и прогресс сохранены в Облаке\nДанные и прогресс синхронизированы на всех Ваших устройствах\nДелитесь карточками со своими друзьями и коллегами"),

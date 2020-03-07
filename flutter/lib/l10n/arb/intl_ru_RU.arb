@@ -42,7 +42,7 @@
     "placeholders": {
     }
   },
-  "signInWithGoogle": "Войти с помощью Google",
+  "signInWithGoogle": "Google",
   "@signInWithGoogle": {
     "description": "Sign in with Google Button",
     "type": "text",
@@ -763,7 +763,7 @@
     "placeholders": {
     }
   },
-  "signInWithFacebook": "Войти с помощью Facebook",
+  "signInWithFacebook": "Facebook",
   "@signInWithFacebook": {
     "description": "Sign in with Facebook Button",
     "type": "text",
@@ -787,6 +787,13 @@
   "shuffleTooltip": "Перемешать карточки",
   "@shuffleTooltip": {
     "description": "Shuffle cards tooltip",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "signInWithLabel": "Войти с помощью:",
+  "@signInWithLabel": {
+    "description": "Sign in with lable before different providers",
     "type": "text",
     "placeholders": {
     }

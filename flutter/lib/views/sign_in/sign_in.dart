@@ -165,8 +165,10 @@ class SignIn extends StatelessWidget {
   }) =>
       TextSpan(
         text: text,
-        style: app_styles.secondaryText
-            .copyWith(decoration: TextDecoration.underline),
+        style: app_styles.secondaryText.copyWith(
+          decoration: TextDecoration.underline,
+          color: app_styles.kHyperlinkColor,
+        ),
         recognizer: TapGestureRecognizer()
           ..onTap = () {
             launchUrl(url, context);

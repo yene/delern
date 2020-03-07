@@ -61,7 +61,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Карточка удалена"),
         "cardsToLearnLabel": m1,
         "continueAnonymously":
-            MessageLookupByLibrary.simpleMessage("Продолжить Анонимно"),
+            MessageLookupByLibrary.simpleMessage("Продолжить как гость"),
         "continueEditingQuestion": MessageLookupByLibrary.simpleMessage(
             "У Вас есть несохраненные изменения. Хотите продолжить редактирование?"),
         "continueLearningQuestion": m2,

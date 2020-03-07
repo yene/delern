@@ -410,9 +410,9 @@ To see the source code for this app, please visit the [Delern GitHub repo](https
       );
 
   String get continueAnonymously => Intl.message(
-        'Continue Anonymously',
+        'Continue as a Guest',
         name: 'continueAnonymously',
-        desc: 'Continue Anonymously',
+        desc: 'Sign in as a guest to the app',
       );
 
   String get splashScreenFeatures => Intl.message(

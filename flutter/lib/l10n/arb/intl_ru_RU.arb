@@ -421,9 +421,9 @@
     "placeholders": {
     }
   },
-  "continueAnonymously": "Продолжить Анонимно",
+  "continueAnonymously": "Продолжить как гость",
   "@continueAnonymously": {
-    "description": "Continue Anonymously",
+    "description": "Continue as a guest",
     "type": "text",
     "placeholders": {
     }

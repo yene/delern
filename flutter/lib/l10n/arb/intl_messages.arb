@@ -1,6 +1,6 @@
 {
   "@@locale": "en_US",
-  "@@last_modified": "2020-02-19T11:08:17.675674",
+  "@@last_modified": "2020-03-07T10:34:29.577855",
   "navigationDrawerSignOut": "Sign Out",
   "@navigationDrawerSignOut": {
     "description": "Sign Out in Navigation Drawer",
@@ -436,9 +436,9 @@
     "placeholders": {
     }
   },
-  "continueAnonymously": "Continue Anonymously",
+  "continueAnonymously": "Continue as a Guest",
   "@continueAnonymously": {
-    "description": "Continue Anonymously",
+    "description": "Sign in as a guest to the app",
     "type": "text",
     "placeholders": {
     }

@@ -44,7 +44,7 @@ class SignInButton extends StatelessWidget {
             ));
       default:
         return RaisedButton(
-          color: Colors.white,
+          color: app_styles.kPrimarySwatch,
           onPressed: () => Auth.instance.currentUser == null
               ? _signInWithProvider(context: context, provider: null)
               : Navigator.of(context).pop(),
@@ -52,8 +52,8 @@ class SignInButton extends StatelessWidget {
             height: _buttonHeight,
             child: Center(
               child: Text(
-                localizations.of(context).continueAnonymously,
-                style: app_styles.primaryText,
+                localizations.of(context).continueAnonymously.toUpperCase(),
+                style: app_styles.primaryText.copyWith(color: Colors.white),
                 overflow: TextOverflow.ellipsis,
               ),
             ),

@@ -56,7 +56,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Card was deleted"),
         "cardsToLearnLabel": m1,
         "continueAnonymously":
-            MessageLookupByLibrary.simpleMessage("Continue Anonymously"),
+            MessageLookupByLibrary.simpleMessage("Continue as a Guest"),
         "continueEditingQuestion": MessageLookupByLibrary.simpleMessage(
             "You have unsaved changes. Would you like to continue editing?"),
         "continueLearningQuestion": m2,

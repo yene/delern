@@ -555,13 +555,6 @@
     "placeholders": {
     }
   },
-  "appLogoName": "Delern Flashcards",
-  "@appLogoName": {
-    "description": "Delern Flashcards",
-    "type": "text",
-    "placeholders": {
-    }
-  },
   "addCardsDeckMenu": "Add Cards",
   "@addCardsDeckMenu": {
     "description": "Add Cards in Deck Menu",

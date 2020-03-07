@@ -519,13 +519,6 @@
     "placeholders": {
     }
   },
-  "appLogoName": "Delern Флэшкарточки",
-  "@appLogoName": {
-    "description": "Delern Flashcards",
-    "type": "text",
-    "placeholders": {
-    }
-  },
   "addCardsDeckMenu": "Добавить карточки",
   "@addCardsDeckMenu": {
     "description": "Add Cards in Deck Menu",

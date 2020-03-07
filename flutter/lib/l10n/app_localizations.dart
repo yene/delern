@@ -522,12 +522,6 @@ To see the source code for this app, please visit the [Delern GitHub repo](https
         desc: 'Skip',
       );
 
-  String get appLogoName => Intl.message(
-        'Delern Flashcards',
-        name: 'appLogoName',
-        desc: 'Delern Flashcards',
-      );
-
   String get addCardsDeckMenu => Intl.message(
         'Add Cards',
         name: 'addCardsDeckMenu',

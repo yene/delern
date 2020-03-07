@@ -40,8 +40,6 @@ class MessageLookup extends MessageLookupByLibrary {
         "addDeckTooltip": MessageLookupByLibrary.simpleMessage("Add Deck"),
         "anonymous": MessageLookupByLibrary.simpleMessage("Anonymous"),
         "answeredCards": m0,
-        "appLogoName":
-            MessageLookupByLibrary.simpleMessage("Delern Flashcards"),
         "appNotInstalledSharingDeck": MessageLookupByLibrary.simpleMessage(
             "This user hasn\'t installed Delern yet. Do you want to sent an invite?"),
         "backSideHint": MessageLookupByLibrary.simpleMessage("Back side:"),

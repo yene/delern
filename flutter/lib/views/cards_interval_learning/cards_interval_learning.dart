@@ -20,13 +20,8 @@ import 'package:delern_flutter/views/helpers/stream_with_value_builder.dart';
 import 'package:delern_flutter/views/helpers/text_overflow_ellipsis_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:pedantic/pedantic.dart';
 
 const _kCardPaddingRatio = 0.07;
-// Take floating button height from source code: https://bit.ly/2y9aIM6
-const BoxConstraints _kFloatingButtonHeightConstraint = BoxConstraints.tightFor(
-  height: 56,
-);
 
 class CardsIntervalLearning extends StatefulWidget {
   static const routeName = '/learn-interval';
@@ -158,31 +153,33 @@ class CardsIntervalLearningState extends State<CardsIntervalLearning> {
                     padding: const EdgeInsets.symmetric(vertical: 20),
                     child: ValueListenableBuilder<bool>(
                       valueListenable: _showReplyButtons,
-                      builder: (context, showReplyButtons, child) =>
-                          showReplyButtons
-                              ? CardAnswerButtonsWidget(
-                                  user: _user,
-                                  scheduledCard: _scheduledCard,
-                                  onAnswer: (knows) {
-                                    if (_answersCount == 0) {
-                                      unawaited(
-                                          logStartLearning(_deck.value.key));
-                                    }
-                                    unawaited(logCardResponse(
-                                      deckId: _deck.value.key,
-                                      knows: knows,
-                                    ));
+                      builder: (context, showReplyButtons, child) => Visibility(
+                        visible: showReplyButtons,
+                        maintainSize: true,
+                        // Required when maintainSize is set.
+                        maintainAnimation: true,
+                        maintainState: true,
+                        child: child,
+                      ),
+                      child: CardAnswerButtonsWidget(
+                        user: _user,
+                        scheduledCard: _scheduledCard,
+                        onAnswer: (knows) {
+                          if (_answersCount == 0) {
+                            logStartLearning(_deck.value.key);
+                          }
+                          logCardResponse(
+                            deckId: _deck.value.key,
+                            knows: knows,
+                          );
 
-                                    if (mounted) {
-                                      setState(() {
-                                        _answersCount++;
-                                      });
-                                    }
-                                  },
-                                )
-                              : ConstrainedBox(
-                                  constraints: _kFloatingButtonHeightConstraint,
-                                ),
+                          if (mounted) {
+                            setState(() {
+                              _answersCount++;
+                            });
+                          }
+                        },
+                      ),
                     ),
                   ),
                   Row(

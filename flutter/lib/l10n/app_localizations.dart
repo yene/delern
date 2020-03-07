@@ -409,12 +409,6 @@ To see the source code for this app, please visit the [Delern GitHub repo](https
         desc: 'Server temporarily unavailable',
       );
 
-  String get doNotNeedFeaturesText => Intl.message(
-        'I do not want any of these features',
-        name: 'doNotNeedFeaturesText',
-        desc: 'Do not need features text',
-      );
-
   String get continueAnonymously => Intl.message(
         'Continue as a Guest',
         name: 'continueAnonymously',
@@ -720,5 +714,11 @@ To see the source code for this app, please visit the [Delern GitHub repo](https
         'Shuffle cards',
         name: 'shuffleTooltip',
         desc: 'Shuffle cards tooltip',
+      );
+
+  String get or => Intl.message(
+        'or',
+        name: 'or',
+        desc: 'or label',
       );
 }

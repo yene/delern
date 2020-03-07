@@ -90,8 +90,6 @@ class MessageLookup extends MessageLookupByLibrary {
         "discard": MessageLookupByLibrary.simpleMessage("Отменить изменения"),
         "doNotKnowCardTooltip":
             MessageLookupByLibrary.simpleMessage("Я не знаю"),
-        "doNotNeedFeaturesText": MessageLookupByLibrary.simpleMessage(
-            "Мне не нужны все эти функции "),
         "done": MessageLookupByLibrary.simpleMessage("Закрыть"),
         "edit": MessageLookupByLibrary.simpleMessage("Редактировать"),
         "editCardTooltip":
@@ -163,6 +161,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Профиль (Вы не в сети)"),
         "offlineUserMessage": MessageLookupByLibrary.simpleMessage(
             "Нет сети, пожалуйста, попробуйте позже"),
+        "or": MessageLookupByLibrary.simpleMessage("или"),
         "other": MessageLookupByLibrary.simpleMessage("другие"),
         "owner": MessageLookupByLibrary.simpleMessage("Владелец"),
         "peopleLabel": MessageLookupByLibrary.simpleMessage("Люди"),

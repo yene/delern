@@ -83,8 +83,6 @@ class MessageLookup extends MessageLookupByLibrary {
         "discard": MessageLookupByLibrary.simpleMessage("Discard"),
         "doNotKnowCardTooltip":
             MessageLookupByLibrary.simpleMessage("I don\'t know"),
-        "doNotNeedFeaturesText": MessageLookupByLibrary.simpleMessage(
-            "I do not want any of these features"),
         "done": MessageLookupByLibrary.simpleMessage("Done"),
         "edit": MessageLookupByLibrary.simpleMessage("Edit"),
         "editCardTooltip": MessageLookupByLibrary.simpleMessage("Edit card"),
@@ -152,6 +150,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Profile (you are offline)"),
         "offlineUserMessage": MessageLookupByLibrary.simpleMessage(
             "You are offline, please try it later"),
+        "or": MessageLookupByLibrary.simpleMessage("or"),
         "other": MessageLookupByLibrary.simpleMessage("other"),
         "owner": MessageLookupByLibrary.simpleMessage("Owner"),
         "peopleLabel": MessageLookupByLibrary.simpleMessage("People"),

@@ -1,6 +1,6 @@
 {
   "@@locale": "en_US",
-  "@@last_modified": "2020-03-07T11:54:06.470789",
+  "@@last_modified": "2020-03-07T14:06:59.795919",
   "navigationDrawerSignOut": "Sign Out",
   "@navigationDrawerSignOut": {
     "description": "Sign Out in Navigation Drawer",
@@ -436,13 +436,6 @@
     "placeholders": {
     }
   },
-  "doNotNeedFeaturesText": "I do not want any of these features",
-  "@doNotNeedFeaturesText": {
-    "description": "Do not need features text",
-    "type": "text",
-    "placeholders": {
-    }
-  },
   "continueAnonymously": "Continue as a Guest",
   "@continueAnonymously": {
     "description": "Sign in as a guest to the app",
@@ -788,6 +781,13 @@
   "shuffleTooltip": "Shuffle cards",
   "@shuffleTooltip": {
     "description": "Shuffle cards tooltip",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "or": "or",
+  "@or": {
+    "description": "or label",
     "type": "text",
     "placeholders": {
     }

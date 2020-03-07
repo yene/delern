@@ -47,7 +47,10 @@ class SignIn extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: 30),
+              padding: const EdgeInsets.symmetric(
+                vertical: 30,
+                horizontal: _kBorderPadding,
+              ),
               child: Image.asset(
                 'images/delern_with_logo.png',
                 width: width,
@@ -84,10 +87,20 @@ class SignIn extends StatelessWidget {
                   const SignInButton(
                       providerId: FacebookAuthProvider.providerId),
                   ...?_getFeatures(context),
-                  Text(
-                    localizations.of(context).doNotNeedFeaturesText,
-                    style: app_styles.secondaryText,
-                    textAlign: TextAlign.center,
+                  Row(
+                    children: <Widget>[
+                      const Expanded(child: Divider()),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: _kBorderPadding),
+                        child: Text(
+                          localizations.of(context).or.toUpperCase(),
+                          style: app_styles.secondaryText,
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                      const Expanded(child: Divider()),
+                    ],
                   ),
                   const SignInButton(providerId: null),
                   _buildLegalInfo(context),

@@ -414,13 +414,6 @@
     "placeholders": {
     }
   },
-  "doNotNeedFeaturesText": "Мне не нужны все эти функции ",
-  "@doNotNeedFeaturesText": {
-    "description": "Do not need features text",
-    "type": "text",
-    "placeholders": {
-    }
-  },
   "continueAnonymously": "Продолжить как гость",
   "@continueAnonymously": {
     "description": "Continue as a guest",
@@ -787,6 +780,13 @@
   "signInWithLabel": "Войти с помощью:",
   "@signInWithLabel": {
     "description": "Sign in with lable before different providers",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "or": "или",
+  "@or": {
+    "description": "or label",
     "type": "text",
     "placeholders": {
     }

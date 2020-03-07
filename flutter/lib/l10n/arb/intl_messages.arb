@@ -1,6 +1,6 @@
 {
   "@@locale": "en_US",
-  "@@last_modified": "2020-03-07T14:06:59.795919",
+  "@@last_modified": "2020-03-07T15:31:44.797396",
   "navigationDrawerSignOut": "Sign Out",
   "@navigationDrawerSignOut": {
     "description": "Sign Out in Navigation Drawer",
@@ -443,7 +443,7 @@
     "placeholders": {
     }
   },
-  "splashScreenFeatures": "Data and progress are saved in the Cloud\nData and progress are synchronized across all your devices\nShare cards with your friends and colleagues",
+  "splashScreenFeatures": "All the data will be saved in the Cloud and synchronized across all your devices. You can also share cards with your friends and colleagues",
   "@splashScreenFeatures": {
     "description": "Data and progress are saved",
     "type": "text",

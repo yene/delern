@@ -416,9 +416,7 @@ To see the source code for this app, please visit the [Delern GitHub repo](https
       );
 
   String get splashScreenFeatures => Intl.message(
-        'Data and progress are saved in the Cloud\n'
-        'Data and progress are synchronized across all your devices\n'
-        'Share cards with your friends and colleagues',
+        'All the data will be saved in the Cloud and synchronized across all your devices. You can also share cards with your friends and colleagues',
         name: 'splashScreenFeatures',
         desc: 'Data and progress are saved',
       );

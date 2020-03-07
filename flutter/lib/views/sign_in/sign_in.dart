@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 class SignIn extends StatelessWidget {
   static const routeName = '/signIn';
   static const _kBorderPadding = 15.0;
+  static const _kMinBetweenWidgetsBox = SizedBox(height: 8);
 
   const SignIn() : super();
 
@@ -26,21 +27,6 @@ class SignIn extends StatelessWidget {
           ),
         ),
       );
-
-  Widget _buildFeatureText(String text) => Row(
-        children: [
-          Icon(Icons.check_circle),
-          const SizedBox(width: 15),
-          Expanded(child: Text(text, style: app_styles.primaryText)),
-        ],
-      );
-
-  List<Widget> _getFeatures(BuildContext context) => localizations
-      .of(context)
-      .splashScreenFeatures
-      .split('\n')
-      .map(_buildFeatureText)
-      .toList();
 
   Widget _buildLogoPicture(BuildContext context, double width) => Center(
         child: Column(
@@ -67,44 +53,70 @@ class SignIn extends StatelessWidget {
             child: ConstrainedBox(
               // SingleChildScrollView will shrink-wrap the content, even when
               // there's enough room on the viewport (screen) to provide
-              // comfortable spacing between the items in Column. We set minimum
-              // height based on viewport size. See also:
-              // https://api.flutter.dev/flutter/widgets/SingleChildScrollView-class.html#centering-spacing-or-aligning-fixed-height-content
+              // comfortable spacing between the items in Column.
+              // It also ensures that the column becomes either as big as
+              // viewport, or as big as the contents, whichever is biggest.
+              // See also: https://api.flutter.dev/flutter/widgets/SingleChildScrollView-class.html#centering-spacing-or-aligning-fixed-height-content
               constraints: BoxConstraints(
                 minHeight: viewportConstraints.maxHeight,
               ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: <Widget>[
-                  Text(localizations.of(context).signInWithLabel.toUpperCase(),
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w700,
-                      )),
-                  const SignInButton(providerId: GoogleAuthProvider.providerId),
-                  const SignInButton(
-                      providerId: FacebookAuthProvider.providerId),
-                  ...?_getFeatures(context),
-                  Row(
-                    children: <Widget>[
-                      const Expanded(child: Divider()),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: _kBorderPadding),
-                        child: Text(
-                          localizations.of(context).or.toUpperCase(),
-                          style: app_styles.secondaryText,
-                          textAlign: TextAlign.center,
-                        ),
+              child: IntrinsicHeight(
+                child: Column(
+                  mainAxisSize: MainAxisSize.max,
+                  children: <Widget>[
+                    Flexible(
+                      child: Column(
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: _kBorderPadding),
+                            child: Text(
+                                localizations
+                                    .of(context)
+                                    .signInWithLabel
+                                    .toUpperCase(),
+                                textAlign: TextAlign.center,
+                                style: const TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w700,
+                                )),
+                          ),
+                          const SignInButton(
+                              providerId: GoogleAuthProvider.providerId),
+                          _kMinBetweenWidgetsBox,
+                          const SignInButton(
+                              providerId: FacebookAuthProvider.providerId),
+                          _kMinBetweenWidgetsBox,
+                          Text(
+                            localizations.of(context).splashScreenFeatures,
+                            style: app_styles.secondaryText,
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
                       ),
-                      const Expanded(child: Divider()),
-                    ],
-                  ),
-                  const SignInButton(providerId: null),
-                  _buildLegalInfo(context),
-                ],
+                    ),
+                    _kMinBetweenWidgetsBox,
+                    Row(
+                      children: <Widget>[
+                        const Expanded(child: Divider()),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: _kBorderPadding),
+                          child: Text(
+                            localizations.of(context).or.toUpperCase(),
+                            style: app_styles.secondaryText,
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                        const Expanded(child: Divider()),
+                      ],
+                    ),
+                    _kMinBetweenWidgetsBox,
+                    const SignInButton(providerId: null),
+                    _kMinBetweenWidgetsBox,
+                    _buildLegalInfo(context),
+                  ],
+                ),
               ),
             ),
           ),

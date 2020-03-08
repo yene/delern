@@ -281,7 +281,8 @@ class CardItemWidget extends StatelessWidget {
                 ),
                 child: Container(
                   padding: const EdgeInsets.all(_kCardBorderPadding),
-                  color: specifyCardColors(deck.type, card.back)[0],
+                  color:
+                      specifyCardColors(deck.type, card.back).defaultBackground,
                   // Use row to expand content to all available space
                   child: Row(
                     children: <Widget>[

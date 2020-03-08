@@ -1,6 +1,5 @@
 import 'package:delern_flutter/flutter/styles.dart' as app_styles;
 import 'package:delern_flutter/models/deck_model.dart';
-import 'package:flutter/material.dart';
 
 enum Gender {
   masculine,
@@ -9,7 +8,7 @@ enum Gender {
   noGender,
 }
 
-List<Color> specifyCardColors(DeckType deckType, String text) =>
+app_styles.CardColor specifyCardColors(DeckType deckType, String text) =>
     app_styles.cardBackgroundColors[_specifyCardGender(deckType, text)];
 
 Gender _specifyCardGender(DeckType deckType, String text) {

@@ -27,15 +27,29 @@ const double kItemListHeightRatio = 0.1;
 const double kItemListPaddingRatio = kItemListHeightRatio * 0.08;
 const double kCardElevation = 6;
 
-/// Colors for the cards background. It has 2 colors to make front and back
-/// sides to look a bit different. First color is used for front side of the
-/// card and as a general one. The second color is used for the back side
-/// of cards.
-final Map<Gender, List<Color>> cardBackgroundColors = {
-  Gender.noGender: const [Color(0xFFF5F5F5), Colors.white],
-  Gender.masculine: [Colors.blueAccent[100], Colors.blue[200]],
-  Gender.feminine: [Colors.pinkAccent[100], Colors.pink[200]],
-  Gender.neuter: [Colors.amberAccent[100], Colors.amber[200]],
+class CardColor {
+  final Color frontSideBackground;
+  final Color backSideBackground;
+  Color get defaultBackground => frontSideBackground;
+  const CardColor({
+    @required this.frontSideBackground,
+    @required this.backSideBackground,
+  })  : assert(frontSideBackground != null),
+        assert(backSideBackground != null);
+}
+
+final Map<Gender, CardColor> cardBackgroundColors = {
+  Gender.noGender: const CardColor(
+      frontSideBackground: Color(0xFFF5F5F5), backSideBackground: Colors.white),
+  Gender.masculine: CardColor(
+      frontSideBackground: Colors.blueAccent[100],
+      backSideBackground: Colors.blue[200]),
+  Gender.feminine: CardColor(
+      frontSideBackground: Colors.pinkAccent[100],
+      backSideBackground: Colors.pink[200]),
+  Gender.neuter: CardColor(
+      frontSideBackground: Colors.amberAccent[100],
+      backSideBackground: Colors.amber[200]),
 };
 
 var color = Colors.white;

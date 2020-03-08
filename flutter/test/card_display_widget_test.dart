@@ -18,7 +18,8 @@ void main() {
           front: frontSide,
           back: backSide,
           tags: const ['#family', '#feminine', '#german'],
-          color: app_styles.cardBackgroundColors[Gender.feminine][0],
+          color: app_styles
+              .cardBackgroundColors[Gender.feminine].defaultBackground,
           showBack: true,
         ),
       ),

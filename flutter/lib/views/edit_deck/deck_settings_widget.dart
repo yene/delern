@@ -83,12 +83,16 @@ class _DeckSettingsWidgetState extends State<DeckSettingsWidget> {
   Widget _buildGermanDeckType() {
     final ruleList = [
       // TODO(dotdoom): Refactor: move logic to card_background_specifier
-      _buildRule('der', app_styles.cardBackgroundColors[Gender.masculine][0]),
       _buildRule(
-          'die, eine', app_styles.cardBackgroundColors[Gender.feminine][0]),
-      _buildRule('das', app_styles.cardBackgroundColors[Gender.neuter][0]),
+          'der',
+          app_styles
+              .cardBackgroundColors[Gender.masculine].frontSideBackground),
+      _buildRule('die, eine',
+          app_styles.cardBackgroundColors[Gender.feminine].frontSideBackground),
+      _buildRule('das',
+          app_styles.cardBackgroundColors[Gender.neuter].frontSideBackground),
       _buildRule(localizations.of(context).other,
-          app_styles.cardBackgroundColors[Gender.noGender][0]),
+          app_styles.cardBackgroundColors[Gender.noGender].frontSideBackground),
     ];
     return _buildDeckType(DeckType.german, ruleList);
   }
@@ -96,21 +100,29 @@ class _DeckSettingsWidgetState extends State<DeckSettingsWidget> {
   Widget _buildSwissDeckType() {
     final ruleList = [
       _buildRule(
-          'de, en', app_styles.cardBackgroundColors[Gender.masculine][0]),
-      _buildRule('d, e', app_styles.cardBackgroundColors[Gender.feminine][0]),
-      _buildRule('s, es', app_styles.cardBackgroundColors[Gender.neuter][0]),
+          'de, en',
+          app_styles
+              .cardBackgroundColors[Gender.masculine].frontSideBackground),
+      _buildRule('d, e',
+          app_styles.cardBackgroundColors[Gender.feminine].frontSideBackground),
+      _buildRule('s, es',
+          app_styles.cardBackgroundColors[Gender.neuter].frontSideBackground),
       _buildRule(localizations.of(context).other,
-          app_styles.cardBackgroundColors[Gender.noGender][0]),
+          app_styles.cardBackgroundColors[Gender.noGender].frontSideBackground),
     ];
     return _buildDeckType(DeckType.swiss, ruleList);
   }
 
   Widget _buildBasicDeckType() {
     final ruleList = [
-      _buildRule('', app_styles.cardBackgroundColors[Gender.noGender][0]),
-      _buildRule('', app_styles.cardBackgroundColors[Gender.noGender][0]),
-      _buildRule('', app_styles.cardBackgroundColors[Gender.noGender][0]),
-      _buildRule('', app_styles.cardBackgroundColors[Gender.noGender][0]),
+      _buildRule('',
+          app_styles.cardBackgroundColors[Gender.noGender].frontSideBackground),
+      _buildRule('',
+          app_styles.cardBackgroundColors[Gender.noGender].frontSideBackground),
+      _buildRule('',
+          app_styles.cardBackgroundColors[Gender.noGender].frontSideBackground),
+      _buildRule('',
+          app_styles.cardBackgroundColors[Gender.noGender].frontSideBackground),
     ];
     return _buildDeckType(DeckType.basic, ruleList);
   }

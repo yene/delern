@@ -14,7 +14,7 @@ typedef CardFlipCallback = void Function();
 class FlipCardWidget extends StatefulWidget {
   final String front;
   final String back;
-  final List<Color> colors;
+  final app_styles.CardColor colors;
   final CardFlipCallback onFirstFlip;
 
   /// The [key] is required and must be unique to the card. E.g.:
@@ -48,7 +48,7 @@ class FlipCardWidget extends StatefulWidget {
     properties
       ..add(StringProperty('front', front))
       ..add(StringProperty('back', back))
-      ..add(DiagnosticsProperty<List<Color>>('colors', colors))
+      ..add(DiagnosticsProperty<app_styles.CardColor>('colors', colors))
       ..add(
           ObjectFlagProperty<CardFlipCallback>.has('onFirstFlip', onFirstFlip));
   }
@@ -137,7 +137,9 @@ class _FlipCardWidgetState extends State<FlipCardWidget>
         child: Stack(
           children: <Widget>[
             Card(
-              color: _isFront ? widget.colors[0] : widget.colors[1],
+              color: _isFront
+                  ? widget.colors.frontSideBackground
+                  : widget.colors.backSideBackground,
               elevation: app_styles.kCardElevation,
               child: Padding(
                 padding: const EdgeInsets.all(_kCardBorderPadding),

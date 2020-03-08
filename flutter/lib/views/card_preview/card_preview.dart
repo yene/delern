@@ -83,7 +83,7 @@ class _CardPreviewState extends State<CardPreview> {
                               color: specifyCardColors(
                                 deckSnapshot.data.type,
                                 cardSnapshot.data.back,
-                              )[0],
+                              ).defaultBackground,
                             )
                           : ProgressIndicatorWidget(),
                     )

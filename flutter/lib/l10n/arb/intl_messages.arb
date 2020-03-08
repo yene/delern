@@ -1,6 +1,6 @@
 {
   "@@locale": "en_US",
-  "@@last_modified": "2020-03-07T15:31:44.797396",
+  "@@last_modified": "2020-03-08T16:31:36.097356",
   "navigationDrawerSignOut": "Sign Out",
   "@navigationDrawerSignOut": {
     "description": "Sign Out in Navigation Drawer",
@@ -785,8 +785,8 @@
     "placeholders": {
     }
   },
-  "or": "or",
-  "@or": {
+  "signInScreenOr": "or",
+  "@signInScreenOr": {
     "description": "or label",
     "type": "text",
     "placeholders": {

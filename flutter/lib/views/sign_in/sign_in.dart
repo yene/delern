@@ -103,7 +103,10 @@ class SignIn extends StatelessWidget {
                           padding: const EdgeInsets.symmetric(
                               horizontal: _kBorderPadding),
                           child: Text(
-                            localizations.of(context).or.toUpperCase(),
+                            localizations
+                                .of(context)
+                                .signInScreenOr
+                                .toUpperCase(),
                             style: app_styles.secondaryText,
                             textAlign: TextAlign.center,
                           ),

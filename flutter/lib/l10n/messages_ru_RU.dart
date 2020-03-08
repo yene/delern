@@ -161,7 +161,6 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Профиль (Вы не в сети)"),
         "offlineUserMessage": MessageLookupByLibrary.simpleMessage(
             "Нет сети, пожалуйста, попробуйте позже"),
-        "or": MessageLookupByLibrary.simpleMessage("или"),
         "other": MessageLookupByLibrary.simpleMessage("другие"),
         "owner": MessageLookupByLibrary.simpleMessage("Владелец"),
         "peopleLabel": MessageLookupByLibrary.simpleMessage("Люди"),
@@ -196,6 +195,7 @@ class MessageLookup extends MessageLookupByLibrary {
                 "Вы уже регистрировались в приложении с этим адресом электронной почты, но с использованием другого сервиса (например, Google вместо Facebook). Пожалуйста, войдите с использованием того же сервиса, которым вы пользовались раньше"),
         "signInCredentialAlreadyInUseWarning": MessageLookupByLibrary.simpleMessage(
             "Вы уже регистрировались в приложении с этим аккаунтом. Если Вы продолжите, все данные, которые Вы создали анонимно, будут потеряны. Желаете продолжить?"),
+        "signInScreenOr": MessageLookupByLibrary.simpleMessage("или"),
         "signInWithFacebook": MessageLookupByLibrary.simpleMessage("Facebook"),
         "signInWithGoogle": MessageLookupByLibrary.simpleMessage("Google"),
         "signInWithLabel":

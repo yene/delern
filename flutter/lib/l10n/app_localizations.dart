@@ -416,7 +416,9 @@ To see the source code for this app, please visit the [Delern GitHub repo](https
       );
 
   String get splashScreenFeatures => Intl.message(
-        'All the data will be saved in the Cloud and synchronized across all your devices. You can also share cards with your friends and colleagues',
+        'All the data will be saved in the Cloud and synchronized across all '
+        'your devices. You can also share cards with your friends and '
+        'colleagues',
         name: 'splashScreenFeatures',
         desc: 'Data and progress are saved',
       );
@@ -714,9 +716,9 @@ To see the source code for this app, please visit the [Delern GitHub repo](https
         desc: 'Shuffle cards tooltip',
       );
 
-  String get or => Intl.message(
+  String get signInScreenOr => Intl.message(
         'or',
-        name: 'or',
+        name: 'signInScreenOr',
         desc: 'or label',
       );
 }

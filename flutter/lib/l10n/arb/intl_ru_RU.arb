@@ -784,8 +784,8 @@
     "placeholders": {
     }
   },
-  "or": "или",
-  "@or": {
+  "signInScreenOr": "или",
+  "@signInScreenOr": {
     "description": "or label",
     "type": "text",
     "placeholders": {

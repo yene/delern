@@ -150,7 +150,6 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Profile (you are offline)"),
         "offlineUserMessage": MessageLookupByLibrary.simpleMessage(
             "You are offline, please try it later"),
-        "or": MessageLookupByLibrary.simpleMessage("or"),
         "other": MessageLookupByLibrary.simpleMessage("other"),
         "owner": MessageLookupByLibrary.simpleMessage("Owner"),
         "peopleLabel": MessageLookupByLibrary.simpleMessage("People"),
@@ -181,6 +180,7 @@ class MessageLookup extends MessageLookupByLibrary {
                 "You have previously signed in to the application using this email, but with a different provider (e.g. Google instead of Facebook). Please sign in with the same provider you have used before."),
         "signInCredentialAlreadyInUseWarning": MessageLookupByLibrary.simpleMessage(
             "The account you have chosen is already registered with the application. If you continue with sign in, all data that you have created anonymously will be lost. Would you like to continue?"),
+        "signInScreenOr": MessageLookupByLibrary.simpleMessage("or"),
         "signInWithFacebook": MessageLookupByLibrary.simpleMessage("Facebook"),
         "signInWithGoogle": MessageLookupByLibrary.simpleMessage("Google"),
         "signInWithLabel":

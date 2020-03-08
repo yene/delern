@@ -52,7 +52,7 @@ void main() {
     });
 
     test('signin_anonymously', () async {
-      final button = find.text('Continue Anonymously');
+      final button = find.text(localizations.continueAnonymously.toUpperCase());
       await driver.waitFor(button);
       await driver.tap(button);
     });

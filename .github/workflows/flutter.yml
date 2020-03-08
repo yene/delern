@@ -58,9 +58,7 @@ jobs:
         run: bundle exec fastlane run flutter args:test,--coverage
       - name: "Upload coverage"
         if: matrix.upload_coverage
-        uses: codecov/codecov-action@v1.0.3
-        with:
-          token: eeabc1cc-89fc-447f-969d-39777e568284
+        uses: codecov/codecov-action@v1.0.6
       - name: "Workaround for fastlane & Dart generating files with LF"
         if: startsWith(matrix.os, 'windows')
         run: git add .

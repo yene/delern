@@ -183,6 +183,7 @@ class DeckListItemWidget extends StatelessWidget {
               unawaited(openEditDeckScreen(context, deckKey: deck.key));
             },
             child: Material(
+              color: app_styles.kDeckItemColor,
               elevation: app_styles.kItemElevation,
               child: InkWell(
                 onTap: () => _showLearningDialog(context),

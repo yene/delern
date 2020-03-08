@@ -281,12 +281,8 @@ class CardItemWidget extends StatelessWidget {
                 ),
                 child: Container(
                   padding: const EdgeInsets.all(_kCardBorderPadding),
-                  decoration: BoxDecoration(
-                    gradient: specifyEditCardBackgroundGradient(
-                      deck.type,
-                      card.back,
-                    ),
-                  ),
+                  color:
+                      specifyCardColors(deck.type, card.back).defaultBackground,
                   // Use row to expand content to all available space
                   child: Row(
                     children: <Widget>[

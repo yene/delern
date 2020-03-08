@@ -114,7 +114,7 @@ void main() {
         @required bool knows,
       }) async {
         await expectCard(expectFront, expectBack);
-        await driver.tap(find.byType('CardDecorationWidget'));
+        await driver.tap(find.byType('Card'));
         await driver.tap(find.byTooltip(knows
             ? localizations.knowCardTooltip
             : localizations.doNotKnowCardTooltip));
@@ -149,10 +149,10 @@ void main() {
 
       await expectCard('front1', 'back1');
 
-      await driver.tap(find.byType('CardDecorationWidget'));
+      await driver.tap(find.byType('Card'));
       await driver.tap(find.byTooltip(localizations.shuffleTooltip));
       await driver.waitFor(find.text('(1/1) My Test Deck'));
-      await driver.tap(find.byType('CardDecorationWidget'));
+      await driver.tap(find.byType('Card'));
 
       await expectCard('front1', 'back1');
     });

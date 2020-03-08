@@ -116,7 +116,7 @@ class _CardsViewLearningState extends State<CardsViewLearning>
                           child: FlipCardWidget(
                             front: snapshot.data[index].frontWithoutTags,
                             back: snapshot.data[index].back,
-                            gradient: specifyLearnCardBackgroundGradient(
+                            colors: specifyCardColors(
                                 widget.deck.type, snapshot.data[index].back),
                             key: ValueKey(snapshot.data[index].key),
                           ),

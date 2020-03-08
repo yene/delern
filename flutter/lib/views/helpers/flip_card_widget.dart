@@ -2,7 +2,6 @@ import 'dart:math';
 
 import 'package:delern_flutter/flutter/localization.dart' as localization;
 import 'package:delern_flutter/flutter/styles.dart' as app_styles;
-import 'package:delern_flutter/views/helpers/card_decoration_widget.dart';
 import 'package:delern_flutter/views/helpers/non_scrolling_markdown_widget.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -15,7 +14,7 @@ typedef CardFlipCallback = void Function();
 class FlipCardWidget extends StatefulWidget {
   final String front;
   final String back;
-  final Gradient gradient;
+  final app_styles.CardColor colors;
   final CardFlipCallback onFirstFlip;
 
   /// The [key] is required and must be unique to the card. E.g.:
@@ -34,7 +33,7 @@ class FlipCardWidget extends StatefulWidget {
   const FlipCardWidget({
     @required this.front,
     @required this.back,
-    @required this.gradient,
+    @required this.colors,
     @required Key key,
     this.onFirstFlip,
   })  : assert(key != null),
@@ -49,7 +48,7 @@ class FlipCardWidget extends StatefulWidget {
     properties
       ..add(StringProperty('front', front))
       ..add(StringProperty('back', back))
-      ..add(DiagnosticsProperty<Gradient>('gradient', gradient))
+      ..add(DiagnosticsProperty<app_styles.CardColor>('colors', colors))
       ..add(
           ObjectFlagProperty<CardFlipCallback>.has('onFirstFlip', onFirstFlip));
   }
@@ -137,8 +136,11 @@ class _FlipCardWidgetState extends State<FlipCardWidget>
         },
         child: Stack(
           children: <Widget>[
-            CardDecorationWidget(
-              gradient: widget.gradient,
+            Card(
+              color: _isFront
+                  ? widget.colors.frontSideBackground
+                  : widget.colors.backSideBackground,
+              elevation: app_styles.kCardElevation,
               child: Padding(
                 padding: const EdgeInsets.all(_kCardBorderPadding),
                 child: LayoutBuilder(

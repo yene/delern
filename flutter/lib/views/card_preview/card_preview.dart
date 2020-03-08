@@ -80,10 +80,10 @@ class _CardPreviewState extends State<CardPreview> {
                               back: cardSnapshot.data.back,
                               tags: cardSnapshot.data.tags.toList(),
                               showBack: true,
-                              gradient: specifyLearnCardBackgroundGradient(
+                              color: specifyCardColors(
                                 deckSnapshot.data.type,
                                 cardSnapshot.data.back,
-                              ),
+                              ).defaultBackground,
                             )
                           : ProgressIndicatorWidget(),
                     )

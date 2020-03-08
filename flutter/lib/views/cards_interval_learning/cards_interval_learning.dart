@@ -145,8 +145,8 @@ class CardsIntervalLearningState extends State<CardsIntervalLearning> {
                           return FlipCardWidget(
                             front: card.frontWithoutTags,
                             back: card.back,
-                            gradient: specifyLearnCardBackgroundGradient(
-                                _deck.value.type, card.back),
+                            colors:
+                                specifyCardColors(_deck.value.type, card.back),
                             onFirstFlip: () {
                               _showReplyButtons.value = true;
                             },

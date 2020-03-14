@@ -220,11 +220,15 @@ class FilteredListAccessor<T extends KeyedListItem> implements ListAccessor<T> {
   }
 
   void _updateCurrentValue() {
-    if (_filter == null) {
-      _currentValue = _base.value;
-    } else {
-      _currentValue = BuiltList<T>.of(_base.value.where(_filter));
+    // Base can be null only before the first even has arrived. Ignore such
+    // updates.
+    if (_base.value != null) {
+      if (_filter == null) {
+        _currentValue = _base.value;
+      } else {
+        _currentValue = BuiltList<T>.of(_base.value.where(_filter));
+      }
+      _value.add(_currentValue);
     }
-    _value.add(_currentValue);
   }
 }

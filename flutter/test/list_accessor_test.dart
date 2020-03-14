@@ -250,6 +250,13 @@ void main() {
       });
     });
   });
+
+  group('FilteredListAccessor', () {
+    test('updates filter successfully even before data arrives', () {
+      FilteredListAccessor(MyListAccessor(dbReference)).filter =
+          (model) => false;
+    });
+  });
 }
 
 class MockDatabaseReference extends Mock implements DatabaseReference {}

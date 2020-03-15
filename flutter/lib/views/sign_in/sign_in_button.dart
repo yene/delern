@@ -1,6 +1,7 @@
 import 'package:delern_flutter/flutter/localization.dart' as localizations;
 import 'package:delern_flutter/flutter/styles.dart' as app_styles;
 import 'package:delern_flutter/flutter/user_messages.dart';
+import 'package:delern_flutter/remote/analytics.dart';
 import 'package:delern_flutter/remote/auth.dart';
 import 'package:delern_flutter/remote/error_reporting.dart' as error_reporting;
 import 'package:delern_flutter/views/helpers/save_updates_dialog.dart';
@@ -77,8 +78,14 @@ class SignInButton extends StatelessWidget {
           height: _buttonHeight,
           child: RaisedButton(
             elevation: _buttonElevation,
-            onPressed: () =>
-                _signInWithProvider(context: context, provider: providerId),
+            onPressed: () {
+              if (providerId == null) {
+                logLoginEvent('anonymous');
+              } else {
+                logLoginEvent(providerId);
+              }
+              _signInWithProvider(context: context, provider: providerId);
+            },
             color: color,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,

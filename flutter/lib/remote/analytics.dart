@@ -68,3 +68,6 @@ Future<void> logPromoteAnonymous() =>
 
 Future<void> logPromoteAnonymousFail() =>
     FirebaseAnalytics().logEvent(name: 'promote_anonymous_fail');
+
+Future<void> logLoginEvent(String provider) =>
+    FirebaseAnalytics().logEvent(name: 'login_$provider');

@@ -46,21 +46,21 @@ class SignIn extends StatelessWidget {
         ),
       );
 
-  Widget _buildSignInControls(BuildContext context) => Padding(
-        padding: const EdgeInsets.symmetric(horizontal: _kBorderPadding),
-        child: LayoutBuilder(
-          builder: (_, viewportConstraints) => SingleChildScrollView(
-            child: ConstrainedBox(
-              // SingleChildScrollView will shrink-wrap the content, even when
-              // there's enough room on the viewport (screen) to provide
-              // comfortable spacing between the items in Column.
-              // Setting minimum constraints ensures that the column becomes
-              // either as big as viewport, or as big as the contents, whichever
-              // is biggest. For more information, see:
-              // https://api.flutter.dev/flutter/widgets/SingleChildScrollView-class.html#centering-spacing-or-aligning-fixed-height-content
-              constraints: BoxConstraints(
-                minHeight: viewportConstraints.maxHeight,
-              ),
+  Widget _buildSignInControls(BuildContext context) => LayoutBuilder(
+        builder: (_, viewportConstraints) => SingleChildScrollView(
+          child: ConstrainedBox(
+            // SingleChildScrollView will shrink-wrap the content, even when
+            // there's enough room on the viewport (screen) to provide
+            // comfortable spacing between the items in Column.
+            // Setting minimum constraints ensures that the column becomes
+            // either as big as viewport, or as big as the contents, whichever
+            // is biggest. For more information, see:
+            // https://api.flutter.dev/flutter/widgets/SingleChildScrollView-class.html#centering-spacing-or-aligning-fixed-height-content
+            constraints: BoxConstraints(
+              minHeight: viewportConstraints.maxHeight,
+            ),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: _kBorderPadding),
               child: Column(
                 mainAxisSize: MainAxisSize.max,
                 // We put two Column widgets inside one with spaceBetween so

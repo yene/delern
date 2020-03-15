@@ -71,3 +71,12 @@ Future<void> logPromoteAnonymousFail() =>
 
 Future<void> logLoginEvent(String provider) =>
     FirebaseAnalytics().logEvent(name: 'login_$provider');
+
+Future<void> logOnboardingStartEvent() =>
+    FirebaseAnalytics().logEvent(name: 'onboarding_start');
+
+Future<void> logOnboardingDoneEvent() =>
+    FirebaseAnalytics().logEvent(name: 'onboarding_done');
+
+Future<void> logOnboardingSkipEvent() =>
+    FirebaseAnalytics().logEvent(name: 'onboarding_skip');

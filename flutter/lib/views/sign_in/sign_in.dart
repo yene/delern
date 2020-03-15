@@ -54,73 +54,77 @@ class SignIn extends StatelessWidget {
               // SingleChildScrollView will shrink-wrap the content, even when
               // there's enough room on the viewport (screen) to provide
               // comfortable spacing between the items in Column.
-              // It also ensures that the column becomes either as big as
-              // viewport, or as big as the contents, whichever is biggest.
-              // See also: https://api.flutter.dev/flutter/widgets/SingleChildScrollView-class.html#centering-spacing-or-aligning-fixed-height-content
+              // Setting minimum constraints ensures that the column becomes
+              // either as big as viewport, or as big as the contents, whichever
+              // is biggest. For more information, see:
+              // https://api.flutter.dev/flutter/widgets/SingleChildScrollView-class.html#centering-spacing-or-aligning-fixed-height-content
               constraints: BoxConstraints(
                 minHeight: viewportConstraints.maxHeight,
               ),
-              child: IntrinsicHeight(
-                child: Column(
-                  mainAxisSize: MainAxisSize.max,
-                  children: <Widget>[
-                    Flexible(
-                      child: Column(
-                        children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                                vertical: _kBorderPadding),
-                            child: Text(
-                                localizations
-                                    .of(context)
-                                    .signInWithLabel
-                                    .toUpperCase(),
-                                textAlign: TextAlign.center,
-                                style: const TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w700,
-                                )),
-                          ),
-                          const SignInButton(
-                              providerId: GoogleAuthProvider.providerId),
-                          _kHeighBetweenWidgets,
-                          const SignInButton(
-                              providerId: FacebookAuthProvider.providerId),
-                          _kHeighBetweenWidgets,
-                          Text(
-                            localizations.of(context).splashScreenFeatures,
-                            style: app_styles.secondaryText,
-                            textAlign: TextAlign.center,
-                          ),
-                        ],
-                      ),
-                    ),
-                    _kHeighBetweenWidgets,
-                    Row(
-                      children: <Widget>[
-                        const Expanded(child: Divider()),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: _kBorderPadding),
-                          child: Text(
+              child: Column(
+                mainAxisSize: MainAxisSize.max,
+                // We put two Column widgets inside one with spaceBetween so
+                // that any space unoccupied by the two is in between them.
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: _kBorderPadding),
+                        child: Text(
                             localizations
                                 .of(context)
-                                .signInScreenOr
+                                .signInWithLabel
                                 .toUpperCase(),
-                            style: app_styles.secondaryText,
                             textAlign: TextAlign.center,
+                            style: const TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w700,
+                            )),
+                      ),
+                      const SignInButton(
+                          providerId: GoogleAuthProvider.providerId),
+                      _kHeighBetweenWidgets,
+                      const SignInButton(
+                          providerId: FacebookAuthProvider.providerId),
+                      _kHeighBetweenWidgets,
+                      Text(
+                        localizations.of(context).splashScreenFeatures,
+                        style: app_styles.secondaryText,
+                        textAlign: TextAlign.center,
+                      ),
+                      _kHeighBetweenWidgets,
+                    ],
+                  ),
+                  Column(
+                    children: [
+                      Row(
+                        children: <Widget>[
+                          const Expanded(child: Divider()),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: _kBorderPadding),
+                            child: Text(
+                              localizations
+                                  .of(context)
+                                  .signInScreenOr
+                                  .toUpperCase(),
+                              style: app_styles.secondaryText,
+                              textAlign: TextAlign.center,
+                            ),
                           ),
-                        ),
-                        const Expanded(child: Divider()),
-                      ],
-                    ),
-                    _kHeighBetweenWidgets,
-                    const SignInButton(providerId: null),
-                    _kHeighBetweenWidgets,
-                    _buildLegalInfo(context),
-                    _kHeighBetweenWidgets,
-                  ],
-                ),
+                          const Expanded(child: Divider()),
+                        ],
+                      ),
+                      _kHeighBetweenWidgets,
+                      const SignInButton(providerId: null),
+                      _kHeighBetweenWidgets,
+                      _buildLegalInfo(context),
+                      _kHeighBetweenWidgets,
+                    ],
+                  ),
+                ],
               ),
             ),
           ),

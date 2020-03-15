@@ -40,11 +40,16 @@ Future<void> logShare({String deckId, String method}) =>
       method: method,
     );
 
+// TODO(ksheremet): Check whether content tipe and method are recorded in
+// Analytics
 Future<void> logUnshare({String deckId, String method}) =>
-    FirebaseAnalytics().logShare(
-      contentType: deckMimeType,
-      itemId: '[unshared] $deckId',
-      method: method,
+    FirebaseAnalytics().logEvent(
+      name: 'unshare',
+      parameters: {
+        'content_type': deckMimeType,
+        'item_id': '$deckId',
+        'method': method,
+      },
     );
 
 Future<void> logCardCreate(String deckId) =>

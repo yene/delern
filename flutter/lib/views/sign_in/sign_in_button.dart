@@ -79,11 +79,7 @@ class SignInButton extends StatelessWidget {
           child: RaisedButton(
             elevation: _buttonElevation,
             onPressed: () {
-              if (providerId == null) {
-                logLoginEvent('anonymous');
-              } else {
-                logLoginEvent(providerId);
-              }
+              logLoginEvent(providerId ?? 'anonymous');
               _signInWithProvider(context: context, provider: providerId);
             },
             color: color,

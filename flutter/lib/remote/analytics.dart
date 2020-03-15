@@ -40,7 +40,7 @@ Future<void> logShare({String deckId, String method}) =>
       method: method,
     );
 
-// TODO(ksheremet): Check whether content tipe and method are recorded in
+// TODO(ksheremet): Check whether content type and method are recorded in
 // Analytics
 Future<void> logUnshare({String deckId, String method}) =>
     FirebaseAnalytics().logEvent(
@@ -70,7 +70,9 @@ Future<void> logPromoteAnonymousFail() =>
     FirebaseAnalytics().logEvent(name: 'promote_anonymous_fail');
 
 Future<void> logLoginEvent(String provider) =>
-    FirebaseAnalytics().logEvent(name: 'login_$provider');
+    // provider looks like 'google.com', 'facebook.com'. Dots are invalid for
+    // reporting, therefore cut string till dot and send the first part
+    FirebaseAnalytics().logEvent(name: 'login_${provider.split('.')[0]}');
 
 Future<void> logOnboardingStartEvent() =>
     FirebaseAnalytics().logEvent(name: 'onboarding_start');

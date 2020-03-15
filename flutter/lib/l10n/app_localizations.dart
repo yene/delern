@@ -50,13 +50,19 @@ class AppLocalizations {
       );
 
   String get signInWithGoogle => Intl.message(
-        'Sign in with Google',
+        'Google',
         name: 'signInWithGoogle',
         desc: 'Sign in with Google Button',
       );
 
+  String get signInWithLabel => Intl.message(
+        'Sign in with:',
+        name: 'signInWithLabel',
+        desc: 'Sign in with lable before different providers',
+      );
+
   String get signInWithFacebook => Intl.message(
-        'Sign in with Facebook',
+        'Facebook',
         name: 'signInWithFacebook',
         desc: 'Sign in with Facebook Button',
       );
@@ -403,22 +409,16 @@ To see the source code for this app, please visit the [Delern GitHub repo](https
         desc: 'Server temporarily unavailable',
       );
 
-  String get doNotNeedFeaturesText => Intl.message(
-        'I do not want any of these features',
-        name: 'doNotNeedFeaturesText',
-        desc: 'Do not need features text',
-      );
-
   String get continueAnonymously => Intl.message(
-        'Continue Anonymously',
+        'Continue as a Guest',
         name: 'continueAnonymously',
-        desc: 'Continue Anonymously',
+        desc: 'Sign in as a guest to the app',
       );
 
   String get splashScreenFeatures => Intl.message(
-        'Data and progress are saved in the Cloud\n'
-        'Data and progress are synchronized across all your devices\n'
-        'Share cards with your friends and colleagues',
+        'All the data will be saved in the Cloud and synchronized across all '
+        'your devices. You can also share cards with your friends and '
+        'colleagues',
         name: 'splashScreenFeatures',
         desc: 'Data and progress are saved',
       );
@@ -514,12 +514,6 @@ To see the source code for this app, please visit the [Delern GitHub repo](https
         'Skip',
         name: 'skip',
         desc: 'Skip',
-      );
-
-  String get appLogoName => Intl.message(
-        'Delern Flashcards',
-        name: 'appLogoName',
-        desc: 'Delern Flashcards',
       );
 
   String get addCardsDeckMenu => Intl.message(
@@ -720,5 +714,11 @@ To see the source code for this app, please visit the [Delern GitHub repo](https
         'Shuffle cards',
         name: 'shuffleTooltip',
         desc: 'Shuffle cards tooltip',
+      );
+
+  String get signInScreenOr => Intl.message(
+        'or',
+        name: 'signInScreenOr',
+        desc: 'or label',
       );
 }

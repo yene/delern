@@ -10,6 +10,8 @@ import 'package:flutter/material.dart';
 /// A screen with sign in information and buttons.
 class SignIn extends StatelessWidget {
   static const routeName = '/signIn';
+  static const _kBorderPadding = 15.0;
+  static const _kHeightBetweenWidgets = SizedBox(height: 8);
 
   const SignIn() : super();
 
@@ -17,49 +19,30 @@ class SignIn extends StatelessWidget {
   Widget build(BuildContext context) => Scaffold(
         backgroundColor: app_styles.signInBackgroundColor,
         body: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.all(15),
-            child: OrientationBuilder(
-              builder: (context, orientation) =>
-                  (orientation == Orientation.portrait)
-                      ? _buildPortraitSignInScreen(context)
-                      : _buildLandscapeSignInScreen(context),
-            ),
+          child: OrientationBuilder(
+            builder: (context, orientation) =>
+                (orientation == Orientation.portrait)
+                    ? _buildPortraitSignInScreen(context)
+                    : _buildLandscapeSignInScreen(context),
           ),
         ),
       );
 
-  Widget _buildFeatureText(String text) => Row(
-        children: [
-          Icon(Icons.check_circle),
-          const SizedBox(width: 15),
-          Expanded(child: Text(text, style: app_styles.primaryText)),
-        ],
-      );
-
-  List<Widget> _getFeatures(BuildContext context) => localizations
-      .of(context)
-      .splashScreenFeatures
-      .split('\n')
-      .map(_buildFeatureText)
-      .toList();
-
-  Widget _buildLogoPicture(BuildContext context) => Padding(
-        padding: const EdgeInsets.only(bottom: 20, left: 20, right: 20),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Image.asset('images/ic_launcher.png'),
-              Text(
-                localizations.of(context).appLogoName,
-                style: const TextStyle(
-                    fontSize: 20,
-                    color: Colors.green,
-                    fontWeight: FontWeight.w700),
+  Widget _buildLogoPicture(BuildContext context, double width) => Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                vertical: 30,
+                horizontal: _kBorderPadding,
               ),
-            ],
-          ),
+              child: Image.asset(
+                'images/delern_with_logo.png',
+                width: width,
+              ),
+            ),
+          ],
         ),
       );
 
@@ -68,27 +51,81 @@ class SignIn extends StatelessWidget {
           child: ConstrainedBox(
             // SingleChildScrollView will shrink-wrap the content, even when
             // there's enough room on the viewport (screen) to provide
-            // comfortable spacing between the items in Column. We set minimum
-            // height based on viewport size. See also:
+            // comfortable spacing between the items in Column.
+            // Setting minimum constraints ensures that the column becomes
+            // either as big as viewport, or as big as the contents, whichever
+            // is biggest. For more information, see:
             // https://api.flutter.dev/flutter/widgets/SingleChildScrollView-class.html#centering-spacing-or-aligning-fixed-height-content
             constraints: BoxConstraints(
               minHeight: viewportConstraints.maxHeight,
             ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                const SignInButton(providerId: GoogleAuthProvider.providerId),
-                const SignInButton(providerId: FacebookAuthProvider.providerId),
-                ...?_getFeatures(context),
-                Text(
-                  localizations.of(context).doNotNeedFeaturesText,
-                  style: app_styles.secondaryText,
-                  textAlign: TextAlign.center,
-                ),
-                const SignInButton(providerId: null),
-                _buildLegalInfo(context),
-              ],
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: _kBorderPadding),
+              child: Column(
+                mainAxisSize: MainAxisSize.max,
+                // We put two Column widgets inside one with spaceBetween so
+                // that any space unoccupied by the two is in between them.
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: _kBorderPadding),
+                        child: Text(
+                            localizations
+                                .of(context)
+                                .signInWithLabel
+                                .toUpperCase(),
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w700,
+                            )),
+                      ),
+                      const SignInButton(
+                          providerId: GoogleAuthProvider.providerId),
+                      _kHeightBetweenWidgets,
+                      const SignInButton(
+                          providerId: FacebookAuthProvider.providerId),
+                      _kHeightBetweenWidgets,
+                      Text(
+                        localizations.of(context).splashScreenFeatures,
+                        style: app_styles.secondaryText,
+                        textAlign: TextAlign.center,
+                      ),
+                      _kHeightBetweenWidgets,
+                    ],
+                  ),
+                  Column(
+                    children: [
+                      Row(
+                        children: <Widget>[
+                          const Expanded(child: Divider()),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: _kBorderPadding),
+                            child: Text(
+                              localizations
+                                  .of(context)
+                                  .signInScreenOr
+                                  .toUpperCase(),
+                              style: app_styles.secondaryText,
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                          const Expanded(child: Divider()),
+                        ],
+                      ),
+                      _kHeightBetweenWidgets,
+                      const SignInButton(providerId: null),
+                      _kHeightBetweenWidgets,
+                      _buildLegalInfo(context),
+                      _kHeightBetweenWidgets,
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -96,7 +133,8 @@ class SignIn extends StatelessWidget {
 
   Widget _buildPortraitSignInScreen(BuildContext context) => Column(
         children: <Widget>[
-          _buildLogoPicture(context),
+          _buildLogoPicture(context, MediaQuery.of(context).size.width / 2),
+          const Divider(),
           Expanded(child: _buildSignInControls(context)),
         ],
       );
@@ -104,7 +142,7 @@ class SignIn extends StatelessWidget {
   Widget _buildLandscapeSignInScreen(BuildContext context) => Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          _buildLogoPicture(context),
+          _buildLogoPicture(context, MediaQuery.of(context).size.width / 3),
           Expanded(child: _buildSignInControls(context)),
         ],
       );
@@ -135,8 +173,10 @@ class SignIn extends StatelessWidget {
   }) =>
       TextSpan(
         text: text,
-        style: app_styles.secondaryText
-            .copyWith(decoration: TextDecoration.underline),
+        style: app_styles.secondaryText.copyWith(
+          decoration: TextDecoration.underline,
+          color: app_styles.kHyperlinkColor,
+        ),
         recognizer: TapGestureRecognizer()
           ..onTap = () {
             launchUrl(url, context);

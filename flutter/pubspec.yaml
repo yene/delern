@@ -65,6 +65,9 @@ flutter:
     - images/google_sign_in.png
     - images/facebook_sign_in.png
 
+    # Image for login screen
+    - images/delern_with_logo.png
+
     # Logo to display in e.g. About dialog.
     - images/ic_launcher.png
 

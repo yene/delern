@@ -40,8 +40,6 @@ class MessageLookup extends MessageLookupByLibrary {
         "addDeckTooltip": MessageLookupByLibrary.simpleMessage("Add Deck"),
         "anonymous": MessageLookupByLibrary.simpleMessage("Anonymous"),
         "answeredCards": m0,
-        "appLogoName":
-            MessageLookupByLibrary.simpleMessage("Delern Flashcards"),
         "appNotInstalledSharingDeck": MessageLookupByLibrary.simpleMessage(
             "This user hasn\'t installed Delern yet. Do you want to sent an invite?"),
         "backSideHint": MessageLookupByLibrary.simpleMessage("Back side:"),
@@ -56,7 +54,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Card was deleted"),
         "cardsToLearnLabel": m1,
         "continueAnonymously":
-            MessageLookupByLibrary.simpleMessage("Continue Anonymously"),
+            MessageLookupByLibrary.simpleMessage("Continue as a Guest"),
         "continueEditingQuestion": MessageLookupByLibrary.simpleMessage(
             "You have unsaved changes. Would you like to continue editing?"),
         "continueLearningQuestion": m2,
@@ -85,8 +83,6 @@ class MessageLookup extends MessageLookupByLibrary {
         "discard": MessageLookupByLibrary.simpleMessage("Discard"),
         "doNotKnowCardTooltip":
             MessageLookupByLibrary.simpleMessage("I don\'t know"),
-        "doNotNeedFeaturesText": MessageLookupByLibrary.simpleMessage(
-            "I do not want any of these features"),
         "done": MessageLookupByLibrary.simpleMessage("Done"),
         "edit": MessageLookupByLibrary.simpleMessage("Edit"),
         "editCardTooltip": MessageLookupByLibrary.simpleMessage("Edit card"),
@@ -184,13 +180,14 @@ class MessageLookup extends MessageLookupByLibrary {
                 "You have previously signed in to the application using this email, but with a different provider (e.g. Google instead of Facebook). Please sign in with the same provider you have used before."),
         "signInCredentialAlreadyInUseWarning": MessageLookupByLibrary.simpleMessage(
             "The account you have chosen is already registered with the application. If you continue with sign in, all data that you have created anonymously will be lost. Would you like to continue?"),
-        "signInWithFacebook":
-            MessageLookupByLibrary.simpleMessage("Sign in with Facebook"),
-        "signInWithGoogle":
-            MessageLookupByLibrary.simpleMessage("Sign in with Google"),
+        "signInScreenOr": MessageLookupByLibrary.simpleMessage("or"),
+        "signInWithFacebook": MessageLookupByLibrary.simpleMessage("Facebook"),
+        "signInWithGoogle": MessageLookupByLibrary.simpleMessage("Google"),
+        "signInWithLabel":
+            MessageLookupByLibrary.simpleMessage("Sign in with:"),
         "skip": MessageLookupByLibrary.simpleMessage("Skip"),
         "splashScreenFeatures": MessageLookupByLibrary.simpleMessage(
-            "Data and progress are saved in the Cloud\nData and progress are synchronized across all your devices\nShare cards with your friends and colleagues"),
+            "All the data will be saved in the Cloud and synchronized across all your devices. You can also share cards with your friends and colleagues"),
         "supportDevelopment": MessageLookupByLibrary.simpleMessage(
             "Please tell us what we can do to make your experience with Delern better!\n\nIf you have any questions or suggestions please contact us:\n[delern@dasfoo.org](mailto:delern@dasfoo.org)\n\nFollow latest news on:\n\n- [Facebook](https://fb.me/das.delern)\n- [Twitter](https://twitter.com/dasdelern)\n- [LinkedIn](https://www.linkedin.com/company/delern)\n- [VK](https://vk.com/delern)\n\nTo see the source code for this app, please visit the [Delern GitHub repo](https://github.com/dasfoo/delern).\n      "),
         "swissDeckType": MessageLookupByLibrary.simpleMessage("Swiss"),

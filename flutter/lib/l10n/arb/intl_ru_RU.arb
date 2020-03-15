@@ -42,7 +42,7 @@
     "placeholders": {
     }
   },
-  "signInWithGoogle": "Войти с помощью Google",
+  "signInWithGoogle": "Google",
   "@signInWithGoogle": {
     "description": "Sign in with Google Button",
     "type": "text",
@@ -414,21 +414,14 @@
     "placeholders": {
     }
   },
-  "doNotNeedFeaturesText": "Мне не нужны все эти функции ",
-  "@doNotNeedFeaturesText": {
-    "description": "Do not need features text",
-    "type": "text",
-    "placeholders": {
-    }
-  },
-  "continueAnonymously": "Продолжить Анонимно",
+  "continueAnonymously": "Продолжить как гость",
   "@continueAnonymously": {
-    "description": "Continue Anonymously",
+    "description": "Continue as a guest",
     "type": "text",
     "placeholders": {
     }
   },
-  "splashScreenFeatures": "Данные и прогресс сохранены в Облаке\nДанные и прогресс синхронизированы на всех Ваших устройствах\nДелитесь карточками со своими друзьями и коллегами",
+  "splashScreenFeatures": "Данные и прогресс изучения будут сохранены в Облаке и синхронизированы на всех Ваших устройствах. Вы также можете поделиться карточками с друзьями и коллегами",
   "@splashScreenFeatures": {
     "description": "Share cards with your friends and colleagues",
     "type": "text",
@@ -515,13 +508,6 @@
   "skip": "Пропустить",
   "@skip": {
     "description": "Skip",
-    "type": "text",
-    "placeholders": {
-    }
-  },
-  "appLogoName": "Delern Флэшкарточки",
-  "@appLogoName": {
-    "description": "Delern Flashcards",
     "type": "text",
     "placeholders": {
     }
@@ -763,7 +749,7 @@
     "placeholders": {
     }
   },
-  "signInWithFacebook": "Войти с помощью Facebook",
+  "signInWithFacebook": "Facebook",
   "@signInWithFacebook": {
     "description": "Sign in with Facebook Button",
     "type": "text",
@@ -787,6 +773,20 @@
   "shuffleTooltip": "Перемешать карточки",
   "@shuffleTooltip": {
     "description": "Shuffle cards tooltip",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "signInWithLabel": "Войти с помощью:",
+  "@signInWithLabel": {
+    "description": "Sign in with lable before different providers",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "signInScreenOr": "или",
+  "@signInScreenOr": {
+    "description": "or label",
     "type": "text",
     "placeholders": {
     }

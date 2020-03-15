@@ -1,6 +1,6 @@
 {
   "@@locale": "en_US",
-  "@@last_modified": "2020-02-19T11:08:17.675674",
+  "@@last_modified": "2020-03-08T16:31:36.097356",
   "navigationDrawerSignOut": "Sign Out",
   "@navigationDrawerSignOut": {
     "description": "Sign Out in Navigation Drawer",
@@ -43,14 +43,21 @@
     "placeholders": {
     }
   },
-  "signInWithGoogle": "Sign in with Google",
+  "signInWithGoogle": "Google",
   "@signInWithGoogle": {
     "description": "Sign in with Google Button",
     "type": "text",
     "placeholders": {
     }
   },
-  "signInWithFacebook": "Sign in with Facebook",
+  "signInWithLabel": "Sign in with:",
+  "@signInWithLabel": {
+    "description": "Sign in with lable before different providers",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "signInWithFacebook": "Facebook",
   "@signInWithFacebook": {
     "description": "Sign in with Facebook Button",
     "type": "text",
@@ -429,21 +436,14 @@
     "placeholders": {
     }
   },
-  "doNotNeedFeaturesText": "I do not want any of these features",
-  "@doNotNeedFeaturesText": {
-    "description": "Do not need features text",
-    "type": "text",
-    "placeholders": {
-    }
-  },
-  "continueAnonymously": "Continue Anonymously",
+  "continueAnonymously": "Continue as a Guest",
   "@continueAnonymously": {
-    "description": "Continue Anonymously",
+    "description": "Sign in as a guest to the app",
     "type": "text",
     "placeholders": {
     }
   },
-  "splashScreenFeatures": "Data and progress are saved in the Cloud\nData and progress are synchronized across all your devices\nShare cards with your friends and colleagues",
+  "splashScreenFeatures": "All the data will be saved in the Cloud and synchronized across all your devices. You can also share cards with your friends and colleagues",
   "@splashScreenFeatures": {
     "description": "Data and progress are saved",
     "type": "text",
@@ -544,13 +544,6 @@
   "skip": "Skip",
   "@skip": {
     "description": "Skip",
-    "type": "text",
-    "placeholders": {
-    }
-  },
-  "appLogoName": "Delern Flashcards",
-  "@appLogoName": {
-    "description": "Delern Flashcards",
     "type": "text",
     "placeholders": {
     }
@@ -788,6 +781,13 @@
   "shuffleTooltip": "Shuffle cards",
   "@shuffleTooltip": {
     "description": "Shuffle cards tooltip",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "signInScreenOr": "or",
+  "@signInScreenOr": {
+    "description": "or label",
     "type": "text",
     "placeholders": {
     }

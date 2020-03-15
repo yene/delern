@@ -11,7 +11,7 @@ import 'package:flutter/material.dart';
 class SignIn extends StatelessWidget {
   static const routeName = '/signIn';
   static const _kBorderPadding = 15.0;
-  static const _kHeighBetweenWidgets = SizedBox(height: 8);
+  static const _kHeightBetweenWidgets = SizedBox(height: 8);
 
   const SignIn() : super();
 
@@ -85,16 +85,16 @@ class SignIn extends StatelessWidget {
                       ),
                       const SignInButton(
                           providerId: GoogleAuthProvider.providerId),
-                      _kHeighBetweenWidgets,
+                      _kHeightBetweenWidgets,
                       const SignInButton(
                           providerId: FacebookAuthProvider.providerId),
-                      _kHeighBetweenWidgets,
+                      _kHeightBetweenWidgets,
                       Text(
                         localizations.of(context).splashScreenFeatures,
                         style: app_styles.secondaryText,
                         textAlign: TextAlign.center,
                       ),
-                      _kHeighBetweenWidgets,
+                      _kHeightBetweenWidgets,
                     ],
                   ),
                   Column(
@@ -117,11 +117,11 @@ class SignIn extends StatelessWidget {
                           const Expanded(child: Divider()),
                         ],
                       ),
-                      _kHeighBetweenWidgets,
+                      _kHeightBetweenWidgets,
                       const SignInButton(providerId: null),
-                      _kHeighBetweenWidgets,
+                      _kHeightBetweenWidgets,
                       _buildLegalInfo(context),
-                      _kHeighBetweenWidgets,
+                      _kHeightBetweenWidgets,
                     ],
                   ),
                 ],

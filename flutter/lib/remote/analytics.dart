@@ -40,11 +40,16 @@ Future<void> logShare({String deckId, String method}) =>
       method: method,
     );
 
+// TODO(ksheremet): Check whether content type and method are recorded in
+// Analytics
 Future<void> logUnshare({String deckId, String method}) =>
-    FirebaseAnalytics().logShare(
-      contentType: deckMimeType,
-      itemId: '[unshared] $deckId',
-      method: method,
+    FirebaseAnalytics().logEvent(
+      name: 'unshare',
+      parameters: {
+        'content_type': deckMimeType,
+        'item_id': '$deckId',
+        'method': method,
+      },
     );
 
 Future<void> logCardCreate(String deckId) =>
@@ -63,3 +68,17 @@ Future<void> logPromoteAnonymous() =>
 
 Future<void> logPromoteAnonymousFail() =>
     FirebaseAnalytics().logEvent(name: 'promote_anonymous_fail');
+
+Future<void> logLoginEvent(String provider) =>
+    // provider looks like 'google.com', 'facebook.com'. Dots are invalid for
+    // reporting, therefore cut string till dot and send the first part
+    FirebaseAnalytics().logEvent(name: 'login_${provider.split('.')[0]}');
+
+Future<void> logOnboardingStartEvent() =>
+    FirebaseAnalytics().logEvent(name: 'onboarding_start');
+
+Future<void> logOnboardingDoneEvent() =>
+    FirebaseAnalytics().logEvent(name: 'onboarding_done');
+
+Future<void> logOnboardingSkipEvent() =>
+    FirebaseAnalytics().logEvent(name: 'onboarding_skip');

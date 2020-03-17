@@ -1,5 +1,6 @@
 import 'package:delern_flutter/flutter/device_info.dart';
 import 'package:delern_flutter/flutter/localization.dart' as localizations;
+import 'package:delern_flutter/remote/analytics.dart';
 import 'package:delern_flutter/views/helpers/progress_indicator_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:intro_views_flutter/Models/page_view_model.dart';
@@ -31,7 +32,9 @@ class _OnboardingState extends State<Onboarding> {
           if (_isIntroShown == true) {
             return widget.afterOnboardingBuilder();
           } else {
+            logOnboardingStartEvent();
             return _OnboardingWidget(callback: () async {
+              unawaited(logOnboardingDoneEvent());
               unawaited((await _prefs).setBool(_introPrefKey, true));
               setState(() => _isIntroShown = true);
             });
@@ -103,6 +106,7 @@ class _OnboardingWidget extends StatelessWidget {
         _introPages(context),
         doneText: Text(localizations.of(context).done.toUpperCase()),
         skipText: Text(localizations.of(context).skip.toUpperCase()),
+        onTapSkipButton: logOnboardingSkipEvent,
         onTapDoneButton: callback,
         showSkipButton: true,
         pageButtonTextStyles: const TextStyle(

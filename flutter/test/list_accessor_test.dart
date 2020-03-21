@@ -298,7 +298,7 @@ class MyModel implements KeyedListItem {
   int get hashCode => key.hashCode ^ value.hashCode;
 
   @override
-  String toString() => '#<$runtimeType key: $key, value: $value>';
+  String toString() => '#<MyModel key: $key, value: $value>';
 }
 
 class MyListAccessor extends DataListAccessor<MyModel> {

@@ -37,6 +37,7 @@ abstract class ScheduledCardModel
 
   /// [ScheduledCardModel.key] is the key of the card that it represents.
   @nullable
+  @override
   String get key;
 
   int get level;

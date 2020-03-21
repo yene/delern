@@ -201,10 +201,10 @@ class AppLocalizations {
       );
 
   String get appNotInstalledSharingDeck => Intl.message(
-        'This user hasn\'t installed Delern yet. Do you want to sent an '
+        "This user hasn't installed Delern yet. Do you want to sent an "
         'invite?',
         name: 'appNotInstalledSharingDeck',
-        desc: 'The app hasn\'t installed by user with who deck was shared',
+        desc: "The app hasn't installed by user with who deck was shared",
       );
 
   String get inviteToAppMessage => Intl.message(
@@ -669,7 +669,7 @@ To see the source code for this app, please visit the [Delern GitHub repo](https
       );
 
   String get doNotKnowCardTooltip => Intl.message(
-        'I don\'t know',
+        "I don't know",
         name: 'doNotKnowCardTooltip',
         desc: 'Tooltip for do not know card button',
       );

@@ -39,6 +39,7 @@ class DeckType extends EnumClass {
 abstract class DeckModel
     implements Built<DeckModel, DeckModelBuilder>, KeyedListItem {
   @nullable
+  @override
   String get key;
   @nullable
   String get name;

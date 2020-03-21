@@ -13,6 +13,7 @@ abstract class CardReplyModel
   String get deckKey;
   String get cardKey;
   @nullable
+  @override
   String get key;
   int get levelBefore;
   bool get reply;

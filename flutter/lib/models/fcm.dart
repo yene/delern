@@ -6,6 +6,7 @@ import 'package:delern_flutter/models/base/keyed_list_item.dart';
 part 'fcm.g.dart';
 
 abstract class FCM implements Built<FCM, FCMBuilder>, KeyedListItem {
+  @override
   String get key;
   String get name;
   String get language;

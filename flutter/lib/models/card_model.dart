@@ -15,6 +15,7 @@ abstract class CardModel
   @nullable
   String get deckKey;
   @nullable
+  @override
   String get key;
   String get front;
   String get back;

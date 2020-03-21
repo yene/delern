@@ -117,6 +117,8 @@ class _MenuRoute<_DeckMenuItemType> extends PopupRoute<_DeckMenuItemType> {
   // We need parent to count position of menu.
   final BuildContext parent;
 
+  // TODO(ksheremet): remove the override.
+  @override
   final AnimationController controller;
 
   _MenuRoute({@required this.parent, @required this.controller})

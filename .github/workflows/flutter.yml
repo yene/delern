@@ -60,7 +60,7 @@ jobs:
         if: matrix.upload_coverage
         uses: codecov/codecov-action@v1.0.6
       - name: "Workaround for fastlane & Dart generating files with LF"
-        if: startsWith(matrix.os, 'windows')
+        if: runner.os == 'Windows'
         run: git add .
       - name: "Check that all files were properly formatted and generated"
         run: bundle exec fastlane ensure_clean_git
@@ -91,12 +91,16 @@ jobs:
         with:
           name: "flutter app (${{ matrix.os }})"
           path: ${{ matrix.app_artifact_path }}
-      - name: "Upload Pubspec.lock for updating when not having a Mac"
+
+      - name: "Clean up generated files before packing a snapshot of changes"
+        if: failure() && runner.os != 'Windows'
+        run: git clean -f -x -d
+      - name: "Upload snapshot of source code after changes to copy over"
+        if: failure() && runner.os != 'Windows'
         uses: actions/upload-artifact@v1
-        if: always() && matrix.platform == 'ios'
         with:
-          name: Podfile.lock
-          path: flutter/ios/Podfile.lock
+          name: flutter
+          path: flutter
 
   publish:
     if: >

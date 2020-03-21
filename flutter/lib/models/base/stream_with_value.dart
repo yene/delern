@@ -19,10 +19,13 @@ class _MappedStreamWithValue<TInput, TOutput>
 
   _MappedStreamWithValue(this._inputStream, this._convert);
 
+  @override
   TOutput get value =>
       _inputStream.hasValue ? _convert(_inputStream.value) : null;
+  @override
   bool get hasValue => _inputStream.hasValue;
 
+  @override
   Stream<TOutput> get updates => _inputStream.updates.mapPerEvent(_convert);
 }
 

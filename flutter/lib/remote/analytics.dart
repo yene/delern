@@ -47,7 +47,7 @@ Future<void> logUnshare({String deckId, String method}) =>
       name: 'unshare',
       parameters: {
         'content_type': deckMimeType,
-        'item_id': '$deckId',
+        'item_id': deckId,
         'method': method,
       },
     );

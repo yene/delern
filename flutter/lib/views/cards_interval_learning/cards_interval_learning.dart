@@ -189,6 +189,7 @@ class CardsIntervalLearningState extends State<CardsIntervalLearning> {
                       // or other similar creative physical features of
                       // the display.
                       SafeArea(
+                        minimum: const EdgeInsets.only(left: 8, bottom: 8),
                         child: Text(
                           localizations
                               .of(context)
@@ -197,7 +198,7 @@ class CardsIntervalLearningState extends State<CardsIntervalLearning> {
                         ),
                       ),
                     ],
-                  )
+                  ),
                 ],
               ),
       );

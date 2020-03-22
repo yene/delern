@@ -215,7 +215,9 @@ platform :ios do
     # Perform an (otherwise unnecessary) build to:
     # - add version
     # - switch to release mode
-    flutter_build
+    retry_on_exception do
+      flutter_build
+    end
     gym(silent: true, suppress_xcode_output: true)
 
     begin

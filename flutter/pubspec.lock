@@ -239,13 +239,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.1.1+2"
-  firebase_crashlytics:
-    dependency: "direct main"
-    description:
-      name: firebase_crashlytics
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.1.3+3"
   firebase_database:
     dependency: "direct main"
     description:
@@ -302,7 +295,7 @@ packages:
       name: flutter_sentry
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.2.1"
+    version: "0.3.0"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -620,7 +613,7 @@ packages:
     source: hosted
     version: "0.23.1"
   sentry:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: sentry
       url: "https://pub.dartlang.org"

@@ -1,24 +1,35 @@
 import 'dart:async';
 
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_sentry/flutter_sentry.dart';
+import 'package:sentry/sentry.dart';
 
-set uid(String uid) => Crashlytics.instance.setUserIdentifier(uid);
+set uid(String uid) => FlutterSentry.instance.userContext = User(id: uid);
 
-Future<void> report(String src, error, StackTrace stackTrace,
-    {Map<String, dynamic> extra}) async {
+Future<void> report(
+  String src,
+  error,
+  StackTrace stackTrace, {
+  Map<String, dynamic> extra,
+}) async {
   if (stackTrace == null && error is Error) {
     stackTrace = error.stackTrace;
   }
   stackTrace ??= StackTrace.current;
 
-  debugPrint('Sending error report...');
+  debugPrint('Sending error report: $error\n$stackTrace\n---');
   if (extra != null) {
-    for (final entry in extra.entries) {
-      debugPrint('[extra] ${entry.key}: ${entry.value}');
-      Crashlytics.instance.setString(entry.key, entry.value.toString());
-    }
+    debugPrint('Extra: $extra');
+    // TODO(dotdoom): add extra to event instead of user, when possible.
+    FlutterSentry.instance.userContext = User(
+      id: FlutterSentry.instance.userContext?.id,
+      extras: extra,
+    );
   }
 
-  return Crashlytics.instance.recordError(error, stackTrace, context: src);
+  // TODO(dotdoom): include "src" in the report, or get rid of it.
+  return FlutterSentry.instance.captureException(
+    exception: error,
+    stackTrace: stackTrace,
+  );
 }

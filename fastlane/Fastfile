@@ -57,12 +57,14 @@ lane :update do
         Dir.chdir('ios') { sh %w(bundle exec pod update) }
       end
     end
-    Dir.chdir('firebase') do
+    npm_update = proc do
       sh %w(npm update)
-      Dir.chdir('functions') do
-        sh %w(npm update)
-      end
+      sh %w(npm audit fix)
+      # And autofix any lint errors.
+      sh %w(npm run fix)
     end
+    Dir.chdir('firebase', &npm_update)
+    Dir.chdir('firebase/functions', &npm_update)
   end
 end
 

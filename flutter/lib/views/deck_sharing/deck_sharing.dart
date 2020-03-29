@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:delern_flutter/app_config.dart';
 import 'package:delern_flutter/flutter/localization.dart' as localizations;
 import 'package:delern_flutter/flutter/styles.dart' as app_styles;
 import 'package:delern_flutter/flutter/user_messages.dart';
@@ -106,6 +107,11 @@ class _DeckSharingState extends State<DeckSharing> {
   bool _isEmailCorrect() => _textController.text.contains('@');
 
   Future<void> _shareDeck(AccessType deckAccess, BuildContext context) async {
+    if (!AppConfig.instance.sharingFeatureEnabled) {
+      await UserMessages.showSimpleInfoDialog(
+          context, localizations.of(context).featureNotAvailableUserMessage);
+      return;
+    }
     try {
       final uid = await userLookup(_textController.text.toString());
       if (uid == null) {

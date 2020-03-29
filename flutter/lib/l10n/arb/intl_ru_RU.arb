@@ -790,5 +790,12 @@
     "type": "text",
     "placeholders": {
     }
+  },
+  "featureNotAvailableUserMessage": "Эта функция в данный момент недоступна. Пожалуйста попробуйте позже.",
+  "@featureNotAvailableUserMessage": {
+    "description": "User message that a feature is not available right now",
+    "type": "text",
+    "placeholders": {
+    }
   }
 }

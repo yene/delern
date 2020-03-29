@@ -96,6 +96,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "emptyUserSharingList":
             MessageLookupByLibrary.simpleMessage("Share your deck"),
         "errorUserMessage": MessageLookupByLibrary.simpleMessage("Error: "),
+        "featureNotAvailableUserMessage": MessageLookupByLibrary.simpleMessage(
+            "This feature is currently not available. Please try it later."),
         "flip": MessageLookupByLibrary.simpleMessage("flip"),
         "frontSideHint": MessageLookupByLibrary.simpleMessage("Front side:"),
         "germanDeckType": MessageLookupByLibrary.simpleMessage("German"),

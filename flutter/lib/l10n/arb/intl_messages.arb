@@ -1,6 +1,6 @@
 {
   "@@locale": "en_US",
-  "@@last_modified": "2020-03-08T16:31:36.097356",
+  "@@last_modified": "2020-03-29T17:24:25.706243",
   "navigationDrawerSignOut": "Sign Out",
   "@navigationDrawerSignOut": {
     "description": "Sign Out in Navigation Drawer",
@@ -788,6 +788,13 @@
   "signInScreenOr": "or",
   "@signInScreenOr": {
     "description": "or label",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "featureNotAvailableUserMessage": "This feature is currently not available. Please try it later.",
+  "@featureNotAvailableUserMessage": {
+    "description": "User message that a feature is not available right now",
     "type": "text",
     "placeholders": {
     }

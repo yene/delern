@@ -721,4 +721,10 @@ To see the source code for this app, please visit the [Delern GitHub repo](https
         name: 'signInScreenOr',
         desc: 'or label',
       );
+
+  String get featureNotAvailableUserMessage => Intl.message(
+        'This feature is currently not available. Please try it later.',
+        name: 'featureNotAvailableUserMessage',
+        desc: 'User message that a feature is not available right now',
+      );
 }

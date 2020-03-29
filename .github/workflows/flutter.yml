@@ -95,7 +95,9 @@ jobs:
       - name: "Clean up generated files before packing a snapshot of changes"
         if: failure() && runner.os != 'Windows'
         run: git clean -f -x -d
-      - name: "Upload snapshot of source code after changes to copy over"
+      - name: >
+          Upload snapshot of source code.
+          To copy over: 'cd delern/flutter && unzip -o ~/Downloads/flutter.zip'
         if: failure() && runner.os != 'Windows'
         uses: actions/upload-artifact@v1
         with:

@@ -29,7 +29,7 @@ class App extends StatelessWidget {
     return MaterialApp(
       // Produce collections of localized values
       localizationsDelegates: [
-        AppLocalizationsDelegate(),
+        const AppLocalizationsDelegate(),
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
       ],

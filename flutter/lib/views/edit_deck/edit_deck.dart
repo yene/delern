@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:built_collection/built_collection.dart';
-import 'package:delern_flutter/flutter/localization.dart' as localizations;
+import 'package:delern_flutter/flutter/localization.dart';
 import 'package:delern_flutter/flutter/styles.dart' as app_styles;
 import 'package:delern_flutter/flutter/user_messages.dart';
 import 'package:delern_flutter/models/card_model.dart';
@@ -85,7 +85,7 @@ class _EditDeckState extends State<EditDeck> {
         return bloc;
       },
       appBarBuilder: (bloc) => SearchBarWidget(
-        title: localizations.of(context).edit,
+        title: context.l.edit,
         search: (input) => _searchTextChanged(bloc, input),
         actions: _buildActions(bloc),
       ),
@@ -108,7 +108,7 @@ class _EditDeckState extends State<EditDeck> {
 
   List<Widget> _buildActions(EditDeckBloc bloc) {
     final menuAction = IconButton(
-      tooltip: localizations.of(context).deckSettingsTooltip,
+      tooltip: context.l.deckSettingsTooltip,
       icon: Icon(Icons.more_vert),
       onPressed: () {
         showDialog<void>(
@@ -149,9 +149,7 @@ class _EditDeckState extends State<EditDeck> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Text(
-                    localizations
-                        .of(context)
-                        .numberOfCards(snapshot.data.length),
+                    context.l.numberOfCards(snapshot.data.length),
                     style: app_styles.secondaryText,
                   ),
                 ],
@@ -182,8 +180,7 @@ class _EditDeckState extends State<EditDeck> {
         },
         emptyMessageBuilder: () => ArrowToFloatingActionButtonWidget(
           fabKey: fabKey,
-          child:
-              EmptyListMessageWidget(localizations.of(context).emptyCardsList),
+          child: EmptyListMessageWidget(context.l.emptyCardsList),
         ),
         controller: controller,
       ),
@@ -212,14 +209,14 @@ class _EditDeckState extends State<EditDeck> {
 
   Widget _buildAddCard(EditDeckBloc bloc) => Builder(
         builder: (context) => FloatingActionButton(
-          tooltip: localizations.of(context).addCardTooltip,
+          tooltip: context.l.addCardTooltip,
           key: fabKey,
           onPressed: () {
             if (_currentDeckState.access != AccessType.read) {
               openNewCardScreen(context, deckKey: _currentDeckState.key);
             } else {
               UserMessages.showMessage(Scaffold.of(context),
-                  localizations.of(context).noAddingWithReadAccessUserMessage);
+                  context.l.noAddingWithReadAccessUserMessage);
             }
           },
           child: const Icon(Icons.add),

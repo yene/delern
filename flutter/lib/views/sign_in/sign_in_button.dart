@@ -1,4 +1,4 @@
-import 'package:delern_flutter/flutter/localization.dart' as localizations;
+import 'package:delern_flutter/flutter/localization.dart';
 import 'package:delern_flutter/flutter/styles.dart' as app_styles;
 import 'package:delern_flutter/flutter/user_messages.dart';
 import 'package:delern_flutter/remote/analytics.dart';
@@ -30,7 +30,7 @@ class SignInButton extends StatelessWidget {
             color: Colors.white,
             providerIconAsset: 'images/google_sign_in.png',
             buttonText: Text(
-              localizations.of(context).signInWithGoogle.toUpperCase(),
+              context.l.signInWithGoogle.toUpperCase(),
               style: app_styles.primaryText,
               overflow: TextOverflow.ellipsis,
             ));
@@ -39,7 +39,7 @@ class SignInButton extends StatelessWidget {
             color: app_styles.kFacebookBlueColor,
             providerIconAsset: 'images/facebook_sign_in.png',
             buttonText: Text(
-              localizations.of(context).signInWithFacebook.toUpperCase(),
+              context.l.signInWithFacebook.toUpperCase(),
               style: app_styles.primaryText
                   .merge(const TextStyle(color: Colors.white)),
               overflow: TextOverflow.ellipsis,
@@ -54,7 +54,7 @@ class SignInButton extends StatelessWidget {
             height: _buttonHeight,
             child: Center(
               child: Text(
-                localizations.of(context).continueAnonymously.toUpperCase(),
+                context.l.continueAnonymously.toUpperCase(),
                 style: app_styles.primaryText.copyWith(color: Colors.white),
                 overflow: TextOverflow.ellipsis,
               ),
@@ -135,9 +135,8 @@ class SignInButton extends StatelessWidget {
           // TODO(ksheremet): Merge data
           final signIn = await showSaveUpdatesDialog(
               context: context,
-              changesQuestion:
-                  localizations.of(context).signInCredentialAlreadyInUseWarning,
-              yesAnswer: localizations.of(context).navigationDrawerSignIn,
+              changesQuestion: context.l.signInCredentialAlreadyInUseWarning,
+              yesAnswer: context.l.navigationDrawerSignIn,
               noAnswer: MaterialLocalizations.of(context).cancelButtonLabel);
           if (signIn) {
             // Sign out of Firebase but retain the account that has been picked
@@ -153,11 +152,8 @@ class SignInButton extends StatelessWidget {
         case 'ERROR_ACCOUNT_EXISTS_WITH_DIFFERENT_CREDENTIAL':
           // Trying to sign in with a different provider but the same email.
           // Can't showDialog because we don't have Navigator before sign in.
-          UserMessages.showMessage(
-              Scaffold.of(context),
-              localizations
-                  .of(context)
-                  .signInAccountExistWithDifferentCredentialWarning);
+          UserMessages.showMessage(Scaffold.of(context),
+              context.l.signInAccountExistWithDifferentCredentialWarning);
           break;
 
         default:

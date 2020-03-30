@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:delern_flutter/flutter/legal.dart';
-import 'package:delern_flutter/flutter/localization.dart' as localizations;
+import 'package:delern_flutter/flutter/localization.dart';
 import 'package:delern_flutter/flutter/styles.dart' as app_styles;
 import 'package:delern_flutter/flutter/url_launcher.dart';
 import 'package:delern_flutter/models/user.dart';
@@ -50,13 +50,13 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
     final list = <Widget>[
       ListTile(
         title: Text(
-          localizations.of(context).navigationDrawerCommunicateGroup,
+          context.l.navigationDrawerCommunicateGroup,
           style: app_styles.navigationDrawerGroupText,
         ),
       ),
       ListTile(
         leading: const Icon(Icons.contact_mail),
-        title: Text(localizations.of(context).navigationDrawerInviteFriends),
+        title: Text(context.l.navigationDrawerInviteFriends),
         onTap: () {
           sendInvite(context);
           Navigator.pop(context);
@@ -64,7 +64,7 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
       ),
       ListTile(
         leading: const Icon(Icons.live_help),
-        title: Text(localizations.of(context).navigationDrawerContactUs),
+        title: Text(context.l.navigationDrawerContactUs),
         onTap: () async {
           Navigator.pop(context);
           await launchEmail(context);
@@ -72,8 +72,7 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
       ),
       ListTile(
         leading: const Icon(Icons.developer_board),
-        title:
-            Text(localizations.of(context).navigationDrawerSupportDevelopment),
+        title: Text(context.l.navigationDrawerSupportDevelopment),
         onTap: () {
           Navigator.pop(context);
           openSupportDevelopmentScreen(context);
@@ -86,22 +85,22 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
         applicationVersion: versionCode,
         applicationLegalese: 'GNU General Public License v3.0',
         aboutBoxChildren: <Widget>[
-          _buildTextLink(localizations.of(context).termsOfService, () {
+          _buildTextLink(context.l.termsOfService, () {
             launchUrl(kTermsOfService, context);
           }),
-          _buildTextLink(localizations.of(context).privacyPolicy, () {
+          _buildTextLink(context.l.privacyPolicy, () {
             launchUrl(kPrivacyPolicy, context);
           }),
         ],
-        child: Text(localizations.of(context).navigationDrawerAbout),
+        child: Text(context.l.navigationDrawerAbout),
       ),
     ];
 
     final signInOutWidget = ListTile(
       leading: const Icon(Icons.perm_identity),
       title: Text(user.isAnonymous
-          ? localizations.of(context).navigationDrawerSignIn
-          : localizations.of(context).navigationDrawerSignOut),
+          ? context.l.navigationDrawerSignIn
+          : context.l.navigationDrawerSignOut),
       onTap: () {
         if (user.isAnonymous) {
           unawaited(_promoteAnonymous(context));
@@ -130,7 +129,7 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
   Widget build(BuildContext context) {
     final user = CurrentUserWidget.of(context).user;
 
-    final accountName = user.displayName ?? localizations.of(context).anonymous;
+    final accountName = user.displayName ?? context.l.anonymous;
 
     return Drawer(
       child: ListView(

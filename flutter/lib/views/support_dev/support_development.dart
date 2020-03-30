@@ -1,4 +1,4 @@
-import 'package:delern_flutter/flutter/localization.dart' as localizations;
+import 'package:delern_flutter/flutter/localization.dart';
 import 'package:delern_flutter/flutter/styles.dart' as app_styles;
 import 'package:delern_flutter/flutter/url_launcher.dart';
 import 'package:flutter/material.dart';
@@ -9,12 +9,10 @@ class SupportDevelopment extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-      appBar: AppBar(
-          title: Text(
-              localizations.of(context).navigationDrawerSupportDevelopment)),
+      appBar: AppBar(title: Text(context.l.navigationDrawerSupportDevelopment)),
       body: Builder(
         builder: (context) => Markdown(
-            data: localizations.of(context).supportDevelopment,
+            data: context.l.supportDevelopment,
             styleSheet: MarkdownStyleSheet.fromTheme(Theme.of(context))
                 .copyWith(p: app_styles.primaryText),
             onTapLink: (href) {

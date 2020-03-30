@@ -1,4 +1,4 @@
-import 'package:delern_flutter/flutter/localization.dart' as localizations;
+import 'package:delern_flutter/flutter/localization.dart';
 import 'package:delern_flutter/flutter/styles.dart' as app_styles;
 import 'package:delern_flutter/flutter/user_messages.dart';
 import 'package:delern_flutter/models/deck_access_model.dart';
@@ -43,7 +43,7 @@ class _DeckMenuState extends State<DeckMenu>
 
   @override
   Widget build(BuildContext context) => IconButton(
-        tooltip: '${widget.deck.name} ${localizations.of(context).menuTooltip}',
+        tooltip: '${widget.deck.name} ${context.l.menuTooltip}',
         padding: const EdgeInsets.all(app_styles.kIconDeckPadding),
         iconSize: widget.buttonSize,
         color: app_styles.kIconColor,
@@ -74,7 +74,7 @@ class _DeckMenuState extends State<DeckMenu>
           openNewCardScreen(context, deckKey: widget.deck.key);
         } else {
           UserMessages.showMessage(Scaffold.of(context),
-              localizations.of(context).noAddingWithReadAccessUserMessage);
+              context.l.noAddingWithReadAccessUserMessage);
         }
         break;
       case _DeckMenuItemType.edit:
@@ -85,8 +85,8 @@ class _DeckMenuState extends State<DeckMenu>
         if (widget.deck.access == AccessType.owner) {
           openShareDeckScreen(context, widget.deck);
         } else {
-          UserMessages.showMessage(Scaffold.of(context),
-              localizations.of(context).noSharingAccessUserMessage);
+          UserMessages.showMessage(
+              Scaffold.of(context), context.l.noSharingAccessUserMessage);
         }
         break;
       case _DeckMenuItemType.delete:
@@ -100,16 +100,16 @@ enum _DeckMenuItemType { add, edit, share, delete }
 
 List<MapEntry<_DeckMenuItemType, String>> _buildMenu(BuildContext context) {
   final deckMenu = <_DeckMenuItemType, String>{
-    _DeckMenuItemType.add: localizations.of(context).addCardsDeckMenu,
-    _DeckMenuItemType.edit: localizations.of(context).editCardsDeckMenu,
+    _DeckMenuItemType.add: context.l.addCardsDeckMenu,
+    _DeckMenuItemType.edit: context.l.editCardsDeckMenu,
   };
 
   if (!CurrentUserWidget.of(context).user.isAnonymous) {
-    deckMenu[_DeckMenuItemType.share] = localizations.of(context).shareDeckMenu;
+    deckMenu[_DeckMenuItemType.share] = context.l.shareDeckMenu;
   }
 
   // Put delete the last to be sure that delete is the last in menu
-  deckMenu[_DeckMenuItemType.delete] = localizations.of(context).delete;
+  deckMenu[_DeckMenuItemType.delete] = context.l.delete;
   return deckMenu.entries.toList();
 }
 

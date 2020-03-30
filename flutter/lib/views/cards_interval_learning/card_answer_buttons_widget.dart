@@ -1,4 +1,4 @@
-import 'package:delern_flutter/flutter/localization.dart' as localizations;
+import 'package:delern_flutter/flutter/localization.dart';
 import 'package:delern_flutter/flutter/user_messages.dart';
 import 'package:delern_flutter/models/scheduled_card_model.dart';
 import 'package:delern_flutter/models/user.dart';
@@ -27,7 +27,7 @@ class CardAnswerButtonsWidget extends StatelessWidget {
         children: [
           FloatingActionButton(
             // heroTag - https://stackoverflow.com/questions/46509553/
-            tooltip: localizations.of(context).doNotKnowCardTooltip,
+            tooltip: context.l.doNotKnowCardTooltip,
             heroTag: 'dontknow',
             backgroundColor: Colors.red,
             onPressed: cb(() => _answerCard(
@@ -37,7 +37,7 @@ class CardAnswerButtonsWidget extends StatelessWidget {
             child: const Icon(Icons.clear),
           ),
           FloatingActionButton(
-            tooltip: localizations.of(context).knowCardTooltip,
+            tooltip: context.l.knowCardTooltip,
             heroTag: 'know',
             backgroundColor: Colors.green,
             onPressed: cb(() => _answerCard(

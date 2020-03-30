@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:built_collection/built_collection.dart';
-import 'package:delern_flutter/flutter/localization.dart' as localization;
+import 'package:delern_flutter/flutter/localization.dart';
 import 'package:delern_flutter/flutter/styles.dart' as app_styles;
 import 'package:delern_flutter/views/helpers/card_side_widget.dart';
 import 'package:flutter/foundation.dart';
@@ -180,7 +180,7 @@ class _FlipCardWidgetState extends State<FlipCardWidget>
                       color: app_styles.kSecondaryTextDeckItemColor,
                     ),
                     Text(
-                      localization.of(context).flip,
+                      context.l.flip,
                       style: app_styles.secondaryText.copyWith(
                           color: app_styles.kSecondaryTextDeckItemColor),
                     ),

@@ -14,7 +14,7 @@ void main() {
     // Widget must be wrapped in MaterialApp widget because it uses material
     // related classes.
     await tester.pumpWidget(MaterialApp(
-      localizationsDelegates: [
+      localizationsDelegates: const [
         AppLocalizationsDelegate(),
       ],
       home: FlipCardWidget(

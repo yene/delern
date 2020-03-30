@@ -3,12 +3,9 @@ import 'dart:async';
 import 'package:delern_flutter/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 
-/// https://flutter.io/tutorials/internationalization/
-AppLocalizations of(BuildContext context) =>
-    Localizations.of<AppLocalizations>(context, AppLocalizations);
-
+@immutable
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
-  AppLocalizationsDelegate();
+  const AppLocalizationsDelegate();
 
   @override
   bool isSupported(Locale locale) => ['en', 'ru'].contains(locale.languageCode);
@@ -19,4 +16,10 @@ class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
 
   @override
   bool shouldReload(AppLocalizationsDelegate old) => false;
+}
+
+extension AppLocalizationsExtension on BuildContext {
+  /// https://flutter.io/tutorials/internationalization/
+  AppLocalizations get l =>
+      Localizations.of<AppLocalizations>(this, AppLocalizations);
 }

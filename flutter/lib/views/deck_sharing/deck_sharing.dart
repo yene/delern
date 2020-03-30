@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:delern_flutter/flutter/localization.dart' as localizations;
+import 'package:delern_flutter/flutter/localization.dart';
 import 'package:delern_flutter/flutter/styles.dart' as app_styles;
 import 'package:delern_flutter/flutter/user_messages.dart';
 import 'package:delern_flutter/models/deck_access_model.dart';
@@ -55,7 +55,7 @@ class _DeckSharingState extends State<DeckSharing> {
             Builder(
               builder: (context) => SlowOperationWidget(
                 (cb) => IconButton(
-                    tooltip: localizations.of(context).shareDeckTooltip,
+                    tooltip: context.l.shareDeckTooltip,
                     icon: const Icon(Icons.send),
                     onPressed: _isEmailCorrect()
                         ? cb(() => _shareDeck(_accessValue, context))
@@ -71,7 +71,7 @@ class _DeckSharingState extends State<DeckSharing> {
               child: Row(
                 children: <Widget>[
                   Text(
-                    localizations.of(context).peopleLabel,
+                    context.l.peopleLabel,
                     style: app_styles.secondaryText,
                   ),
                 ],
@@ -92,7 +92,7 @@ class _DeckSharingState extends State<DeckSharing> {
           },
           style: app_styles.primaryText,
           decoration: InputDecoration(
-            hintText: localizations.of(context).emailAddressHint,
+            hintText: context.l.emailAddressHint,
           ),
         ),
         trailing: DeckAccessDropdownWidget(
@@ -109,7 +109,7 @@ class _DeckSharingState extends State<DeckSharing> {
   Future<void> _shareDeck(AccessType deckAccess, BuildContext context) async {
     if (!AppConfig.instance.sharingFeatureEnabled) {
       await UserMessages.showSimpleInfoDialog(
-          context, localizations.of(context).featureNotAvailableUserMessage);
+          context, context.l.featureNotAvailableUserMessage);
       return;
     }
     try {
@@ -132,11 +132,11 @@ class _DeckSharingState extends State<DeckSharing> {
       }
     } on SocketException catch (_) {
       UserMessages.showMessage(
-          Scaffold.of(context), localizations.of(context).offlineUserMessage);
+          Scaffold.of(context), context.l.offlineUserMessage);
     } on HttpException catch (e, stackTrace) {
       unawaited(error_reporting.report('share deck', e, stackTrace));
-      UserMessages.showMessage(Scaffold.of(context),
-          localizations.of(context).serverUnavailableUserMessage);
+      UserMessages.showMessage(
+          Scaffold.of(context), context.l.serverUnavailableUserMessage);
     } catch (e, stackTrace) {
       unawaited(
           UserMessages.showError(() => Scaffold.of(context), e, stackTrace));
@@ -144,7 +144,7 @@ class _DeckSharingState extends State<DeckSharing> {
   }
 
   Future<bool> _inviteUser() async {
-    final locale = localizations.of(context);
+    final locale = context.l;
     final inviteUser = await showSaveUpdatesDialog(
         context: context,
         changesQuestion: locale.appNotInstalledSharingDeck,
@@ -180,7 +180,7 @@ class _DeckUsersState extends State<DeckUsersWidget> {
             child: Row(
               children: <Widget>[
                 Text(
-                  localizations.of(context).whoHasAccessLabel,
+                  context.l.whoHasAccessLabel,
                   style: app_styles.secondaryText,
                 ),
               ],
@@ -190,8 +190,8 @@ class _DeckUsersState extends State<DeckUsersWidget> {
             child: ListAccessorWidget<DeckAccessModel>(
               list: widget.viewModel.list,
               itemBuilder: (context, item, index) => _buildUserAccessInfo(item),
-              emptyMessageBuilder: () => EmptyListMessageWidget(
-                  localizations.of(context).emptyUserSharingList),
+              emptyMessageBuilder: () =>
+                  EmptyListMessageWidget(context.l.emptyUserSharingList),
             ),
           )
         ],

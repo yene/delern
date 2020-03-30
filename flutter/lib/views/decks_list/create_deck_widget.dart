@@ -1,4 +1,4 @@
-import 'package:delern_flutter/flutter/localization.dart' as localizations;
+import 'package:delern_flutter/flutter/localization.dart';
 import 'package:delern_flutter/flutter/styles.dart' as app_styles;
 import 'package:delern_flutter/flutter/user_messages.dart';
 import 'package:delern_flutter/models/deck_model.dart';
@@ -18,7 +18,7 @@ class CreateDeckWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => FloatingActionButton(
-        tooltip: localizations.of(context).createDeckTooltip,
+        tooltip: context.l.createDeckTooltip,
         onPressed: () async {
           var newDeck = await showDialog<DeckModel>(
             context: context,
@@ -59,7 +59,7 @@ class _CreateDeckDialogState extends State<_CreateDeckDialog> {
                   (DeckModelBuilder()..name = _textController.text).build());
             },
       child: Text(
-        localizations.of(context).add.toUpperCase(),
+        context.l.add.toUpperCase(),
         style: TextStyle(
             color: _textController.text.isEmpty
                 ? Theme.of(context).disabledColor
@@ -86,7 +86,7 @@ class _CreateDeckDialogState extends State<_CreateDeckDialog> {
     if (MediaQuery.of(context).orientation == Orientation.portrait) {
       return AlertDialog(
         title: Text(
-          localizations.of(context).deck,
+          context.l.deck,
           style: const TextStyle(fontWeight: FontWeight.w600),
         ),
         content: SingleChildScrollView(

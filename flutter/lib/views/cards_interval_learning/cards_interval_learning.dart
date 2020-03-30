@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:delern_flutter/flutter/clock.dart';
-import 'package:delern_flutter/flutter/localization.dart' as localizations;
+import 'package:delern_flutter/flutter/localization.dart';
 import 'package:delern_flutter/flutter/styles.dart' as app_styles;
 import 'package:delern_flutter/models/base/stream_with_value.dart';
 import 'package:delern_flutter/models/card_model.dart';
@@ -192,7 +192,7 @@ class CardsIntervalLearningState extends State<CardsIntervalLearning> {
                     SafeArea(
                       minimum: const EdgeInsets.only(left: 8, bottom: 8),
                       child: Text(
-                        localizations.of(context).answeredCards(_answersCount),
+                        context.l.answeredCards(_answersCount),
                         style: app_styles.secondaryText,
                       ),
                     ),
@@ -216,13 +216,10 @@ class CardsIntervalLearningState extends State<CardsIntervalLearning> {
       if (!_atLeastOneCardShown) {
         _learnBeyondHorizon = await showSaveUpdatesDialog(
                 context: context,
-                changesQuestion: localizations
-                    .of(context)
-                    .continueLearningQuestion(DateFormat.yMMMd()
-                        .add_jm()
-                        .format(scheduledCard.repeatAt)),
-                noAnswer: localizations.of(context).no,
-                yesAnswer: localizations.of(context).yes) ==
+                changesQuestion: context.l.continueLearningQuestion(
+                    DateFormat.yMMMd().add_jm().format(scheduledCard.repeatAt)),
+                noAnswer: context.l.no,
+                yesAnswer: context.l.yes) ==
             true;
       }
       if (!_learnBeyondHorizon) {

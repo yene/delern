@@ -1,5 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:delern_flutter/flutter/localization.dart' as localizations;
+import 'package:delern_flutter/flutter/localization.dart';
 import 'package:delern_flutter/flutter/styles.dart' as app_styles;
 import 'package:delern_flutter/remote/error_reporting.dart' as error_reporting;
 import 'package:delern_flutter/views/helpers/progress_indicator_widget.dart';
@@ -20,7 +20,7 @@ Widget buildDisplayImageWidget(String uri) => CachedNetworkImage(
               color: app_styles.kIconColor,
             ),
             Text(
-              localizations.of(context).imageLoadingErrorUserMessage,
+              context.l.imageLoadingErrorUserMessage,
               softWrap: true,
               textAlign: TextAlign.center,
               style: app_styles.secondaryText,

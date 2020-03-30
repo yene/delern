@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:delern_flutter/flutter/localization.dart';
 import 'package:delern_flutter/flutter/styles.dart' as app_styles;
+import 'package:delern_flutter/remote/app_config.dart';
 import 'package:delern_flutter/views/card_create_update/card_create_update.dart';
 import 'package:delern_flutter/views/card_preview/card_preview.dart';
 import 'package:delern_flutter/views/cards_interval_learning/cards_interval_learning.dart';
@@ -67,6 +68,7 @@ Future<void> main() => FlutterSentry.wrap(
       () async {
         unawaited(FirebaseDatabase.instance.setPersistenceEnabled(true));
         unawaited(FirebaseAnalytics().logAppOpen());
+        AppConfig.instance;
         runApp(App());
       },
       dsn: 'https://e6b5021448e14a49803b2c734621deae@sentry.io/1867466',

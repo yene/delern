@@ -51,4 +51,20 @@ class UserMessages {
     exceptionSpecificMessage ??= e.toString();
     return locale.errorUserMessage + exceptionSpecificMessage;
   }
+
+  static Future<void> showSimpleInfoDialog(
+          BuildContext context, String message) =>
+      showDialog<void>(
+          context: context,
+          builder: (context) => AlertDialog(
+                title: Text(message),
+                actions: <Widget>[
+                  FlatButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: Text(MaterialLocalizations.of(context)
+                        .okButtonLabel
+                        .toUpperCase()),
+                  ),
+                ],
+              ));
 }

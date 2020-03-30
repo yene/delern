@@ -106,6 +106,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Поделитесь списком"),
         "errorUserMessage":
             MessageLookupByLibrary.simpleMessage("Произошла ошибка: "),
+        "featureNotAvailableUserMessage": MessageLookupByLibrary.simpleMessage(
+            "Эта функция в данный момент недоступна. Пожалуйста попробуйте позже."),
         "flip": MessageLookupByLibrary.simpleMessage("перевернуть"),
         "frontSideHint":
             MessageLookupByLibrary.simpleMessage("Передняя сторона:"),

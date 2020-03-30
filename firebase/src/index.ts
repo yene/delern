@@ -18,10 +18,10 @@ const packageName = 'org.dasfoo.delern.debug';
 
 console.log(`Setting up Firebase project: <${projectId}>.`);
 
-const stealFirebaseCredentials = () => {
+const borrowFirebaseCredentials = () => {
   const api = require('firebase-tools/lib/api.js'),
     configstore = require('firebase-tools/lib/configstore.js'),
-    tokens = configstore.get('tokens');
+    tokens = configstore.configstore.get('tokens');
   return {
     clientId: api.clientId,
     clientSecret: api.clientSecret,
@@ -86,12 +86,12 @@ const updateLocalAppConfig = async (iosAppConfig: string) => {
 
   const projects: Array<{
     name: string;
-    id: string;
-    permission: string;
-    instance: string;
-  }> = await firebase_tools.list();
+    projectId: string;
+    projectNumber: string;
+    displayName: string;
+  }> = await firebase_tools.projects.list();
 
-  if (projects.findIndex(p => p.id === projectId) < 0) {
+  if (projects.findIndex(p => p.projectId === projectId) < 0) {
     console.log(`
 The project does not exist and will be created. Since it is a completely new
 project, it will take a while (few minutes) to initialize for the first time.
@@ -105,7 +105,7 @@ Please be patient.
 
   const app = firebase_admin.initializeApp({
     credential: firebase_admin.credential.refreshToken(
-      stealFirebaseCredentials()
+      borrowFirebaseCredentials()
     ),
     projectId,
   });

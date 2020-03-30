@@ -14,10 +14,8 @@ analyzer:
     - "**/messages_*.dart"
     - "**/*.g.dart"
   strong-mode:
+    # TODO(dotdoom): disable implicit dynamic and annotate with "dynamic".
     # Problems with disabling implicit dynamic:
-    # - when declaring functions with parameters typed "dynamic", this conflicts
-    #   with "avoid_annotating_with_dynamic" lint.
-    #   TODO(dotdoom): disable that lint and annotate with "dynamic";
     # - it requires annotating all Map and Iterable literals with template
     #   parameters, even when they are passed as a strongly typed argument to a
     #   function (creates unnecessary burden);
@@ -88,6 +86,10 @@ linter:
 
     # Prefer single quotes instead.
     prefer_double_quotes: false
+
+    # Forgetting to specify a type or assuming that it will be correctly
+    # inferred is a source of errors. Annotate with dynamic explicitly.
+    avoid_annotating_with_dynamic: false
 
     # Questionable effort-to-gain ratio.
     avoid_catches_without_on_clauses: false

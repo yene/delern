@@ -231,7 +231,7 @@ class DeckListItemWidget extends StatelessWidget {
                     streamWithValue: deck.tags,
                     builder: (_, snapshot) => snapshot.hasData
                         ? TagsWidget(tags: snapshot.data)
-                        : ProgressIndicatorWidget(),
+                        : const ProgressIndicatorWidget(),
                   ),
                   SingleChildScrollView(
                     scrollDirection: Axis.horizontal,

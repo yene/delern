@@ -83,7 +83,7 @@ class _CardsViewLearningState extends State<CardsViewLearning>
           streamWithValue: bloc.doSetCardsList,
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
-              return ProgressIndicatorWidget();
+              return const ProgressIndicatorWidget();
             } else {
               return PageView.builder(
                   controller: _controller,

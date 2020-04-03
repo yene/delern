@@ -54,7 +54,7 @@ class _CardPreviewState extends State<CardPreview> {
           streamWithValue: bloc.deck,
           builder: (context, snapshot) => snapshot.hasData
               ? Text(snapshot.data.name)
-              : ProgressIndicatorWidget(),
+              : const ProgressIndicatorWidget(),
         ),
         actions: <Widget>[
           IconButton(
@@ -87,9 +87,9 @@ class _CardPreviewState extends State<CardPreview> {
                                 cardSnapshot.data.back,
                               ).defaultBackground,
                             )
-                          : ProgressIndicatorWidget(),
+                          : const ProgressIndicatorWidget(),
                     )
-                  : ProgressIndicatorWidget(),
+                  : const ProgressIndicatorWidget(),
             ),
           ),
           const Padding(padding: EdgeInsets.only(bottom: 100))

@@ -214,7 +214,7 @@ class _DeckUsersState extends State<DeckUsersWidget> {
               backgroundImage: NetworkImage(accessViewModel.photoUrl),
             ),
       title: displayName == null
-          ? ProgressIndicatorWidget()
+          ? const ProgressIndicatorWidget()
           : Text(
               displayName,
               style: app_styles.primaryText,

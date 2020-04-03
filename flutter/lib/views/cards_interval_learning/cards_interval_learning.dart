@@ -142,9 +142,7 @@ class CardsIntervalLearningState extends State<CardsIntervalLearning> {
                             back: card.back,
                             colors:
                                 specifyCardColors(_deck.value.type, card.back),
-                            onFirstFlip: () {
-                              _showReplyButtons.value = true;
-                            },
+                            hasBeenFlipped: _showReplyButtons,
                             key: ValueKey(card.key),
                           );
                         }),
@@ -210,8 +208,6 @@ class CardsIntervalLearningState extends State<CardsIntervalLearning> {
     // We call setState because the next card has arrived and we have to
     // display it.
     setState(() {
-      // New card arrived, do not show reply buttons.
-      _showReplyButtons.value = false;
       _scheduledCard = scheduledCard;
       _card = _deck.value.cards.getItem(scheduledCard.key);
     });

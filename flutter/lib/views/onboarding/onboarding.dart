@@ -40,7 +40,7 @@ class _OnboardingState extends State<Onboarding> {
             });
           }
         }
-        return ProgressIndicatorWidget();
+        return const ProgressIndicatorWidget();
       });
 }
 

@@ -104,7 +104,7 @@ class _CardCreateUpdateState extends State<CardCreateUpdate> {
             ? TextOverflowEllipsisWidget(
                 textDetails: snapshot.data.name,
               )
-            : ProgressIndicatorWidget(),
+            : const ProgressIndicatorWidget(),
       ),
       actions: <Widget>[
         StreamBuilder<bool>(

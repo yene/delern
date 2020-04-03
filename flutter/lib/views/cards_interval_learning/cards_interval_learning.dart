@@ -98,7 +98,7 @@ class CardsIntervalLearningState extends State<CardsIntervalLearning> {
               ? TextOverflowEllipsisWidget(
                   textDetails: snapshot.data.name,
                 )
-              : ProgressIndicatorWidget(),
+              : const ProgressIndicatorWidget(),
         ),
         actions: _card == null
             ? null
@@ -111,7 +111,7 @@ class CardsIntervalLearningState extends State<CardsIntervalLearning> {
               ],
       ),
       body: _card == null
-          ? ProgressIndicatorWidget()
+          ? const ProgressIndicatorWidget()
           : Column(
               children: <Widget>[
                 Expanded(
@@ -134,7 +134,7 @@ class CardsIntervalLearningState extends State<CardsIntervalLearning> {
                       builder: (context, snapshot) {
                         // TODO(dotdoom): handle removed data (in model).
                         if (!snapshot.hasData) {
-                          return ProgressIndicatorWidget();
+                          return const ProgressIndicatorWidget();
                         }
                         final card = snapshot.data;
                         // TODO(dotdoom): handle card updates.

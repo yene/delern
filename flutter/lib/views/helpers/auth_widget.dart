@@ -91,7 +91,7 @@ class _AuthWidgetState extends State<AuthWidget> {
       return CurrentUserWidget(_currentUser, child: widget.child);
     }
     if (!Auth.instance.authStateKnown) {
-      return ProgressIndicatorWidget();
+      return const ProgressIndicatorWidget();
     }
 
     return const SignIn();

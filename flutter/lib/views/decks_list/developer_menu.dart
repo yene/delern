@@ -76,7 +76,7 @@ List<Widget> buildDeveloperMenu(BuildContext context) {
           future: _getDebugInformation(),
           builder: (context, snapshot) => snapshot.hasData
               ? SelectableText(snapshot.data)
-              : ProgressIndicatorWidget(),
+              : const ProgressIndicatorWidget(),
         ),
       ],
       child: const Text('About Debug version'),

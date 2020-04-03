@@ -58,7 +58,7 @@ class _ListAccessorWidgetState<T extends KeyedListItem>
   @override
   Widget build(BuildContext context) {
     if (!widget.list.hasValue) {
-      return ProgressIndicatorWidget();
+      return const ProgressIndicatorWidget();
     }
     if (_list.isEmpty) {
       return widget.emptyMessageBuilder();

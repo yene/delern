@@ -1,8 +1,10 @@
+import 'package:built_collection/built_collection.dart';
 import 'package:delern_flutter/flutter/localization.dart' as localizations;
 import 'package:delern_flutter/flutter/styles.dart' as app_styles;
 import 'package:delern_flutter/view_models/card_create_update_bloc.dart';
 import 'package:delern_flutter/views/base/screen_bloc_view.dart';
 import 'package:delern_flutter/views/card_create_update/card_side_input_widget.dart';
+import 'package:delern_flutter/views/helpers/display_image_widget.dart';
 import 'package:delern_flutter/views/helpers/progress_indicator_widget.dart';
 import 'package:delern_flutter/views/helpers/save_updates_dialog.dart';
 import 'package:delern_flutter/views/helpers/stream_with_value_builder.dart';
@@ -140,6 +142,18 @@ class _CardCreateUpdateState extends State<CardCreateUpdate> {
             _isChanged = true;
           });
         },
+        onImageSelected: (file) {
+          bloc.onFrontImageAdded.add(file);
+          _isChanged = true;
+        },
+        imageList: DisplayImageListWidget(
+          addImageStream: bloc.doFrontImageAdded,
+          deleteImageSink: bloc.onFrontImageDeleted,
+          showImagePlaceholderStream: bloc.doShowFrontImagePlaceholder,
+          onDeleted: () {
+            _isChanged = true;
+          },
+        ),
         hint: localizations.of(context).frontSideHint,
         autofocus: true,
         focusNode: _frontSideFocus,
@@ -153,6 +167,18 @@ class _CardCreateUpdateState extends State<CardCreateUpdate> {
             _isChanged = true;
           });
         },
+        onImageSelected: (file) {
+          bloc.onBackImageAdded.add(file);
+          _isChanged = true;
+        },
+        imageList: DisplayImageListWidget(
+          addImageStream: bloc.doBackImageAdded,
+          deleteImageSink: bloc.onBackImageDeleted,
+          onDeleted: () {
+            _isChanged = true;
+          },
+          showImagePlaceholderStream: bloc.doShowBackImagePlaceholder,
+        ),
         hint: localizations.of(context).backSideHint,
       ),
     ];
@@ -189,9 +215,87 @@ class _CardCreateUpdateState extends State<CardCreateUpdate> {
       _isChanged = false;
       _frontTextController.clear();
       _backTextController.clear();
+      bloc.onClearImages.add(null);
       bloc.onFrontSideText.add('');
       bloc.onBackSideText.add('');
       FocusScope.of(context).requestFocus(_frontSideFocus);
     });
+  }
+}
+
+class DisplayImageListWidget extends StatelessWidget {
+  final Stream<BuiltList<String>> _addImageStream;
+  final Stream<bool> _showImagePlaceholderStream;
+  final Sink<int> _deleteImageSink;
+  final Function _onDeleted;
+
+  const DisplayImageListWidget(
+      {@required addImageStream,
+      @required deleteImageSink,
+      @required onDeleted,
+      @required showImagePlaceholderStream})
+      : _addImageStream = addImageStream,
+        _deleteImageSink = deleteImageSink,
+        _onDeleted = onDeleted,
+        _showImagePlaceholderStream = showImagePlaceholderStream;
+
+  @override
+  Widget build(BuildContext context) => StreamBuilder<bool>(
+      stream: _showImagePlaceholderStream,
+      builder: (context, placeholderSnapshot) =>
+          StreamBuilder<BuiltList<String>>(
+            stream: _addImageStream,
+            builder: (context, snapshot) {
+              final children = <Widget>[];
+
+              if (snapshot.hasData &&
+                  snapshot.data != null &&
+                  snapshot.data.isNotEmpty) {
+                children
+                    .addAll(_buildImagesList(snapshot.data, _deleteImageSink));
+              }
+              if (placeholderSnapshot.hasData && placeholderSnapshot.data) {
+                children.add(const Padding(
+                  padding: EdgeInsets.all(16),
+                  child: ImageProgressIndicatorPlaceholderWidget(),
+                ));
+              }
+              return Column(
+                children: children,
+              );
+            },
+          ));
+
+  List<Widget> _buildImagesList(BuiltList<String> images, Sink<int> onDelete) {
+    final widgetsList = <Widget>[];
+    for (var i = 0; i < images.length; i++) {
+      final imageUrl = images[i];
+      widgetsList.add(
+        Padding(
+            padding: const EdgeInsets.all(16),
+            child: Stack(children: <Widget>[
+              buildDisplayImageWidget(imageUrl),
+              Align(
+                alignment: Alignment.topRight,
+                child: Padding(
+                  padding: const EdgeInsets.only(right: 8, top: 8),
+                  child: DecoratedBox(
+                    decoration: const BoxDecoration(
+                      color: Colors.white,
+                      shape: BoxShape.circle,
+                    ),
+                    child: IconButton(
+                        icon: const Icon(Icons.delete),
+                        onPressed: () {
+                          onDelete.add(i);
+                          _onDeleted();
+                        }),
+                  ),
+                ),
+              ),
+            ])),
+      );
+    }
+    return widgetsList;
   }
 }

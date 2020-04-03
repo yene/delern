@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'dart:math';
 
 import 'package:delern_flutter/flutter/clock.dart';
@@ -13,9 +14,12 @@ import 'package:delern_flutter/models/scheduled_card_model.dart';
 import 'package:delern_flutter/remote/error_reporting.dart' as error_reporting;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/foundation.dart';
 import 'package:meta/meta.dart';
 import 'package:pedantic/pedantic.dart';
 import 'package:quiver/strings.dart';
+import 'package:uuid/uuid.dart';
 
 /// An abstraction layer on top of FirebaseUser, plus data writing methods.
 class User {
@@ -148,7 +152,15 @@ class User {
           .forEach((a) => updates['decks/${a.key}/${deck.key}'] = null);
     }
 
-    return _write(updates);
+    final frontImageUriList =
+        deck.cards.value.expand((card) => card.frontImagesUri).toList();
+    final backImageUriList =
+        deck.cards.value.expand((card) => card.backImagesUri).toList();
+    final allImagesUri = frontImageUriList..addAll(backImageUriList);
+    await _write(updates);
+    for (final imageUri in allImagesUri) {
+      unawaited(deleteImage(imageUri));
+    }
   }
 
   Future<void> createCard({
@@ -179,6 +191,12 @@ class User {
         // changing it (see the note above), in which case Firebase Database
         // will reject the update.
         '$cardPath/createdAt': ServerValue.timestamp,
+        '$cardPath/frontImagesUri': reverse
+            ? card.backImagesUri.toList()
+            : card.frontImagesUri.toList(),
+        '$cardPath/backImagesUri': reverse
+            ? card.frontImagesUri.toList()
+            : card.backImagesUri.toList(),
         '$scheduledCardPath/level': 0,
         // Set random time to shuffle cards when they are created
         '$scheduledCardPath/repeatAt': repeatAt.floor(),
@@ -198,13 +216,22 @@ class User {
     return _write({
       '$cardPath/front': card.front,
       '$cardPath/back': card.back,
+      '$cardPath/frontImagesUri': card.frontImagesUri.toList(),
+      '$cardPath/backImagesUri': card.backImagesUri.toList(),
     });
   }
 
-  Future<void> deleteCard({@required CardModel card}) => _write({
-        'cards/${card.deckKey}/${card.key}': null,
-        'learning/$uid/${card.deckKey}/${card.key}': null,
-      });
+  Future<void> deleteCard({@required CardModel card}) async {
+    final imageUriList = card.frontImagesUri.toList()
+      ..addAll(card.backImagesUri);
+    await _write({
+      'cards/${card.deckKey}/${card.key}': null,
+      'learning/$uid/${card.deckKey}/${card.key}': null,
+    });
+    for (final imageUri in imageUriList) {
+      unawaited(deleteImage(imageUri));
+    }
+  }
 
   Future<void> learnCard({
     @required ScheduledCardModel unansweredScheduledCard,
@@ -300,4 +327,19 @@ class User {
   }
 
   String _newKey() => FirebaseDatabase.instance.reference().push().key;
+
+  /// Delete image from FB Storage
+  Future<void> deleteImage(String url) async =>
+      (await FirebaseStorage.instance.getReferenceFromUrl(url)).delete();
+
+  Future<dynamic> uploadImage(File file, String deckKey) async =>
+      (await FirebaseStorage.instance
+              .ref()
+              .child('cards')
+              .child(deckKey)
+              .child(Uuid().v1())
+              .putFile(file)
+              .onComplete)
+          .ref
+          .getDownloadURL();
 }

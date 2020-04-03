@@ -26,6 +26,7 @@ const double kItemElevation = 4;
 const double kItemListHeightRatio = 0.1;
 const double kItemListPaddingRatio = kItemListHeightRatio * 0.08;
 const double kCardElevation = 6;
+const double kImageMenuButtonSize = 36;
 
 class CardColor {
   final Color frontSideBackground;

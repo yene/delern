@@ -151,6 +151,8 @@ type Card {
   front: String,
   back: String,
   createdAt: Number,
+  frontImagesUri: String[] | Null,
+  backImagesUri: String[] | Null,
 }
 
 path /cards/{deckId} {

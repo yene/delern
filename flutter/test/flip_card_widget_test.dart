@@ -19,7 +19,9 @@ void main() {
       ],
       home: FlipCardWidget(
         front: frontSide,
+        frontImages: null,
         back: backSide,
+        backImages: null,
         colors: app_styles.cardBackgroundColors[Gender.masculine],
         hasBeenFlipped: hasBeenFlipped,
         key: UniqueKey(),

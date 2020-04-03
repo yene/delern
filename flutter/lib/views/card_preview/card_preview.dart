@@ -77,8 +77,10 @@ class _CardPreviewState extends State<CardPreview> {
                       builder: (context, cardSnapshot) => cardSnapshot.hasData
                           ? CardDisplayWidget(
                               front: cardSnapshot.data.frontWithoutTags,
-                              back: cardSnapshot.data.back,
+                              frontImages: cardSnapshot.data.frontImagesUri,
                               tags: cardSnapshot.data.tags.toList(),
+                              back: cardSnapshot.data.back,
+                              backImages: cardSnapshot.data.backImagesUri,
                               showBack: true,
                               color: specifyCardColors(
                                 deckSnapshot.data.type,

@@ -763,6 +763,20 @@
     "placeholders": {
     }
   },
+  "imageFromPhotoLabel": "Сфотографировать",
+  "@imageFromPhotoLabel": {
+    "description": "Take photo to upload image",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "imageFromGalleryLabel": "Из Галереи",
+  "@imageFromGalleryLabel": {
+    "description": "Upload image from Gallery",
+    "type": "text",
+    "placeholders": {
+    }
+  },
   "signInAccountExistWithDifferentCredentialWarning": "Вы уже регистрировались в приложении с этим адресом электронной почты, но с использованием другого сервиса (например, Google вместо Facebook). Пожалуйста, войдите с использованием того же сервиса, которым вы пользовались раньше",
   "@signInAccountExistWithDifferentCredentialWarning": {
     "description": "Sign in flow: a warning after sign in attempt (unauthenticated)",
@@ -794,6 +808,62 @@
   "featureNotAvailableUserMessage": "Эта функция в данный момент недоступна. Пожалуйста попробуйте позже.",
   "@featureNotAvailableUserMessage": {
     "description": "User message that a feature is not available right now",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "accessibilityAddImageLabel": "Добавить картинку",
+  "@accessibilityAddImageLabel": {
+    "description": "Add Image Accessibility label",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "imageLoadingErrorUserMessage": "Ошибка при загрузке картинки. Пожалуйста попробуйте позже.",
+  "@imageLoadingErrorUserMessage": {
+    "description": "Image loading error message to user",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "galleryAccessUserMessage": "Чтобы воспользоваться данной функцией, пожалуйста разрешите доступ к фотографиям",
+  "@galleryAccessUserMessage": {
+    "description": "User message that there is no Gallery access",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "open": "Открыть",
+  "@open": {
+    "description": "Open",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "cameraAccessUserMessage": "Чтобы воспользоваться данной функцией, пожалуйста разрешите доступ к камере",
+  "@cameraAccessUserMessage": {
+    "description": "User message that there is no Camera access",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "openAppSettingsGalleryAccessQuestion": "Хотити открыть настройки приложения, чтобы разрешить доступ к Галереи?",
+  "@openAppSettingsGalleryAccessQuestion": {
+    "description": "Suggestion to open settings of the app",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "openAppSettingsCameraAccessQuestion": "Хотити открыть настройки приложения, чтобы разрешить доступ к Камере?",
+  "@openAppSettingsCameraAccessQuestion": {
+    "description": "Suggestion to open settings of the app",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "couldNotOpenAppSettingsUserMessage": "Не смогли окрыть настройки приложения. Пожалуйста сделайте это в настройках телефона.",
+  "@couldNotOpenAppSettingsUserMessage": {
+    "description": "Couln't open App Settings user message",
     "type": "text",
     "placeholders": {
     }

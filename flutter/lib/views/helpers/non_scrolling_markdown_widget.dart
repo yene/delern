@@ -1,4 +1,4 @@
-import 'package:delern_flutter/flutter/localization.dart' as localizations;
+import 'package:delern_flutter/flutter/localization.dart';
 import 'package:delern_flutter/flutter/user_messages.dart';
 import 'package:delern_flutter/views/helpers/display_image_widget.dart';
 import 'package:flutter/material.dart';
@@ -30,7 +30,7 @@ class NonScrollingMarkdownWidget extends StatelessWidget {
                 await launch(href, forceSafariVC: false);
               } else {
                 unawaited(UserMessages.showError(() => Scaffold.of(context),
-                    localizations.of(context).couldNotLaunchUrl(href)));
+                    context.l.couldNotLaunchUrl(href)));
               }
             }),
       );

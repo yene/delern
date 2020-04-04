@@ -1,5 +1,5 @@
 import 'package:built_collection/built_collection.dart';
-import 'package:delern_flutter/flutter/localization.dart' as localizations;
+import 'package:delern_flutter/flutter/localization.dart';
 import 'package:delern_flutter/flutter/styles.dart' as app_styles;
 import 'package:delern_flutter/view_models/card_create_update_bloc.dart';
 import 'package:delern_flutter/views/base/screen_bloc_view.dart';
@@ -50,7 +50,7 @@ class _CardCreateUpdateState extends State<CardCreateUpdate> {
     @required bool defaultDiscard,
   }) async {
     if (_isChanged) {
-      final locale = localizations.of(context);
+      final locale = context.l;
       final continueEditing = await showSaveUpdatesDialog(
         context: context,
         changesQuestion: locale.continueEditingQuestion,
@@ -112,14 +112,14 @@ class _CardCreateUpdateState extends State<CardCreateUpdate> {
           stream: bloc.isOperationEnabled,
           builder: (context, snapshot) => bloc.isAddOperation
               ? IconButton(
-                  tooltip: localizations.of(context).addCardTooltip,
+                  tooltip: context.l.addCardTooltip,
                   icon: const Icon(Icons.check),
                   onPressed: snapshot.data ? saveCard : null,
                 )
               : FlatButton(
                   onPressed: _isChanged && snapshot.data ? saveCard : null,
                   child: Text(
-                    localizations.of(context).save.toUpperCase(),
+                    context.l.save.toUpperCase(),
                     style: _isChanged && snapshot.data
                         ? const TextStyle(color: Colors.white)
                         : null,
@@ -154,7 +154,7 @@ class _CardCreateUpdateState extends State<CardCreateUpdate> {
             _isChanged = true;
           },
         ),
-        hint: localizations.of(context).frontSideHint,
+        hint: context.l.frontSideHint,
         autofocus: true,
         focusNode: _frontSideFocus,
       ),
@@ -179,7 +179,7 @@ class _CardCreateUpdateState extends State<CardCreateUpdate> {
           },
           showImagePlaceholderStream: bloc.doShowBackImagePlaceholder,
         ),
-        hint: localizations.of(context).backSideHint,
+        hint: context.l.backSideHint,
       ),
     ];
 
@@ -189,7 +189,7 @@ class _CardCreateUpdateState extends State<CardCreateUpdate> {
       // CheckboxListTile to have a clickable checkbox label.
       widgetsList.add(CheckboxListTile(
         title: Text(
-          localizations.of(context).reversedCardLabel,
+          context.l.reversedCardLabel,
           style: app_styles.primaryText,
         ),
         value: _addReversedCard,

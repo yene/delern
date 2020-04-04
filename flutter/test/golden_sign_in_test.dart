@@ -9,11 +9,11 @@ void main() {
   testWidgets(
     'Sign in screen',
     (tester) async {
-      await tester.pumpWidget(MaterialApp(
+      await tester.pumpWidget(const MaterialApp(
         localizationsDelegates: [
           AppLocalizationsDelegate(),
         ],
-        home: const Scaffold(body: SignIn()),
+        home: Scaffold(body: SignIn()),
       ));
       await tester.pumpAndSettle();
 

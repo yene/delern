@@ -1,4 +1,4 @@
-import 'package:delern_flutter/flutter/localization.dart' as localizations;
+import 'package:delern_flutter/flutter/localization.dart';
 import 'package:delern_flutter/flutter/user_messages.dart';
 import 'package:delern_flutter/models/user.dart';
 import 'package:delern_flutter/view_models/base/screen_bloc.dart';
@@ -47,7 +47,7 @@ class _ScreenBlocViewState<T extends ScreenBloc>
       _bloc.doShowMessage.listen(_showUserMessage);
     }
 
-    final locale = localizations.of(context);
+    final locale = context.l;
     if (_bloc.locale != locale) {
       _bloc.onLocale.add(locale);
     }

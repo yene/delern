@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:delern_flutter/flutter/localization.dart' as localization;
+import 'package:delern_flutter/flutter/localization.dart';
 import 'package:delern_flutter/l10n/app_localizations.dart';
 import 'package:delern_flutter/remote/error_reporting.dart' as error_reporting;
 import 'package:flutter/material.dart';
@@ -15,8 +15,7 @@ class UserMessages {
     // Call a finder only *after* reporting the error, in case it crashes
     // (often because Scaffold.of cannot find Scaffold ancestor widget).
     final scaffoldState = scaffoldFinder();
-    final message =
-        formUserFriendlyErrorMessage(localization.of(scaffoldState.context), e);
+    final message = formUserFriendlyErrorMessage(scaffoldState.context.l, e);
     showMessage(scaffoldState, message);
 
     return errorFuture;

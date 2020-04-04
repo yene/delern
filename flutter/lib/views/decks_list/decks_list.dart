@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:delern_flutter/flutter/localization.dart' as localizations;
+import 'package:delern_flutter/flutter/localization.dart';
 import 'package:delern_flutter/flutter/styles.dart' as app_styles;
 import 'package:delern_flutter/flutter/user_messages.dart';
 import 'package:delern_flutter/models/deck_access_model.dart';
@@ -71,7 +71,7 @@ class _DecksListState extends State<DecksList> {
   Widget build(BuildContext context) => Scaffold(
         key: _scaffoldKey,
         appBar: SearchBarWidget(
-          title: localizations.of(context).listOFDecksScreenTitle,
+          title: context.l.listOFDecksScreenTitle,
           search: setFilter,
           leading: buildStreamBuilderWithValue<bool>(
               streamWithValue: _bloc.isOnline,
@@ -79,8 +79,8 @@ class _DecksListState extends State<DecksList> {
                 final online = snapshot.data == true;
                 return IconButton(
                   tooltip: online
-                      ? localizations.of(context).profileTooltip
-                      : localizations.of(context).offlineProfileTooltip,
+                      ? context.l.profileTooltip
+                      : context.l.offlineProfileTooltip,
                   icon: AnimatedCrossFade(
                     duration: const Duration(milliseconds: 500),
                     firstChild: const Icon(Icons.person),
@@ -135,8 +135,7 @@ class _DecksListState extends State<DecksList> {
                 },
                 emptyMessageBuilder: () => ArrowToFloatingActionButtonWidget(
                     fabKey: _fabKey,
-                    child: EmptyListMessageWidget(
-                        localizations.of(context).emptyDecksList)),
+                    child: EmptyListMessageWidget(context.l.emptyDecksList)),
               ),
             ),
           ],
@@ -219,7 +218,7 @@ class DeckListItemWidget extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.all(8),
                     child: Text(
-                      localizations.of(context).learning(deck.name),
+                      context.l.learning(deck.name),
                       // TODO(ksheremet): fix this to use non-deprecated value.
                       // ignore: deprecated_member_use
                       style: Theme.of(context).textTheme.title,
@@ -240,9 +239,8 @@ class DeckListItemWidget extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         LearningMethodWidget(
-                          name: localizations.of(context).intervalLearning,
-                          tooltip:
-                              localizations.of(context).intervalLearningTooltip,
+                          name: context.l.intervalLearning,
+                          tooltip: context.l.intervalLearningTooltip,
                           icon: Icons.autorenew,
                           onTap: () {
                             // Close dialog
@@ -254,9 +252,8 @@ class DeckListItemWidget extends StatelessWidget {
                           },
                         ),
                         LearningMethodWidget(
-                          name: localizations.of(context).viewLearning,
-                          tooltip:
-                              localizations.of(context).viewLearningTooltip,
+                          name: context.l.viewLearning,
+                          tooltip: context.l.viewLearningTooltip,
                           icon: Icons.remove_red_eye,
                           onTap: () {
                             // Close dialog
@@ -291,12 +288,12 @@ class DeckListItemWidget extends StatelessWidget {
         buildStreamBuilderWithValue<int>(
           streamWithValue: deck.numberOfCardsDue,
           builder: (context, snapshot) => Text(
-            localizations.of(context).cardsToLearnLabel(
-                  snapshot.data?.toString() ?? 'N/A',
-                  // TODO(ksheremet): Add StreamBuilder to get updates about all
-                  // cards
-                  deck.cards.value?.length?.toString() ?? 'N/A',
-                ),
+            context.l.cardsToLearnLabel(
+              snapshot.data?.toString() ?? 'N/A',
+              // TODO(ksheremet): Add StreamBuilder to get updates about all
+              // cards
+              deck.cards.value?.length?.toString() ?? 'N/A',
+            ),
             style: secondaryTextStyle,
           ),
         ),
@@ -326,7 +323,7 @@ class DeckListItemWidget extends StatelessWidget {
       );
 
   Future<bool> _showDeleteDeckDialog(BuildContext context) {
-    final locale = localizations.of(context);
+    final locale = context.l;
     return showSaveUpdatesDialog(
         context: context,
         changesQuestion: deck.access == AccessType.owner
@@ -344,7 +341,7 @@ class DeckListItemWidget extends StatelessWidget {
       final scaffoldContext = Scaffold.of(context);
       await bloc.deleteDeck(deck);
       UserMessages.showMessage(
-          scaffoldContext, localizations.of(context).deckDeletedUserMessage);
+          scaffoldContext, context.l.deckDeletedUserMessage);
       return true;
     } catch (e, stackTrace) {
       unawaited(

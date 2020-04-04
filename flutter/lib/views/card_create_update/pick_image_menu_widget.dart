@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:delern_flutter/flutter/localization.dart' as localizations;
+import 'package:delern_flutter/flutter/localization.dart';
 import 'package:delern_flutter/flutter/styles.dart' as app_styles;
 import 'package:delern_flutter/flutter/user_messages.dart';
 import 'package:delern_flutter/remote/error_reporting.dart' as error_reporting;
@@ -27,7 +27,7 @@ class PickImageMenuWidget extends StatelessWidget {
         icon: Icon(
           Icons.camera_alt,
           size: app_styles.kImageMenuButtonSize,
-          semanticLabel: localizations.of(context).accessibilityAddImageLabel,
+          semanticLabel: context.l.accessibilityAddImageLabel,
         ),
         onSelected: (source) async {
           final file = await _openImage(source, context);
@@ -59,8 +59,8 @@ class PickImageMenuWidget extends StatelessWidget {
             final permission =
                 await _acquirePermission(context, PermissionGroup.photos);
             if (permission != PermissionStatus.granted) {
-              UserMessages.showMessage(Scaffold.of(context),
-                  localizations.of(context).galleryAccessUserMessage);
+              UserMessages.showMessage(
+                  Scaffold.of(context), context.l.galleryAccessUserMessage);
               break;
             }
           }
@@ -70,10 +70,8 @@ class PickImageMenuWidget extends StatelessWidget {
             maxWidth: _kImageSideSizeLimit,
           );
         } catch (e, stackTrace) {
-          UserMessages.showMessage(
-              Scaffold.of(context),
-              UserMessages.formUserFriendlyErrorMessage(
-                  localizations.of(context), e));
+          UserMessages.showMessage(Scaffold.of(context),
+              UserMessages.formUserFriendlyErrorMessage(context.l, e));
           unawaited(error_reporting.report(
               'Getting image from Gallery failed', e, stackTrace));
         }
@@ -101,17 +99,15 @@ class PickImageMenuWidget extends StatelessWidget {
             final permission =
                 await _acquirePermission(context, PermissionGroup.camera);
             if (permission != PermissionStatus.granted) {
-              UserMessages.showMessage(Scaffold.of(context),
-                  localizations.of(context).cameraAccessUserMessage);
+              UserMessages.showMessage(
+                  Scaffold.of(context), context.l.cameraAccessUserMessage);
               break;
             }
           }
           image = await ImagePicker.pickImage(source: ImageSource.camera);
         } catch (e, stackTrace) {
-          UserMessages.showMessage(
-              Scaffold.of(context),
-              UserMessages.formUserFriendlyErrorMessage(
-                  localizations.of(context), e));
+          UserMessages.showMessage(Scaffold.of(context),
+              UserMessages.formUserFriendlyErrorMessage(context.l, e));
           unawaited(
               error_reporting.report('Taking picture failed', e, stackTrace));
         }
@@ -135,9 +131,9 @@ class PickImageMenuWidget extends StatelessWidget {
         final openAppSettings = await showSaveUpdatesDialog(
           context: context,
           changesQuestion: PermissionGroup.camera == permissionGroup
-              ? localizations.of(context).openAppSettingsCameraAccessQuestion
-              : localizations.of(context).openAppSettingsGalleryAccessQuestion,
-          yesAnswer: localizations.of(context).open,
+              ? context.l.openAppSettingsCameraAccessQuestion
+              : context.l.openAppSettingsGalleryAccessQuestion,
+          yesAnswer: context.l.open,
           noAnswer: MaterialLocalizations.of(context).cancelButtonLabel,
         );
         if (openAppSettings) {
@@ -146,7 +142,7 @@ class PickImageMenuWidget extends StatelessWidget {
           final hasOpened = await PermissionHandler().openAppSettings();
           if (!hasOpened) {
             UserMessages.showMessage(Scaffold.of(context),
-                localizations.of(context).couldNotOpenAppSettingsUserMessage);
+                context.l.couldNotOpenAppSettingsUserMessage);
           }
         }
       }
@@ -172,9 +168,8 @@ class PickImageMenuWidget extends StatelessWidget {
   Map<_ImageMenuItemSource, Widget> _buildImageMenu(BuildContext context) =>
       <_ImageMenuItemSource, Widget>{
         _ImageMenuItemSource.gallery: _buildImageMenuItem(
-            Icons.add_photo_alternate,
-            localizations.of(context).imageFromGalleryLabel),
+            Icons.add_photo_alternate, context.l.imageFromGalleryLabel),
         _ImageMenuItemSource.photo: _buildImageMenuItem(
-            Icons.add_a_photo, localizations.of(context).imageFromPhotoLabel),
+            Icons.add_a_photo, context.l.imageFromPhotoLabel),
       };
 }

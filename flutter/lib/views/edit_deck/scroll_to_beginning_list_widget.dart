@@ -1,4 +1,4 @@
-import 'package:delern_flutter/flutter/localization.dart' as localizations;
+import 'package:delern_flutter/flutter/localization.dart';
 import 'package:delern_flutter/models/base/keyed_list_item.dart';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
@@ -84,7 +84,7 @@ class ScrollToBeginningListWidgetState<T extends KeyedListItem>
             // It crashes. User hero for add card on default.
             heroTag: 'up_button',
             backgroundColor: Colors.blueGrey,
-            tooltip: localizations.of(context).scrollToStartLabel,
+            tooltip: context.l.scrollToStartLabel,
             onPressed: () {
               _scrollController.animateTo(0,
                   duration: const Duration(seconds: 1), curve: Curves.easeIn);

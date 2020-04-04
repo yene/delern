@@ -1,4 +1,4 @@
-import 'package:delern_flutter/flutter/localization.dart' as localizations;
+import 'package:delern_flutter/flutter/localization.dart';
 import 'package:delern_flutter/flutter/user_messages.dart';
 import 'package:delern_flutter/models/card_model.dart';
 import 'package:delern_flutter/models/deck_access_model.dart';
@@ -26,7 +26,7 @@ class CardActionsMenuWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => PopupMenuButton<_CardMenuItemType>(
-        tooltip: localizations.of(context).menuTooltip,
+        tooltip: context.l.menuTooltip,
         onSelected: (itemType) => _onCardMenuItemSelected(
           context: context,
           menuItem: itemType,
@@ -55,7 +55,7 @@ class CardActionsMenuWidget extends StatelessWidget {
           );
         } else {
           UserMessages.showMessage(Scaffold.of(context),
-              localizations.of(context).noEditingWithReadAccessUserMessage);
+              context.l.noEditingWithReadAccessUserMessage);
         }
         break;
       case _CardMenuItemType.delete:
@@ -63,7 +63,7 @@ class CardActionsMenuWidget extends StatelessWidget {
           _deleteCard(context: context);
         } else {
           UserMessages.showMessage(Scaffold.of(context),
-              localizations.of(context).noDeletingWithReadAccessUserMessage);
+              context.l.noDeletingWithReadAccessUserMessage);
         }
         break;
     }
@@ -73,7 +73,7 @@ class CardActionsMenuWidget extends StatelessWidget {
     // TODO(dotdoom): do not pass context in stateless widget.
     @required BuildContext context,
   }) async {
-    final locale = localizations.of(context);
+    final locale = context.l;
     final saveChanges = await showSaveUpdatesDialog(
         context: context,
         changesQuestion: locale.deleteCardQuestion,
@@ -82,8 +82,8 @@ class CardActionsMenuWidget extends StatelessWidget {
     if (saveChanges) {
       try {
         await user.deleteCard(card: card);
-        UserMessages.showMessage(Scaffold.of(context),
-            localizations.of(context).cardDeletedUserMessage);
+        UserMessages.showMessage(
+            Scaffold.of(context), context.l.cardDeletedUserMessage);
       } catch (e, stackTrace) {
         unawaited(
             UserMessages.showError(() => Scaffold.of(context), e, stackTrace));
@@ -95,6 +95,6 @@ class CardActionsMenuWidget extends StatelessWidget {
 enum _CardMenuItemType { edit, delete }
 
 Map<_CardMenuItemType, String> _buildMenu(BuildContext context) => {
-      _CardMenuItemType.edit: localizations.of(context).edit,
-      _CardMenuItemType.delete: localizations.of(context).delete,
+      _CardMenuItemType.edit: context.l.edit,
+      _CardMenuItemType.delete: context.l.delete,
     };

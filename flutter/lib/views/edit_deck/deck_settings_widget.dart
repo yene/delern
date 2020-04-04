@@ -1,4 +1,4 @@
-import 'package:delern_flutter/flutter/localization.dart' as localizations;
+import 'package:delern_flutter/flutter/localization.dart';
 import 'package:delern_flutter/flutter/styles.dart' as app_styles;
 import 'package:delern_flutter/models/deck_model.dart';
 import 'package:delern_flutter/view_models/edit_deck_bloc.dart';
@@ -31,7 +31,7 @@ class _DeckSettingsWidgetState extends State<DeckSettingsWidget> {
 
   @override
   void didChangeDependencies() {
-    final locale = localizations.of(context);
+    final locale = context.l;
     if (widget.bloc?.locale != locale) {
       widget.bloc.onLocale.add(locale);
     }
@@ -52,7 +52,7 @@ class _DeckSettingsWidgetState extends State<DeckSettingsWidget> {
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
                     Text(
-                      localizations.of(context).deckType,
+                      context.l.deckType,
                       style: app_styles.primaryText,
                     ),
                   ],
@@ -91,7 +91,7 @@ class _DeckSettingsWidgetState extends State<DeckSettingsWidget> {
           app_styles.cardBackgroundColors[Gender.feminine].frontSideBackground),
       _buildRule('das',
           app_styles.cardBackgroundColors[Gender.neuter].frontSideBackground),
-      _buildRule(localizations.of(context).other,
+      _buildRule(context.l.other,
           app_styles.cardBackgroundColors[Gender.noGender].frontSideBackground),
     ];
     return _buildDeckType(DeckType.german, ruleList);
@@ -107,7 +107,7 @@ class _DeckSettingsWidgetState extends State<DeckSettingsWidget> {
           app_styles.cardBackgroundColors[Gender.feminine].frontSideBackground),
       _buildRule('s, es',
           app_styles.cardBackgroundColors[Gender.neuter].frontSideBackground),
-      _buildRule(localizations.of(context).other,
+      _buildRule(context.l.other,
           app_styles.cardBackgroundColors[Gender.noGender].frontSideBackground),
     ];
     return _buildDeckType(DeckType.swiss, ruleList);
@@ -160,13 +160,13 @@ class _DeckSettingsWidgetState extends State<DeckSettingsWidget> {
   String _getDeckTypeName(DeckType deckType) {
     switch (deckType) {
       case DeckType.basic:
-        return localizations.of(context).basicDeckType;
+        return context.l.basicDeckType;
       case DeckType.german:
-        return localizations.of(context).germanDeckType;
+        return context.l.germanDeckType;
       case DeckType.swiss:
-        return localizations.of(context).swissDeckType;
+        return context.l.swissDeckType;
     }
-    return localizations.of(context).unknownDeckType;
+    return context.l.unknownDeckType;
   }
 
   Widget _buildRule(String text, Color color) => ConstrainedBox(

@@ -1,5 +1,5 @@
 import 'package:delern_flutter/flutter/device_info.dart';
-import 'package:delern_flutter/flutter/localization.dart' as localizations;
+import 'package:delern_flutter/flutter/localization.dart';
 import 'package:delern_flutter/remote/analytics.dart';
 import 'package:delern_flutter/views/helpers/progress_indicator_widget.dart';
 import 'package:flutter/material.dart';
@@ -60,10 +60,10 @@ class _OnboardingWidget extends StatelessWidget {
       PageViewModel(
           pageColor: const Color(0xFF3F51A5),
           body: Text(
-            localizations.of(context).decksIntroDescription,
+            context.l.decksIntroDescription,
           ),
           title: Text(
-            localizations.of(context).decksIntroTitle,
+            context.l.decksIntroTitle,
           ),
           textStyle: textStyle,
           mainImage: Image.asset(
@@ -74,9 +74,9 @@ class _OnboardingWidget extends StatelessWidget {
       PageViewModel(
         pageColor: const Color(0xFFFFB74D),
         body: Text(
-          localizations.of(context).learnIntroDescription,
+          context.l.learnIntroDescription,
         ),
-        title: Text(localizations.of(context).learnIntroTitle),
+        title: Text(context.l.learnIntroTitle),
         mainImage: Image.asset(
           'images/child_learning.png',
           width: imageWidth,
@@ -87,9 +87,9 @@ class _OnboardingWidget extends StatelessWidget {
       PageViewModel(
         pageColor: const Color(0xFF607D8B),
         body: Text(
-          localizations.of(context).shareIntroDescription,
+          context.l.shareIntroDescription,
         ),
-        title: Text(localizations.of(context).shareIntroTitle),
+        title: Text(context.l.shareIntroTitle),
         mainImage: Image.asset(
           'images/card_sharing.png',
           width: imageWidth,
@@ -104,8 +104,8 @@ class _OnboardingWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) => IntroViewsFlutter(
         _introPages(context),
-        doneText: Text(localizations.of(context).done.toUpperCase()),
-        skipText: Text(localizations.of(context).skip.toUpperCase()),
+        doneText: Text(context.l.done.toUpperCase()),
+        skipText: Text(context.l.skip.toUpperCase()),
         onTapSkipButton: logOnboardingSkipEvent,
         onTapDoneButton: callback,
         showSkipButton: true,

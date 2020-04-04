@@ -1,4 +1,4 @@
-import 'package:delern_flutter/flutter/localization.dart' as localizations;
+import 'package:delern_flutter/flutter/localization.dart';
 import 'package:delern_flutter/models/card_model.dart';
 import 'package:delern_flutter/models/deck_model.dart';
 import 'package:delern_flutter/routes.dart';
@@ -58,7 +58,7 @@ class _CardPreviewState extends State<CardPreview> {
         ),
         actions: <Widget>[
           IconButton(
-            tooltip: localizations.of(context).deleteCardTooltip,
+            tooltip: context.l.deleteCardTooltip,
             icon: const Icon(Icons.delete),
             onPressed: () async => bloc.onDeleteDeckIntention.add(null),
           ),
@@ -96,7 +96,7 @@ class _CardPreviewState extends State<CardPreview> {
         ],
       ),
       floatingActionButtonBuilder: (bloc) => FloatingActionButton(
-        tooltip: localizations.of(context).editCardTooltip,
+        tooltip: context.l.editCardTooltip,
         onPressed: () => bloc.onEditCardIntention.add(null),
         child: const Icon(Icons.edit),
       ),
@@ -108,7 +108,7 @@ class _CardPreviewState extends State<CardPreview> {
     final deleteCardDialog = await showSaveUpdatesDialog(
         context: context,
         changesQuestion: deleteCardQuestion,
-        yesAnswer: localizations.of(context).delete,
+        yesAnswer: context.l.delete,
         noAnswer: MaterialLocalizations.of(context).cancelButtonLabel);
     if (deleteCardDialog) {
       bloc.onDeleteCard.add(null);

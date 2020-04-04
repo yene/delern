@@ -1,5 +1,5 @@
 import 'package:delern_flutter/flutter/legal.dart';
-import 'package:delern_flutter/flutter/localization.dart' as localizations;
+import 'package:delern_flutter/flutter/localization.dart';
 import 'package:delern_flutter/flutter/styles.dart' as app_styles;
 import 'package:delern_flutter/flutter/url_launcher.dart';
 import 'package:delern_flutter/views/sign_in/sign_in_button.dart';
@@ -73,15 +73,13 @@ class SignIn extends StatelessWidget {
                         padding: const EdgeInsets.symmetric(
                             vertical: _kBorderPadding),
                         child: Text(
-                            localizations
-                                .of(context)
-                                .signInWithLabel
-                                .toUpperCase(),
-                            textAlign: TextAlign.center,
-                            style: const TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w700,
-                            )),
+                          context.l.signInWithLabel.toUpperCase(),
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
                       ),
                       const SignInButton(
                           providerId: GoogleAuthProvider.providerId),
@@ -90,7 +88,7 @@ class SignIn extends StatelessWidget {
                           providerId: FacebookAuthProvider.providerId),
                       _kHeightBetweenWidgets,
                       Text(
-                        localizations.of(context).splashScreenFeatures,
+                        context.l.splashScreenFeatures,
                         style: app_styles.secondaryText,
                         textAlign: TextAlign.center,
                       ),
@@ -106,10 +104,7 @@ class SignIn extends StatelessWidget {
                             padding: const EdgeInsets.symmetric(
                                 horizontal: _kBorderPadding),
                             child: Text(
-                              localizations
-                                  .of(context)
-                                  .signInScreenOr
-                                  .toUpperCase(),
+                              context.l.signInScreenOr.toUpperCase(),
                               style: app_styles.secondaryText,
                               textAlign: TextAlign.center,
                             ),
@@ -152,16 +147,16 @@ class SignIn extends StatelessWidget {
         text: TextSpan(
           style: app_styles.secondaryText,
           children: <TextSpan>[
-            TextSpan(text: localizations.of(context).legacyAcceptanceLabel),
+            TextSpan(text: context.l.legacyAcceptanceLabel),
             _buildLegalUrl(
                 context: context,
                 url: kPrivacyPolicy,
-                text: localizations.of(context).privacyPolicySignIn),
-            TextSpan(text: localizations.of(context).legacyPartsConnector),
+                text: context.l.privacyPolicySignIn),
+            TextSpan(text: context.l.legacyPartsConnector),
             _buildLegalUrl(
                 context: context,
                 url: kTermsOfService,
-                text: localizations.of(context).termsOfServiceSignIn),
+                text: context.l.termsOfServiceSignIn),
           ],
         ),
       );

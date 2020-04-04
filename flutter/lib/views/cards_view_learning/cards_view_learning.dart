@@ -1,5 +1,5 @@
 import 'package:built_collection/built_collection.dart';
-import 'package:delern_flutter/flutter/localization.dart' as localizations;
+import 'package:delern_flutter/flutter/localization.dart';
 import 'package:delern_flutter/models/card_model.dart';
 import 'package:delern_flutter/models/deck_model.dart';
 import 'package:delern_flutter/view_models/cards_view_learning_bloc.dart';
@@ -69,7 +69,7 @@ class _CardsViewLearningState extends State<CardsViewLearning>
                 streamWithValue: bloc.doSetCardsList,
                 builder: (context, snapshot) => IconButton(
                       icon: Icon(Icons.shuffle),
-                      tooltip: localizations.of(context).shuffleTooltip,
+                      tooltip: context.l.shuffleTooltip,
                       onPressed: snapshot.hasData
                           ? (() {
                               bloc.onShuffleCards.add(null);

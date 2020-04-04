@@ -11,8 +11,6 @@ import 'package:flutter/material.dart';
 const _kFlipCardDuration = Duration(milliseconds: 300);
 const double _kCardBorderPadding = 24;
 
-typedef CardFlipCallback = void Function();
-
 class FlipCardWidget extends StatefulWidget {
   final String front;
   final BuiltList<String> frontImages;

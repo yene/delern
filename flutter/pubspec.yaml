@@ -20,9 +20,12 @@ dependencies:
   built_collection: ^4.2.2
   built_value: ^6.6.0
   rxdart: ^0.23.1
+  uuid: ^2.0.1
 
-  flutter_sentry: ^0.3.1
+  flutter_sentry: ^0.3.2
+  # Needed for the User context type, version is bound by flutter_sentry.
   sentry: any
+
   image_picker: ^0.6.1
   # https://github.com/renefloor/flutter_cached_network_image/issues/261
   cached_network_image: 2.0.0-rc
@@ -33,11 +36,10 @@ dependencies:
   firebase_database: ^3.1.1
   firebase_messaging: ^6.0.9
   firebase_remote_config: ^0.3.0
+  firebase_storage: ^3.1.1
 
   google_sign_in: ^4.0.1
   flutter_facebook_login: ^3.0.0
-  firebase_storage: ^3.1.1
-  uuid: ^2.0.1
 
   flutter:
     sdk: flutter

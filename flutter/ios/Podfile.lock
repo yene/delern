@@ -205,7 +205,7 @@ PODS:
     - Flutter
   - path_provider_macos (0.0.1):
     - Flutter
-  - "permission_handler (4.4.0+hotfix.2)":
+  - "permission_handler (4.4.0+hotfix.4)":
     - Flutter
   - PromisesObjC (1.2.8)
   - Protobuf (3.11.4)
@@ -404,7 +404,7 @@ SPEC CHECKSUMS:
   package_info: 48b108e75b8802c2d5e126f208ef540561c98aef
   path_provider: fb74bd0465e96b594bb3b5088ee4a4e7bb1f2a9d
   path_provider_macos: f760a3c5b04357c380e2fddb6f9db6f3015897e0
-  permission_handler: d5d46b2ca93671e8dcf870b949e304c7ddb65ad0
+  permission_handler: 8278954f2382902f63f00dd8828769c0bd6d511b
   PromisesObjC: c119f3cd559f50b7ae681fa59dc1acd19173b7e6
   Protobuf: 176220c526ad8bd09ab1fb40a978eac3fef665f7
   Sentry: ab6c209f23700d1460691dbc90e19ed0a05d496b

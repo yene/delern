@@ -65,7 +65,7 @@ abstract class ScheduledCardModel
     try {
       value['level'] = int.parse(levelString);
     } on FormatException catch (e, stackTrace) {
-      error_reporting.report('ScheduledCard', e, stackTrace);
+      error_reporting.report(e, stackTrace: stackTrace);
       value['level'] = 0;
     }
 

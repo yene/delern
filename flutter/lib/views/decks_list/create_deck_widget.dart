@@ -30,8 +30,11 @@ class CreateDeckWidget extends StatelessWidget {
             try {
               newDeck = await bloc.createDeck(newDeck);
             } catch (e, stackTrace) {
-              unawaited(UserMessages.showError(
-                  () => Scaffold.of(context), e, stackTrace));
+              UserMessages.showAndReportError(
+                () => Scaffold.of(context),
+                e,
+                stackTrace: stackTrace,
+              );
               return;
             }
             unawaited(openNewCardScreen(context, deckKey: newDeck.key));

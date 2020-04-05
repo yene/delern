@@ -1,7 +1,5 @@
-import 'package:delern_flutter/remote/error_reporting.dart' as error_reporting;
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/foundation.dart';
-import 'package:pedantic/pedantic.dart';
 
 class AppConfig {
   static final AppConfig _instance = AppConfig._();
@@ -28,12 +26,7 @@ class AppConfig {
     _remoteConfig = await RemoteConfig.instance;
     await _remoteConfig
         .setConfigSettings(RemoteConfigSettings(debugMode: kDebugMode));
-    try {
-      final duration = kDebugMode ? const Duration() : const Duration(hours: 5);
-      await _remoteConfig.fetch(expiration: duration);
-    } on FetchThrottledException catch (e, stackTrace) {
-      unawaited(
-          error_reporting.report('RemoteConfig Throttled', e, stackTrace));
-    }
+    final duration = kDebugMode ? const Duration() : const Duration(hours: 5);
+    return _remoteConfig.fetch(expiration: duration);
   }
 }

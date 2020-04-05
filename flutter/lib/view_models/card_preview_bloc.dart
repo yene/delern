@@ -39,7 +39,7 @@ class CardPreviewBloc extends ScreenBloc {
                 .value);
         notifyPop();
       } catch (e, stackTrace) {
-        unawaited(error_reporting.report('deleteCard', e, stackTrace));
+        unawaited(error_reporting.report(e, stackTrace: stackTrace));
         notifyErrorOccurred(e);
       }
     });

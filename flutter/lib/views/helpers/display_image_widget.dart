@@ -11,8 +11,10 @@ Widget buildDisplayImageWidget(String uri) => CachedNetworkImage(
       placeholder: (context, url) =>
           const ImageProgressIndicatorPlaceholderWidget(),
       errorWidget: (context, url, error) {
-        unawaited(
-            error_reporting.report('Image loading  failed: $url', error, null));
+        unawaited(error_reporting.report(
+          error,
+          description: 'Image loading failed: $url',
+        ));
         return Column(
           children: <Widget>[
             Icon(

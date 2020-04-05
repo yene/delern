@@ -3,11 +3,9 @@ import 'dart:io';
 import 'package:delern_flutter/flutter/localization.dart';
 import 'package:delern_flutter/flutter/styles.dart' as app_styles;
 import 'package:delern_flutter/flutter/user_messages.dart';
-import 'package:delern_flutter/remote/error_reporting.dart' as error_reporting;
 import 'package:delern_flutter/views/helpers/save_updates_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:pedantic/pedantic.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 typedef ImageSelected = void Function(File file);
@@ -70,10 +68,11 @@ class PickImageMenuWidget extends StatelessWidget {
             maxWidth: _kImageSideSizeLimit,
           );
         } catch (e, stackTrace) {
-          UserMessages.showMessage(Scaffold.of(context),
-              UserMessages.formUserFriendlyErrorMessage(context.l, e));
-          unawaited(error_reporting.report(
-              'Getting image from Gallery failed', e, stackTrace));
+          UserMessages.showAndReportError(
+            () => Scaffold.of(context),
+            e,
+            stackTrace: stackTrace,
+          );
         }
         break;
       case _ImageMenuItemSource.photo:
@@ -106,10 +105,11 @@ class PickImageMenuWidget extends StatelessWidget {
           }
           image = await ImagePicker.pickImage(source: ImageSource.camera);
         } catch (e, stackTrace) {
-          UserMessages.showMessage(Scaffold.of(context),
-              UserMessages.formUserFriendlyErrorMessage(context.l, e));
-          unawaited(
-              error_reporting.report('Taking picture failed', e, stackTrace));
+          UserMessages.showAndReportError(
+            () => Scaffold.of(context),
+            e,
+            stackTrace: stackTrace,
+          );
         }
         break;
     }

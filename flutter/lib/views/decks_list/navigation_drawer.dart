@@ -173,8 +173,7 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
         providerImageAsset = 'images/facebook_sign_in.png';
         break;
       default:
-        unawaited(error_reporting.report(
-            'NavigationDrawer', 'Unknown provider: $provider', null));
+        unawaited(error_reporting.report('Unknown provider: $provider'));
         return Text(provider);
     }
 

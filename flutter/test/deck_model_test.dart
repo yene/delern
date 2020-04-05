@@ -94,10 +94,10 @@ class _DataListAccessor<T extends KeyedListItem>
 mixin _ListAccessorItemStubsMixin<T extends KeyedListItem>
     implements DataListAccessor<T> {
   @override
-  T parseItem(String key, value) => null;
+  T parseItem(String key, dynamic value) => null;
 
   @override
-  T updateItem(T previous, String key, value) => parseItem(key, value);
+  T updateItem(T previous, String key, dynamic value) => parseItem(key, value);
 
   @override
   void disposeItem(T item) {}

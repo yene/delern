@@ -42,7 +42,7 @@ void main() {
 
     expect(
         accessor.updates,
-        emitsInOrder([
+        emitsInOrder(<dynamic>[
           BuiltList.of(<MyModel>[]),
         ]));
     expectListChangeRecord<MyModel>(
@@ -137,7 +137,7 @@ void main() {
       });
 
       test('initial (empty)', () async {
-        expect(accessor.value, const Iterable.empty());
+        expect(accessor.value, const Iterable<void>.empty());
       });
     });
 
@@ -225,7 +225,7 @@ void main() {
           // event is processed.
           expect(
               item.updates,
-              emitsInOrder([
+              emitsInOrder(<dynamic>[
                 const MyModel(key: 'test', value: 'hello'),
                 const MyModel(key: 'test', value: 'world'),
                 null,
@@ -291,7 +291,7 @@ class MyModel implements KeyedListItem {
   const MyModel({this.key, this.value});
 
   @override
-  bool operator ==(other) =>
+  bool operator ==(dynamic other) =>
       other is MyModel && key == other.key && value == other.value;
 
   @override
@@ -305,7 +305,8 @@ class MyListAccessor extends DataListAccessor<MyModel> {
   MyListAccessor(DatabaseReference reference) : super(reference);
 
   @override
-  MyModel parseItem(String key, value) => MyModel(key: key, value: value);
+  MyModel parseItem(String key, dynamic value) =>
+      MyModel(key: key, value: value);
 }
 
 void expectListChangeRecord<T>(

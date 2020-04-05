@@ -14,15 +14,8 @@ analyzer:
     - "**/messages_*.dart"
     - "**/*.g.dart"
   strong-mode:
-    # TODO(dotdoom): disable implicit dynamic and annotate with "dynamic".
-    # Problems with disabling implicit dynamic:
-    # - it requires annotating all Map and Iterable literals with template
-    #   parameters, even when they are passed as a strongly typed argument to a
-    #   function (creates unnecessary burden);
-    # - it requires type annotations where they are unnecessary, such as
-    #   Future.delayed(), Stream.empty() or Iterable.empty() - especially sad
-    #   for tests.
-    implicit-dynamic: true
+    implicit-dynamic: false
+
     # Disabling implicit casts forces type casting from "dynamic" as it is no
     # longer a bottom type since Dart 2:
     # https://dart.dev/guides/language/sound-problems#the-function-expression-type--isnt-of-type-

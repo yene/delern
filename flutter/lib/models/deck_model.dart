@@ -149,7 +149,7 @@ class DeckModelListAccessor extends DataListAccessor<DeckModel> {
       : super(FirebaseDatabase.instance.reference().child('decks').child(uid));
 
   @override
-  DeckModel parseItem(String key, value) =>
+  DeckModel parseItem(String key, dynamic value) =>
       DeckModel.fromSnapshot(key: key, value: value).rebuild((d) => d
         ..cards = CardModelListAccessor(d.key)
         ..scheduledCards =
@@ -158,7 +158,7 @@ class DeckModelListAccessor extends DataListAccessor<DeckModel> {
         ..numberOfCardsDue = _ScheduledCardsDueCounter(d.scheduledCards));
 
   @override
-  DeckModel updateItem(DeckModel previous, String key, value) =>
+  DeckModel updateItem(DeckModel previous, String key, dynamic value) =>
       DeckModel.fromSnapshot(key: key, value: value).rebuild((d) => d
         ..cards = previous.cards
         ..scheduledCards = previous.scheduledCards

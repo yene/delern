@@ -42,10 +42,12 @@ Future<void> launchEmail(BuildContext context) async {
       .toString());
 
   final googleGmailUrl = _queryEncodingToPercent(Uri(
-          scheme: 'googlegmail',
-          path: '/co',
-          queryParameters: {'to': _supportEmail}..addAll(appInfoOptions))
-      .toString());
+    scheme: 'googlegmail',
+    path: '/co',
+    queryParameters: <String, dynamic>{
+      'to': _supportEmail,
+    }..addAll(appInfoOptions),
+  ).toString());
 
   try {
     if (Theme.of(context).platform == TargetPlatform.iOS &&

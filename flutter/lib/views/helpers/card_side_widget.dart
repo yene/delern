@@ -11,10 +11,10 @@ class CardSideWidget extends StatelessWidget {
   }) : _markdownContent = imagesList == null
             ? text
             : imagesList
-                .fold(
+                .fold<StringBuffer>(
                   StringBuffer(text),
                   (buffer, imageUrl) =>
-                      buffer.write('\n\n![alt text]($imageUrl "$text image")'),
+                      buffer..write('\n\n![alt text]($imageUrl "$text image")'),
                 )
                 .toString();
 

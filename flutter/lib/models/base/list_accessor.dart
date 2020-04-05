@@ -160,11 +160,11 @@ abstract class DataListAccessor<T extends KeyedListItem>
 
   @protected
   @visibleForOverriding
-  T parseItem(String key, value);
+  T parseItem(String key, dynamic value);
 
   @protected
   @visibleForOverriding
-  T updateItem(T previous, String key, value) => parseItem(key, value);
+  T updateItem(T previous, String key, dynamic value) => parseItem(key, value);
 
   @protected
   @visibleForOverriding

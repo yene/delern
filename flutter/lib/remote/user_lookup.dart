@@ -12,7 +12,7 @@ Future<String> userLookup(String email) async {
       scheme: 'https',
       host: 'us-central1-${_opts.projectID}.cloudfunctions.net',
       path: 'userLookup',
-      queryParameters: {'q': email});
+      queryParameters: <String, dynamic>{'q': email});
 
   final response = await http.get(uri);
   if (response.statusCode == 200) {

@@ -100,7 +100,7 @@ class User {
     final deck = deckTemplate.rebuild((b) => b..key = _newKey());
     final deckPath = 'decks/$uid/${deck.key}';
     final deckAccessPath = 'deck_access/${deck.key}/$uid';
-    await _write({
+    await _write(<String, dynamic>{
       '$deckPath/name': deck.name,
       '$deckPath/markdown': deck.markdown,
       '$deckPath/deckType': deck.type.toString().toUpperCase(),
@@ -119,7 +119,7 @@ class User {
 
   Future<void> updateDeck({@required DeckModel deck}) {
     final deckPath = 'decks/$uid/${deck.key}';
-    return _write({
+    return _write(<String, dynamic>{
       '$deckPath/name': deck.name,
       '$deckPath/markdown': deck.markdown,
       '$deckPath/deckType': deck.type.toString().toUpperCase(),
@@ -179,7 +179,7 @@ class User {
         // right next to the forward card.
         repeatAt *= Random().nextDouble();
       }
-      updates.addAll({
+      updates.addAll(<String, dynamic>{
         '$cardPath/front': reverse ? card.back : card.front,
         '$cardPath/back': reverse ? card.front : card.back,
         // Important note: we ask server to fill in the timestamp, but we do not
@@ -213,7 +213,7 @@ class User {
 
   Future<void> updateCard({@required CardModel card}) {
     final cardPath = 'cards/${card.deckKey}/${card.key}';
-    return _write({
+    return _write(<String, dynamic>{
       '$cardPath/front': card.front,
       '$cardPath/back': card.back,
       '$cardPath/frontImagesUri': card.frontImagesUri.toList(),
@@ -224,7 +224,9 @@ class User {
   Future<void> deleteCard({@required CardModel card}) async {
     final imageUriList = card.frontImagesUri.toList()
       ..addAll(card.backImagesUri);
-    await _write({
+    // We want to make sure all values are set to `null`.
+    // ignore: prefer_void_to_null
+    await _write(<String, Null>{
       'cards/${card.deckKey}/${card.key}': null,
       'learning/$uid/${card.deckKey}/${card.key}': null,
     });
@@ -244,7 +246,7 @@ class User {
         'learning/$uid/${scheduledCard.deckKey}/${scheduledCard.key}';
     final cardViewPath =
         'views/$uid/${scheduledCard.deckKey}/${scheduledCard.key}/${_newKey()}';
-    return _write({
+    return _write(<String, dynamic>{
       '$scheduledCardPath/level': scheduledCard.level,
       '$scheduledCardPath/repeatAt':
           scheduledCard.repeatAt.millisecondsSinceEpoch,
@@ -258,7 +260,9 @@ class User {
     @required DeckModel deck,
     @required String shareWithUid,
   }) =>
-      _write({
+      // We want to make sure all values are set to `null`.
+      // ignore: prefer_void_to_null
+      _write(<String, Null>{
         'deck_access/${deck.key}/$shareWithUid': null,
         'decks/$shareWithUid/${deck.key}': null,
       });
@@ -279,7 +283,7 @@ class User {
     if (!deck.usersAccess.getItem(shareWithUid).hasValue) {
       // If there's no DeckAccess, assume the deck hasn't been shared yet, as
       // opposed to changing access level for a previously shared deck.
-      updates.addAll({
+      updates.addAll(<String, dynamic>{
         '$deckPath/name': deck.name,
         '$deckPath/markdown': deck.markdown,
         '$deckPath/deckType': deck.type.toString().toUpperCase(),
@@ -295,14 +299,17 @@ class User {
     return _write(updates);
   }
 
-  Future<void> addFCM({@required FCM fcm}) => _write({
+  Future<void> addFCM({@required FCM fcm}) => _write(<String, dynamic>{
         'fcm/$uid/${fcm.key}': {
           'name': fcm.name,
           'language': fcm.language,
         }
       });
 
-  Future<void> cleanupDanglingScheduledCard(ScheduledCardModel sc) => _write({
+  Future<void> cleanupDanglingScheduledCard(ScheduledCardModel sc) =>
+      // We want to make sure all values are set to `null`.
+      // ignore: prefer_void_to_null
+      _write(<String, Null>{
         'learning/$uid/${sc.deckKey}/${sc.key}': null,
       });
 
@@ -311,11 +318,11 @@ class User {
     final updateFuture = FirebaseDatabase.instance.reference().update(updates);
 
     if (isOnline.value != true) {
-      unawaited(
-          updateFuture.catchError((error, stackTrace) => error_reporting.report(
+      unawaited(updateFuture.catchError(
+          (dynamic error, dynamic stackTrace) => error_reporting.report(
                 error,
                 stackTrace: stackTrace,
-                extra: {'updates': updates, 'online': false},
+                extra: <String, dynamic>{'updates': updates, 'online': false},
               )));
       return;
     }
@@ -326,7 +333,7 @@ class User {
       unawaited(error_reporting.report(
         error,
         stackTrace: stackTrace,
-        extra: {'updates': updates, 'online': true},
+        extra: <String, dynamic>{'updates': updates, 'online': true},
       ));
       rethrow;
     }
@@ -338,7 +345,7 @@ class User {
   Future<void> deleteImage(String url) async =>
       (await FirebaseStorage.instance.getReferenceFromUrl(url)).delete();
 
-  Future<dynamic> uploadImage(File file, String deckKey) async =>
+  Future<String> uploadImage(File file, String deckKey) async =>
       (await FirebaseStorage.instance
               .ref()
               .child('cards')

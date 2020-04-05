@@ -108,7 +108,7 @@ abstract class ScheduledCardModel
         final List<MapEntry> allEntries = event.snapshot.value.entries.toList();
         final latestScheduledCard = (allEntries
               ..sort((s1, s2) {
-                final repeatAtComparison =
+                final int repeatAtComparison =
                     s1.value['repeatAt'].compareTo(s2.value['repeatAt']);
                 // Sometimes repeatAt of 2 cards may be the same, which
                 // will result in unstable order. Most often this is
@@ -169,6 +169,6 @@ class ScheduledCardModelListAccessor
             .child(deckKey));
 
   @override
-  ScheduledCardModel parseItem(String key, value) =>
+  ScheduledCardModel parseItem(String key, dynamic value) =>
       ScheduledCardModel.fromSnapshot(key: key, deckKey: deckKey, value: value);
 }

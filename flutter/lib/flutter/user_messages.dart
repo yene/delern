@@ -27,7 +27,7 @@ class UserMessages {
 
     var message = formUserFriendlyErrorMessage(scaffoldState.context.l, e);
     if (userFriendlyPrefix != null) {
-      message = userFriendlyPrefix + message;
+      message = '$userFriendlyPrefix ($message)';
     }
     showMessage(scaffoldState, message);
   }
@@ -42,7 +42,10 @@ class UserMessages {
         duration: const Duration(seconds: 7),
       ));
 
-  static String formUserFriendlyErrorMessage(AppLocalizations locale, e) {
+  static String formUserFriendlyErrorMessage(
+    AppLocalizations locale,
+    dynamic e,
+  ) {
     String exceptionSpecificMessage;
     if (e is PlatformException) {
       exceptionSpecificMessage = e.message;

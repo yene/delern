@@ -68,7 +68,7 @@ void main() {
       await driver.waitFor(find.text('My Test Deck'));
       // When text was entered business logic needs some time to enable
       // "Add" button. Otherwise disabled button will be clicked and test fails.
-      await Future.delayed(const Duration(seconds: 1));
+      await Future<void>.delayed(const Duration(seconds: 1));
       await driver.tap(add, timeout: timeoutDuration);
     });
 
@@ -120,6 +120,8 @@ void main() {
             : localizations.doNotKnowCardTooltip));
       }
 
+      // Random repeatAt in addCard above sometimes shuffles 1st / 2nd card.
+      // TODO(dotdoom): deflake this test.
       await learnCard(expectFront: 'front1', expectBack: 'back1', knows: true);
       await learnCard(expectFront: 'front2', expectBack: 'back2', knows: false);
       // At this point the learning screen should automatically close because

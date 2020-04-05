@@ -8,30 +8,40 @@ const deckMimeType = 'application/flashcards-deck';
 Future<void> logDeckCreate() =>
     FirebaseAnalytics().logEvent(name: 'deck_create');
 
-Future<void> logDeckEditMenu(String deckId) =>
-    FirebaseAnalytics().logEvent(name: 'deck_edit_menu', parameters: {
-      'item_id': deckId,
-    });
+Future<void> logDeckEditMenu(String deckId) => FirebaseAnalytics().logEvent(
+      name: 'deck_edit_menu',
+      parameters: <String, String>{
+        'item_id': deckId,
+      },
+    );
 
-Future<void> logDeckEditSwipe(String deckId) =>
-    FirebaseAnalytics().logEvent(name: 'deck_edit_swipe', parameters: {
-      'item_id': deckId,
-    });
+Future<void> logDeckEditSwipe(String deckId) => FirebaseAnalytics().logEvent(
+      name: 'deck_edit_swipe',
+      parameters: <String, String>{
+        'item_id': deckId,
+      },
+    );
 
-Future<void> logDeckDeleteSwipe(String deckId) =>
-    FirebaseAnalytics().logEvent(name: 'deck_delete_swipe', parameters: {
-      'item_id': deckId,
-    });
+Future<void> logDeckDeleteSwipe(String deckId) => FirebaseAnalytics().logEvent(
+      name: 'deck_delete_swipe',
+      parameters: <String, String>{
+        'item_id': deckId,
+      },
+    );
 
-Future<void> logDeckDelete(String deckId) =>
-    FirebaseAnalytics().logEvent(name: 'deck_delete', parameters: {
-      'item_id': deckId,
-    });
+Future<void> logDeckDelete(String deckId) => FirebaseAnalytics().logEvent(
+      name: 'deck_delete',
+      parameters: <String, String>{
+        'item_id': deckId,
+      },
+    );
 
-Future<void> logStartLearning(String deckId) =>
-    FirebaseAnalytics().logEvent(name: 'deck_learning_start', parameters: {
-      'item_id': deckId,
-    });
+Future<void> logStartLearning(String deckId) => FirebaseAnalytics().logEvent(
+      name: 'deck_learning_start',
+      parameters: <String, String>{
+        'item_id': deckId,
+      },
+    );
 
 Future<void> logShare({String deckId, String method}) =>
     FirebaseAnalytics().logShare(
@@ -45,23 +55,28 @@ Future<void> logShare({String deckId, String method}) =>
 Future<void> logUnshare({String deckId, String method}) =>
     FirebaseAnalytics().logEvent(
       name: 'unshare',
-      parameters: {
+      parameters: <String, String>{
         'content_type': deckMimeType,
         'item_id': deckId,
         'method': method,
       },
     );
 
-Future<void> logCardCreate(String deckId) =>
-    FirebaseAnalytics().logEvent(name: 'card_create', parameters: {
-      'item_id': deckId,
-    });
+Future<void> logCardCreate(String deckId) => FirebaseAnalytics().logEvent(
+      name: 'card_create',
+      parameters: <String, String>{
+        'item_id': deckId,
+      },
+    );
 
 Future<void> logCardResponse({@required String deckId, @required bool knows}) =>
-    FirebaseAnalytics().logEvent(name: 'card_response', parameters: {
-      'item_id': deckId,
-      'knows': knows ? 1 : 0,
-    });
+    FirebaseAnalytics().logEvent(
+      name: 'card_response',
+      parameters: <String, dynamic>{
+        'item_id': deckId,
+        'knows': knows ? 1 : 0,
+      },
+    );
 
 Future<void> logPromoteAnonymous() =>
     FirebaseAnalytics().logEvent(name: 'promote_anonymous');
@@ -86,4 +101,4 @@ Future<void> logOnboardingSkipEvent() =>
 Future<void> logAddImageToCard({@required bool isFrontSide}) =>
     FirebaseAnalytics().logEvent(
         name: 'card_create_with_image',
-        parameters: {'front': isFrontSide ? 1 : 0});
+        parameters: <String, dynamic>{'front': isFrontSide ? 1 : 0});

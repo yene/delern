@@ -50,7 +50,10 @@ void main() {
 
   group('StreamWithLatestValue', () {
     test('takes initialValue', () {
-      final sv = StreamWithLatestValue(const Stream.empty(), initialValue: 42);
+      final sv = StreamWithLatestValue(
+        const Stream<int>.empty(),
+        initialValue: 42,
+      );
       expect(sv.hasValue, true);
       expect(sv.value, 42);
     });

@@ -88,6 +88,6 @@ class DeckAccessListAccessor extends DataListAccessor<DeckAccessModel> {
               ..orderByKey());
 
   @override
-  DeckAccessModel parseItem(String key, value) =>
+  DeckAccessModel parseItem(String key, dynamic value) =>
       DeckAccessModel.fromSnapshot(key: key, deckKey: deckKey, value: value);
 }

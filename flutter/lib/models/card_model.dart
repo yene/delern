@@ -69,6 +69,6 @@ class CardModelListAccessor extends DataListAccessor<CardModel> {
             FirebaseDatabase.instance.reference().child('cards').child(deckId));
 
   @override
-  CardModel parseItem(String key, value) =>
+  CardModel parseItem(String key, dynamic value) =>
       CardModel.fromSnapshot(deckKey: deckId, key: key, value: value);
 }

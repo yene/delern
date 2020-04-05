@@ -4,7 +4,6 @@ import 'package:delern_flutter/models/scheduled_card_model.dart';
 import 'package:delern_flutter/models/user.dart';
 import 'package:delern_flutter/views/helpers/slow_operation_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:pedantic/pedantic.dart';
 
 class CardAnswerButtonsWidget extends StatelessWidget {
   final User user;
@@ -59,9 +58,12 @@ class CardAnswerButtonsWidget extends StatelessWidget {
         unansweredScheduledCard: scheduledCard,
         knows: knows,
       );
-    } catch (e, stacktrace) {
-      unawaited(
-          UserMessages.showError(() => Scaffold.of(context), e, stacktrace));
+    } catch (e, stackTrace) {
+      UserMessages.showAndReportError(
+        () => Scaffold.of(context),
+        e,
+        stackTrace: stackTrace,
+      );
       return;
     }
 

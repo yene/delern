@@ -7,7 +7,6 @@ import 'package:delern_flutter/flutter/user_messages.dart';
 import 'package:delern_flutter/models/deck_access_model.dart';
 import 'package:delern_flutter/models/deck_model.dart';
 import 'package:delern_flutter/remote/app_config.dart';
-import 'package:delern_flutter/remote/error_reporting.dart' as error_reporting;
 import 'package:delern_flutter/remote/user_lookup.dart';
 import 'package:delern_flutter/view_models/deck_access_view_model.dart';
 import 'package:delern_flutter/views/deck_sharing/deck_access_dropdown.dart';
@@ -19,7 +18,6 @@ import 'package:delern_flutter/views/helpers/save_updates_dialog.dart';
 import 'package:delern_flutter/views/helpers/send_invite.dart';
 import 'package:delern_flutter/views/helpers/slow_operation_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:pedantic/pedantic.dart';
 
 class DeckSharing extends StatefulWidget {
   static const routeName = '/share-deck';
@@ -134,12 +132,18 @@ class _DeckSharingState extends State<DeckSharing> {
       UserMessages.showMessage(
           Scaffold.of(context), context.l.offlineUserMessage);
     } on HttpException catch (e, stackTrace) {
-      unawaited(error_reporting.report('share deck', e, stackTrace));
-      UserMessages.showMessage(
-          Scaffold.of(context), context.l.serverUnavailableUserMessage);
+      UserMessages.showAndReportError(
+        () => Scaffold.of(context),
+        e,
+        stackTrace: stackTrace,
+        userFriendlyPrefix: context.l.serverUnavailableUserMessage,
+      );
     } catch (e, stackTrace) {
-      unawaited(
-          UserMessages.showError(() => Scaffold.of(context), e, stackTrace));
+      UserMessages.showAndReportError(
+        () => Scaffold.of(context),
+        e,
+        stackTrace: stackTrace,
+      );
     }
   }
 

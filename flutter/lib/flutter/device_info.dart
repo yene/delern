@@ -56,7 +56,7 @@ class DeviceInfo {
       } catch (e, stackTrace) {
         // Can't report directly because ErrorReporting uses this method.
         scheduleMicrotask(() {
-          error_reporting.report('getDeviceInfo', e, stackTrace);
+          error_reporting.report(e, stackTrace: stackTrace);
         });
       }
     }

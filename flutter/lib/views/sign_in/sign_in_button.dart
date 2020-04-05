@@ -3,13 +3,11 @@ import 'package:delern_flutter/flutter/styles.dart' as app_styles;
 import 'package:delern_flutter/flutter/user_messages.dart';
 import 'package:delern_flutter/remote/analytics.dart';
 import 'package:delern_flutter/remote/auth.dart';
-import 'package:delern_flutter/remote/error_reporting.dart' as error_reporting;
 import 'package:delern_flutter/views/helpers/save_updates_dialog.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
-import 'package:pedantic/pedantic.dart';
 
 class SignInButton extends StatelessWidget {
   final String providerId;
@@ -119,8 +117,6 @@ class SignInButton extends StatelessWidget {
       // with something else.
       Navigator.of(context, nullOk: true)?.pop();
     } on PlatformException catch (e, stackTrace) {
-      unawaited(error_reporting.report('signInWithProvider', e, stackTrace));
-
       // Cover only those scenarios where we can recover or an additional action
       // from user can be helpful.
       switch (e.code) {
@@ -157,7 +153,11 @@ class SignInButton extends StatelessWidget {
           break;
 
         default:
-          unawaited(UserMessages.showError(() => Scaffold.of(context), e));
+          UserMessages.showAndReportError(
+            () => Scaffold.of(context),
+            e,
+            stackTrace: stackTrace,
+          );
       }
     }
   }

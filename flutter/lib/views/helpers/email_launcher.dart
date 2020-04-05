@@ -3,7 +3,6 @@ import 'package:delern_flutter/flutter/localization.dart';
 import 'package:delern_flutter/flutter/user_messages.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info/package_info.dart';
-import 'package:pedantic/pedantic.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 const String _supportEmail = 'delern@dasfoo.org';
@@ -56,7 +55,11 @@ Future<void> launchEmail(BuildContext context) async {
     }
     await launch(mailUrl, forceSafariVC: false);
   } catch (e, stackTrace) {
-    unawaited(UserMessages.showError(
-        () => Scaffold.of(context), context.l.installEmailApp, stackTrace));
+    UserMessages.showAndReportError(
+      () => Scaffold.of(context),
+      e,
+      userFriendlyPrefix: context.l.installEmailApp,
+      stackTrace: stackTrace,
+    );
   }
 }

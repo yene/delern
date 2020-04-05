@@ -45,7 +45,8 @@ abstract class ScreenBloc {
   Sink<void> get onCloseScreen => _onCloseScreenController.sink;
   final _onCloseScreenController = StreamController<void>();
 
-  /// Call when any errors occur
+  /// Call to inform the user that an error has occured. Report the error via
+  /// error_reporting separately, if needed.
   @protected
   void notifyErrorOccurred(e) => _doShowErrorController
       .add(UserMessages.formUserFriendlyErrorMessage(locale, e));

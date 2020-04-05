@@ -168,8 +168,7 @@ class CardCreateUpdateBloc extends ScreenBloc {
         _checkOperationAvailability();
       } catch (e, stackTrace) {
         _doShowFrontImagePlaceholderController.add(false);
-        unawaited(error_reporting.report(
-            'Upload Image to Storage failed', e, stackTrace));
+        unawaited(error_reporting.report(e, stackTrace: stackTrace));
         notifyErrorOccurred(e);
       }
     });
@@ -184,8 +183,7 @@ class CardCreateUpdateBloc extends ScreenBloc {
         _checkOperationAvailability();
       } catch (e, stackTrace) {
         _doShowBackImagePlaceholderController.add(false);
-        unawaited(error_reporting.report(
-            'Upload Image to Storage failed', e, stackTrace));
+        unawaited(error_reporting.report(e, stackTrace: stackTrace));
         notifyErrorOccurred(e);
       }
     });
@@ -200,8 +198,7 @@ class CardCreateUpdateBloc extends ScreenBloc {
         _doFrontImageAddedController.add(_card.frontImagesUri.build());
         _checkOperationAvailability();
       } catch (e, stackTrace) {
-        unawaited(error_reporting.report(
-            'Delete image from Storage failed', e, stackTrace));
+        unawaited(error_reporting.report(e, stackTrace: stackTrace));
         notifyErrorOccurred(e);
       }
     });
@@ -216,8 +213,7 @@ class CardCreateUpdateBloc extends ScreenBloc {
         _doBackImageAddedController.add(_card.backImagesUri.build());
         _checkOperationAvailability();
       } catch (e, stackTrace) {
-        unawaited(error_reporting.report(
-            'Delete image from Storage failed', e, stackTrace));
+        unawaited(error_reporting.report(e, stackTrace: stackTrace));
         notifyErrorOccurred(e);
       }
     });
@@ -268,7 +264,7 @@ class CardCreateUpdateBloc extends ScreenBloc {
       }
       _doClearInputFieldsController.add(null);
     } catch (e, stackTrace) {
-      unawaited(error_reporting.report('saveCard', e, stackTrace));
+      unawaited(error_reporting.report(e, stackTrace: stackTrace));
       notifyErrorOccurred(e);
     }
   }

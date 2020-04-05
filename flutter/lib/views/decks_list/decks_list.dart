@@ -344,8 +344,11 @@ class DeckListItemWidget extends StatelessWidget {
           scaffoldContext, context.l.deckDeletedUserMessage);
       return true;
     } catch (e, stackTrace) {
-      unawaited(
-          UserMessages.showError(() => Scaffold.of(context), e, stackTrace));
+      UserMessages.showAndReportError(
+        () => Scaffold.of(context),
+        e,
+        stackTrace: stackTrace,
+      );
     }
     return false;
   }

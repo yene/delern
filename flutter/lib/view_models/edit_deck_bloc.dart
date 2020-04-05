@@ -83,7 +83,7 @@ class EditDeckBloc extends ScreenBloc {
       await user.updateDeck(deck: _deck);
       return true;
     } catch (e, stackTrace) {
-      unawaited(error_reporting.report('updateDeck', e, stackTrace));
+      unawaited(error_reporting.report(e, stackTrace: stackTrace));
       notifyErrorOccurred(e);
     }
     return false;

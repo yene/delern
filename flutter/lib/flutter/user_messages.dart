@@ -7,18 +7,29 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class UserMessages {
-  // TODO(ksheremet): Get rid of it
-  static Future<void> showError(ScaffoldState Function() scaffoldFinder, e,
-      [StackTrace stackTrace]) {
-    final errorFuture = error_reporting.report('showError', e, stackTrace);
+  static void showAndReportError(
+    ScaffoldState Function() scaffoldFinder,
+    dynamic e, {
+    String userFriendlyPrefix,
+    StackTrace stackTrace,
+  }) {
+    error_reporting.report(
+      e,
+      stackTrace: stackTrace,
+      description: userFriendlyPrefix == null
+          ? null
+          : 'via showAndReportError: $userFriendlyPrefix',
+    );
 
     // Call a finder only *after* reporting the error, in case it crashes
     // (often because Scaffold.of cannot find Scaffold ancestor widget).
     final scaffoldState = scaffoldFinder();
-    final message = formUserFriendlyErrorMessage(scaffoldState.context.l, e);
-    showMessage(scaffoldState, message);
 
-    return errorFuture;
+    var message = formUserFriendlyErrorMessage(scaffoldState.context.l, e);
+    if (userFriendlyPrefix != null) {
+      message = userFriendlyPrefix + message;
+    }
+    showMessage(scaffoldState, message);
   }
 
   // TODO(ksheremet): Add user message for Snackbar and error message for

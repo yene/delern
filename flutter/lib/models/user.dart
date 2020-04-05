@@ -311,17 +311,23 @@ class User {
     final updateFuture = FirebaseDatabase.instance.reference().update(updates);
 
     if (isOnline.value != true) {
-      unawaited(updateFuture.catchError((error, stackTrace) => error_reporting
-          .report('DataWriter', error, stackTrace,
-              extra: {'updates': updates, 'online': false})));
+      unawaited(
+          updateFuture.catchError((error, stackTrace) => error_reporting.report(
+                error,
+                stackTrace: stackTrace,
+                extra: {'updates': updates, 'online': false},
+              )));
       return;
     }
 
     try {
       await updateFuture;
     } catch (error, stackTrace) {
-      unawaited(error_reporting.report('DataWriter', error, stackTrace,
-          extra: {'updates': updates, 'online': true}));
+      unawaited(error_reporting.report(
+        error,
+        stackTrace: stackTrace,
+        extra: {'updates': updates, 'online': true},
+      ));
       rethrow;
     }
   }

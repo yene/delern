@@ -6,11 +6,10 @@ import 'package:sentry/sentry.dart';
 
 set uid(String uid) => FlutterSentry.instance.userContext = User(id: uid);
 
-// TODO(dotdoom): get rid of "src", make "stackTrace" optional.
 Future<void> report(
-  String src,
-  error,
-  StackTrace stackTrace, {
+  dynamic error, {
+  String description,
+  StackTrace stackTrace,
   Map<String, dynamic> extra,
 }) async {
   if (stackTrace == null && error is Error) {
@@ -18,14 +17,13 @@ Future<void> report(
   }
   stackTrace ??= StackTrace.current;
 
-  debugPrint('Sending error report from $src: $error\n$stackTrace\n---');
-  if (extra == null) {
-    extra = {'src': src};
-  } else {
+  debugPrint('Sending error report: $error\n$description\n$stackTrace');
+  if (extra != null) {
     debugPrint('Extra: $extra');
-    extra = Map<String, dynamic>.from(extra)..['src'] = src;
   }
+  debugPrint('---');
 
+  // TODO(dotdoom): add description when it will be possible.
   return FlutterSentry.instance.captureException(
     exception: error,
     stackTrace: stackTrace,

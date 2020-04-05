@@ -7,7 +7,6 @@ import 'package:delern_flutter/models/user.dart';
 import 'package:delern_flutter/routes.dart';
 import 'package:delern_flutter/views/helpers/save_updates_dialog.dart';
 import 'package:flutter/material.dart';
-import 'package:pedantic/pedantic.dart';
 
 class CardActionsMenuWidget extends StatelessWidget {
   final User user;
@@ -85,8 +84,11 @@ class CardActionsMenuWidget extends StatelessWidget {
         UserMessages.showMessage(
             Scaffold.of(context), context.l.cardDeletedUserMessage);
       } catch (e, stackTrace) {
-        unawaited(
-            UserMessages.showError(() => Scaffold.of(context), e, stackTrace));
+        UserMessages.showAndReportError(
+          () => Scaffold.of(context),
+          e,
+          stackTrace: stackTrace,
+        );
       }
     }
   }

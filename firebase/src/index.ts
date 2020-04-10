@@ -8,8 +8,7 @@ import * as path from 'path';
 import * as plist from 'plist';
 
 if (process.argv.length !== 3) {
-  console.error('This command takes exactly 1 argument: project id');
-  process.exit(1);
+  throw new Error('This command takes exactly 1 argument: project id');
 }
 
 const projectId = process.argv[2];
@@ -19,7 +18,9 @@ const packageName = 'org.dasfoo.delern.debug';
 console.log(`Setting up Firebase project: <${projectId}>.`);
 
 const borrowFirebaseCredentials = () => {
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
   const api = require('firebase-tools/lib/api.js'),
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
     configstore = require('firebase-tools/lib/configstore.js'),
     tokens = configstore.configstore.get('tokens');
   return {
@@ -210,11 +211,7 @@ The following steps have to be completed manually if you have not done them yet:
   and it will download updated artifacts for Android and iOS apps
 
 Have a nice day!`);
-})()
-  .then(() => {
-    process.exit(0);
-  })
-  .catch(e => {
-    console.error('Project setup has failed!', e);
-    process.exit(1);
-  });
+})().catch(e => {
+  console.error(e);
+  throw new Error('Project setup has failed!');
+});

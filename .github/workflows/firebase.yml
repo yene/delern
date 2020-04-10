@@ -52,11 +52,6 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: 10
-      - name: "Configure GCloud to deploy AppEngine"
-        run: >
-          gcloud auth activate-service-account --key-file <(
-            base64 -d <<<'${{ secrets.GOOGLE_APPLICATION_CREDENTIALS_DATA }}'
-          )
 
       - run: npm ci
         working-directory: firebase

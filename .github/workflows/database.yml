@@ -1,4 +1,4 @@
-name: backup
+name: database
 
 on:
   schedule:
@@ -6,8 +6,11 @@ on:
     - cron: "3 4 * * *"
 
 jobs:
-  firebase-database:
+  maintenance-and-backup:
+    # TODO(dotdoom): infer project name from repository.
     if: startsWith(github.repository, 'dasfoo/')
+    env:
+      PROJECT: delern-e1b33
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
@@ -20,9 +23,14 @@ jobs:
           gcloud auth activate-service-account --key-file <(
             base64 -d <<<'${{ secrets.GOOGLE_APPLICATION_CREDENTIALS_DATA }}'
           )
+      - run: >
+          curl
+          --max-time 300
+          https://us-central1-${PROJECT}.cloudfunctions.net/databaseMaintenance
+          -H "Authorization: bearer $(gcloud auth print-identity-token)"
       - run: |
           firebase/node_modules/.bin/firebase \
-            --project delern-e1b33 \
+            --project "${PROJECT?}" \
             database:get / |
           gzip |
           gsutil cp - "${BUCKET?}/firebase-database-$(($(date +%_j) % 100)).gz"

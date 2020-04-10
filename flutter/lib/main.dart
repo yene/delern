@@ -9,7 +9,6 @@ import 'package:delern_flutter/views/cards_interval_learning/cards_interval_lear
 import 'package:delern_flutter/views/decks_list/decks_list.dart';
 import 'package:delern_flutter/views/edit_deck/edit_deck.dart';
 import 'package:delern_flutter/views/helpers/auth_widget.dart';
-import 'package:delern_flutter/views/onboarding/onboarding.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -46,8 +45,7 @@ class App extends StatelessWidget {
       ],
       title: title,
       // SignInWidget must be above Navigator to provide CurrentUserWidget.of().
-      builder: (context, child) =>
-          Onboarding(afterOnboardingBuilder: () => AuthWidget(child: child)),
+      builder: (context, child) => AuthWidget(child: child),
       theme: ThemeData(
           scaffoldBackgroundColor: app_styles.kScaffoldBackgroundColor,
           primarySwatch: app_styles.kPrimarySwatch,

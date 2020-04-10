@@ -42,15 +42,6 @@ void main() {
       unawaited(driver?.close());
     });
 
-    test('skip_intro', () async {
-      final skipButton = find.text('SKIP');
-      await driver.waitFor(skipButton);
-      await driver.tap(skipButton);
-      final doneButton = find.text('DONE');
-      await driver.waitFor(doneButton);
-      await driver.tap(doneButton);
-    });
-
     test('signin_anonymously', () async {
       final button = find.text(localizations.continueAnonymously.toUpperCase());
       await driver.waitFor(button);

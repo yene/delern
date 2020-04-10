@@ -16,6 +16,7 @@ const kFacebookBlueColor = Color(0xFF1877F2);
 const kDeckItemColor = Colors.white;
 const kCurrentDeckTypeColor = Colors.grey;
 final kGeneralDeckTypeColor = Colors.grey[200];
+final kBottomSheetColor = Colors.blueGrey[50];
 
 const double kMinItemHeight = 48;
 const double kMinIconHeight = 24;
@@ -27,6 +28,8 @@ const double kItemListHeightRatio = 0.1;
 const double kItemListPaddingRatio = kItemListHeightRatio * 0.08;
 const double kCardElevation = 6;
 const double kImageMenuButtonSize = 36;
+const double kBottomSheetBorderRadius = 24;
+const double kBottomSheetElevation = 20;
 
 class CardColor {
   final Color frontSideBackground;

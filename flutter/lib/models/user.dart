@@ -346,13 +346,14 @@ class User {
       (await FirebaseStorage.instance.getReferenceFromUrl(url)).delete();
 
   Future<String> uploadImage(File file, String deckKey) async =>
-      (await FirebaseStorage.instance
-              .ref()
-              .child('cards')
-              .child(deckKey)
-              .child(Uuid().v1())
-              .putFile(file)
-              .onComplete)
-          .ref
-          .getDownloadURL();
+      (await (await FirebaseStorage.instance
+                  .ref()
+                  .child('cards')
+                  .child(deckKey)
+                  .child(Uuid().v1())
+                  .putFile(file)
+                  .onComplete)
+              .ref
+              .getDownloadURL())
+          .toString();
 }

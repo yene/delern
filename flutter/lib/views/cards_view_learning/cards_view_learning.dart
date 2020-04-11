@@ -68,7 +68,7 @@ class _CardsViewLearningState extends State<CardsViewLearning>
             buildStreamBuilderWithValue<BuiltList<CardModel>>(
                 streamWithValue: bloc.doSetCardsList,
                 builder: (context, snapshot) => IconButton(
-                      icon: Icon(Icons.shuffle),
+                      icon: const Icon(Icons.shuffle),
                       tooltip: context.l.shuffleTooltip,
                       onPressed: snapshot.hasData
                           ? (() {

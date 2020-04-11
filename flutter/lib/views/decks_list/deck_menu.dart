@@ -47,7 +47,7 @@ class _DeckMenuState extends State<DeckMenu>
         padding: const EdgeInsets.all(app_styles.kIconDeckPadding),
         iconSize: widget.buttonSize,
         color: app_styles.kIconColor,
-        icon: Icon(Icons.more_vert),
+        icon: const Icon(Icons.more_vert),
         onPressed: () async {
           final menuItemType = await Navigator.push(
               context,

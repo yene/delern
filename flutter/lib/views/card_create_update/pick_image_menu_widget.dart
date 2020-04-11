@@ -149,10 +149,13 @@ class PickImageMenuWidget extends StatelessWidget {
   Map<_ImageMenuItemSource, Widget> _buildImageMenu(BuildContext context) =>
       <_ImageMenuItemSource, Widget>{
         _ImageMenuItemSource.gallery: ImageMenuItem(
-            icon: Icons.add_photo_alternate,
-            text: context.l.imageFromGalleryLabel),
+          icon: Icons.add_photo_alternate,
+          text: context.l.imageFromGalleryLabel,
+        ),
         _ImageMenuItemSource.photo: ImageMenuItem(
-            icon: Icons.add_a_photo, text: context.l.imageFromPhotoLabel),
+          icon: Icons.add_a_photo,
+          text: context.l.imageFromPhotoLabel,
+        ),
       };
 }
 

@@ -74,7 +74,7 @@ class _ListAccessorWidgetState<T extends KeyedListItem>
     return ListView.builder(
       itemBuilder: (context, index) => index == _list.length
           // It's hard to know exactly the size of FAB because it's dynamic.
-          ? SizedBox(height: kFloatingActionButtonMargin * 3)
+          ? const SizedBox(height: kFloatingActionButtonMargin * 3)
           : widget.itemBuilder(context, _list[index], index),
       itemCount: showSpareItem ? _list.length + 1 : _list.length,
       controller: widget.controller,

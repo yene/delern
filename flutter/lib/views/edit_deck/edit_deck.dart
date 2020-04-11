@@ -109,7 +109,7 @@ class _EditDeckState extends State<EditDeck> {
   List<Widget> _buildActions(EditDeckBloc bloc) {
     final menuAction = IconButton(
       tooltip: context.l.deckSettingsTooltip,
-      icon: Icon(Icons.more_vert),
+      icon: const Icon(Icons.more_vert),
       onPressed: () {
         showDialog<void>(
           context: context,

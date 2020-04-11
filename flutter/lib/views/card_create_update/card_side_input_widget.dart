@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:delern_flutter/flutter/localization.dart';
 import 'package:delern_flutter/flutter/styles.dart' as app_styles;
+import 'package:delern_flutter/flutter/text_input.dart';
 import 'package:delern_flutter/views/card_create_update/pick_image_menu_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -50,11 +51,8 @@ class CardSideInputWidget extends StatelessWidget {
                       semanticLabel: context.l.accessibilityAddImageLabel,
                     ),
                     onPressed: () {
-                      // If there is a keyboard, close it.
-                      // https://stackoverflow.com/questions/44991968
-                      SystemChannels.textInput
-                          .invokeMethod<void>('TextInput.hide');
-                      showBottomSheet<dynamic>(
+                      hideTextInput();
+                      showBottomSheet<void>(
                         context: context,
                         builder: (context) => Padding(
                           padding: const EdgeInsets.all(24),

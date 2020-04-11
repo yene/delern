@@ -13,7 +13,6 @@ class NonScrollingMarkdownWidget extends StatelessWidget {
   Widget build(BuildContext context) => Center(
         child: MarkdownBody(
           data: text,
-          fitContent: true,
           styleSheet: MarkdownStyleSheet.fromTheme(Theme.of(context)).copyWith(
             p: textStyle,
             listBullet: textStyle,

@@ -1,0 +1,2 @@
+# https://github.com/google/gts/issues/485
+*.ts text eol=lf

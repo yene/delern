@@ -3,7 +3,7 @@
   "scripts": {
     "check": "gts check",
     "clean": "gts clean",
-    "compile": "tsc -p .",
+    "compile": "tsc",
     "fix": "gts fix",
     "prepare": "npm run compile",
     "pretest": "npm run compile",
@@ -22,11 +22,11 @@
     "firebase-functions-test": "^0.1.6",
     "tslint": "^5.20.0",
     "typescript": "~3.8.0",
-    "gts": "^1.1.0",
+    "gts": "^2.0.0",
     "@types/node": "^10.0.3"
   },
   "engines": {
-    "node": "8"
+    "node": "10"
   },
   "private": true
 }

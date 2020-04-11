@@ -10,6 +10,8 @@ on:
 
 jobs:
   test:
+    # Don't clutter up CI project with tests from other repos.
+    if: startsWith(github.repository, 'dasfoo/')
     strategy:
       fail-fast: false
       matrix:
@@ -48,7 +50,18 @@ jobs:
       - name: "Pre-build app to unclutter test output"
         working-directory: flutter
         run: bundle exec fastlane ios build
-      - name: "Build and run tests"
+
+      - name: "Build and run tests (default error reporting environment)"
+        if: github.event_name == 'pull_request'
         working-directory: flutter
-        run: |
-          "${FLUTTER_ROOT?}/bin/flutter" drive --target test_driver/main.dart
+        run: >
+          "${FLUTTER_ROOT?}/bin/flutter" drive
+          --target test_driver/main.dart
+
+      - name: "Build and run tests (ci error reporting environment)"
+        if: github.event_name == 'push'
+        working-directory: flutter
+        run: >
+          "${FLUTTER_ROOT?}/bin/flutter" drive
+          --dart-define sentry.environment=ci
+          --target test_driver/main.dart

@@ -51,7 +51,7 @@ jobs:
       - uses: actions/checkout@v1
       - uses: actions/setup-node@v1
         with:
-          node-version: 8
+          node-version: 10
       - name: "Configure GCloud to deploy AppEngine"
         run: >
           gcloud auth activate-service-account --key-file <(

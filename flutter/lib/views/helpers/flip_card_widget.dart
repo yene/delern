@@ -175,7 +175,7 @@ class _FlipCardWidgetState extends State<FlipCardWidget>
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
-                    Icon(
+                    const Icon(
                       Icons.autorenew,
                       color: app_styles.kSecondaryTextDeckItemColor,
                     ),

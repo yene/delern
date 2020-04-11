@@ -12,13 +12,21 @@ class AppConfig {
 
   // Value initialized from Remote Config, whether enable or disable images
   // feature in the app (uploading images).
-  bool get imageFeatureEnabled =>
-      _remoteConfig?.getBool('images_feature_enabled') ?? true;
+  bool get imageFeatureEnabled {
+    final value = _remoteConfig?.getValue('images_feature_enabled');
+    // For better readability
+    // ignore: avoid_bool_literals_in_conditional_expressions
+    return value.source == ValueSource.valueRemote ? value.asBool() : true;
+  }
 
   // Value initialized from Remote Config, whether enable or disable sharing
   // decks with other users.
-  bool get sharingFeatureEnabled =>
-      _remoteConfig?.getBool('sharing_feature_enabled') ?? true;
+  bool get sharingFeatureEnabled {
+    final value = _remoteConfig?.getValue('sharing_feature_enabled');
+    // For better readability
+    // ignore: avoid_bool_literals_in_conditional_expressions
+    return value.source == ValueSource.valueRemote ? value.asBool() : true;
+  }
 
   RemoteConfig _remoteConfig;
 

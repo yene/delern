@@ -21,22 +21,17 @@ class PickImageMenuWidget extends StatelessWidget {
       : super(key: key);
 
   @override
-  Widget build(BuildContext context) => PopupMenuButton<_ImageMenuItemSource>(
-        icon: Icon(
-          Icons.camera_alt,
-          size: app_styles.kImageMenuButtonSize,
-          semanticLabel: context.l.accessibilityAddImageLabel,
-        ),
-        onSelected: (source) async {
-          final file = await _openImage(source, context);
-          if (file != null) {
-            onImageSelected(file);
-          }
-        },
-        itemBuilder: (context) => _buildImageMenu(context)
+  Widget build(BuildContext context) => Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: _buildImageMenu(context)
             .entries
-            .map((entry) => PopupMenuItem<_ImageMenuItemSource>(
-                  value: entry.key,
+            .map((entry) => GestureDetector(
+                  onTap: () async {
+                    final file = await _openImage(entry.key, context);
+                    if (file != null) {
+                      onImageSelected(file);
+                    }
+                  },
                   child: entry.value,
                 ))
             .toList(),
@@ -151,25 +146,53 @@ class PickImageMenuWidget extends StatelessWidget {
     return permission;
   }
 
-  Widget _buildImageMenuItem(IconData icon, String text) => Row(
-        mainAxisAlignment: MainAxisAlignment.start,
+  Map<_ImageMenuItemSource, Widget> _buildImageMenu(BuildContext context) =>
+      <_ImageMenuItemSource, Widget>{
+        _ImageMenuItemSource.gallery: ImageMenuItem(
+          icon: Icons.add_photo_alternate,
+          text: context.l.imageFromGalleryLabel,
+        ),
+        _ImageMenuItemSource.photo: ImageMenuItem(
+          icon: Icons.add_a_photo,
+          text: context.l.imageFromPhotoLabel,
+        ),
+      };
+}
+
+@immutable
+class ImageMenuItem extends StatelessWidget {
+  final IconData icon;
+  final String text;
+
+  const ImageMenuItem({@required this.icon, @required this.text})
+      : assert(icon != null),
+        assert(text != null);
+
+  @override
+  Widget build(BuildContext context) => Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          Icon(
-            icon,
-            semanticLabel: text,
+          Container(
+            margin: const EdgeInsets.all(8),
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: app_styles.kLightPrimaryColor,
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: Center(
+              child: Icon(
+                icon,
+                size: app_styles.kImageMenuButtonSize,
+                semanticLabel: text,
+              ),
+            ),
           ),
-          Padding(
-            padding: const EdgeInsets.only(left: 5),
-            child: Text(text),
+          Text(
+            text,
+            style: app_styles.primaryText.copyWith(
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ],
       );
-
-  Map<_ImageMenuItemSource, Widget> _buildImageMenu(BuildContext context) =>
-      <_ImageMenuItemSource, Widget>{
-        _ImageMenuItemSource.gallery: _buildImageMenuItem(
-            Icons.add_photo_alternate, context.l.imageFromGalleryLabel),
-        _ImageMenuItemSource.photo: _buildImageMenuItem(
-            Icons.add_a_photo, context.l.imageFromPhotoLabel),
-      };
 }

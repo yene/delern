@@ -6,25 +6,22 @@ import 'package:flutter/widgets.dart';
 Widget buildStreamBuilderWithValue<T>({
   @required StreamWithValue<T> streamWithValue,
   @required AsyncWidgetBuilder<T> builder,
-  Key key,
 }) =>
     StreamBuilderWithValue<T>(
       streamWithValue: streamWithValue,
       builder: builder,
-      key: key,
     );
 
 @immutable
 class StreamBuilderWithValue<T> extends StatefulWidget {
   final StreamWithValue<T> streamWithValue;
   final AsyncWidgetBuilder<T> builder;
-  final Key _streamBuilderKey;
 
   const StreamBuilderWithValue({
     @required this.streamWithValue,
     @required this.builder,
     Key key,
-  }) : _streamBuilderKey = key;
+  }) : super(key: key);
 
   @override
   _StreamBuilderWithValueState<T> createState() =>
@@ -34,7 +31,8 @@ class StreamBuilderWithValue<T> extends StatefulWidget {
 class _StreamBuilderWithValueState<T> extends State<StreamBuilderWithValue<T>> {
   @override
   Widget build(BuildContext context) => StreamBuilder<T>(
-        key: widget._streamBuilderKey,
+        // By contract, we have to rebuild from scratch if the stream changes.
+        key: ValueKey(widget.streamWithValue.updates),
         initialData: widget.streamWithValue.value,
         stream: widget.streamWithValue.updates,
         builder: widget.builder,

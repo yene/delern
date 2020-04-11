@@ -127,9 +127,6 @@ class CardsIntervalLearningState extends State<CardsIntervalLearning> {
                               right: MediaQuery.of(context).size.width *
                                   _kCardPaddingRatio),
                   child: buildStreamBuilderWithValue<CardModel>(
-                      // TODO(dotdoom): find a prettier way to trigger the
-                      //                builder() when initialData changes.
-                      key: ValueKey(_card.value?.key),
                       streamWithValue: _card,
                       builder: (context, snapshot) {
                         // TODO(dotdoom): handle removed data (in model).

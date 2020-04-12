@@ -84,19 +84,6 @@ This service account has to be given "Release manager" role on the
 "Settings > Users & permissions" page of
 [Google Play Console](https://play.google.com/apps/publish/).
 
-### Deploy AppEngine (for cron jobs)
-
-We reuse the same account as for publishing to Google Play, to deploy AppEngine
-code. To deploy to AppEngine, it has to be given "App Engine Deployer" role on
-the [IAM page](https://console.cloud.google.com/iam-admin/iam) of GCP project(s)
-that we deploy to (Debug and Release).
-
-In addition, for the project that the service accounts belongs to, enable the
-following APIs:
-
-- [Google Service Management API](https://console.developers.google.com/apis/api/servicemanagement.googleapis.com/)
-- [Google App Engine Admin API](https://console.developers.google.com/apis/api/appengine.googleapis.com/)
-
 ### Build iOS app and publish to App Store
 
 Building a release version of iOS app requires signing it, similar to how it is

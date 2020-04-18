@@ -19,11 +19,11 @@
     "nodemailer": "^6.4.0"
   },
   "devDependencies": {
-    "firebase-functions-test": "^0.1.6",
-    "tslint": "^5.20.0",
-    "typescript": "~3.8.0",
+    "@types/node": "^10.17.20",
+    "firebase-functions-test": "^0.1.7",
     "gts": "^2.0.0",
-    "@types/node": "^10.0.3"
+    "tslint": "^5.20.0",
+    "typescript": "~3.8.0"
   },
   "engines": {
     "node": "10"

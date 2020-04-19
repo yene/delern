@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:delern_flutter/flutter/localization.dart';
 import 'package:delern_flutter/l10n/app_localizations.dart';
 import 'package:delern_flutter/remote/error_reporting.dart' as error_reporting;
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -48,6 +49,8 @@ class UserMessages {
   ) {
     String exceptionSpecificMessage;
     if (e is PlatformException) {
+      exceptionSpecificMessage = e.message;
+    } else if (e is DatabaseError) {
       exceptionSpecificMessage = e.message;
     } else if (e is Exception) {
       final exceptionString = e.toString();

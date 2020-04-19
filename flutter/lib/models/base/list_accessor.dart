@@ -7,6 +7,7 @@ import 'package:delern_flutter/models/base/stream_with_value.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/foundation.dart';
 import 'package:meta/meta.dart';
+import 'package:quiver/strings.dart';
 
 // https://github.com/dart-lang/linter/issues/1826
 // ignore: one_member_abstracts
@@ -19,23 +20,33 @@ class DataListAccessorItem<T extends KeyedListItem>
   final String key;
   final DataListAccessor<T> _listAccessor;
   StreamController<T> _updates;
-  StreamSubscription<ListChangeRecord<T>> _eventsSubscription;
 
   @visibleForTesting
   DataListAccessorItem(this._listAccessor, this.key) {
+    StreamSubscription<ListChangeRecord<T>> eventsSubscription;
     _updates = StreamController<T>.broadcast(
       onListen: () {
-        _eventsSubscription = _listAccessor.events.listen((listChangedRecord) {
-          final addedItem = listChangedRecord.added
-              .firstWhere((item) => item.key == key, orElse: () => null);
-          final itemWasRemoved =
-              listChangedRecord.removed.any((item) => item.key == key);
-          if (addedItem != null || itemWasRemoved) {
-            _updates.add(addedItem);
-          }
-        }, onDone: () => _updates.close());
+        eventsSubscription = _listAccessor.events.listen(
+          (listChangedRecord) {
+            final addedItem = listChangedRecord.added
+                .firstWhere((item) => item.key == key, orElse: () => null);
+            final itemWasRemoved =
+                listChangedRecord.removed.any((item) => item.key == key);
+            if (addedItem != null || itemWasRemoved) {
+              _updates.add(addedItem);
+            }
+          },
+          onDone: () => _updates.close(),
+          // Forward errors on the listener. In addition, DataListAccessor
+          // errors are always terminating the stream, so onDone will follow.
+          // We have to annotate parameter types because onError handler is
+          // defined as untyped Function and types can not be inferred.
+          // ignore: avoid_types_on_closure_parameters
+          onError: (dynamic e, StackTrace stackTrace) =>
+              _updates.addError(e, stackTrace),
+        );
       },
-      onCancel: () => _eventsSubscription.cancel(),
+      onCancel: () => eventsSubscription.cancel(),
     );
   }
 
@@ -65,6 +76,41 @@ class DataListAccessorItem<T extends KeyedListItem>
     }
     return null;
   }
+}
+
+/// A proxy class for [DatabaseError], only used to only report errors about
+/// reading from a database (streams like [Query.onChildAdded], [Query.onValue]
+/// etc). The differences are:
+/// - it includes [path], which should be set to [Query.path] of the [Query]
+///   which subscription has failed;
+/// - it overrides [toString] to provide additional information like [path];
+/// - it implements [Exception] interface as a good citizen.
+///
+/// It `implements` [DatabaseError] rather than extending it because it does not
+/// have a public constructor.
+@immutable
+class DatabaseReadException implements Exception, DatabaseError {
+  final String path;
+  final DatabaseError _underlyingError;
+
+  const DatabaseReadException({
+    @required DatabaseError underlyingError,
+    @required this.path,
+  }) : _underlyingError = underlyingError;
+
+  @override
+  int get code => _underlyingError.code;
+
+  @override
+  String get message => _underlyingError.message;
+
+  @override
+  String get details => isEmpty(_underlyingError.details)
+      ? 'path:$path'
+      : '${_underlyingError.details} (path:$path)';
+
+  @override
+  String toString() => 'DatabaseReadException($code, $message, $details)';
 }
 
 abstract class DataListAccessor<T extends KeyedListItem>
@@ -97,26 +143,36 @@ abstract class DataListAccessor<T extends KeyedListItem>
   Stream<ListChangeRecord<T>> get events => _events.stream;
 
   StreamSubscription<Event> _onChildAdded, _onChildChanged, _onChildRemoved;
+  String _path;
 
   DataListAccessor(DatabaseReference reference) {
-    // TODO(dotdoom): onError handler should close().
-    _onChildAdded = reference.onChildAdded.listen(_childAddedOrChanged);
-    _onChildChanged = reference.onChildChanged.listen(_childAddedOrChanged);
-    _onChildRemoved = reference.onChildRemoved.listen((data) {
-      final index = _currentValue.indexOfKey(data.snapshot.key);
-      final deletedItem = _currentValue[index];
-      _currentValue.removeAt(index);
-      disposeItem(deletedItem);
-      if (_loaded) {
-        if (_value.hasListener) {
-          _value.add(BuiltList.from(_currentValue));
+    _path = reference.path;
+    _onChildAdded = reference.onChildAdded.listen(
+      _childAddedOrChanged,
+      onError: _onListenError,
+    );
+    _onChildChanged = reference.onChildChanged.listen(
+      _childAddedOrChanged,
+      onError: _onListenError,
+    );
+    _onChildRemoved = reference.onChildRemoved.listen(
+      (data) {
+        final index = _currentValue.indexOfKey(data.snapshot.key);
+        final deletedItem = _currentValue[index];
+        _currentValue.removeAt(index);
+        disposeItem(deletedItem);
+        if (_loaded) {
+          if (_value.hasListener) {
+            _value.add(BuiltList.from(_currentValue));
+          }
+          if (_events.hasListener) {
+            _events.add(ListChangeRecord<T>.remove(
+                _currentValue, index, [deletedItem]));
+          }
         }
-        if (_events.hasListener) {
-          _events.add(
-              ListChangeRecord<T>.remove(_currentValue, index, [deletedItem]));
-        }
-      }
-    });
+      },
+      onError: _onListenError,
+    );
     // onChildAdded listener will be called first, but we don't send updates
     // until we get the full list value.
     reference.once().then((val) {
@@ -130,7 +186,24 @@ abstract class DataListAccessor<T extends KeyedListItem>
         _events.add(
             ListChangeRecord<T>.add(_currentValue, 0, _currentValue.length));
       }
-    });
+    }).catchError(_onListenError);
+  }
+
+  void _onListenError(dynamic error, StackTrace stackTrace) {
+    if (error is DatabaseError) {
+      // Can't use throw because that would loose stackTrace that we have.
+      error = DatabaseReadException(
+        underlyingError: error,
+        path: _path,
+      );
+    }
+    if (!_value.isClosed && _value.hasListener) {
+      _value.addError(error, stackTrace);
+    }
+    if (!_events.isClosed && _events.hasListener) {
+      _events.addError(error, stackTrace);
+    }
+    close();
   }
 
   void _childAddedOrChanged(Event data) {
@@ -155,8 +228,7 @@ abstract class DataListAccessor<T extends KeyedListItem>
     }
   }
 
-  DataListAccessorItem<T> getItem(String key) =>
-      DataListAccessorItem(this, key);
+  StreamWithValue<T> getItem(String key) => DataListAccessorItem(this, key);
 
   @protected
   @visibleForOverriding

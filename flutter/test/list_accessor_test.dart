@@ -22,6 +22,7 @@ void main() {
     onChildRemoved = StreamController<Event>();
 
     dbReference = MockDatabaseReference();
+    when(dbReference.path).thenReturn('/objects');
     when(dbReference.onChildAdded).thenAnswer((_) => onChildAdded.stream);
     when(dbReference.onChildRemoved).thenAnswer((_) => onChildRemoved.stream);
     when(dbReference.onChildChanged).thenAnswer((_) => onChildChanged.stream);
@@ -32,6 +33,22 @@ void main() {
     await onChildAdded.close();
     await onChildRemoved.close();
     await onChildChanged.close();
+  });
+
+  test('ListAccessor (initial read error)', () async {
+    when(dbReference.once())
+        .thenAnswer((_) => Future.error(const AccessDeniedError()));
+
+    final accessor = MyListAccessor(dbReference);
+    try {
+      await accessor.events.first;
+      throw Exception('This should have failed!');
+    } on DatabaseReadException catch (e) {
+      expect(e.code, 13);
+      expect(e.message, contains('Access denied'));
+      expect(e.details, contains('READ'));
+      expect(e.path, '/objects');
+    }
   });
 
   test('ListAccessor (first set)', () async {
@@ -64,10 +81,11 @@ void main() {
 
     tearDown(() {
       accessor.close();
+      expect(accessor.value, isEmpty);
     });
 
     group('updates', () {
-      test('remove', () async {
+      test('add then remove', () async {
         final updates = StreamQueue(accessor.updates);
         onChildAdded.add(FakeEvent(snapshot: FakeSnapshot(key: '1')));
         expect(await updates.next, BuiltList.of([const MyModel(key: '1')]));
@@ -75,7 +93,7 @@ void main() {
         expect(await updates.next, BuiltList.of(<MyModel>[]));
       });
 
-      test('add', () async {
+      test('add then add', () async {
         final updates = StreamQueue(accessor.updates);
         onChildAdded.add(FakeEvent(snapshot: FakeSnapshot(key: '1')));
         expect(await updates.next, BuiltList.of([const MyModel(key: '1')]));
@@ -86,7 +104,7 @@ void main() {
         );
       });
 
-      test('update', () async {
+      test('add then update', () async {
         final updates = StreamQueue(accessor.updates);
         onChildAdded
             .add(FakeEvent(snapshot: FakeSnapshot(key: '1', value: '3')));
@@ -101,10 +119,27 @@ void main() {
           BuiltList.of([const MyModel(key: '1', value: '1')]),
         );
       });
+
+      test('add then error', () async {
+        final updates = StreamQueue(accessor.updates);
+        onChildAdded.add(FakeEvent(snapshot: FakeSnapshot(key: '1')));
+        expect(await updates.next, BuiltList.of([const MyModel(key: '1')]));
+        onChildAdded.addError(const AccessDeniedError());
+        try {
+          await updates.next;
+          throw Exception('This should have failed!');
+        } on DatabaseReadException catch (e) {
+          expect(e.code, 13);
+          expect(e.message, contains('Access denied'));
+          expect(e.details, contains('READ'));
+          expect(e.path, '/objects');
+        }
+        expect(() => updates.next, throwsA(const TypeMatcher<StateError>()));
+      });
     });
 
     group('value', () {
-      test('remove', () async {
+      test('add then remove', () async {
         onChildAdded.add(FakeEvent(snapshot: FakeSnapshot(key: '1')));
         await allEventsDelivered();
         expect(accessor.value, BuiltList.of([const MyModel(key: '1')]));
@@ -113,7 +148,7 @@ void main() {
         expect(accessor.value, BuiltList.of(<MyModel>[]));
       });
 
-      test('add', () async {
+      test('add then add', () async {
         onChildAdded.add(FakeEvent(snapshot: FakeSnapshot(key: '1')));
         await allEventsDelivered();
         expect(accessor.value, BuiltList.of([const MyModel(key: '1')]));
@@ -123,7 +158,7 @@ void main() {
             BuiltList.of([const MyModel(key: '1'), const MyModel(key: '2')]));
       });
 
-      test('update', () async {
+      test('add then update', () async {
         onChildAdded
             .add(FakeEvent(snapshot: FakeSnapshot(key: '1', value: '3')));
         await allEventsDelivered();
@@ -136,13 +171,22 @@ void main() {
             BuiltList.of([const MyModel(key: '1', value: '1')]));
       });
 
+      test('add then error', () async {
+        onChildAdded.add(FakeEvent(snapshot: FakeSnapshot(key: '1')));
+        await allEventsDelivered();
+        expect(accessor.value, BuiltList.of([const MyModel(key: '1')]));
+        onChildAdded.addError(const AccessDeniedError());
+        await allEventsDelivered();
+        expect(accessor.value, isEmpty);
+      });
+
       test('initial (empty)', () async {
         expect(accessor.value, const Iterable<void>.empty());
       });
     });
 
     group('events', () {
-      test('remove', () async {
+      test('add then remove', () async {
         final events = StreamQueue(accessor.events);
         onChildAdded.add(FakeEvent(snapshot: FakeSnapshot(key: '1')));
         expectListChangeRecord<MyModel>(
@@ -153,7 +197,7 @@ void main() {
             removed: [const MyModel(key: '1')]);
       });
 
-      test('add', () async {
+      test('add then add', () async {
         final events = StreamQueue(accessor.events);
         onChildAdded.add(FakeEvent(snapshot: FakeSnapshot(key: '1')));
         expectListChangeRecord<MyModel>(
@@ -165,7 +209,7 @@ void main() {
             removed: [], addedCount: 1);
       });
 
-      test('update', () async {
+      test('add then update', () async {
         final events = StreamQueue(accessor.events);
         onChildAdded
             .add(FakeEvent(snapshot: FakeSnapshot(key: '1', value: '3')));
@@ -177,6 +221,25 @@ void main() {
         expectListChangeRecord<MyModel>(
             await events.next, [const MyModel(key: '1', value: '1')], 0,
             removed: [const MyModel(key: '1', value: '3')], addedCount: 1);
+      });
+
+      test('add then error', () async {
+        final events = StreamQueue(accessor.events);
+        onChildAdded.add(FakeEvent(snapshot: FakeSnapshot(key: '1')));
+        expectListChangeRecord<MyModel>(
+            await events.next, [const MyModel(key: '1')], 0,
+            removed: [], addedCount: 1);
+        onChildAdded.addError(const AccessDeniedError());
+        try {
+          await events.next;
+          throw Exception('This should have failed!');
+        } on DatabaseReadException catch (e) {
+          expect(e.code, 13);
+          expect(e.message, contains('Access denied'));
+          expect(e.details, contains('READ'));
+          expect(e.path, '/objects');
+        }
+        expect(() => events.next, throwsA(const TypeMatcher<StateError>()));
       });
     });
 
@@ -213,6 +276,11 @@ void main() {
         await allEventsDelivered();
         expect(item.hasValue, true);
         expect(item.value, const MyModel(key: 'test', value: 'hello'));
+
+        onChildAdded.addError(const AccessDeniedError());
+        await allEventsDelivered();
+        expect(item.hasValue, false);
+        expect(item.value, null);
       });
 
       test('updates', () async {
@@ -248,6 +316,25 @@ void main() {
         await allEventsDelivered();
         accessor.close();
       });
+
+      test('updates with error', () async {
+        final item = accessor.getItem('test');
+        // Can't use StreamQueue here because subscription to accessor.events
+        // from item.updates is indirect and happens after the first onChild*
+        // event is processed.
+        expect(
+            item.updates,
+            emitsInOrder(<dynamic>[
+              const MyModel(key: 'test', value: 'hello'),
+              emitsError(const TypeMatcher<DatabaseReadException>()),
+              emitsDone,
+            ]));
+        onChildAdded
+          ..add(FakeEvent(
+            snapshot: FakeSnapshot(key: 'test', value: 'hello'),
+          ))
+          ..addError(const AccessDeniedError());
+      });
     });
   });
 
@@ -257,6 +344,20 @@ void main() {
           (model) => false;
     });
   });
+}
+
+@immutable
+class AccessDeniedError implements DatabaseError {
+  const AccessDeniedError();
+
+  @override
+  int get code => 13;
+
+  @override
+  String get message => 'Access denied';
+
+  @override
+  String get details => 'User does not have access to READ this node';
 }
 
 class MockDatabaseReference extends Mock implements DatabaseReference {}

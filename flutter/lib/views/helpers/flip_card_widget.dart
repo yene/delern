@@ -105,6 +105,12 @@ class _FlipCardWidgetState extends State<FlipCardWidget>
       });
   }
 
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
   void _startAnimation() {
     if (!mounted) {
       return;

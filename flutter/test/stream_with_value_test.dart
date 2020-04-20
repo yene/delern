@@ -54,63 +54,63 @@ void main() {
         const Stream<int>.empty(),
         initialValue: 42,
       );
-      expect(sv.hasValue, true);
+      expect(sv.loaded, true);
       expect(sv.value, 42);
     });
 
     test('updates value when it arrives', () async {
       final sv = StreamWithLatestValue(Stream.fromIterable([0, 1, 2]));
-      expect(sv.hasValue, false);
+      expect(sv.loaded, false);
 
       expect(await sv.updates.first, 0);
-      expect(sv.hasValue, true);
+      expect(sv.loaded, true);
       expect(sv.value, 0);
     });
 
     test('does not update value when there is no listener', () async {
       final source = StreamController<int>.broadcast();
       final sv = StreamWithLatestValue(source.stream);
-      expect(sv.hasValue, false);
+      expect(sv.loaded, false);
       source.add(0);
-      expect(sv.hasValue, false);
+      expect(sv.loaded, false);
 
       final first = sv.updates.first;
       source.add(1);
       expect(await first, 1);
-      expect(sv.hasValue, true);
+      expect(sv.loaded, true);
       expect(sv.value, 1);
 
       await source.close();
 
-      expect(sv.hasValue, true);
+      expect(sv.loaded, true);
       expect(sv.value, 1);
     });
 
-    test('recognizes null as hasValue (except initialValue)', () async {
+    test('recognizes null as loaded (except from initialValue)', () async {
       final sv = StreamWithLatestValue(
         Stream.fromIterable([0, null, 1]).asBroadcastStream(),
         initialValue: null,
       );
-      expect(sv.hasValue, false);
+      expect(sv.loaded, false);
 
       expect(await sv.updates.first, 0);
-      expect(sv.hasValue, true);
+      expect(sv.loaded, true);
       expect(sv.value, 0);
 
       expect(await sv.updates.first, null);
-      expect(sv.hasValue, true);
+      expect(sv.loaded, true);
       expect(sv.value, null);
     });
   });
 
   group('StreamWithValue.map extension', () {
-    test('relays hasValue and value', () async {
+    test('relays loaded and value', () async {
       final swv = StreamWithLatestValue(Stream.fromIterable([1, 2, 3])),
           mapped = swv.map((x) => x + 1);
-      expect(mapped.hasValue, false);
+      expect(mapped.loaded, false);
 
       await swv.updates.first;
-      expect(mapped.hasValue, true);
+      expect(mapped.loaded, true);
       expect(mapped.value, swv.value + 1);
     });
 

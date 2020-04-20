@@ -50,11 +50,10 @@ class DataListAccessorItem<T extends KeyedListItem>
     );
   }
 
-  /// Whether the underlying list is fully loaded and there is currently an item
-  /// with this [key] in the list.
+  /// Whether the underlying list is fully loaded and therefore the state of
+  /// this item (exists / does not exist) is known.
   @override
-  bool get hasValue =>
-      _listAccessor.hasValue && _listAccessor.value.indexOfKey(key) >= 0;
+  bool get loaded => _listAccessor.loaded;
 
   /// There's the following contract to [updates] of a list item:
   /// - when an item is gone from the list, this stream yields `null`, but the
@@ -68,7 +67,7 @@ class DataListAccessorItem<T extends KeyedListItem>
   /// with this [key] in the list, returns the value. Otherwise, returns `null`.
   @override
   T get value {
-    if (_listAccessor.hasValue) {
+    if (_listAccessor.loaded) {
       final index = _listAccessor.value.indexOfKey(key);
       if (index >= 0) {
         return _listAccessor.value[index];
@@ -121,7 +120,7 @@ abstract class DataListAccessor<T extends KeyedListItem>
   final _events = StreamController<ListChangeRecord<T>>.broadcast();
 
   /// Current value of the list. The following edge cases exist:
-  /// - the value is `null` if initialization is not yet complete ([hasValue] is
+  /// - the value is `null` if initialization is not yet complete ([loaded] is
   ///   false);
   /// - if the `ListAccessor` has been [close]d, the value is an empty list.
   @override
@@ -130,7 +129,7 @@ abstract class DataListAccessor<T extends KeyedListItem>
   /// `true` once the initial value has been loaded from the database. Never
   /// changes to `false` afterwards.
   @override
-  bool get hasValue => _loaded;
+  bool get loaded => _loaded;
 
   /// Updates to the current [value]. This stream is closed when this object is
   /// [close]d.
@@ -283,7 +282,7 @@ class FilteredListAccessor<T extends KeyedListItem> implements ListAccessor<T> {
   @override
   BuiltList<T> get value => _currentValue;
   @override
-  bool get hasValue => _base.hasValue;
+  bool get loaded => _base.loaded;
 
   @override
   void close() {

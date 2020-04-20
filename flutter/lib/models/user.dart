@@ -280,7 +280,7 @@ class User {
       '$deckAccessPath/access': access.toString(),
       '$deckPath/access': access.toString(),
     };
-    if (!deck.usersAccess.getItem(shareWithUid).hasValue) {
+    if (deck.usersAccess.getItem(shareWithUid).value == null) {
       // If there's no DeckAccess, assume the deck hasn't been shared yet, as
       // opposed to changing access level for a previously shared deck.
       updates.addAll(<String, dynamic>{

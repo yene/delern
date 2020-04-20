@@ -2,7 +2,7 @@ import 'dart:async';
 
 abstract class StreamWithValue<T> {
   T get value;
-  bool get hasValue;
+  bool get loaded;
 
   /// Any changes to [value], in the form of a stream.
   /// The current [value] itself typically is not sent upon [Stream.listen] to
@@ -21,9 +21,9 @@ class _MappedStreamWithValue<TInput, TOutput>
 
   @override
   TOutput get value =>
-      _inputStream.hasValue ? _convert(_inputStream.value) : null;
+      _inputStream.loaded ? _convert(_inputStream.value) : null;
   @override
-  bool get hasValue => _inputStream.hasValue;
+  bool get loaded => _inputStream.loaded;
 
   @override
   Stream<TOutput> get updates => _inputStream.updates.mapPerEvent(_convert);
@@ -38,7 +38,7 @@ extension StreamWithValueExtensions<TInput> on StreamWithValue<TInput> {
       _MappedStreamWithValue(this, convert);
 
   Stream<TInput> get valueWithUpdates async* {
-    if (hasValue) {
+    if (loaded) {
       yield value;
     }
     yield* updates;
@@ -112,5 +112,5 @@ class StreamWithLatestValue<T> implements StreamWithValue<T> {
   T get value => _latestValue;
 
   @override
-  bool get hasValue => _hasLatestValue;
+  bool get loaded => _hasLatestValue;
 }

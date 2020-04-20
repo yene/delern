@@ -72,6 +72,13 @@ void main() {
     accessor.close();
   });
 
+  test('ListAccessor getItem (before loading)', () async {
+    final item = MyListAccessor(dbReference).getItem('test');
+    expect(item.loaded, false);
+    await allEventsDelivered();
+    expect(item.loaded, true);
+  });
+
   group('ListAccessor (subsequent changes)', () {
     MyListAccessor accessor;
 
@@ -246,40 +253,37 @@ void main() {
     group('getItem', () {
       test('value', () async {
         final item = accessor.getItem('test');
-        expect(item.hasValue, false);
-        expect(item.value, null);
-
         onChildAdded.add(FakeEvent(
           snapshot: FakeSnapshot(key: 'test', value: 'hello'),
         ));
         await allEventsDelivered();
-        expect(item.hasValue, true);
+        expect(item.loaded, true);
         expect(item.value, const MyModel(key: 'test', value: 'hello'));
 
         onChildChanged.add(FakeEvent(
           snapshot: FakeSnapshot(key: 'test', value: 'world'),
         ));
         await allEventsDelivered();
-        expect(item.hasValue, true);
+        expect(item.loaded, true);
         expect(item.value, const MyModel(key: 'test', value: 'world'));
 
         onChildRemoved.add(FakeEvent(
           snapshot: FakeSnapshot(key: 'test'),
         ));
         await allEventsDelivered();
-        expect(item.hasValue, false);
+        expect(item.loaded, true);
         expect(item.value, null);
 
         onChildAdded.add(FakeEvent(
           snapshot: FakeSnapshot(key: 'test', value: 'hello'),
         ));
         await allEventsDelivered();
-        expect(item.hasValue, true);
+        expect(item.loaded, true);
         expect(item.value, const MyModel(key: 'test', value: 'hello'));
 
         onChildAdded.addError(const AccessDeniedError());
         await allEventsDelivered();
-        expect(item.hasValue, false);
+        expect(item.loaded, true);
         expect(item.value, null);
       });
 

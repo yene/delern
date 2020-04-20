@@ -847,14 +847,14 @@
     "placeholders": {
     }
   },
-  "openAppSettingsGalleryAccessQuestion": "Хотити открыть настройки приложения, чтобы разрешить доступ к Галереи?",
+  "openAppSettingsGalleryAccessQuestion": "Хотите открыть настройки приложения, чтобы разрешить доступ к Галерее?",
   "@openAppSettingsGalleryAccessQuestion": {
     "description": "Suggestion to open settings of the app",
     "type": "text",
     "placeholders": {
     }
   },
-  "openAppSettingsCameraAccessQuestion": "Хотити открыть настройки приложения, чтобы разрешить доступ к Камере?",
+  "openAppSettingsCameraAccessQuestion": "Хотите открыть настройки приложения, чтобы разрешить доступ к Камере?",
   "@openAppSettingsCameraAccessQuestion": {
     "description": "Suggestion to open settings of the app",
     "type": "text",
@@ -864,6 +864,20 @@
   "couldNotOpenAppSettingsUserMessage": "Не смогли окрыть настройки приложения. Пожалуйста сделайте это в настройках телефона.",
   "@couldNotOpenAppSettingsUserMessage": {
     "description": "Couln't open App Settings user message",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "decksRefreshed": "Списки обновлены",
+  "@decksRefreshed": {
+    "description": "The user pulled down on decks list and some changes have been picked up",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "noUpdates": "Нет обновлений",
+  "@noUpdates": {
+    "description": "The user pulled down on decks list but no changes were found",
     "type": "text",
     "placeholders": {
     }

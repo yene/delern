@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:built_collection/built_collection.dart';
 import 'package:delern_flutter/models/base/list_accessor.dart';
 import 'package:delern_flutter/models/base/stream_with_value.dart';
 import 'package:delern_flutter/models/card_model.dart';
@@ -309,6 +310,37 @@ class User {
       _write(<String, Null>{
         'learning/$uid/${sc.deckKey}/${sc.key}': null,
       });
+
+  /// Delete orphaned [ScheduledCardModel] of the deck and add missing ones.
+  /// Returns `true` if any changes were made.
+  Future<bool> syncScheduledCards(DeckModel deck) async {
+    final cards = BuiltSet<String>.of(deck.cards.value.map((card) => card.key));
+    final scheduledCards = BuiltSet<String>.of(
+        deck.scheduledCards.value.map((scheduledCard) => scheduledCard.key));
+
+    final updates = <String, dynamic>{};
+
+    for (final key in cards.union(scheduledCards)) {
+      final scheduledCardPath = 'learning/$uid/${deck.key}/$key';
+      if (cards.contains(key)) {
+        if (!scheduledCards.contains(key)) {
+          updates['$scheduledCardPath/level'] = 0;
+          updates['$scheduledCardPath/repeatAt'] =
+              ScheduledCardModel.computeRepeatAtBase(
+                  newCard: true, shuffle: true);
+        }
+      } else {
+        updates[scheduledCardPath] = null;
+      }
+    }
+
+    if (updates.isEmpty) {
+      return false;
+    }
+
+    await _write(updates);
+    return true;
+  }
 
   Future<void> _write(Map<String, dynamic> updates) async {
     // Firebase update() does not return until it gets response from the server.

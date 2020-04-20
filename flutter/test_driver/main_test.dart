@@ -151,6 +151,18 @@ void main() {
       await driver.tap(find.pageBack());
     });
 
+    test('refresh decks', () async {
+      await driver.scroll(
+        find.byType('ListView'),
+        0,
+        // We don't know the screen height, so put in a really large offset to
+        // cover for all scenarios.
+        999999,
+        const Duration(milliseconds: 500),
+      );
+      await driver.waitFor(find.text(localizations.noUpdates));
+    });
+
     test('delete deck', () async {
       // Swipe right.
       await driver.scroll(

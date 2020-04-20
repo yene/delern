@@ -50,13 +50,13 @@ class _DataListAccessor<T extends KeyedListItem>
   final _value = StreamController<BuiltList<T>>.broadcast();
   final _events = StreamController<ListChangeRecord<T>>.broadcast();
   final _currentValue = <T>[];
-  var _hasValue = false;
+  var _loaded = false;
 
   StreamSubscription<ListChangeRecord<T>> _sourceSubscription;
 
   _DataListAccessor(Stream<ListChangeRecord<T>> source) {
     _sourceSubscription = source.listen((change) {
-      _hasValue = true;
+      _loaded = true;
       _currentValue
         ..removeRange(change.index, change.removed.length)
         ..insertAll(change.index, change.added);
@@ -72,7 +72,7 @@ class _DataListAccessor<T extends KeyedListItem>
   StreamWithValue<T> getItem(String key) => DataListAccessorItem(this, key);
 
   @override
-  bool get hasValue => _hasValue;
+  bool get loaded => _loaded;
 
   @override
   Stream<BuiltList<T>> get updates => _value.stream;

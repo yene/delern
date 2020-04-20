@@ -129,7 +129,7 @@ abstract class ScheduledCardModel
             deckKey: deck.key,
             value: latestScheduledCard.value);
 
-        if (!deck.cards.getItem(latestScheduledCard.key).hasValue) {
+        if (deck.cards.getItem(latestScheduledCard.key).value == null) {
           // Card has been removed but we still have ScheduledCard for it.
           debugPrint('Removing dangling ScheduledCard ${scheduledCard.key}');
           unawaited(user.cleanupDanglingScheduledCard(scheduledCard));

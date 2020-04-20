@@ -99,13 +99,13 @@ class _ScheduledCardsDueCounter implements StreamWithValue<int> {
     // active subscriptions (and also closing _counter StreamController).
     scheduledCards.updates
         .listen(_findCardsAndResetTimer, onDone: _counter.close);
-    if (scheduledCards.hasValue) {
+    if (scheduledCards.loaded) {
       _findCardsAndResetTimer(scheduledCards.value);
     }
   }
 
   @override
-  bool get hasValue => _latestValue != null;
+  bool get loaded => _latestValue != null;
 
   @override
   Stream<int> get updates => _counter.stream;

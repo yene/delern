@@ -4,6 +4,7 @@ import 'package:built_collection/src/list.dart';
 import 'package:delern_flutter/models/base/keyed_list_item.dart';
 import 'package:delern_flutter/models/base/list_accessor.dart';
 import 'package:delern_flutter/models/base/list_change_record.dart';
+import 'package:delern_flutter/models/base/stream_with_value.dart';
 import 'package:delern_flutter/models/card_model.dart';
 import 'package:delern_flutter/models/deck_model.dart';
 import 'package:test/test.dart';
@@ -68,8 +69,7 @@ class _DataListAccessor<T extends KeyedListItem>
   Stream<ListChangeRecord<T>> get events => _events.stream;
 
   @override
-  DataListAccessorItem<T> getItem(String key) =>
-      DataListAccessorItem(this, key);
+  StreamWithValue<T> getItem(String key) => DataListAccessorItem(this, key);
 
   @override
   bool get hasValue => _hasValue;

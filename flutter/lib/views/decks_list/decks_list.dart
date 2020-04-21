@@ -170,14 +170,8 @@ class DeckListItemWidget extends StatelessWidget {
           child: EditDeleteDismissible(
             key: Key(deck.key),
             iconSize: iconSize,
-            onDelete: () async {
-              if (await _showDeleteDeckDialog(context)) {
-                unawaited(logDeckDeleteSwipe(deck.key));
-                return _deleteDeck(context);
-              }
-              return false;
-            },
-            onEdit: () {
+            onDelete: _confirmAndDeleteDeck,
+            onEdit: (context) {
               unawaited(logDeckEditSwipe(deck.key));
               unawaited(openEditDeckScreen(context, deckKey: deck.key));
             },
@@ -190,7 +184,7 @@ class DeckListItemWidget extends StatelessWidget {
                   children: <Widget>[
                     _buildLeading(iconSize),
                     Expanded(child: _buildContent(context)),
-                    _buildTrailing(context, iconSize),
+                    _buildTrailing(iconSize),
                   ],
                 ),
               ),
@@ -311,45 +305,49 @@ class DeckListItemWidget extends StatelessWidget {
         iconSize: size,
       );
 
-  Widget _buildTrailing(BuildContext context, double size) => DeckMenu(
+  Widget _buildTrailing(double size) => DeckMenu(
         deck: deck,
         buttonSize: size,
-        onDeleteDeck: () async {
-          if (await _showDeleteDeckDialog(context)) {
-            unawaited(logDeckDelete(deck.key));
-            await _deleteDeck(context);
-          }
-        },
+        onDeleteDeck: _confirmAndDeleteDeck,
       );
 
-  Future<bool> _showDeleteDeckDialog(BuildContext context) {
+  Future<bool> _confirmAndDeleteDeck(BuildContext context) async {
+    // Retrieve values from context immediately, while it is still available. If
+    // this widget is disposed and deleted from widget tree, looking up its
+    // ancestors throws an exception.
     final locale = context.l;
-    return showSaveUpdatesDialog(
+    final scaffold = Scaffold.of(context),
+        deckDeletedUserMessage = locale.deckDeletedUserMessage;
+
+    // Confirm in foreground, stopping any animation.
+    if (!await showSaveUpdatesDialog(
         context: context,
         changesQuestion: deck.access == AccessType.owner
             ? locale.deleteDeckOwnerAccessQuestion
             : locale.deleteDeckWriteReadAccessQuestion,
         yesAnswer: locale.delete,
-        noAnswer: MaterialLocalizations.of(context).cancelButtonLabel);
-  }
-
-  Future<bool> _deleteDeck(BuildContext context) async {
-    try {
-      // Keep instance of Scaffold context. If deck is disposed and deleted
-      // from widget tree it throws an exception that not possible to search
-      // for Scaffold.
-      final scaffoldContext = Scaffold.of(context);
-      await bloc.deleteDeck(deck);
-      UserMessages.showMessage(
-          scaffoldContext, context.l.deckDeletedUserMessage);
-      return true;
-    } catch (e, stackTrace) {
-      UserMessages.showAndReportError(
-        () => Scaffold.of(context),
-        e,
-        stackTrace: stackTrace,
-      );
+        noAnswer: MaterialLocalizations.of(context).cancelButtonLabel)) {
+      return false;
     }
-    return false;
+
+    unawaited(logDeckDelete(deck.key));
+
+    // Don't wait for deck deletion to finish caller animation; if item is
+    // removed from the list faster than Dismissible finishes animating, it
+    // throws an exception.
+    unawaited(() async {
+      try {
+        await bloc.deleteDeck(deck);
+        UserMessages.showMessage(scaffold, deckDeletedUserMessage);
+      } catch (e, stackTrace) {
+        UserMessages.showAndReportError(
+          () => scaffold,
+          e,
+          stackTrace: stackTrace,
+        );
+      }
+    }());
+
+    return true;
   }
 }

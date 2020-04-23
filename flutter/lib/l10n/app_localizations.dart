@@ -1,8 +1,12 @@
 import 'package:delern_flutter/l10n/messages_all.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
+import 'package:meta/meta.dart';
 
+@immutable
 class AppLocalizations {
+  const AppLocalizations();
+
   static Future<AppLocalizations> load(String locale) async {
     final localeName = Intl.canonicalizedLocale(locale);
 
@@ -10,7 +14,7 @@ class AppLocalizations {
     await initializeDateFormatting(localeName);
     Intl.defaultLocale = localeName;
 
-    return AppLocalizations();
+    return const AppLocalizations();
   }
 
   String get navigationDrawerSignOut => Intl.message(

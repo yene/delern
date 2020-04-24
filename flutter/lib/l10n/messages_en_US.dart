@@ -76,6 +76,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "decksIntroDescription": MessageLookupByLibrary.simpleMessage(
             "Create decks with flashcards"),
         "decksIntroTitle": MessageLookupByLibrary.simpleMessage("Create Decks"),
+        "decksRefreshed":
+            MessageLookupByLibrary.simpleMessage("Decks refreshed"),
         "delete": MessageLookupByLibrary.simpleMessage("Delete"),
         "deleteCardQuestion": MessageLookupByLibrary.simpleMessage(
             "Do you want to delete this card?"),
@@ -161,6 +163,7 @@ class MessageLookup extends MessageLookupByLibrary {
                 "You cannot edit card with a read access."),
         "noSharingAccessUserMessage": MessageLookupByLibrary.simpleMessage(
             "Only owner of deck can share it."),
+        "noUpdates": MessageLookupByLibrary.simpleMessage("No updates"),
         "numberOfCards": m5,
         "offlineProfileTooltip":
             MessageLookupByLibrary.simpleMessage("Profile (you are offline)"),

@@ -98,44 +98,59 @@ class _DecksListState extends State<DecksList> {
         body: Column(
           children: <Widget>[
             Expanded(
-              child: ListAccessorWidget<DeckModel>(
-                list: _bloc.decksList,
-                itemBuilder: (context, item, index) {
-                  final itemHeight = max(
-                      MediaQuery.of(context).size.height *
-                          app_styles.kItemListHeightRatio,
-                      app_styles.kMinItemHeight);
-                  return Column(
-                    children: <Widget>[
-                      if (index == 0)
-                        Padding(
-                          padding: EdgeInsets.symmetric(
-                              vertical: MediaQuery.of(context).size.height *
-                                  app_styles.kItemListPaddingRatio *
-                                  2),
+              child: RefreshIndicator(
+                onRefresh: () async {
+                  final changesMade = (await Future.wait(_bloc.user.decks.value
+                          .map((deck) => _bloc.user.syncScheduledCards(deck))))
+                      .contains(true);
+                  if (_scaffoldKey.currentState != null) {
+                    UserMessages.showMessage(
+                      _scaffoldKey.currentState,
+                      changesMade
+                          ? context.l.decksRefreshed
+                          : context.l.noUpdates,
+                    );
+                  }
+                },
+                child: ListAccessorWidget<DeckModel>(
+                  list: _bloc.decksList,
+                  itemBuilder: (context, item, index) {
+                    final itemHeight = max(
+                        MediaQuery.of(context).size.height *
+                            app_styles.kItemListHeightRatio,
+                        app_styles.kMinItemHeight);
+                    return Column(
+                      children: <Widget>[
+                        if (index == 0)
+                          Padding(
+                            padding: EdgeInsets.symmetric(
+                                vertical: MediaQuery.of(context).size.height *
+                                    app_styles.kItemListPaddingRatio *
+                                    2),
+                          ),
+                        DeckListItemWidget(
+                          deck: item,
+                          bloc: _bloc,
+                          minHeight: itemHeight,
                         ),
-                      DeckListItemWidget(
-                        deck: item,
-                        bloc: _bloc,
-                        minHeight: itemHeight,
-                      ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(
-                            vertical: MediaQuery.of(context).size.height *
-                                app_styles.kItemListPaddingRatio),
-                      ),
-                      if (index == (_bloc.decksList.value.length - 1))
                         Padding(
                           padding: EdgeInsets.symmetric(
                               vertical: MediaQuery.of(context).size.height *
                                   app_styles.kItemListPaddingRatio),
                         ),
-                    ],
-                  );
-                },
-                emptyMessageBuilder: () => ArrowToFloatingActionButtonWidget(
-                    fabKey: _fabKey,
-                    child: EmptyListMessageWidget(context.l.emptyDecksList)),
+                        if (index == (_bloc.decksList.value.length - 1))
+                          Padding(
+                            padding: EdgeInsets.symmetric(
+                                vertical: MediaQuery.of(context).size.height *
+                                    app_styles.kItemListPaddingRatio),
+                          ),
+                      ],
+                    );
+                  },
+                  emptyMessageBuilder: () => ArrowToFloatingActionButtonWidget(
+                      fabKey: _fabKey,
+                      child: EmptyListMessageWidget(context.l.emptyDecksList)),
+                ),
               ),
             ),
           ],

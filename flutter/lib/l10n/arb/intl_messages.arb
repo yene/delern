@@ -1,6 +1,6 @@
 {
   "@@locale": "en_US",
-  "@@last_modified": "2020-03-30T19:22:43.333698",
+  "@@last_modified": "2020-04-24T19:50:06.916212",
   "navigationDrawerSignOut": "Sign Out",
   "@navigationDrawerSignOut": {
     "description": "Sign Out in Navigation Drawer",
@@ -865,6 +865,20 @@
   "couldNotOpenAppSettingsUserMessage": "Couln't open the App Settings. Please do it using your Phone Settings.",
   "@couldNotOpenAppSettingsUserMessage": {
     "description": "Couln't open App Settings user message",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "decksRefreshed": "Decks refreshed",
+  "@decksRefreshed": {
+    "description": "The user pulled down on decks list and some updates have been picked up",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "noUpdates": "No updates",
+  "@noUpdates": {
+    "description": "The user pulled down on decks list but no updates were found",
     "type": "text",
     "placeholders": {
     }

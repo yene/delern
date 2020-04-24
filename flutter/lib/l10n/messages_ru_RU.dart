@@ -82,6 +82,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "Создавайте списки с карточками"),
         "decksIntroTitle":
             MessageLookupByLibrary.simpleMessage("Создавайте списки"),
+        "decksRefreshed":
+            MessageLookupByLibrary.simpleMessage("Списки обновлены"),
         "delete": MessageLookupByLibrary.simpleMessage("Удалить"),
         "deleteCardQuestion": MessageLookupByLibrary.simpleMessage(
             "Вы хотите удалить эту карточку?"),
@@ -172,6 +174,7 @@ class MessageLookup extends MessageLookupByLibrary {
                 "Вы не можете редактировать карточки с доступом на чтение."),
         "noSharingAccessUserMessage": MessageLookupByLibrary.simpleMessage(
             "Только владелец может поделиться списком."),
+        "noUpdates": MessageLookupByLibrary.simpleMessage("Нет обновлений"),
         "numberOfCards": m5,
         "offlineProfileTooltip":
             MessageLookupByLibrary.simpleMessage("Профиль (Вы не в сети)"),
@@ -179,10 +182,10 @@ class MessageLookup extends MessageLookupByLibrary {
             "Нет сети, пожалуйста, попробуйте позже"),
         "open": MessageLookupByLibrary.simpleMessage("Открыть"),
         "openAppSettingsCameraAccessQuestion": MessageLookupByLibrary.simpleMessage(
-            "Хотити открыть настройки приложения, чтобы разрешить доступ к Камере?"),
+            "Хотите открыть настройки приложения, чтобы разрешить доступ к Камере?"),
         "openAppSettingsGalleryAccessQuestion":
             MessageLookupByLibrary.simpleMessage(
-                "Хотити открыть настройки приложения, чтобы разрешить доступ к Галереи?"),
+                "Хотите открыть настройки приложения, чтобы разрешить доступ к Галерее?"),
         "other": MessageLookupByLibrary.simpleMessage("другие"),
         "owner": MessageLookupByLibrary.simpleMessage("Владелец"),
         "peopleLabel": MessageLookupByLibrary.simpleMessage("Люди"),

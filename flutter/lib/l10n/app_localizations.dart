@@ -795,4 +795,17 @@ To see the source code for this app, please visit the [Delern GitHub repo](https
         name: 'couldNotOpenAppSettingsUserMessage',
         desc: "Couln't open App Settings user message",
       );
+
+  String get decksRefreshed => Intl.message(
+        'Decks refreshed',
+        name: 'decksRefreshed',
+        desc: 'The user pulled down on decks list and some updates have been '
+            'picked up',
+      );
+
+  String get noUpdates => Intl.message(
+        'No updates',
+        name: 'noUpdates',
+        desc: 'The user pulled down on decks list but no updates were found',
+      );
 }

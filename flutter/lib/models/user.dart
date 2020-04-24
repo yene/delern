@@ -1,8 +1,6 @@
 import 'dart:async';
 import 'dart:io';
-import 'dart:math';
 
-import 'package:delern_flutter/flutter/clock.dart';
 import 'package:delern_flutter/models/base/list_accessor.dart';
 import 'package:delern_flutter/models/base/stream_with_value.dart';
 import 'package:delern_flutter/models/card_model.dart';
@@ -173,12 +171,12 @@ class User {
       final cardKey = _newKey();
       final cardPath = 'cards/${card.deckKey}/$cardKey';
       final scheduledCardPath = 'learning/$uid/${card.deckKey}/$cardKey';
-      var repeatAt = clock.now().millisecondsSinceEpoch.toDouble();
-      if (reverse) {
-        // Put reversed card into a random position behind to avoid it showing
-        // right next to the forward card.
-        repeatAt *= Random().nextDouble();
-      }
+      // Put reversed card into a random position behind to avoid it showing
+      // right next to the forward card.
+      final repeatAt = ScheduledCardModel.computeRepeatAtBase(
+        newCard: true,
+        shuffle: reverse,
+      );
       updates.addAll(<String, dynamic>{
         '$cardPath/front': reverse ? card.back : card.front,
         '$cardPath/back': reverse ? card.front : card.back,
@@ -198,8 +196,7 @@ class User {
             ? card.frontImagesUri.toList()
             : card.backImagesUri.toList(),
         '$scheduledCardPath/level': 0,
-        // Set random time to shuffle cards when they are created
-        '$scheduledCardPath/repeatAt': repeatAt.floor(),
+        '$scheduledCardPath/repeatAt': repeatAt.millisecondsSinceEpoch,
       });
     }
 

@@ -22,6 +22,7 @@ abstract class ScheduledCardModel
     implements
         Built<ScheduledCardModel, ScheduledCardModelBuilder>,
         KeyedListItem {
+  @visibleForTesting
   static const levelDurations = [
     Duration(hours: 4),
     Duration(days: 1),
@@ -76,9 +77,29 @@ abstract class ScheduledCardModel
           ..key = key);
   }
 
-  // A jutter used to calculate diverse next scheduled time for a card.
-  static final _jitterRandom = Random();
-  Duration _newJitter() => Duration(minutes: _jitterRandom.nextInt(180));
+  /// A shuffling generator to mix cards in the future via repeatAt (or mix new
+  /// reversed cards into the past).
+  static final _shuffleRandom = Random();
+
+  /// Compute the base value for [repeatAt]; thet is, one without delay based on
+  /// card level. If [newCard] is set, [shuffle] will attenuate the date
+  /// backwards (effectively putting card into learning queue), otherwise it
+  /// will attenuate the date forward (shuffling cards to learn in future).
+  static DateTime computeRepeatAtBase({
+    @required bool newCard,
+    @required bool shuffle,
+  }) {
+    final now = clock.now();
+
+    if (!shuffle) {
+      return now;
+    }
+
+    if (newCard) {
+      return now.add(Duration(days: -_shuffleRandom.nextInt(365)));
+    }
+    return now.add(Duration(hours: _shuffleRandom.nextInt(3)));
+  }
 
   static Stream<ScheduledCardModel> next(User user, DeckModel deck) =>
       FirebaseDatabase.instance
@@ -152,7 +173,10 @@ abstract class ScheduledCardModel
 
     return rebuild((b) => b
       ..level = newLevel
-      ..repeatAt = now.toUtc().add(levelDurations[newLevel] + _newJitter()));
+      ..repeatAt = computeRepeatAtBase(
+        newCard: false,
+        shuffle: true,
+      ).add(levelDurations[newLevel]));
   }
 }
 

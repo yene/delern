@@ -153,20 +153,18 @@ jobs:
           echo '${{ secrets.ANDROID_KEYSTORE_DATA }}' |
           base64 -d > "${ANDROID_KEYSTORE_PATH?}"
 
+      # The credentials are going to be used for both gcloud and Play Store.
       - run: >
           echo '${{ secrets.GOOGLE_APPLICATION_CREDENTIALS_DATA }}' |
           base64 -d > "${GOOGLE_APPLICATION_CREDENTIALS?}"
-      - name: "Install and configure GCloud to fetch 'fastlane match' repo"
+
+      - if: matrix.platform == 'ios'
+        uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+      - name: "Configure GCloud to fetch 'fastlane match' repo"
         if: matrix.platform == 'ios'
-        # Redirect to /dev/null because gcloud installation script instructs
-        # tar to spit out all installed file names, which is a lot!
         run: >
-          curl -sSL https://sdk.cloud.google.com | bash >/dev/null
-
-          ${HOME?}/google-cloud-sdk/bin/gcloud auth activate-service-account
+          gcloud auth activate-service-account
           --key-file "${GOOGLE_APPLICATION_CREDENTIALS?}"
-
-          echo "::add-path::${HOME?}/google-cloud-sdk/bin"
 
           git config --global
           credential.https://source.developers.google.com.helper

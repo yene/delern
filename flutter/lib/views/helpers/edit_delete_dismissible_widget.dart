@@ -1,14 +1,14 @@
 import 'package:delern_flutter/flutter/styles.dart' as app_styles;
 import 'package:flutter/material.dart';
 
-typedef DeleteCallback = Future<bool> Function();
-typedef EditCallback = void Function();
+typedef DeleteDismissibleCallback = Future<bool> Function(BuildContext context);
+typedef EditDismissibleCallback = void Function(BuildContext context);
 
 class EditDeleteDismissible extends StatelessWidget {
   final Widget child;
   final double iconSize;
-  final DeleteCallback onDelete;
-  final EditCallback onEdit;
+  final DeleteDismissibleCallback onDelete;
+  final EditDismissibleCallback onEdit;
 
   const EditDeleteDismissible({
     @required this.child,
@@ -56,10 +56,10 @@ class EditDeleteDismissible extends StatelessWidget {
               ),
         confirmDismiss: (direction) async {
           if (direction == DismissDirection.endToStart && onDelete != null) {
-            return onDelete();
+            return onDelete(context);
           }
           if (onEdit != null) {
-            onEdit();
+            onEdit(context);
           }
           return false;
         },

@@ -35,7 +35,7 @@ void main() {
 
     setUpAll(() async {
       driver = await FlutterDriver.connect();
-      localizations = AppLocalizations();
+      localizations = const AppLocalizations();
     });
 
     tearDownAll(() async {
@@ -53,7 +53,7 @@ void main() {
       await driver.waitFor(fab, timeout: timeoutDuration);
       await driver.tap(fab);
 
-      final add = find.text('ADD');
+      final add = find.text(localizations.add.toUpperCase());
       await driver.waitFor(add);
       await driver.enterText('My Test Deck');
       await driver.waitFor(find.text('My Test Deck'));
@@ -148,6 +148,22 @@ void main() {
       await driver.tap(find.byType('Card'));
 
       await expectCard('front1', 'back1');
+      await driver.tap(find.pageBack());
+    });
+
+    test('delete deck', () async {
+      // Swipe right.
+      await driver.scroll(
+        find.byType('DeckListItemWidget'),
+        // We don't know the screen width, so put in a really large offset to
+        // cover for all scenarios.
+        -999999,
+        0,
+        const Duration(milliseconds: 500),
+      );
+      await driver.tap(find.text(localizations.delete.toUpperCase()));
+      await driver.waitFor(find.text(localizations.deckDeletedUserMessage));
+      await driver.waitFor(find.text(localizations.emptyDecksList));
     });
   });
 }

@@ -757,45 +757,6 @@ To see the source code for this app, please visit the [Delern GitHub repo](https
         desc: 'Image loading error message to user',
       );
 
-  String get galleryAccessUserMessage => Intl.message(
-        'To use this feature please allow to access photos on the device.',
-        name: 'galleryAccessUserMessage',
-        desc: 'User message that there is no Gallery access',
-      );
-
-  String get cameraAccessUserMessage => Intl.message(
-        'To use this feature please allow to access camera on the device.',
-        name: 'cameraAccessUserMessage',
-        desc: 'User message that there is no Camera access',
-      );
-
-  String get openAppSettingsGalleryAccessQuestion => Intl.message(
-        'Would you like to open the Delern Settings to allow '
-        'the Gallery access?',
-        name: 'openAppSettingsGalleryAccessQuestion',
-        desc: 'Suggestion to open settings of the app',
-      );
-
-  String get openAppSettingsCameraAccessQuestion => Intl.message(
-        'Would you like to open the Delern Settings to allow the '
-        'Camera access?',
-        name: 'openAppSettingsCameraAccessQuestion',
-        desc: 'Suggestion to open settings of the app',
-      );
-
-  String get open => Intl.message(
-        'Open',
-        name: 'open',
-        desc: 'Open',
-      );
-
-  String get couldNotOpenAppSettingsUserMessage => Intl.message(
-        "Couln't open the App Settings. Please do it using "
-        'your Phone Settings.',
-        name: 'couldNotOpenAppSettingsUserMessage',
-        desc: "Couln't open App Settings user message",
-      );
-
   String get decksRefreshed => Intl.message(
         'Decks refreshed',
         name: 'decksRefreshed',

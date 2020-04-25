@@ -51,8 +51,6 @@ class MessageLookup extends MessageLookupByLibrary {
         "backSideHint":
             MessageLookupByLibrary.simpleMessage("Обратная сторона:"),
         "basicDeckType": MessageLookupByLibrary.simpleMessage("Базовый"),
-        "cameraAccessUserMessage": MessageLookupByLibrary.simpleMessage(
-            "Чтобы воспользоваться данной функцией, пожалуйста разрешите доступ к камере"),
         "canEdit": MessageLookupByLibrary.simpleMessage("Может редактировать"),
         "canView": MessageLookupByLibrary.simpleMessage("Может просматривать"),
         "cardAddedUserMessage":
@@ -68,8 +66,6 @@ class MessageLookup extends MessageLookupByLibrary {
             "У Вас есть несохраненные изменения. Хотите продолжить редактирование?"),
         "continueLearningQuestion": m2,
         "couldNotLaunchUrl": m3,
-        "couldNotOpenAppSettingsUserMessage": MessageLookupByLibrary.simpleMessage(
-            "Не смогли окрыть настройки приложения. Пожалуйста сделайте это в настройках телефона."),
         "createDeckTooltip":
             MessageLookupByLibrary.simpleMessage("Создать список"),
         "deck": MessageLookupByLibrary.simpleMessage("Список"),
@@ -119,8 +115,6 @@ class MessageLookup extends MessageLookupByLibrary {
         "flip": MessageLookupByLibrary.simpleMessage("перевернуть"),
         "frontSideHint":
             MessageLookupByLibrary.simpleMessage("Передняя сторона:"),
-        "galleryAccessUserMessage": MessageLookupByLibrary.simpleMessage(
-            "Чтобы воспользоваться данной функцией, пожалуйста разрешите доступ к фотографиям"),
         "germanDeckType": MessageLookupByLibrary.simpleMessage("Немецкий"),
         "imageFromGalleryLabel":
             MessageLookupByLibrary.simpleMessage("Из Галереи"),
@@ -180,12 +174,6 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Профиль (Вы не в сети)"),
         "offlineUserMessage": MessageLookupByLibrary.simpleMessage(
             "Нет сети, пожалуйста, попробуйте позже"),
-        "open": MessageLookupByLibrary.simpleMessage("Открыть"),
-        "openAppSettingsCameraAccessQuestion": MessageLookupByLibrary.simpleMessage(
-            "Хотите открыть настройки приложения, чтобы разрешить доступ к Камере?"),
-        "openAppSettingsGalleryAccessQuestion":
-            MessageLookupByLibrary.simpleMessage(
-                "Хотите открыть настройки приложения, чтобы разрешить доступ к Галерее?"),
         "other": MessageLookupByLibrary.simpleMessage("другие"),
         "owner": MessageLookupByLibrary.simpleMessage("Владелец"),
         "peopleLabel": MessageLookupByLibrary.simpleMessage("Люди"),

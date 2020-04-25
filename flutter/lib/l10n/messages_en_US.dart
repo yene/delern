@@ -46,8 +46,6 @@ class MessageLookup extends MessageLookupByLibrary {
             "This user hasn\'t installed Delern yet. Do you want to sent an invite?"),
         "backSideHint": MessageLookupByLibrary.simpleMessage("Back side:"),
         "basicDeckType": MessageLookupByLibrary.simpleMessage("Basic"),
-        "cameraAccessUserMessage": MessageLookupByLibrary.simpleMessage(
-            "To use this feature please allow to access camera on the device."),
         "canEdit": MessageLookupByLibrary.simpleMessage("Can Edit"),
         "canView": MessageLookupByLibrary.simpleMessage("Can View"),
         "cardAddedUserMessage":
@@ -63,8 +61,6 @@ class MessageLookup extends MessageLookupByLibrary {
             "You have unsaved changes. Would you like to continue editing?"),
         "continueLearningQuestion": m2,
         "couldNotLaunchUrl": m3,
-        "couldNotOpenAppSettingsUserMessage": MessageLookupByLibrary.simpleMessage(
-            "Couln\'t open the App Settings. Please do it using your Phone Settings."),
         "createDeckTooltip":
             MessageLookupByLibrary.simpleMessage("Create deck"),
         "deck": MessageLookupByLibrary.simpleMessage("Deck"),
@@ -108,8 +104,6 @@ class MessageLookup extends MessageLookupByLibrary {
             "This feature is currently not available. Please try it later."),
         "flip": MessageLookupByLibrary.simpleMessage("flip"),
         "frontSideHint": MessageLookupByLibrary.simpleMessage("Front side:"),
-        "galleryAccessUserMessage": MessageLookupByLibrary.simpleMessage(
-            "To use this feature please allow to access photos on the device."),
         "germanDeckType": MessageLookupByLibrary.simpleMessage("German"),
         "imageFromGalleryLabel":
             MessageLookupByLibrary.simpleMessage("From Gallery"),
@@ -169,12 +163,6 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Profile (you are offline)"),
         "offlineUserMessage": MessageLookupByLibrary.simpleMessage(
             "You are offline, please try it later"),
-        "open": MessageLookupByLibrary.simpleMessage("Open"),
-        "openAppSettingsCameraAccessQuestion": MessageLookupByLibrary.simpleMessage(
-            "Would you like to open the Delern Settings to allow the Camera access?"),
-        "openAppSettingsGalleryAccessQuestion":
-            MessageLookupByLibrary.simpleMessage(
-                "Would you like to open the Delern Settings to allow the Gallery access?"),
         "other": MessageLookupByLibrary.simpleMessage("other"),
         "owner": MessageLookupByLibrary.simpleMessage("Owner"),
         "peopleLabel": MessageLookupByLibrary.simpleMessage("People"),

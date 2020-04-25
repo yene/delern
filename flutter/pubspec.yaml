@@ -28,8 +28,7 @@ dependencies:
   image_picker: ^0.6.1
   # https://github.com/renefloor/flutter_cached_network_image/issues/261
   cached_network_image: 2.0.0-rc
-  permission_handler: ^4.0.0
-
+  app_settings: ^4.0.0
   firebase_auth: ^0.15.3
   firebase_analytics: ^5.0.9
   firebase_database: ^3.1.1

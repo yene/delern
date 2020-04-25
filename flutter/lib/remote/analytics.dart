@@ -1,9 +1,30 @@
 import 'dart:async';
 
 import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_performance/firebase_performance.dart';
 import 'package:meta/meta.dart';
 
 const deckMimeType = 'application/flashcards-deck';
+
+Future<void> trace<T>(String name, Future<T> operation) async {
+  final trace = FirebasePerformance.instance.newTrace(name);
+  await trace.start();
+  try {
+    final result = await operation;
+    await trace.putAttribute('result', result.toString());
+  } catch (e) {
+    await trace.putAttribute('error', e.runtimeType.toString());
+    rethrow;
+  } finally {
+    await trace.stop();
+  }
+}
+
+Completer<T> startTrace<T>(String name) {
+  final completer = Completer<T>();
+  trace(name, completer.future);
+  return completer;
+}
 
 Future<void> logDeckCreate() =>
     FirebaseAnalytics().logEvent(name: 'deck_create');

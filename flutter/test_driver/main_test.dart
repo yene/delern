@@ -4,6 +4,12 @@ import 'package:meta/meta.dart';
 import 'package:pedantic/pedantic.dart';
 import 'package:test/test.dart';
 
+import 'commands.dart';
+
+// This is not production code, and also, debugPrint() is not available outside
+// Flutter framework.
+// ignore_for_file: avoid_print
+
 void main() {
   const timeoutDuration = Duration(seconds: 15);
 
@@ -33,6 +39,21 @@ void main() {
       );
     }
 
+    Future<void> fillInAndAddCard(String front, String back) async {
+      final frontInput = find.byValueKey('frontCardInput');
+      await driver.waitFor(frontInput, timeout: timeoutDuration);
+      await driver.enterText(front);
+
+      await driver.tap(find.byValueKey('backCardInput'),
+          timeout: timeoutDuration);
+      await driver.enterText(back);
+      await driver.tap(find.byTooltip(localizations.addCardTooltip),
+          timeout: timeoutDuration);
+
+      await driver.waitFor(find.text(localizations.cardAddedUserMessage),
+          timeout: timeoutDuration);
+    }
+
     setUpAll(() async {
       driver = await FlutterDriver.connect();
       localizations = const AppLocalizations();
@@ -42,13 +63,13 @@ void main() {
       unawaited(driver?.close());
     });
 
-    test('signin_anonymously', () async {
+    test('Sign in anonymously', () async {
       final button = find.text(localizations.continueAnonymously.toUpperCase());
       await driver.waitFor(button);
       await driver.tap(button);
     });
 
-    test('create_deck', () async {
+    test('Create a deck', () async {
       final fab = find.byType('FloatingActionButton');
       await driver.waitFor(fab, timeout: timeoutDuration);
       await driver.tap(fab);
@@ -63,24 +84,9 @@ void main() {
       await driver.tap(add, timeout: timeoutDuration);
     });
 
-    test('create_cards', () async {
-      Future<void> addCard(String front, String back) async {
-        final frontInput = find.byValueKey('frontCardInput');
-        await driver.waitFor(frontInput, timeout: timeoutDuration);
-        await driver.enterText(front);
-
-        await driver.tap(find.byValueKey('backCardInput'),
-            timeout: timeoutDuration);
-        await driver.enterText(back);
-        await driver.tap(find.byTooltip(localizations.addCardTooltip),
-            timeout: timeoutDuration);
-
-        await driver.waitFor(find.text(localizations.cardAddedUserMessage),
-            timeout: timeoutDuration);
-      }
-
-      await addCard('front1', 'back1');
-      await addCard('front2', 'back2');
+    test('Add 2 cards to the deck', () async {
+      await fillInAndAddCard('front1', 'back1');
+      await fillInAndAddCard('front2', 'back2');
 
       // Make some changes without saving them.
       await driver.enterText('something');
@@ -95,8 +101,24 @@ void main() {
       await tapDialogButton(localizations.discard);
     });
 
-    test('learn_cards', () async {
-      await driver.tap(find.byType('DeckListItemWidget'));
+    test('Add one more card', () async {
+      // Swipe right.
+      await driver.scroll(
+        find.text('My Test Deck'),
+        (await driver.getWindow()).width / 2,
+        0,
+        const Duration(milliseconds: 500),
+      );
+      await driver.tap(find.byType('FloatingActionButton'));
+      await fillInAndAddCard('front3', 'back3');
+      // Back to the list of cards.
+      await driver.tap(find.pageBack());
+      // Back to the list of decks.
+      await driver.tap(find.pageBack());
+    });
+
+    test('Learn 3 cards (interval learning)', () async {
+      await driver.tap(find.text('My Test Deck'));
       await driver.tap(find.byTooltip(localizations.intervalLearningTooltip));
 
       Future<void> learnCard({
@@ -111,16 +133,28 @@ void main() {
             : localizations.doNotKnowCardTooltip));
       }
 
-      // Random repeatAt in addCard above sometimes shuffles 1st / 2nd card.
-      // TODO(dotdoom): deflake this test.
       await learnCard(expectFront: 'front1', expectBack: 'back1', knows: true);
       await learnCard(expectFront: 'front2', expectBack: 'back2', knows: false);
+      await learnCard(expectFront: 'front3', expectBack: 'back3', knows: false);
       // At this point the learning screen should automatically close because
       // there are no more cards to learn.
     });
 
-    test('delete_card', () async {
-      await driver.tap(find.byType('DeckListItemWidget'));
+    test('Delete 2 cards', () async {
+      // Swipe right.
+      await driver.scroll(
+        find.text('My Test Deck'),
+        (await driver.getWindow()).width / 2,
+        0,
+        const Duration(milliseconds: 500),
+      );
+      await driver.tap(find.text('front3'));
+      await driver.tap(find.byTooltip(localizations.deleteCardTooltip));
+      await tapDialogButton(localizations.delete);
+      await driver.tap(find.pageBack());
+
+      print('Deleting 2nd card');
+      await driver.tap(find.text('My Test Deck'));
       await driver.tap(find.byTooltip(localizations.intervalLearningTooltip));
       // Since we replied "does no know" to front2, it should be the first in
       // the queue. But before that, dismiss the "learn beyond horizon" dialog.
@@ -135,11 +169,13 @@ void main() {
       await driver.tap(find.pageBack());
     });
 
-    test('view_learn_card', () async {
-      await driver.tap(find.byType('DeckListItemWidget'));
+    test('Learn one card (view learning)', () async {
+      await driver.tap(find.text('My Test Deck'));
       await driver.tap(find.byTooltip(localizations.viewLearningTooltip));
       await driver.waitFor(find.text('(1/1) My Test Deck'));
 
+      // Due to reshuffling when postponing cards, front1 may have been deleted.
+      // TODO(dotdoom): deflake this test.
       await expectCard('front1', 'back1');
 
       await driver.tap(find.byType('Card'));
@@ -151,29 +187,26 @@ void main() {
       await driver.tap(find.pageBack());
     });
 
-    test('refresh decks', () async {
+    test('Refresh decks', () async {
+      // Pull down.
       await driver.scroll(
         find.byType('ListView'),
         0,
-        // We don't know the screen height, so put in a really large offset to
-        // cover for all scenarios.
-        999999,
+        (await driver.getWindow()).height / 2,
         const Duration(milliseconds: 500),
       );
       await driver.waitFor(find.text(localizations.noUpdates));
     });
 
-    test('delete deck', () async {
+    test('Delete deck', () async {
       // Swipe right.
       await driver.scroll(
-        find.byType('DeckListItemWidget'),
-        // We don't know the screen width, so put in a really large offset to
-        // cover for all scenarios.
-        -999999,
+        find.text('My Test Deck'),
+        -(await driver.getWindow()).width / 2,
         0,
         const Duration(milliseconds: 500),
       );
-      await driver.tap(find.text(localizations.delete.toUpperCase()));
+      await tapDialogButton(localizations.delete);
       await driver.waitFor(find.text(localizations.deckDeletedUserMessage));
       await driver.waitFor(find.text(localizations.emptyDecksList));
     });

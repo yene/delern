@@ -85,6 +85,33 @@ abstract class DeckModel
 
   StreamWithValue<Set<String>> get tags => cards
       ?.map<Set<String>>((cards) => cards.expand((card) => card.tags).toSet());
+
+  /// Yield one [ScheduledCardModel] and then yield one every time [answers]
+  /// stream generates an event, excluding the cards which keys are provided on
+  /// [answers].
+  Stream<ScheduledCardModel> startLearningSession({
+    @required Stream<String> answers,
+  }) async* {
+    yield (scheduledCards.value.toList()
+          ..sort((c1, c2) => c1.repeatAt.compareTo(c2.repeatAt)))
+        .first;
+
+    final cardsAnswered = <String>{};
+    await for (final cardKey in answers) {
+      cardsAnswered.add(cardKey);
+
+      final cardsLeft = (scheduledCards.value
+          .where((scheduledCard) => !cardsAnswered.contains(scheduledCard.key))
+          .toList()
+            ..sort((c1, c2) => c1.repeatAt.compareTo(c2.repeatAt)));
+
+      if (cardsLeft.isEmpty) {
+        break;
+      }
+
+      yield cardsLeft.first;
+    }
+  }
 }
 
 class _ScheduledCardsDueCounter implements StreamWithValue<int> {

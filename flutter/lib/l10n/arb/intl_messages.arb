@@ -1,6 +1,6 @@
 {
   "@@locale": "en_US",
-  "@@last_modified": "2020-04-24T19:50:06.916212",
+  "@@last_modified": "2020-04-25T11:13:34.404824",
   "navigationDrawerSignOut": "Sign Out",
   "@navigationDrawerSignOut": {
     "description": "Sign Out in Navigation Drawer",
@@ -823,48 +823,6 @@
   "imageLoadingErrorUserMessage": "Error during loading the image. Please try it later.",
   "@imageLoadingErrorUserMessage": {
     "description": "Image loading error message to user",
-    "type": "text",
-    "placeholders": {
-    }
-  },
-  "galleryAccessUserMessage": "To use this feature please allow to access photos on the device.",
-  "@galleryAccessUserMessage": {
-    "description": "User message that there is no Gallery access",
-    "type": "text",
-    "placeholders": {
-    }
-  },
-  "cameraAccessUserMessage": "To use this feature please allow to access camera on the device.",
-  "@cameraAccessUserMessage": {
-    "description": "User message that there is no Camera access",
-    "type": "text",
-    "placeholders": {
-    }
-  },
-  "openAppSettingsGalleryAccessQuestion": "Would you like to open the Delern Settings to allow the Gallery access?",
-  "@openAppSettingsGalleryAccessQuestion": {
-    "description": "Suggestion to open settings of the app",
-    "type": "text",
-    "placeholders": {
-    }
-  },
-  "openAppSettingsCameraAccessQuestion": "Would you like to open the Delern Settings to allow the Camera access?",
-  "@openAppSettingsCameraAccessQuestion": {
-    "description": "Suggestion to open settings of the app",
-    "type": "text",
-    "placeholders": {
-    }
-  },
-  "open": "Open",
-  "@open": {
-    "description": "Open",
-    "type": "text",
-    "placeholders": {
-    }
-  },
-  "couldNotOpenAppSettingsUserMessage": "Couln't open the App Settings. Please do it using your Phone Settings.",
-  "@couldNotOpenAppSettingsUserMessage": {
-    "description": "Couln't open App Settings user message",
     "type": "text",
     "placeholders": {
     }

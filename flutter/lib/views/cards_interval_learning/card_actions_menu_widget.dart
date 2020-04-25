@@ -40,7 +40,6 @@ class CardActionsMenuWidget extends StatelessWidget {
       );
 
   void _onCardMenuItemSelected({
-    // TODO(dotdoom): do not pass context in stateless widget.
     @required BuildContext context,
     @required _CardMenuItemType menuItem,
   }) {
@@ -69,10 +68,10 @@ class CardActionsMenuWidget extends StatelessWidget {
   }
 
   Future<void> _deleteCard({
-    // TODO(dotdoom): do not pass context in stateless widget.
     @required BuildContext context,
   }) async {
-    final locale = context.l;
+    // Extract values from context before async gap might destroy it.
+    final scaffold = Scaffold.of(context), locale = context.l;
     final saveChanges = await showSaveUpdatesDialog(
         context: context,
         changesQuestion: locale.deleteCardQuestion,
@@ -81,11 +80,10 @@ class CardActionsMenuWidget extends StatelessWidget {
     if (saveChanges) {
       try {
         await user.deleteCard(card: card);
-        UserMessages.showMessage(
-            Scaffold.of(context), context.l.cardDeletedUserMessage);
+        UserMessages.showMessage(scaffold, locale.cardDeletedUserMessage);
       } catch (e, stackTrace) {
         UserMessages.showAndReportError(
-          () => Scaffold.of(context),
+          () => scaffold,
           e,
           stackTrace: stackTrace,
         );

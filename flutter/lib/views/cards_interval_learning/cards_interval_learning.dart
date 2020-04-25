@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:delern_flutter/flutter/clock.dart';
 import 'package:delern_flutter/flutter/localization.dart';
 import 'package:delern_flutter/flutter/styles.dart' as app_styles;
+import 'package:delern_flutter/models/base/list_accessor.dart';
 import 'package:delern_flutter/models/base/stream_with_value.dart';
 import 'package:delern_flutter/models/card_model.dart';
 import 'package:delern_flutter/models/deck_model.dart';
@@ -46,171 +47,176 @@ class CardsIntervalLearningState extends State<CardsIntervalLearning> {
   /// and replied positively.
   bool _learnBeyondHorizon = false;
 
-  /// Whether we have shown at least one side of one card to the user (does not
-  /// necessarily mean that they answered it).
-  bool _atLeastOneCardShown = false;
-
-  /// Number of cards the user has answered (either positively or negatively) to
-  /// in this session.
-  int _answersCount = 0;
-
   User _user;
-  StreamSubscription<void> _updates;
-  StreamWithValue<DeckModel> _deck;
-  StreamWithValue<CardModel> _card;
-  ScheduledCardModel _scheduledCard;
+  DataListAccessorItem<DeckModel> _deck;
+
+  StreamWithValue<ScheduledCardModel> _nextScheduledCard;
+  final _currentCard = ValueNotifier<CardModel>(null);
+  Sink<String> _answers;
+  final _answersCount = ValueNotifier<int>(0);
 
   final _showReplyButtons = ValueNotifier<bool>(false);
+
+  Completer<bool> _cardAnswerTrace;
 
   @override
   void didChangeDependencies() {
     final user = CurrentUserWidget.of(context).user;
     if (_user != user) {
       _user = user;
-      _updates?.cancel();
+      _answers?.close();
 
       final Map<String, String> arguments =
           ModalRoute.of(context).settings.arguments;
-      final deckKey = arguments['deckKey'];
-      _deck = _user.decks.getItem(deckKey);
+      _deck = _user.decks.getItem(arguments['deckKey']);
 
-      _updates ??=
-          ScheduledCardModel.next(_user, _deck.value).listen(_nextCardArrived,
-              // Tell caller that no cards were available,
-              onDone: () => Navigator.of(context).pop());
+      // Start sync in background (to add new cards).
+      _user.syncScheduledCards(_deck.value);
+
+      _nextScheduledCard =
+          StreamWithLatestValue(_deck.value.startLearningSession(
+        answers: (_answers = StreamController<String>()).stream,
+      ));
     }
     super.didChangeDependencies();
   }
 
   @override
   void dispose() {
-    _updates?.cancel();
+    _answers.close();
+    if (_cardAnswerTrace?.isCompleted == false) {
+      // User has looked at a card but left the screen before answering.
+      _cardAnswerTrace.complete(null);
+    }
     super.dispose();
   }
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-      // TODO(dotdoom): find out why build triggers twice for next card.
-      appBar: AppBar(
-        title: buildStreamBuilderWithValue<DeckModel>(
-          streamWithValue: _deck,
-          builder: (context, snapshot) => snapshot.hasData
-              ? TextOverflowEllipsisWidget(
-                  textDetails: snapshot.data.name,
-                )
-              : const ProgressIndicatorWidget(),
-        ),
-        actions: _card == null
-            ? null
-            : <Widget>[
-                CardActionsMenuWidget(
-                  user: _user,
-                  deck: _deck.value,
-                  card: _card.value,
-                ),
-              ],
-      ),
-      body: _card == null
-          ? const ProgressIndicatorWidget()
-          : Column(
-              children: <Widget>[
-                Expanded(
-                    child: Padding(
-                  padding:
-                      MediaQuery.of(context).orientation == Orientation.portrait
-                          ? EdgeInsets.all(MediaQuery.of(context).size.width *
-                              _kCardPaddingRatio)
-                          : EdgeInsets.only(
-                              top: 10,
-                              left: MediaQuery.of(context).size.width *
-                                  _kCardPaddingRatio,
-                              right: MediaQuery.of(context).size.width *
-                                  _kCardPaddingRatio),
-                  child: buildStreamBuilderWithValue<CardModel>(
-                      streamWithValue: _card,
-                      builder: (context, snapshot) {
-                        // TODO(dotdoom): handle removed data (in model).
-                        if (!snapshot.hasData) {
-                          return const ProgressIndicatorWidget();
-                        }
-                        final card = snapshot.data;
-                        // TODO(dotdoom): handle card updates.
-                        return FlipCardWidget(
-                          front: card.frontWithoutTags,
-                          frontImages: card.frontImagesUri,
-                          back: card.back,
-                          backImages: card.backImagesUri,
-                          colors:
-                              specifyCardColors(_deck.value.type, card.back),
-                          hasBeenFlipped: _showReplyButtons,
-                          key: ValueKey(card.key),
-                        );
-                      }),
-                )),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 20),
-                  child: ValueListenableBuilder<bool>(
-                    valueListenable: _showReplyButtons,
-                    builder: (context, showReplyButtons, child) => Visibility(
-                      visible: showReplyButtons,
-                      maintainSize: true,
-                      // Required when maintainSize is set.
-                      maintainAnimation: true,
-                      maintainState: true,
-                      child: child,
-                    ),
-                    child: CardAnswerButtonsWidget(
-                      user: _user,
-                      scheduledCard: _scheduledCard,
-                      onAnswer: (knows) {
-                        if (_answersCount == 0) {
-                          unawaited(logStartLearning(_deck.value.key));
-                        }
-                        unawaited(logCardResponse(
-                          deckId: _deck.value.key,
-                          knows: knows,
-                        ));
-
-                        if (mounted) {
-                          setState(() {
-                            _answersCount++;
-                          });
-                        }
-                      },
-                    ),
-                  ),
-                ),
-                Row(
-                  children: <Widget>[
-                    // Use SafeArea to indent the child by the amount
-                    // necessary to avoid The Notch on the iPhone X,
-                    // or other similar creative physical features of
-                    // the display.
-                    SafeArea(
-                      minimum: const EdgeInsets.only(left: 8, bottom: 8),
-                      child: Text(
-                        context.l.answeredCards(_answersCount),
-                        style: app_styles.secondaryText,
+  Widget build(BuildContext context) => DataStreamWithValueBuilder<DeckModel>(
+      streamWithValue: _deck,
+      builder: (context, deck) => Scaffold(
+          appBar: AppBar(
+            title: TextOverflowEllipsisWidget(
+              textDetails: deck.name,
+            ),
+            actions: <Widget>[
+              ValueListenableBuilder<CardModel>(
+                valueListenable: _currentCard,
+                builder: (context, card, _) => card == null
+                    ? const ProgressIndicatorWidget()
+                    : CardActionsMenuWidget(
+                        user: _user,
+                        deck: deck,
+                        card: card,
                       ),
-                    ),
-                  ],
-                )
-              ],
-            ));
+              ),
+            ],
+          ),
+          body: DataStreamWithValueBuilder<ScheduledCardModel>(
+              streamWithValue: _nextScheduledCard,
+              onData: (scheduledCard) async {
+                if (await _promptBeyondHorizon(scheduledCard)) {
+                  _cardAnswerTrace =
+                      startTrace('interval_learning_card_answer');
+                }
+              },
+              builder: (context, scheduledCard) => Column(
+                    children: <Widget>[
+                      Expanded(
+                          child: Padding(
+                        padding: MediaQuery.of(context).orientation ==
+                                Orientation.portrait
+                            ? EdgeInsets.all(MediaQuery.of(context).size.width *
+                                _kCardPaddingRatio)
+                            : EdgeInsets.only(
+                                top: 10,
+                                left: MediaQuery.of(context).size.width *
+                                    _kCardPaddingRatio,
+                                right: MediaQuery.of(context).size.width *
+                                    _kCardPaddingRatio),
+                        child: DataStreamWithValueBuilder<CardModel>(
+                            streamWithValue:
+                                deck.cards.getItem(scheduledCard.key),
+                            onData: (newValue) {
+                              if (newValue == null) {
+                                _user.cleanupOrphanedScheduledCard(
+                                    scheduledCard);
+                                _cardAnswerTrace.complete(null);
+                                _answers.add(scheduledCard.key);
+                              }
+                              _currentCard.value = newValue;
+                            },
+                            builder: (context, card) => FlipCardWidget(
+                                  front: card.frontWithoutTags,
+                                  frontImages: card.frontImagesUri,
+                                  back: card.back,
+                                  backImages: card.backImagesUri,
+                                  colors:
+                                      specifyCardColors(deck.type, card.back),
+                                  hasBeenFlipped: _showReplyButtons,
+                                  key: ValueKey(card.key),
+                                )),
+                      )),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 20),
+                        child: ValueListenableBuilder<bool>(
+                          valueListenable: _showReplyButtons,
+                          builder: (context, showReplyButtons, child) =>
+                              Visibility(
+                            visible: showReplyButtons,
+                            maintainSize: true,
+                            // Required when maintainSize is set.
+                            maintainAnimation: true,
+                            maintainState: true,
+                            child: child,
+                          ),
+                          child: CardAnswerButtonsWidget(
+                            onAnswer: (knows) {
+                              _cardAnswerTrace.complete(knows);
+                              // Update database in background for fast user
+                              // experience.
+                              _user.learnCard(
+                                unansweredScheduledCard: scheduledCard,
+                                knows: knows,
+                              );
+                              _answers.add(scheduledCard.key);
+                              ++_answersCount.value;
 
-  Future<void> _nextCardArrived(ScheduledCardModel scheduledCard) async {
-    if (!mounted) {
-      return;
-    }
-    // We call setState because the next card has arrived and we have to
-    // display it.
-    setState(() {
-      _scheduledCard = scheduledCard;
-      _card = _deck.value.cards.getItem(scheduledCard.key);
-    });
+                              if (_answersCount.value == 1) {
+                                unawaited(logStartLearning(deck.key));
+                              }
+                              unawaited(logCardResponse(
+                                deckId: deck.key,
+                                knows: knows,
+                              ));
+                            },
+                          ),
+                        ),
+                      ),
+                      Row(
+                        children: <Widget>[
+                          // Use SafeArea to indent the child by the amount
+                          // necessary to avoid The Notch on the iPhone X,
+                          // or other similar creative physical features of
+                          // the display.
+                          SafeArea(
+                            minimum: const EdgeInsets.only(left: 8, bottom: 8),
+                            child: ValueListenableBuilder<int>(
+                              valueListenable: _answersCount,
+                              builder: (context, answersCount, _) => Text(
+                                context.l.answeredCards(answersCount),
+                                style: app_styles.secondaryText,
+                              ),
+                            ),
+                          ),
+                        ],
+                      )
+                    ],
+                  ))));
 
+  Future<bool> _promptBeyondHorizon(ScheduledCardModel scheduledCard) async {
     if (!_learnBeyondHorizon && scheduledCard.repeatAt.isAfter(clock.now())) {
-      if (!_atLeastOneCardShown) {
+      if (_answersCount.value == 0) {
         _learnBeyondHorizon = await showSaveUpdatesDialog(
                 context: context,
                 changesQuestion: context.l.continueLearningQuestion(
@@ -221,9 +227,9 @@ class CardsIntervalLearningState extends State<CardsIntervalLearning> {
       }
       if (!_learnBeyondHorizon) {
         Navigator.of(context).pop();
+        return false;
       }
     }
-
-    _atLeastOneCardShown = true;
+    return true;
   }
 }

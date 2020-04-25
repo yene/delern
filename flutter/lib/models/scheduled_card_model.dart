@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:core';
 import 'dart:math';
 
@@ -7,14 +6,11 @@ import 'package:built_value/serializer.dart';
 import 'package:delern_flutter/flutter/clock.dart';
 import 'package:delern_flutter/models/base/keyed_list_item.dart';
 import 'package:delern_flutter/models/base/list_accessor.dart';
-import 'package:delern_flutter/models/deck_model.dart';
 import 'package:delern_flutter/models/serializers.dart';
-import 'package:delern_flutter/models/user.dart';
 import 'package:delern_flutter/remote/error_reporting.dart' as error_reporting;
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/foundation.dart';
 import 'package:meta/meta.dart';
-import 'package:pedantic/pedantic.dart';
 
 part 'scheduled_card_model.g.dart';
 
@@ -100,65 +96,6 @@ abstract class ScheduledCardModel
     }
     return now.add(Duration(hours: _shuffleRandom.nextInt(3)));
   }
-
-  static Stream<ScheduledCardModel> next(User user, DeckModel deck) =>
-      FirebaseDatabase.instance
-          .reference()
-          .child('learning')
-          .child(user.uid)
-          .child(deck.key)
-          .orderByChild('repeatAt')
-          // Need at least 2 because of how Firebase local cache works.
-          // After we pick up the latest ScheduledCard and update it, it
-          // triggers onValue twice: once with the updated ScheduledCard (most
-          // likely triggered by local cache) and the second time with the next
-          // ScheduledCard (fetched from the server). Doing keepSynced(true) on
-          // the learning tree fixes this because local cache gets all entries.
-          .limitToFirst(2)
-          .onValue
-          .transform(
-              StreamTransformer.fromHandlers(handleData: (event, sink) async {
-        if (event.snapshot.value == null) {
-          // The deck is empty. Should we offer the user to re-sync?
-          sink.close();
-          return;
-        }
-
-        // TODO(dotdoom): remove sorting once Flutter Firebase issue is fixed.
-        // Workaround for https://github.com/flutter/flutter/issues/19389.
-        final List<MapEntry> allEntries = event.snapshot.value.entries.toList();
-        final latestScheduledCard = (allEntries
-              ..sort((s1, s2) {
-                final int repeatAtComparison =
-                    s1.value['repeatAt'].compareTo(s2.value['repeatAt']);
-                // Sometimes repeatAt of 2 cards may be the same, which
-                // will result in unstable order. Most often this is
-                // happening to the newly added cards, which have
-                // repeatAt = 0.
-                // We mimic Firebase behavior here, which falls back to
-                // sorting lexicographically by key.
-                // TODO(dotdoom): do not set repeatAt = 0?
-                if (repeatAtComparison == 0) {
-                  return s1.key.compareTo(s2.key);
-                }
-                return repeatAtComparison;
-              }))
-            .first;
-
-        final scheduledCard = ScheduledCardModel.fromSnapshot(
-            key: latestScheduledCard.key,
-            deckKey: deck.key,
-            value: latestScheduledCard.value);
-
-        if (deck.cards.getItem(latestScheduledCard.key).value == null) {
-          // Card has been removed but we still have ScheduledCard for it.
-          debugPrint('Removing dangling ScheduledCard ${scheduledCard.key}');
-          unawaited(user.cleanupDanglingScheduledCard(scheduledCard));
-          return;
-        }
-
-        sink.add(scheduledCard);
-      }));
 
   ScheduledCardModel answer({@required bool knows}) {
     var newLevel = level;

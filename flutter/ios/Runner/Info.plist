@@ -5,9 +5,9 @@
     <key>SentryDSN</key>
     <string>https://e6b5021448e14a49803b2c734621deae@sentry.io/1867466</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string></string>
+	<string>$(DISPLAY_NAME) requires access to your phone’s photo library to use images in cards.</string>
 	<key>NSCameraUsageDescription</key>
-	<string></string>
+	<string>$(DISPLAY_NAME) requires access to your phone’s camera to use images in cards.</string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<!-- Invitations, contact us -->

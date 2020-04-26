@@ -58,6 +58,7 @@ report.xml
 
 # Coverage information
 /flutter/coverage
+/flutter/test/all_imports_for_coverage_test.dart
 
 # Firebase configuration specific to the current developer (for Debug and Profile).
 /flutter/ios/Flutter/FirebaseLocalDeveloper.xcconfig

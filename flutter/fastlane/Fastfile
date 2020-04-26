@@ -233,7 +233,7 @@ platform :ios do
         }
         begin
           upload_to_testflight(config)
-        rescue
+        rescue => e
           # It is possible that the binary has been uploaded, but failed to
           # distribute. It is not allowed to upload the binary twice, so retries
           # will fail, but if we can distribute this binary without an error,
@@ -241,9 +241,11 @@ platform :ios do
           #
           # It's only slightly hacky -- pilot does not provide Action interface:
           # https://github.com/fastlane/fastlane/issues/13612.
-          config[:ipa] = File.expand_path(
-            lane_context[SharedValues::IPA_OUTPUT_PATH]
-          )
+          UI.error("upload + distribute failed: #{e}, retrying distribute")
+          config.merge!({
+            ipa: File.expand_path(lane_context[SharedValues::IPA_OUTPUT_PATH]),
+            app_identifier: app_identifier,
+          })
           fastlane_require 'pilot'
           Pilot::BuildManager.new.distribute(config)
         end

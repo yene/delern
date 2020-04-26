@@ -110,12 +110,6 @@ class SignInButton extends StatelessWidget {
         provider,
         forceAccountPicker: forceAccountPicker,
       );
-      // When launched from within a Navigator (e.g. "Sign In" when currently an
-      // anonymous user), pop now.
-      // When AuthWidget builds, it will instead listen to userChanged event and
-      // rebuild immediately once the user is logged in, replacing this widget
-      // with something else.
-      Navigator.of(context, nullOk: true)?.pop();
     } on PlatformException catch (e, stackTrace) {
       // Cover only those scenarios where we can recover or an additional action
       // from user can be helpful.

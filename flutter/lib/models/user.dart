@@ -304,7 +304,7 @@ class User {
         }
       });
 
-  Future<void> cleanupDanglingScheduledCard(ScheduledCardModel sc) =>
+  Future<void> cleanupOrphanedScheduledCard(ScheduledCardModel sc) =>
       // We want to make sure all values are set to `null`.
       // ignore: prefer_void_to_null
       _write(<String, Null>{
@@ -327,7 +327,9 @@ class User {
           updates['$scheduledCardPath/level'] = 0;
           updates['$scheduledCardPath/repeatAt'] =
               ScheduledCardModel.computeRepeatAtBase(
-                  newCard: true, shuffle: true);
+            newCard: true,
+            shuffle: true,
+          ).millisecondsSinceEpoch;
         }
       } else {
         updates[scheduledCardPath] = null;

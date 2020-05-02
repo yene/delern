@@ -1,5 +1,5 @@
-import 'package:delern_flutter/flutter/localization.dart';
 import 'package:delern_flutter/models/base/keyed_list_item.dart';
+import 'package:delern_flutter/views/helpers/localization.dart';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 

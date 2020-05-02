@@ -1,13 +1,9 @@
 import 'dart:math';
 
 import 'package:built_collection/built_collection.dart';
-import 'package:delern_flutter/flutter/localization.dart';
-import 'package:delern_flutter/flutter/styles.dart' as app_styles;
-import 'package:delern_flutter/flutter/user_messages.dart';
 import 'package:delern_flutter/models/card_model.dart';
 import 'package:delern_flutter/models/deck_access_model.dart';
 import 'package:delern_flutter/models/deck_model.dart';
-import 'package:delern_flutter/routes.dart';
 import 'package:delern_flutter/view_models/edit_deck_bloc.dart';
 import 'package:delern_flutter/views/base/screen_bloc_view.dart';
 import 'package:delern_flutter/views/edit_deck/deck_settings_widget.dart';
@@ -17,9 +13,13 @@ import 'package:delern_flutter/views/helpers/card_background_specifier.dart';
 import 'package:delern_flutter/views/helpers/edit_delete_dismissible_widget.dart';
 import 'package:delern_flutter/views/helpers/empty_list_message_widget.dart';
 import 'package:delern_flutter/views/helpers/list_accessor_widget.dart';
+import 'package:delern_flutter/views/helpers/localization.dart';
+import 'package:delern_flutter/views/helpers/routes.dart';
 import 'package:delern_flutter/views/helpers/search_bar_widget.dart';
 import 'package:delern_flutter/views/helpers/stream_with_value_builder.dart';
+import 'package:delern_flutter/views/helpers/styles.dart' as app_styles;
 import 'package:delern_flutter/views/helpers/text_overflow_ellipsis_widget.dart';
+import 'package:delern_flutter/views/helpers/user_messages.dart';
 import 'package:flutter/material.dart';
 
 const int _kUpButtonVisibleRow = 20;

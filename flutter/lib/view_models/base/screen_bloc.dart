@@ -1,8 +1,8 @@
 import 'dart:async';
 
-import 'package:delern_flutter/flutter/user_messages.dart';
 import 'package:delern_flutter/l10n/app_localizations.dart';
 import 'package:delern_flutter/models/user.dart';
+import 'package:delern_flutter/views/helpers/user_messages.dart';
 import 'package:meta/meta.dart';
 
 abstract class ScreenBloc {

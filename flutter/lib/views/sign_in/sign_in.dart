@@ -1,7 +1,7 @@
-import 'package:delern_flutter/flutter/legal.dart';
-import 'package:delern_flutter/flutter/localization.dart';
-import 'package:delern_flutter/flutter/styles.dart' as app_styles;
-import 'package:delern_flutter/flutter/url_launcher.dart';
+import 'package:delern_flutter/views/helpers/legal.dart';
+import 'package:delern_flutter/views/helpers/localization.dart';
+import 'package:delern_flutter/views/helpers/styles.dart' as app_styles;
+import 'package:delern_flutter/views/helpers/url_launcher.dart';
 import 'package:delern_flutter/views/sign_in/sign_in_button.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';

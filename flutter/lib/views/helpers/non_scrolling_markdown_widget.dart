@@ -1,5 +1,5 @@
-import 'package:delern_flutter/flutter/url_launcher.dart';
 import 'package:delern_flutter/views/helpers/display_image_widget.dart';
+import 'package:delern_flutter/views/helpers/url_launcher.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 

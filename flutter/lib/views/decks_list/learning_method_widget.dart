@@ -1,4 +1,4 @@
-import 'package:delern_flutter/flutter/styles.dart' as app_styles;
+import 'package:delern_flutter/views/helpers/styles.dart' as app_styles;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 

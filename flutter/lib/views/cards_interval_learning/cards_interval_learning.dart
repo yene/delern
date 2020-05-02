@@ -1,8 +1,6 @@
 import 'dart:async';
 
-import 'package:delern_flutter/flutter/clock.dart';
-import 'package:delern_flutter/flutter/localization.dart';
-import 'package:delern_flutter/flutter/styles.dart' as app_styles;
+import 'package:delern_flutter/models/base/clock.dart';
 import 'package:delern_flutter/models/base/list_accessor.dart';
 import 'package:delern_flutter/models/base/stream_with_value.dart';
 import 'package:delern_flutter/models/card_model.dart';
@@ -15,9 +13,11 @@ import 'package:delern_flutter/views/cards_interval_learning/card_answer_buttons
 import 'package:delern_flutter/views/helpers/auth_widget.dart';
 import 'package:delern_flutter/views/helpers/card_background_specifier.dart';
 import 'package:delern_flutter/views/helpers/flip_card_widget.dart';
+import 'package:delern_flutter/views/helpers/localization.dart';
 import 'package:delern_flutter/views/helpers/progress_indicator_widget.dart';
 import 'package:delern_flutter/views/helpers/save_updates_dialog.dart';
 import 'package:delern_flutter/views/helpers/stream_with_value_builder.dart';
+import 'package:delern_flutter/views/helpers/styles.dart' as app_styles;
 import 'package:delern_flutter/views/helpers/text_overflow_ellipsis_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';

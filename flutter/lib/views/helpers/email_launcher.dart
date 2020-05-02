@@ -1,6 +1,6 @@
-import 'package:delern_flutter/flutter/device_info.dart';
-import 'package:delern_flutter/flutter/localization.dart';
-import 'package:delern_flutter/flutter/user_messages.dart';
+import 'package:delern_flutter/views/helpers/device_info.dart';
+import 'package:delern_flutter/views/helpers/localization.dart';
+import 'package:delern_flutter/views/helpers/user_messages.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info/package_info.dart';
 import 'package:url_launcher/url_launcher.dart';

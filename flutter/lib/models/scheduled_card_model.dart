@@ -3,7 +3,7 @@ import 'dart:math';
 
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
-import 'package:delern_flutter/flutter/clock.dart';
+import 'package:delern_flutter/models/base/clock.dart';
 import 'package:delern_flutter/models/base/keyed_list_item.dart';
 import 'package:delern_flutter/models/base/list_accessor.dart';
 import 'package:delern_flutter/models/serializers.dart';

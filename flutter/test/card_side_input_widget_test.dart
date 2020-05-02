@@ -1,5 +1,5 @@
-import 'package:delern_flutter/flutter/localization.dart';
 import 'package:delern_flutter/views/card_create_update/card_side_input_widget.dart';
+import 'package:delern_flutter/views/helpers/localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 

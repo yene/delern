@@ -1,9 +1,9 @@
 import 'dart:io';
 
-import 'package:delern_flutter/flutter/localization.dart';
-import 'package:delern_flutter/flutter/styles.dart' as app_styles;
-import 'package:delern_flutter/flutter/text_input.dart';
 import 'package:delern_flutter/views/card_create_update/pick_image_menu_widget.dart';
+import 'package:delern_flutter/views/helpers/localization.dart';
+import 'package:delern_flutter/views/helpers/styles.dart' as app_styles;
+import 'package:delern_flutter/views/helpers/text_input.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 

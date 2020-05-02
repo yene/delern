@@ -1,12 +1,12 @@
-import 'package:delern_flutter/flutter/localization.dart';
 import 'package:delern_flutter/models/card_model.dart';
 import 'package:delern_flutter/models/deck_model.dart';
-import 'package:delern_flutter/routes.dart';
 import 'package:delern_flutter/view_models/card_preview_bloc.dart';
 import 'package:delern_flutter/views/base/screen_bloc_view.dart';
+import 'package:delern_flutter/views/card_preview/card_display_widget.dart';
 import 'package:delern_flutter/views/helpers/card_background_specifier.dart';
-import 'package:delern_flutter/views/helpers/card_display_widget.dart';
+import 'package:delern_flutter/views/helpers/localization.dart';
 import 'package:delern_flutter/views/helpers/progress_indicator_widget.dart';
+import 'package:delern_flutter/views/helpers/routes.dart';
 import 'package:delern_flutter/views/helpers/save_updates_dialog.dart';
 import 'package:delern_flutter/views/helpers/stream_with_value_builder.dart';
 import 'package:flutter/material.dart';

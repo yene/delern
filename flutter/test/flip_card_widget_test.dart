@@ -22,6 +22,7 @@ void main() {
         frontImages: null,
         back: backSide,
         backImages: null,
+        tags: const <String>[],
         colors: app_styles.cardBackgroundColors[Gender.masculine],
         hasBeenFlipped: hasBeenFlipped,
         key: UniqueKey(),

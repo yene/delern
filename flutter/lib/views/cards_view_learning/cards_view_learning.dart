@@ -118,6 +118,7 @@ class _CardsViewLearningState extends State<CardsViewLearning>
                             frontImages: snapshot.data[index].frontImagesUri,
                             back: snapshot.data[index].back,
                             backImages: snapshot.data[index].backImagesUri,
+                            tags: snapshot.data[index].tags,
                             colors: specifyCardColors(
                                 widget.deck.type, snapshot.data[index].back),
                             key: ValueKey(snapshot.data[index].key),

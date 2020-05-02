@@ -151,6 +151,7 @@ class CardsIntervalLearningState extends State<CardsIntervalLearning> {
                                   frontImages: card.frontImagesUri,
                                   back: card.back,
                                   backImages: card.backImagesUri,
+                                  tags: card.tags,
                                   colors:
                                       specifyCardColors(deck.type, card.back),
                                   hasBeenFlipped: _showReplyButtons,

@@ -5,6 +5,7 @@ import 'package:built_collection/built_collection.dart';
 import 'package:delern_flutter/views/helpers/card_side_widget.dart';
 import 'package:delern_flutter/views/helpers/localization.dart';
 import 'package:delern_flutter/views/helpers/styles.dart' as app_styles;
+import 'package:delern_flutter/views/helpers/tags_widget.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -16,6 +17,7 @@ class FlipCardWidget extends StatefulWidget {
   final BuiltList<String> frontImages;
   final String back;
   final BuiltList<String> backImages;
+  final Iterable<String> tags;
 
   final app_styles.CardColor colors;
   final ValueNotifier<bool> hasBeenFlipped;
@@ -39,6 +41,7 @@ class FlipCardWidget extends StatefulWidget {
     @required this.back,
     @required this.colors,
     @required this.backImages,
+    @required this.tags,
     @required Key key,
     this.hasBeenFlipped,
   })  : assert(key != null),
@@ -123,78 +126,90 @@ class _FlipCardWidgetState extends State<FlipCardWidget>
   }
 
   @override
-  Widget build(BuildContext context) => AnimatedBuilder(
-      animation: _flipAnimation,
-      builder: (context, child) => Transform.scale(
-            scale: _sizeAnimation.value,
-            child: Transform(
-              alignment: Alignment.center,
-              transform: Matrix4.identity()
-                ..setEntry(3, 2, 0.001)
-                ..rotateY(_flipAnimation.value),
-              child: child,
-            ),
+  Widget build(BuildContext context) => Column(
+        children: <Widget>[
+          TagsWidget(
+            tags: widget.tags,
+            singleLine: true,
           ),
-      child: GestureDetector(
-        onTap: () {
-          // If card is not turning now, turn card
-          if (!_controller.isAnimating) {
-            _startAnimation();
-          }
-        },
-        child: Stack(
-          children: <Widget>[
-            Card(
-              color: _isFront
-                  ? widget.colors.frontSideBackground
-                  : widget.colors.backSideBackground,
-              elevation: app_styles.kCardElevation,
-              child: Padding(
-                padding: const EdgeInsets.all(_kCardBorderPadding),
-                child: LayoutBuilder(
-                  builder: (context, viewportConstraints) =>
-                      SingleChildScrollView(
-                    // Keep scroll position separate for front and back.
-                    key: ValueKey(_isFront),
-                    child: ConstrainedBox(
-                      constraints: BoxConstraints(
-                        minHeight: viewportConstraints.maxHeight,
-                      ),
-                      child: _isFront
-                          ? CardSideWidget(
-                              text: widget.front,
-                              imagesList: widget.frontImages,
-                            )
-                          : CardSideWidget(
-                              text: widget.back,
-                              imagesList: widget.backImages,
-                            ),
-                    ),
-                  ),
+          Expanded(
+            child: AnimatedBuilder(
+              animation: _flipAnimation,
+              builder: (context, child) => Transform.scale(
+                scale: _sizeAnimation.value,
+                child: Transform(
+                  alignment: Alignment.center,
+                  transform: Matrix4.identity()
+                    ..setEntry(3, 2, 0.001)
+                    ..rotateY(_flipAnimation.value),
+                  child: child,
                 ),
               ),
-            ),
-            Align(
-              alignment: Alignment.topRight,
-              child: Padding(
-                padding: const EdgeInsets.only(top: 1, right: 4),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
+              child: GestureDetector(
+                onTap: () {
+                  // If card is not turning now, turn card
+                  if (!_controller.isAnimating) {
+                    _startAnimation();
+                  }
+                },
+                child: Stack(
                   children: <Widget>[
-                    const Icon(
-                      Icons.autorenew,
-                      color: app_styles.kSecondaryTextDeckItemColor,
+                    Card(
+                      color: _isFront
+                          ? widget.colors.frontSideBackground
+                          : widget.colors.backSideBackground,
+                      elevation: app_styles.kCardElevation,
+                      child: Padding(
+                        padding: const EdgeInsets.all(_kCardBorderPadding),
+                        child: LayoutBuilder(
+                          builder: (context, viewportConstraints) =>
+                              SingleChildScrollView(
+                            // Keep scroll position separate for front and back.
+                            key: ValueKey(_isFront),
+                            child: ConstrainedBox(
+                              constraints: BoxConstraints(
+                                minHeight: viewportConstraints.maxHeight,
+                              ),
+                              child: _isFront
+                                  ? CardSideWidget(
+                                      text: widget.front,
+                                      imagesList: widget.frontImages,
+                                    )
+                                  : CardSideWidget(
+                                      text: widget.back,
+                                      imagesList: widget.backImages,
+                                    ),
+                            ),
+                          ),
+                        ),
+                      ),
                     ),
-                    Text(
-                      context.l.flip,
-                      style: app_styles.secondaryText.copyWith(
-                          color: app_styles.kSecondaryTextDeckItemColor),
-                    ),
+                    Align(
+                      alignment: Alignment.topRight,
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 1, right: 4),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            const Icon(
+                              Icons.autorenew,
+                              color: app_styles.kSecondaryTextDeckItemColor,
+                            ),
+                            Text(
+                              context.l.flip,
+                              style: app_styles.secondaryText.copyWith(
+                                  color:
+                                      app_styles.kSecondaryTextDeckItemColor),
+                            ),
+                          ],
+                        ),
+                      ),
+                    )
                   ],
                 ),
               ),
-            )
-          ],
-        ),
-      ));
+            ),
+          ),
+        ],
+      );
 }

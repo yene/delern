@@ -1,3 +1,4 @@
+import 'package:built_collection/built_collection.dart';
 import 'package:delern_flutter/views/helpers/card_background_specifier.dart';
 import 'package:delern_flutter/views/helpers/flip_card_widget.dart';
 import 'package:delern_flutter/views/helpers/localization.dart';
@@ -22,7 +23,7 @@ void main() {
         frontImages: null,
         back: backSide,
         backImages: null,
-        tags: const <String>[],
+        tags: BuiltSet<String>(),
         colors: app_styles.cardBackgroundColors[Gender.masculine],
         hasBeenFlipped: hasBeenFlipped,
         key: UniqueKey(),

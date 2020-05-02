@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:built_collection/built_collection.dart';
 import 'package:delern_flutter/models/base/clock.dart';
 import 'package:delern_flutter/models/base/stream_with_value.dart';
 import 'package:delern_flutter/models/card_model.dart';
@@ -29,11 +30,13 @@ class CardsIntervalLearning extends StatefulWidget {
 
   const CardsIntervalLearning();
 
-  static Map<String, String> buildArguments({
+  static Map<String, dynamic> buildArguments({
     @required String deckKey,
+    Iterable<String> tags,
   }) =>
-      {
+      <String, dynamic>{
         'deckKey': deckKey,
+        'tags': tags,
       };
 
   @override
@@ -68,8 +71,10 @@ class CardsIntervalLearningState extends State<CardsIntervalLearning> {
       final arguments =
           // https://github.com/dasfoo/delern/issues/1386
           // ignore: avoid_as
-          ModalRoute.of(context).settings.arguments as Map<String, String>;
-      _deck = _user.decks.getItem(arguments['deckKey']);
+          ModalRoute.of(context).settings.arguments as Map<String, dynamic>;
+      // https://github.com/dasfoo/delern/issues/1386
+      // ignore: avoid_as
+      _deck = _user.decks.getItem(arguments['deckKey'] as String);
 
       // Start sync in background (to add new cards).
       _user.syncScheduledCards(_deck.value);
@@ -77,6 +82,11 @@ class CardsIntervalLearningState extends State<CardsIntervalLearning> {
       _nextScheduledCard =
           StreamWithLatestValue(_deck.value.startLearningSession(
         answers: (_answers = StreamController<String>()).stream,
+        tags: BuiltSet<String>.of(
+          // https://github.com/dasfoo/delern/issues/1386
+          // ignore: avoid_as
+          (arguments['tags'] as Iterable<String>) ?? [],
+        ),
       ));
     }
     super.didChangeDependencies();

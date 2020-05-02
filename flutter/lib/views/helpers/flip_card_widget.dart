@@ -17,7 +17,7 @@ class FlipCardWidget extends StatefulWidget {
   final BuiltList<String> frontImages;
   final String back;
   final BuiltList<String> backImages;
-  final Iterable<String> tags;
+  final BuiltSet<String> tags;
 
   final app_styles.CardColor colors;
   final ValueNotifier<bool> hasBeenFlipped;

@@ -1,6 +1,5 @@
 import 'package:built_collection/built_collection.dart';
 import 'package:delern_flutter/models/card_model.dart';
-import 'package:delern_flutter/models/deck_model.dart';
 import 'package:delern_flutter/view_models/cards_view_learning_bloc.dart';
 import 'package:delern_flutter/views/base/screen_bloc_view.dart';
 import 'package:delern_flutter/views/helpers/card_background_specifier.dart';
@@ -17,9 +16,16 @@ const double _kCardPadding = 8;
 class CardsViewLearning extends StatefulWidget {
   static const routeName = '/learn-view';
 
-  final DeckModel deck;
+  const CardsViewLearning();
 
-  const CardsViewLearning({@required this.deck}) : assert(deck != null);
+  static Map<String, dynamic> buildArguments({
+    @required String deckKey,
+    Iterable<String> tags,
+  }) =>
+      <String, dynamic>{
+        'deckKey': deckKey,
+        'tags': tags,
+      };
 
   @override
   _CardsViewLearningState createState() => _CardsViewLearningState();
@@ -44,8 +50,24 @@ class _CardsViewLearningState extends State<CardsViewLearning>
 
   @override
   Widget build(BuildContext context) => ScreenBlocView<CardsViewLearningBloc>(
-        blocBuilder: (user) =>
-            CardsViewLearningBloc(deck: widget.deck, user: user),
+        blocBuilder: (user) {
+          final arguments =
+              // https://github.com/dasfoo/delern/issues/1386
+              // ignore: avoid_as
+              ModalRoute.of(context).settings.arguments as Map<String, dynamic>;
+
+          return CardsViewLearningBloc(
+            // https://github.com/dasfoo/delern/issues/1386
+            // ignore: avoid_as
+            deck: user.decks.getItem(arguments['deckKey'] as String),
+            user: user,
+            tags: BuiltSet<String>.of(
+              // https://github.com/dasfoo/delern/issues/1386
+              // ignore: avoid_as
+              (arguments['tags'] as Iterable<String>) ?? [],
+            ),
+          );
+        },
         // TODO(ksheremet): Refactor: listening the same stream;
         //  when setState called, the whole tree will be rebuild. The aim is
         // to rebuild widgets which are needed to be rebuild
@@ -57,11 +79,11 @@ class _CardsViewLearningState extends State<CardsViewLearning>
                   return TextOverflowEllipsisWidget(
                     textDetails:
                         '(${_currentCard + 1}/${snapshot.data.length}) '
-                        '${widget.deck.name}',
+                        '${bloc.deck.value.name}',
                   );
                 }
                 return TextOverflowEllipsisWidget(
-                  textDetails: widget.deck.name,
+                  textDetails: bloc.deck.value.name,
                 );
               }),
           actions: <Widget>[
@@ -120,7 +142,9 @@ class _CardsViewLearningState extends State<CardsViewLearning>
                             backImages: snapshot.data[index].backImagesUri,
                             tags: snapshot.data[index].tags,
                             colors: specifyCardColors(
-                                widget.deck.type, snapshot.data[index].back),
+                              bloc.deck.value.type,
+                              snapshot.data[index].back,
+                            ),
                             key: ValueKey(snapshot.data[index].key),
                           ),
                         ),

@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:delern_flutter/l10n/app_localizations.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 @immutable
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

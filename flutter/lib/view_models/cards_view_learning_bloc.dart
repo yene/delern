@@ -9,22 +9,39 @@ import 'package:delern_flutter/view_models/base/screen_bloc.dart';
 import 'package:flutter/cupertino.dart';
 
 class CardsViewLearningBloc extends ScreenBloc {
+  final StreamWithValue<DeckModel> deck;
+
   StreamWithLatestValue<BuiltList<CardModel>> _doSetCardsList;
   StreamWithValue<BuiltList<CardModel>> get doSetCardsList => _doSetCardsList;
 
-  CardsViewLearningBloc({@required User user, @required DeckModel deck})
-      : super(user) {
+  CardsViewLearningBloc({
+    @required User user,
+    @required this.deck,
+    @required BuiltSet<String> tags,
+  }) : super(user) {
     _doSetCardsList = StreamWithLatestValue(
-        _onShuffleStreamController.stream.mapPerEvent(
-          (_) => deck.cards.value?.rebuild(
-            (cardListBuilder) => cardListBuilder.shuffle(),
-          ),
+      _onShuffleStreamController.stream.mapPerEvent(
+        (_) => _cardsFilteredByTags(tags).rebuild(
+          (cardListBuilder) => cardListBuilder.shuffle(),
         ),
-        initialValue: deck.cards.value);
+      ),
+      initialValue: _cardsFilteredByTags(tags),
+    );
   }
 
   final _onShuffleStreamController = StreamController<void>.broadcast();
   Sink<void> get onShuffleCards => _onShuffleStreamController.sink;
+
+  BuiltList<CardModel> _cardsFilteredByTags(BuiltSet<String> tags) {
+    final cards = deck.value.cards.value;
+
+    if (tags.isEmpty) {
+      return cards;
+    }
+
+    return BuiltList<CardModel>.of(
+        cards.where((card) => card.tags.intersection(tags).isNotEmpty));
+  }
 
   @override
   void dispose() {

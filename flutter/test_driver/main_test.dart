@@ -58,6 +58,18 @@ void main() {
           timeout: timeoutDuration);
     }
 
+    Future<void> answerCard({
+      @required String expectFront,
+      @required String expectBack,
+      @required bool knows,
+    }) async {
+      await expectCard(expectFront, expectBack);
+      await driver.tap(find.byType('Card'));
+      await driver.tap(find.byTooltip(knows
+          ? localizations.knowCardTooltip
+          : localizations.doNotKnowCardTooltip));
+    }
+
     setUpAll(() async {
       driver = await FlutterDriver.connect();
       localizations = const AppLocalizations();
@@ -89,8 +101,8 @@ void main() {
     });
 
     test('Add 2 cards to the deck', () async {
-      await fillInAndAddCard('front1', 'back1');
-      await fillInAndAddCard('front2', 'back2');
+      await fillInAndAddCard('front1 #all-cards #card12', 'back1');
+      await fillInAndAddCard('front2 #all-cards #card12 #card23', 'back2');
 
       // Make some changes without saving them.
       await driver.enterText('something');
@@ -105,7 +117,7 @@ void main() {
       await tapDialogButton(localizations.discard);
     });
 
-    test('Add one more card', () async {
+    test('Add 2 more cards, 1 of them without #all-cards tag', () async {
       // Swipe right.
       await driver.scroll(
         find.text('My Test Deck'),
@@ -114,7 +126,8 @@ void main() {
         const Duration(milliseconds: 500),
       );
       await driver.tap(find.byType('FloatingActionButton'));
-      await fillInAndAddCard('front3', 'back3');
+      await fillInAndAddCard('front3 #all-cards #card23', 'back3');
+      await fillInAndAddCard('front4', 'back4');
       // Back to the list of cards.
       await driver.tap(find.pageBack());
       // Back to the list of decks.
@@ -123,23 +136,24 @@ void main() {
 
     test('Learn 3 cards (interval learning)', () async {
       await driver.tap(find.text('My Test Deck'));
+      await driver.tap(find.text('#all-cards'));
       await driver.tap(find.byTooltip(localizations.intervalLearningTooltip));
 
-      Future<void> learnCard({
-        @required String expectFront,
-        @required String expectBack,
-        @required bool knows,
-      }) async {
-        await expectCard(expectFront, expectBack);
-        await driver.tap(find.byType('Card'));
-        await driver.tap(find.byTooltip(knows
-            ? localizations.knowCardTooltip
-            : localizations.doNotKnowCardTooltip));
-      }
-
-      await learnCard(expectFront: 'front1', expectBack: 'back1', knows: true);
-      await learnCard(expectFront: 'front2', expectBack: 'back2', knows: false);
-      await learnCard(expectFront: 'front3', expectBack: 'back3', knows: false);
+      await answerCard(
+        expectFront: 'front1',
+        expectBack: 'back1',
+        knows: true,
+      );
+      await answerCard(
+        expectFront: 'front2',
+        expectBack: 'back2',
+        knows: false,
+      );
+      await answerCard(
+        expectFront: 'front3',
+        expectBack: 'back3',
+        knows: false,
+      );
       // At this point the learning screen should automatically close because
       // there are no more cards to learn.
     });
@@ -175,6 +189,7 @@ void main() {
 
     test('Learn one card (view learning)', () async {
       await driver.tap(find.text('My Test Deck'));
+      // #all-cards tag selection must be preserved.
       await driver.tap(find.byTooltip(localizations.viewLearningTooltip));
       await driver.waitFor(find.text('(1/1) My Test Deck'));
 
@@ -200,6 +215,20 @@ void main() {
         const Duration(milliseconds: 500),
       );
       await driver.waitFor(find.text(localizations.noUpdates));
+    });
+
+    test('Learn last card', () async {
+      await driver.tap(find.text('My Test Deck'));
+      // Remove the tag selection, which should reveal the 4th card.
+      await driver.tap(find.text('#all-cards'));
+      await driver.tap(find.byTooltip(localizations.intervalLearningTooltip));
+      await answerCard(
+        expectFront: 'front4',
+        expectBack: 'back4',
+        knows: false,
+      );
+      // At this point the learning screen should automatically close because
+      // there are no more cards to learn.
     });
 
     test('Delete deck', () async {

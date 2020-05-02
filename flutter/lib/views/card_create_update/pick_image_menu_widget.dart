@@ -1,9 +1,9 @@
 import 'dart:io';
 
 import 'package:app_settings/app_settings.dart';
-import 'package:delern_flutter/flutter/localization.dart';
-import 'package:delern_flutter/flutter/styles.dart' as app_styles;
-import 'package:delern_flutter/flutter/user_messages.dart';
+import 'package:delern_flutter/views/helpers/localization.dart';
+import 'package:delern_flutter/views/helpers/styles.dart' as app_styles;
+import 'package:delern_flutter/views/helpers/user_messages.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';

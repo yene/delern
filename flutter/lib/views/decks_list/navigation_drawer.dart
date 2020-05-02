@@ -1,18 +1,18 @@
 import 'dart:async';
 
-import 'package:delern_flutter/flutter/legal.dart';
-import 'package:delern_flutter/flutter/localization.dart';
-import 'package:delern_flutter/flutter/styles.dart' as app_styles;
-import 'package:delern_flutter/flutter/url_launcher.dart';
 import 'package:delern_flutter/models/user.dart';
 import 'package:delern_flutter/remote/analytics.dart';
 import 'package:delern_flutter/remote/auth.dart';
 import 'package:delern_flutter/remote/error_reporting.dart' as error_reporting;
-import 'package:delern_flutter/routes.dart';
 import 'package:delern_flutter/views/decks_list/developer_menu.dart';
 import 'package:delern_flutter/views/helpers/auth_widget.dart';
 import 'package:delern_flutter/views/helpers/email_launcher.dart';
+import 'package:delern_flutter/views/helpers/legal.dart';
+import 'package:delern_flutter/views/helpers/localization.dart';
+import 'package:delern_flutter/views/helpers/routes.dart';
 import 'package:delern_flutter/views/helpers/send_invite.dart';
+import 'package:delern_flutter/views/helpers/styles.dart' as app_styles;
+import 'package:delern_flutter/views/helpers/url_launcher.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';

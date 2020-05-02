@@ -4,7 +4,7 @@ import 'dart:core';
 import 'package:built_collection/built_collection.dart';
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
-import 'package:delern_flutter/flutter/clock.dart';
+import 'package:delern_flutter/models/base/clock.dart';
 import 'package:delern_flutter/models/base/keyed_list_item.dart';
 import 'package:delern_flutter/models/base/list_accessor.dart';
 import 'package:delern_flutter/models/base/stream_with_value.dart';

@@ -1,8 +1,8 @@
 import 'dart:async';
 
-import 'package:delern_flutter/flutter/user_messages.dart';
 import 'package:delern_flutter/models/base/stream_with_value.dart';
 import 'package:delern_flutter/views/helpers/progress_indicator_widget.dart';
+import 'package:delern_flutter/views/helpers/user_messages.dart';
 import 'package:flutter/material.dart';
 
 /// Build a [StreamBuilder] widget with values supplied from [StreamWithValue]

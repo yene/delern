@@ -1,5 +1,5 @@
-import 'package:delern_flutter/flutter/styles.dart' as app_styles;
 import 'package:delern_flutter/views/helpers/non_scrolling_markdown_widget.dart';
+import 'package:delern_flutter/views/helpers/styles.dart' as app_styles;
 import 'package:flutter/material.dart';
 
 class CardSideWidget extends StatelessWidget {

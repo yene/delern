@@ -1,9 +1,6 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:delern_flutter/flutter/localization.dart';
-import 'package:delern_flutter/flutter/styles.dart' as app_styles;
-import 'package:delern_flutter/flutter/user_messages.dart';
 import 'package:delern_flutter/models/deck_access_model.dart';
 import 'package:delern_flutter/models/deck_model.dart';
 import 'package:delern_flutter/remote/app_config.dart';
@@ -13,10 +10,13 @@ import 'package:delern_flutter/views/deck_sharing/deck_access_dropdown.dart';
 import 'package:delern_flutter/views/helpers/auth_widget.dart';
 import 'package:delern_flutter/views/helpers/empty_list_message_widget.dart';
 import 'package:delern_flutter/views/helpers/list_accessor_widget.dart';
+import 'package:delern_flutter/views/helpers/localization.dart';
 import 'package:delern_flutter/views/helpers/progress_indicator_widget.dart';
 import 'package:delern_flutter/views/helpers/save_updates_dialog.dart';
 import 'package:delern_flutter/views/helpers/send_invite.dart';
 import 'package:delern_flutter/views/helpers/slow_operation_widget.dart';
+import 'package:delern_flutter/views/helpers/styles.dart' as app_styles;
+import 'package:delern_flutter/views/helpers/user_messages.dart';
 import 'package:flutter/material.dart';
 
 class DeckSharing extends StatefulWidget {

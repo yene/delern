@@ -1,10 +1,10 @@
 import 'dart:async';
 
-import 'package:delern_flutter/flutter/device_info.dart';
 import 'package:delern_flutter/models/fcm.dart';
 import 'package:delern_flutter/models/user.dart';
 import 'package:delern_flutter/remote/auth.dart';
 import 'package:delern_flutter/remote/error_reporting.dart' as error_reporting;
+import 'package:delern_flutter/views/helpers/device_info.dart';
 import 'package:delern_flutter/views/helpers/progress_indicator_widget.dart';
 import 'package:delern_flutter/views/sign_in/sign_in.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';

@@ -1,6 +1,6 @@
-import 'package:delern_flutter/flutter/styles.dart' as app_styles;
+import 'package:delern_flutter/views/card_preview/card_display_widget.dart';
 import 'package:delern_flutter/views/helpers/card_background_specifier.dart';
-import 'package:delern_flutter/views/helpers/card_display_widget.dart';
+import 'package:delern_flutter/views/helpers/styles.dart' as app_styles;
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:flutter_test/flutter_test.dart';

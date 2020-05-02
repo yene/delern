@@ -343,3 +343,16 @@ export const databaseMaintenance = functions
 
     res.end();
   });
+
+export const pushConfig = functions.remoteConfig.onUpdate(
+  async versionMetadata => {
+    const payload = {
+      topic: 'PUSH_RC',
+      data: {
+        CONFIG_STATE: 'STALE',
+      },
+    };
+    console.log(await admin.messaging().send(payload));
+    return null;
+  }
+);

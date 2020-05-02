@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:delern_flutter/models/fcm.dart';
 import 'package:delern_flutter/models/user.dart';
+import 'package:delern_flutter/remote/app_config.dart';
 import 'package:delern_flutter/remote/auth.dart';
 import 'package:delern_flutter/remote/error_reporting.dart' as error_reporting;
 import 'package:delern_flutter/views/helpers/device_info.dart';
@@ -39,6 +40,8 @@ class _AuthWidgetState extends State<AuthWidget> {
         return;
       }
 
+      unawaited(FirebaseMessaging().subscribeToTopic('PUSH_RC'));
+
       final fcm = (FCMBuilder()
             ..language = Localizations.localeOf(context).toString()
             ..name = (await DeviceInfo.getDeviceInfo()).userFriendlyName
@@ -65,10 +68,20 @@ class _AuthWidgetState extends State<AuthWidget> {
                 ? 'anonymous'
                 : loginProviders.join(',')));
 
-        // TODO(dotdoom): register onMessage to show a snack bar with
-        //                notification when the app is in foreground.
         // Must be called after each login to obtain a FirebaseMessaging token.
-        FirebaseMessaging().configure();
+        FirebaseMessaging().configure(
+          onMessage: (message) {
+            // TODO(dotdoom): show a snack bar if message['notification'] map
+            //                has 'title' and 'body' values.
+            final Map<String, String> data = message['data'];
+
+            if (data != null && data['CONFIG_STATE'] == 'STALE') {
+              AppConfig.instance.remoteConfigIsStale = true;
+            }
+
+            return null;
+          },
+        );
       }
     });
 

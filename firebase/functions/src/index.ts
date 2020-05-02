@@ -11,7 +11,7 @@ if ('email' in functions.config()) {
 }
 
 // tslint:disable-next-line:no-any (legacy code)
-const delern: { [functionName: string]: any } = {
+const delern: {[functionName: string]: any} = {
   createScheduledCardObject: () => {
     return {
       level: 'L0',
@@ -21,21 +21,21 @@ const delern: { [functionName: string]: any } = {
   },
   createMissingScheduledCards: async (uid: string, deckKey: string) => {
     const scheduledCards =
-      (await admin
-        .database()
-        .ref('learning')
-        .child(uid)
-        .child(deckKey)
-        .once('value')).val() || {};
+      (
+        await admin
+          .database()
+          .ref('learning')
+          .child(uid)
+          .child(deckKey)
+          .once('value')
+      ).val() || {};
     const cards =
-      (await admin
-        .database()
-        .ref('cards')
-        .child(deckKey)
-        .once('value')).val() || {};
+      (
+        await admin.database().ref('cards').child(deckKey).once('value')
+      ).val() || {};
 
     // tslint:disable-next-line:no-any (legacy code)
-    const scheduledCardsUpdates: { [path: string]: any } = {};
+    const scheduledCardsUpdates: {[path: string]: any} = {};
     for (const cardKey in cards) {
       if (!(cardKey in scheduledCards)) {
         scheduledCardsUpdates[cardKey] = delern.createScheduledCardObject();
@@ -65,14 +65,12 @@ const delern: { [functionName: string]: any } = {
     // tslint:disable-next-line:no-any (legacy code)
     scheduledCard: any
   ) => {
-    const deckAccesses = (await admin
-      .database()
-      .ref('deck_access')
-      .child(deckKey)
-      .once('value')).val();
+    const deckAccesses = (
+      await admin.database().ref('deck_access').child(deckKey).once('value')
+    ).val();
 
     // tslint:disable-next-line:no-any (legacy code)
-    const learningUpdate: { [key: string]: any } = {};
+    const learningUpdate: {[key: string]: any} = {};
     for (const sharedWithUid in deckAccesses) {
       if (sharedWithUid !== skipUid) {
         learningUpdate[
@@ -80,10 +78,7 @@ const delern: { [functionName: string]: any } = {
         ] = scheduledCard;
       }
     }
-    await admin
-      .database()
-      .ref('learning')
-      .update(learningUpdate);
+    await admin.database().ref('learning').update(learningUpdate);
   },
   forEachUser: null,
 
@@ -106,7 +101,7 @@ const delern: { [functionName: string]: any } = {
 
 export const userLookup = functions.https.onRequest((req, res) =>
   // https://firebase.google.com/docs/functions/http-events
-  cors({ origin: true })(req, res, async () => {
+  cors({origin: true})(req, res, async () => {
     // TODO(dotdoom): check auth, e.g.:
     // https://github.com/firebase/functions-samples/tree/master/authorized-https-endpoint
 
@@ -145,12 +140,10 @@ export const triggers = {
         .getUser(context.params.sharedWithUid);
 
       // tslint:disable-next-line:no-any (legacy code)
-      const scheduledCards: { [key: string]: any } = {};
-      const cards = (await admin
-        .database()
-        .ref('cards')
-        .child(deckKey)
-        .once('value')).val();
+      const scheduledCards: {[key: string]: any} = {};
+      const cards = (
+        await admin.database().ref('cards').child(deckKey).once('value')
+      ).val();
       for (const cardKey of Object.keys(cards)) {
         scheduledCards[cardKey] = delern.createScheduledCardObject();
       }
@@ -168,13 +161,15 @@ export const triggers = {
 
       const numberOfCards = Object.keys(scheduledCards).length;
       const actorUser = await admin.auth().getUser(context.auth.uid);
-      const deckName = (await admin
-        .database()
-        .ref('decks')
-        .child(sharedWithUser.uid)
-        .child(deckKey)
-        .child('name')
-        .once('value')).val();
+      const deckName = (
+        await admin
+          .database()
+          .ref('decks')
+          .child(sharedWithUser.uid)
+          .child(deckKey)
+          .child('name')
+          .once('value')
+      ).val();
       if (mailTransport) {
         const mailOptions: nodemailer.SendMailOptions = {
           // Either "from" or "reply-to" will work with most servers and
@@ -199,10 +194,7 @@ export const triggers = {
         }
       }
 
-      const fcmSnapshot = admin
-        .database()
-        .ref('fcm')
-        .child(sharedWithUser.uid);
+      const fcmSnapshot = admin.database().ref('fcm').child(sharedWithUser.uid);
       const fcmEntries = (await fcmSnapshot.once('value')).val() || {};
       const payload = {
         notification: {
@@ -214,7 +206,7 @@ export const triggers = {
         token: '',
       };
 
-      const tokenRemovals: { [key: string]: null } = {};
+      const tokenRemovals: {[key: string]: null} = {};
       for (const fcmId of Object.keys(fcmEntries)) {
         console.log(
           `Notifying user ${sharedWithUser.uid} on ` +
@@ -236,10 +228,7 @@ export const triggers = {
           }
         }
       }
-      await admin
-        .database()
-        .ref('fcm')
-        .update(tokenRemovals);
+      await admin.database().ref('fcm').update(tokenRemovals);
     }),
   // TODO(dotdoom): Deck is removed by owner, and Learning/Views should be
   //                cleaned up by databaseMaintenance (2.4+).
@@ -289,20 +278,16 @@ delern.forEachUser = async (
 };
 
 export const databaseMaintenance = functions
-  .runWith({ timeoutSeconds: 300 }) // Bump timeout from default 60s to 5min.
+  .runWith({timeoutSeconds: 300}) // Bump timeout from default 60s to 5min.
   .https.onRequest(async (req, res) => {
-    const deckAccesses = (await admin
-      .database()
-      .ref('deck_access')
-      .once('value')).val();
-    const decks = (await admin
-      .database()
-      .ref('decks')
-      .once('value')).val();
+    const deckAccesses = (
+      await admin.database().ref('deck_access').once('value')
+    ).val();
+    const decks = (await admin.database().ref('decks').once('value')).val();
 
-    const uidCache: { [uid: string]: admin.auth.UserRecord } = {};
+    const uidCache: {[uid: string]: admin.auth.UserRecord} = {};
     // tslint:disable-next-line:no-any (legacy code)
-    const updates: { [path: string]: any } = {};
+    const updates: {[path: string]: any} = {};
     const missingCardsOperations: Array<Promise<void>> = [];
 
     let deletedSharedDecks = 0;
@@ -354,10 +339,7 @@ export const databaseMaintenance = functions
     );
 
     await Promise.all(missingCardsOperations);
-    await admin
-      .database()
-      .ref()
-      .update(updates);
+    await admin.database().ref().update(updates);
 
     res.end();
   });

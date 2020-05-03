@@ -14,9 +14,9 @@ class Window {
     @required this.height,
   });
 
-  Window.fromJson(Map<String, dynamic> json)
-      : width = json['width'],
-        height = json['height'];
+  Window.fromJson(dynamic json)
+      : width = json['width'] as double, // ignore: avoid_as
+        height = json['height'] as double; // ignore: avoid_as
 
   Map<String, dynamic> toJson() => <String, dynamic>{
         'width': width,

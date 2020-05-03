@@ -15,39 +15,12 @@ analyzer:
     - "**/*.g.dart"
   strong-mode:
     implicit-dynamic: false
-
-    # Disabling implicit casts forces type casting from "dynamic" as it is no
-    # longer a bottom type since Dart 2:
-    # https://dart.dev/guides/language/sound-problems#the-function-expression-type--isnt-of-type-
-    # "dynamic" is typically coming from Firebase, but may also appear in other
-    # places. This means one of:
-    #
-    #   if (variable is Type) {
-    #     ...
-    #   }
-    #
-    # or
-    #
-    #   (variable as Type)
-    #
-    # constructions. In the first case, it is a cumbersome construction with
-    # unclear handlng of the "else" case. In the second case, the avoid_as lint
-    # check complains about performance impact. It recommends type assertion,
-    # see https://dart-lang.github.io/linter/lints/avoid_as.html, but it's
-    # unclear what it is. assert(variable is Type) is not working:
-    # https://github.com/dart-lang/sdk/issues/36883. Overall, avoid_as may be
-    # changed drastically or even deprecated:
-    # https://github.com/dart-lang/linter/issues/1401.
-    #
-    # TODO(dotdoom): confirm performance impact of "as".
-    #
-    implicit-casts: true
-  #language:
-  # TODO(dotdoom): consider enabling these features.
-  #  # https://github.com/dart-lang/language/blob/master/resources/type-system/strict-inference.md
-  #  strict-inference: true
-  #  # https://github.com/dart-lang/language/blob/master/resources/type-system/strict-raw-types.md
-  #  strict-raw-types: true
+    implicit-casts: false
+  language:
+    # https://github.com/dart-lang/language/blob/master/resources/type-system/strict-inference.md
+    strict-inference: true
+    # https://github.com/dart-lang/language/blob/master/resources/type-system/strict-raw-types.md
+    strict-raw-types: true
   #enable-experiment:
   #  # TODO(dotdoom): enable via https://stackoverflow.com/questions/57934341/.
   #  - non-nullable

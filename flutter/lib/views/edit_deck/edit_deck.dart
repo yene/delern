@@ -59,8 +59,10 @@ class _EditDeckState extends State<EditDeck> {
 
   @override
   Widget build(BuildContext context) {
-    final Map<String, String> arguments =
-        ModalRoute.of(context).settings.arguments;
+    final arguments =
+        // https://github.com/dasfoo/delern/issues/1386
+        // ignore: avoid_as
+        ModalRoute.of(context).settings.arguments as Map<String, String>;
     return ScreenBlocView<EditDeckBloc>(
       blocBuilder: (user) {
         final bloc = EditDeckBloc(

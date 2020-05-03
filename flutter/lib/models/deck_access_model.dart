@@ -64,17 +64,6 @@ abstract class DeckAccessModel
   factory DeckAccessModel([void Function(DeckAccessModelBuilder) updates]) =
       _$DeckAccessModel;
   DeckAccessModel._();
-
-  static DeckAccessModel fromSnapshot({
-    @required String key,
-    @required String deckKey,
-    @required Map value,
-  }) =>
-      serializers
-          .deserializeWith(DeckAccessModel.serializer, value)
-          .rebuild((b) => b
-            ..deckKey = deckKey
-            ..key = key);
 }
 
 class DeckAccessListAccessor extends DataListAccessor<DeckAccessModel> {
@@ -88,6 +77,9 @@ class DeckAccessListAccessor extends DataListAccessor<DeckAccessModel> {
               ..orderByKey());
 
   @override
-  DeckAccessModel parseItem(String key, dynamic value) =>
-      DeckAccessModel.fromSnapshot(key: key, deckKey: deckKey, value: value);
+  DeckAccessModel parseItem(String key, dynamic value) => serializers
+      .deserializeWith(DeckAccessModel.serializer, value)
+      .rebuild((b) => b
+        ..deckKey = deckKey
+        ..key = key);
 }

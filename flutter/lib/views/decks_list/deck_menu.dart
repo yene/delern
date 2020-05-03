@@ -142,22 +142,27 @@ class _MenuRoute<_DeckMenuItemType> extends PopupRoute<_DeckMenuItemType> {
   @override
   Widget buildPage(BuildContext context, Animation<double> animation,
       Animation<double> secondaryAnimation) {
-    final RenderBox renderBox = parent.findRenderObject();
-    final offset = renderBox.localToGlobal(Offset.zero);
-    final rightOffset = renderBox.size.width * 3 / 4;
-    final topOffset =
-        (MediaQuery.of(context).size.height > (_kMenuExpandedSize + offset.dy))
-            ? offset.dy
-            : MediaQuery.of(context).size.height - _kMenuExpandedSize - 8;
+    final renderBox = parent.findRenderObject();
+    if (renderBox is RenderBox) {
+      final offset = renderBox.localToGlobal(Offset.zero);
+      final rightOffset = renderBox.size.width * 3 / 4;
+      final topOffset = (MediaQuery.of(context).size.height >
+              (_kMenuExpandedSize + offset.dy))
+          ? offset.dy
+          : MediaQuery.of(context).size.height - _kMenuExpandedSize - 8;
 
-    return Stack(children: <Widget>[
-      Positioned(
-        right: rightOffset,
-        top: topOffset,
-        height: _kMenuExpandedSize,
-        child: _MenuItemsWidget(controller: controller),
-      )
-    ]);
+      return Stack(children: <Widget>[
+        Positioned(
+          right: rightOffset,
+          top: topOffset,
+          height: _kMenuExpandedSize,
+          child: _MenuItemsWidget(controller: controller),
+        )
+      ]);
+    }
+
+    // This should never happen.
+    return const Placeholder();
   }
 
   @override

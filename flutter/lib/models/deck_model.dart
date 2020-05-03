@@ -68,14 +68,6 @@ abstract class DeckModel
   factory DeckModel([void Function(DeckModelBuilder) updates]) = _$DeckModel;
   DeckModel._();
 
-  static DeckModel fromSnapshot({
-    @required String key,
-    @required Map value,
-  }) =>
-      serializers
-          .deserializeWith(DeckModel.serializer, value)
-          .rebuild((b) => b..key = key);
-
   static void _initializeBuilder(DeckModelBuilder b) => b
     ..lastSyncAt = DateTime.fromMillisecondsSinceEpoch(0)
     ..markdown = true
@@ -177,16 +169,18 @@ class DeckModelListAccessor extends DataListAccessor<DeckModel> {
 
   @override
   DeckModel parseItem(String key, dynamic value) =>
-      DeckModel.fromSnapshot(key: key, value: value).rebuild((d) => d
-        ..cards = CardModelListAccessor(d.key)
+      serializers.deserializeWith(DeckModel.serializer, value).rebuild((d) => d
+        ..key = key
+        ..cards = CardModelListAccessor(key)
         ..scheduledCards =
-            ScheduledCardModelListAccessor(uid: uid, deckKey: d.key)
-        ..usersAccess = DeckAccessListAccessor(deckKey: d.key)
+            ScheduledCardModelListAccessor(uid: uid, deckKey: key)
+        ..usersAccess = DeckAccessListAccessor(deckKey: key)
         ..numberOfCardsDue = _ScheduledCardsDueCounter(d.scheduledCards));
 
   @override
-  DeckModel updateItem(DeckModel previous, String key, dynamic value) =>
-      DeckModel.fromSnapshot(key: key, value: value).rebuild((d) => d
+  DeckModel updateItem(DeckModel previous, dynamic value) =>
+      serializers.deserializeWith(DeckModel.serializer, value).rebuild((d) => d
+        ..key = previous.key
         ..cards = previous.cards
         ..scheduledCards = previous.scheduledCards
         ..usersAccess = previous.usersAccess

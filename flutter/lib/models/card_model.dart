@@ -7,8 +7,6 @@ import 'package:delern_flutter/models/base/keyed_list_item.dart';
 import 'package:delern_flutter/models/base/list_accessor.dart';
 import 'package:delern_flutter/models/serializers.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:flutter/foundation.dart';
-import 'package:meta/meta.dart';
 
 part 'card_model.g.dart';
 
@@ -30,15 +28,6 @@ abstract class CardModel
 
   factory CardModel([void Function(CardModelBuilder) updates]) = _$CardModel;
   CardModel._();
-
-  static CardModel fromSnapshot({
-    @required String deckKey,
-    @required String key,
-    @required Map value,
-  }) =>
-      serializers.deserializeWith(CardModel.serializer, value).rebuild((b) => b
-        ..deckKey = deckKey
-        ..key = key);
 
   static void _initializeBuilder(CardModelBuilder b) => b
     ..front = ''
@@ -62,13 +51,17 @@ abstract class CardModel
 }
 
 class CardModelListAccessor extends DataListAccessor<CardModel> {
-  final String deckId;
+  final String deckKey;
 
-  CardModelListAccessor(this.deckId)
-      : super(
-            FirebaseDatabase.instance.reference().child('cards').child(deckId));
+  CardModelListAccessor(this.deckKey)
+      : super(FirebaseDatabase.instance
+            .reference()
+            .child('cards')
+            .child(deckKey));
 
   @override
   CardModel parseItem(String key, dynamic value) =>
-      CardModel.fromSnapshot(deckKey: deckId, key: key, value: value);
+      serializers.deserializeWith(CardModel.serializer, value).rebuild((b) => b
+        ..deckKey = deckKey
+        ..key = key);
 }

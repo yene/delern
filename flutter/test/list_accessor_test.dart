@@ -391,7 +391,7 @@ class MyModel implements KeyedListItem {
   @override
   final String key;
 
-  final String value;
+  final dynamic value;
 
   const MyModel({this.key, this.value});
 

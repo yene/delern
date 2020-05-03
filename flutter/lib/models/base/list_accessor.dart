@@ -189,19 +189,22 @@ abstract class DataListAccessor<T extends KeyedListItem>
   }
 
   void _onListenError(dynamic error, StackTrace stackTrace) {
+    dynamic wrappedError = error;
     if (error is DatabaseError) {
       // Can't use throw because that would loose stackTrace that we have.
-      error = DatabaseReadException(
+      wrappedError = DatabaseReadException(
         underlyingError: error,
         path: _path,
       );
     }
+
     if (!_value.isClosed && _value.hasListener) {
-      _value.addError(error, stackTrace);
+      _value.addError(wrappedError, stackTrace);
     }
     if (!_events.isClosed && _events.hasListener) {
-      _events.addError(error, stackTrace);
+      _events.addError(wrappedError, stackTrace);
     }
+
     close();
   }
 
@@ -210,7 +213,7 @@ abstract class DataListAccessor<T extends KeyedListItem>
     if (existingIndex >= 0) {
       final replacedItem = _currentValue[existingIndex];
       _currentValue[existingIndex] =
-          updateItem(replacedItem, data.snapshot.key, data.snapshot.value);
+          updateItem(replacedItem, data.snapshot.value);
       if (_loaded && _events.hasListener) {
         _events.add(ListChangeRecord<T>.replace(
             _currentValue, existingIndex, [replacedItem]));
@@ -235,7 +238,7 @@ abstract class DataListAccessor<T extends KeyedListItem>
 
   @protected
   @visibleForOverriding
-  T updateItem(T previous, String key, dynamic value) => parseItem(key, value);
+  T updateItem(T previous, dynamic value) => parseItem(previous.key, value);
 
   @protected
   @visibleForOverriding

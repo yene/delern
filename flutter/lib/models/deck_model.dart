@@ -178,9 +178,9 @@ class DeckModelListAccessor extends DataListAccessor<DeckModel> {
         ..numberOfCardsDue = _ScheduledCardsDueCounter(d.scheduledCards));
 
   @override
-  DeckModel updateItem(DeckModel previous, String key, dynamic value) =>
+  DeckModel updateItem(DeckModel previous, dynamic value) =>
       serializers.deserializeWith(DeckModel.serializer, value).rebuild((d) => d
-        ..key = key
+        ..key = previous.key
         ..cards = previous.cards
         ..scheduledCards = previous.scheduledCards
         ..usersAccess = previous.usersAccess

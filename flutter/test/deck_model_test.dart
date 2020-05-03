@@ -97,7 +97,7 @@ mixin _ListAccessorItemStubsMixin<T extends KeyedListItem>
   T parseItem(String key, dynamic value) => null;
 
   @override
-  T updateItem(T previous, String key, dynamic value) => parseItem(key, value);
+  T updateItem(T previous, dynamic value) => parseItem(previous.key, value);
 
   @override
   void disposeItem(T item) {}

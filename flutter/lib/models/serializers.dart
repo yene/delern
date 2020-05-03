@@ -23,9 +23,14 @@ class FirebaseDateTimeSerializer implements PrimitiveSerializer<DateTime> {
       dateTime.millisecondsSinceEpoch;
 
   @override
-  DateTime deserialize(Serializers serializers, Object serialized,
-          {FullType specifiedType = FullType.unspecified}) =>
-      DateTime.fromMillisecondsSinceEpoch(serialized);
+  DateTime deserialize(
+    Serializers serializers,
+    Object serialized, {
+    FullType specifiedType = FullType.unspecified,
+  }) =>
+      serialized is num
+          ? DateTime.fromMillisecondsSinceEpoch(serialized.toInt())
+          : null;
 }
 
 @SerializersFor([

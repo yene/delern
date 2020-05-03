@@ -39,8 +39,7 @@ void main() {
     for (final widget in tester.allWidgets) {
       if (widget is RichText) {
         richTextWidgetCount++;
-        final TextSpan span = widget.text;
-        final text = _extractTextFromTextSpan(span);
+        final text = widget.text.toPlainText();
         if (richTextWidgetCount == 4) {
           expect(text, equals(frontSide));
         } else if (richTextWidgetCount == 5) {
@@ -50,14 +49,4 @@ void main() {
     }
     expect(richTextWidgetCount, 5);
   });
-}
-
-String _extractTextFromTextSpan(TextSpan span) {
-  final textBuffer = StringBuffer(span.text ?? '');
-  if (span.children != null) {
-    for (final child in span.children) {
-      textBuffer.write(_extractTextFromTextSpan(child));
-    }
-  }
-  return textBuffer.toString();
 }

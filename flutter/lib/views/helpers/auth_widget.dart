@@ -73,10 +73,12 @@ class _AuthWidgetState extends State<AuthWidget> {
           onMessage: (message) {
             // TODO(dotdoom): show a snack bar if message['notification'] map
             //                has 'title' and 'body' values.
-            final Map<String, String> data = message['data'];
 
-            if (data != null && data['CONFIG_STATE'] == 'STALE') {
-              AppConfig.instance.remoteConfigIsStale = true;
+            final dynamic data = message['data'];
+            if (data is Map<String, String>) {
+              if (data['CONFIG_STATE'] == 'STALE') {
+                AppConfig.instance.remoteConfigIsStale = true;
+              }
             }
 
             return null;

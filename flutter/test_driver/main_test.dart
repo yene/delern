@@ -28,7 +28,11 @@ void main() {
       final card =
           await driver.getWidgetDiagnostics(find.byType('FlipCardWidget'));
 
-      final properties = List<Map<String, dynamic>>.from(card['properties']);
+      final properties = List<Map<String, dynamic>>.from(
+        // ignore: avoid_as
+        card['properties'] as Iterable<dynamic>,
+      );
+
       expect(
         properties.firstWhere((p) => p['name'] == 'front')['value'],
         front,

@@ -32,8 +32,10 @@ class CardPreview extends StatefulWidget {
 class _CardPreviewState extends State<CardPreview> {
   @override
   Widget build(BuildContext context) {
-    final Map<String, String> arguments =
-        ModalRoute.of(context).settings.arguments;
+    final arguments =
+        // https://github.com/dasfoo/delern/issues/1386
+        // ignore: avoid_as
+        ModalRoute.of(context).settings.arguments as Map<String, String>;
     final cardKey = arguments['cardKey'], deckKey = arguments['deckKey'];
     return ScreenBlocView<CardPreviewBloc>(
       blocBuilder: (user) {

@@ -22,35 +22,37 @@ class _ArrowToFloatingActionButtonState extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final RenderBox scaffoldBox = scaffoldContext.findRenderObject();
-    final RenderBox fabBox = fabKey.currentContext.findRenderObject();
-    final fabRect =
-        scaffoldBox.globalToLocal(fabBox.localToGlobal(Offset.zero)) &
-            fabBox.size;
-    final center = size.center(Offset.zero);
+    final scaffoldBox = scaffoldContext.findRenderObject();
+    final fabBox = fabKey.currentContext.findRenderObject();
+    if (scaffoldBox is RenderBox && fabBox is RenderBox) {
+      final fabRect =
+          scaffoldBox.globalToLocal(fabBox.localToGlobal(Offset.zero)) &
+              fabBox.size;
+      final center = size.center(Offset.zero);
 
-    final curve = Path()
-      ..moveTo(center.dx, center.dy + _margin)
-      ..cubicTo(
-          center.dx - _margin,
-          center.dy + _margin * 2,
-          _margin - center.dx,
-          (fabRect.center.dy - center.dy) * 2 / 3 + center.dy,
-          fabRect.centerLeft.dx - _margin,
-          fabRect.center.dy)
-      ..moveTo(fabRect.centerLeft.dx - _margin, fabRect.center.dy)
-      ..lineTo(
-          fabRect.centerLeft.dx - _margin * 2.5, fabRect.center.dy - _margin)
-      ..moveTo(fabRect.centerLeft.dx - _margin, fabRect.center.dy)
-      ..lineTo(fabRect.centerLeft.dx - _margin * 2.5,
-          fabRect.center.dy + _margin / 2);
+      final curve = Path()
+        ..moveTo(center.dx, center.dy + _margin)
+        ..cubicTo(
+            center.dx - _margin,
+            center.dy + _margin * 2,
+            _margin - center.dx,
+            (fabRect.center.dy - center.dy) * 2 / 3 + center.dy,
+            fabRect.centerLeft.dx - _margin,
+            fabRect.center.dy)
+        ..moveTo(fabRect.centerLeft.dx - _margin, fabRect.center.dy)
+        ..lineTo(
+            fabRect.centerLeft.dx - _margin * 2.5, fabRect.center.dy - _margin)
+        ..moveTo(fabRect.centerLeft.dx - _margin, fabRect.center.dy)
+        ..lineTo(fabRect.centerLeft.dx - _margin * 2.5,
+            fabRect.center.dy + _margin / 2);
 
-    canvas.drawPath(
-        curve,
-        Paint()
-          ..style = PaintingStyle.stroke
-          ..strokeWidth = 3.0
-          ..strokeCap = StrokeCap.round);
+      canvas.drawPath(
+          curve,
+          Paint()
+            ..style = PaintingStyle.stroke
+            ..strokeWidth = 3.0
+            ..strokeCap = StrokeCap.round);
+    }
   }
 
   @override

@@ -43,21 +43,10 @@ void main() {
 void _expectText(Iterable<Widget> widgets, String string) {
   for (final widget in widgets) {
     if (widget is RichText) {
-      final TextSpan span = widget.text;
-      final text = _extractTextFromTextSpan(span);
-      expect(text, equals(string));
-      // No need to iterate more after the RichText
-      break;
+      expect(widget.text.toPlainText(), equals(string));
+      // No need to iterate more after the RichText.
+      return;
     }
   }
-}
-
-String _extractTextFromTextSpan(TextSpan span) {
-  final textBuffer = StringBuffer(span.text ?? '');
-  if (span.children != null) {
-    for (final child in span.children) {
-      textBuffer.write(_extractTextFromTextSpan(child));
-    }
-  }
-  return textBuffer.toString();
+  throw AssertionError('Expected text "$string" not found!');
 }

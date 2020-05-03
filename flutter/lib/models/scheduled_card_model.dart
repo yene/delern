@@ -48,31 +48,6 @@ abstract class ScheduledCardModel
       _$ScheduledCardModel;
   ScheduledCardModel._();
 
-  static ScheduledCardModel fromSnapshot({
-    @required String key,
-    @required String deckKey,
-    @required Map value,
-  }) {
-    // Below is a hack to translate legacy values (i.e. strings starting with
-    // 'L') into something that BuiltValue understands.
-    var levelString = value['level'].toString();
-    if (levelString.startsWith('L')) {
-      levelString = levelString.substring(1);
-    }
-    try {
-      value['level'] = int.parse(levelString);
-    } on FormatException catch (e, stackTrace) {
-      error_reporting.report(e, stackTrace: stackTrace);
-      value['level'] = 0;
-    }
-
-    return serializers
-        .deserializeWith(ScheduledCardModel.serializer, value)
-        .rebuild((b) => b
-          ..deckKey = deckKey
-          ..key = key);
-  }
-
   /// A shuffling generator to mix cards in the future via repeatAt (or mix new
   /// reversed cards into the past).
   static final _shuffleRandom = Random();
@@ -130,6 +105,24 @@ class ScheduledCardModelListAccessor
             .child(deckKey));
 
   @override
-  ScheduledCardModel parseItem(String key, dynamic value) =>
-      ScheduledCardModel.fromSnapshot(key: key, deckKey: deckKey, value: value);
+  ScheduledCardModel parseItem(String key, dynamic value) {
+    // Below is a hack to translate legacy values (i.e. strings starting with
+    // 'L') into something that BuiltValue understands.
+    var levelString = value['level'].toString();
+    if (levelString.startsWith('L')) {
+      levelString = levelString.substring(1);
+    }
+    try {
+      value['level'] = int.parse(levelString);
+    } on FormatException catch (e, stackTrace) {
+      error_reporting.report(e, stackTrace: stackTrace);
+      value['level'] = 0;
+    }
+
+    return serializers
+        .deserializeWith(ScheduledCardModel.serializer, value)
+        .rebuild((b) => b
+          ..deckKey = deckKey
+          ..key = key);
+  }
 }

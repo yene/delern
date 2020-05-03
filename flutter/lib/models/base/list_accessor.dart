@@ -189,19 +189,22 @@ abstract class DataListAccessor<T extends KeyedListItem>
   }
 
   void _onListenError(dynamic error, StackTrace stackTrace) {
+    dynamic wrappedError = error;
     if (error is DatabaseError) {
       // Can't use throw because that would loose stackTrace that we have.
-      error = DatabaseReadException(
+      wrappedError = DatabaseReadException(
         underlyingError: error,
         path: _path,
       );
     }
+
     if (!_value.isClosed && _value.hasListener) {
-      _value.addError(error, stackTrace);
+      _value.addError(wrappedError, stackTrace);
     }
     if (!_events.isClosed && _events.hasListener) {
-      _events.addError(error, stackTrace);
+      _events.addError(wrappedError, stackTrace);
     }
+
     close();
   }
 

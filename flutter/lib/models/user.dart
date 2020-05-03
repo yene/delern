@@ -35,7 +35,7 @@ class User {
             .reference()
             .child('.info/connected')
             .onValue
-            .mapPerEvent((event) => event.snapshot.value)) {
+            .mapPerEvent((event) => event.snapshot.value == true)) {
     // Subscribe ourselves to online status immediately because we always want
     // to know the current value, and that requires at least 1 subscription for
     // StreamWithLatestValue.
@@ -350,7 +350,9 @@ class User {
 
     if (isOnline.value != true) {
       unawaited(updateFuture.catchError(
-          (dynamic error, dynamic stackTrace) => error_reporting.report(
+          // https://github.com/dart-lang/linter/issues/1099
+          // ignore: avoid_types_on_closure_parameters
+          (dynamic error, StackTrace stackTrace) => error_reporting.report(
                 error,
                 stackTrace: stackTrace,
                 extra: <String, dynamic>{'updates': updates, 'online': false},

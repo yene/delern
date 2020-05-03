@@ -1,4 +1,5 @@
 import 'package:built_collection/built_collection.dart';
+import 'package:delern_flutter/models/deck_model.dart';
 import 'package:delern_flutter/view_models/card_create_update_bloc.dart';
 import 'package:delern_flutter/views/base/screen_bloc_view.dart';
 import 'package:delern_flutter/views/card_create_update/card_side_input_widget.dart';
@@ -67,8 +68,8 @@ class _CardCreateUpdateState extends State<CardCreateUpdate> {
 
   @override
   Widget build(BuildContext context) {
-    final Map<String, String> arguments =
-        ModalRoute.of(context).settings.arguments;
+    final arguments = ModalRoute.of(context).settings.arguments
+        as Map<String, String>; // ignore: avoid_as
 
     return ScreenBlocView<CardCreateUpdateBloc>(
       blocBuilder: (user) {
@@ -98,7 +99,7 @@ class _CardCreateUpdateState extends State<CardCreateUpdate> {
   AppBar _buildAppBar(CardCreateUpdateBloc bloc) {
     void saveCard() => bloc.onSaveCard.add(null);
     return AppBar(
-      title: buildStreamBuilderWithValue(
+      title: buildStreamBuilderWithValue<DeckModel>(
         streamWithValue: bloc.deck,
         builder: (_, snapshot) => snapshot.hasData
             ? TextOverflowEllipsisWidget(

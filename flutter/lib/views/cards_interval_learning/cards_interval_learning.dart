@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:delern_flutter/models/base/clock.dart';
-import 'package:delern_flutter/models/base/list_accessor.dart';
 import 'package:delern_flutter/models/base/stream_with_value.dart';
 import 'package:delern_flutter/models/card_model.dart';
 import 'package:delern_flutter/models/deck_model.dart';
@@ -48,7 +47,7 @@ class CardsIntervalLearningState extends State<CardsIntervalLearning> {
   bool _learnBeyondHorizon = false;
 
   User _user;
-  DataListAccessorItem<DeckModel> _deck;
+  StreamWithValue<DeckModel> _deck;
 
   StreamWithValue<ScheduledCardModel> _nextScheduledCard;
   final _currentCard = ValueNotifier<CardModel>(null);
@@ -66,8 +65,10 @@ class CardsIntervalLearningState extends State<CardsIntervalLearning> {
       _user = user;
       _answers?.close();
 
-      final Map<String, String> arguments =
-          ModalRoute.of(context).settings.arguments;
+      final arguments =
+          // https://github.com/dasfoo/delern/issues/1386
+          // ignore: avoid_as
+          ModalRoute.of(context).settings.arguments as Map<String, String>;
       _deck = _user.decks.getItem(arguments['deckKey']);
 
       // Start sync in background (to add new cards).

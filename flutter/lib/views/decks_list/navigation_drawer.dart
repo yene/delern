@@ -129,6 +129,13 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
   Widget build(BuildContext context) {
     final user = CurrentUserWidget.of(context).user;
 
+    ImageProvider<dynamic> backgroundImage;
+    if (user.photoUrl == null) {
+      backgroundImage = const AssetImage('images/anonymous.jpg');
+    } else {
+      backgroundImage = NetworkImage(user.photoUrl);
+    }
+
     final accountName = user.displayName ?? context.l.anonymous;
 
     return Drawer(
@@ -149,9 +156,7 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
                     ],
                   )),
               currentAccountPicture: CircleAvatar(
-                backgroundImage: user.photoUrl == null
-                    ? const AssetImage('images/anonymous.jpg')
-                    : NetworkImage(user.photoUrl),
+                backgroundImage: backgroundImage,
               ),
             ),
             ...?_buildUserButtons(user),

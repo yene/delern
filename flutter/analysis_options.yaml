@@ -16,12 +16,11 @@ analyzer:
   strong-mode:
     implicit-dynamic: false
     implicit-casts: false
-  #language:
-  # TODO(dotdoom): consider enabling these features.
-  #  # https://github.com/dart-lang/language/blob/master/resources/type-system/strict-inference.md
-  #  strict-inference: true
-  #  # https://github.com/dart-lang/language/blob/master/resources/type-system/strict-raw-types.md
-  #  strict-raw-types: true
+  language:
+    # https://github.com/dart-lang/language/blob/master/resources/type-system/strict-inference.md
+    strict-inference: true
+    # https://github.com/dart-lang/language/blob/master/resources/type-system/strict-raw-types.md
+    strict-raw-types: true
   #enable-experiment:
   #  # TODO(dotdoom): enable via https://stackoverflow.com/questions/57934341/.
   #  - non-nullable

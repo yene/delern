@@ -29,7 +29,8 @@ class AuthWidget extends StatefulWidget {
 class _AuthWidgetState extends State<AuthWidget> {
   User _currentUser = Auth.instance.currentUser;
 
-  StreamSubscription _fcmSubscription, _userChangedSubscription;
+  StreamSubscription<String> _fcmSubscription;
+  StreamSubscription<User> _userChangedSubscription;
 
   @override
   void initState() {

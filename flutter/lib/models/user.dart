@@ -23,7 +23,7 @@ import 'package:uuid/uuid.dart';
 /// An abstraction layer on top of FirebaseUser, plus data writing methods.
 class User {
   FirebaseUser _dataSource;
-  StreamSubscription _onlineSubscription;
+  StreamSubscription<bool> _onlineSubscription;
 
   final StreamWithValue<bool> isOnline;
   final DataListAccessor<DeckModel> decks;

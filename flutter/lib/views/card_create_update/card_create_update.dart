@@ -228,12 +228,12 @@ class DisplayImageListWidget extends StatelessWidget {
   final Stream<BuiltList<String>> _addImageStream;
   final Stream<bool> _showImagePlaceholderStream;
   final Sink<int> _deleteImageSink;
-  final Function() _onDeleted;
+  final void Function() _onDeleted;
 
   const DisplayImageListWidget({
     @required Stream<BuiltList<String>> addImageStream,
     @required Sink<int> deleteImageSink,
-    @required Function() onDeleted,
+    @required void Function() onDeleted,
     @required Stream<bool> showImagePlaceholderStream,
   })  : _addImageStream = addImageStream,
         _deleteImageSink = deleteImageSink,

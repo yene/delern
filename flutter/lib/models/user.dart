@@ -8,7 +8,7 @@ import 'package:delern_flutter/models/card_model.dart';
 import 'package:delern_flutter/models/card_reply_model.dart';
 import 'package:delern_flutter/models/deck_access_model.dart';
 import 'package:delern_flutter/models/deck_model.dart';
-import 'package:delern_flutter/models/fcm.dart';
+import 'package:delern_flutter/models/fcm_model.dart';
 import 'package:delern_flutter/models/scheduled_card_model.dart';
 import 'package:delern_flutter/remote/error_reporting.dart' as error_reporting;
 import 'package:firebase_auth/firebase_auth.dart';
@@ -297,7 +297,7 @@ class User {
     return _write(updates);
   }
 
-  Future<void> addFCM({@required FCM fcm}) => _write(<String, dynamic>{
+  Future<void> addFCM({@required FCMModel fcm}) => _write(<String, dynamic>{
         'fcm/$uid/${fcm.key}': {
           'name': fcm.name,
           'language': fcm.language,

@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:delern_flutter/models/fcm.dart';
+import 'package:delern_flutter/models/fcm_model.dart';
 import 'package:delern_flutter/models/user.dart';
 import 'package:delern_flutter/remote/app_config.dart';
 import 'package:delern_flutter/remote/auth.dart';
@@ -43,7 +43,7 @@ class _AuthWidgetState extends State<AuthWidget> {
 
       unawaited(FirebaseMessaging().subscribeToTopic('PUSH_RC'));
 
-      final fcm = (FCMBuilder()
+      final fcm = (FCMModelBuilder()
             ..language = Localizations.localeOf(context).toString()
             ..name = (await DeviceInfo.getDeviceInfo()).userFriendlyName
             ..key = token)

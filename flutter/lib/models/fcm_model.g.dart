@@ -1,12 +1,12 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'fcm.dart';
+part of 'fcm_model.dart';
 
 // **************************************************************************
 // BuiltValueGenerator
 // **************************************************************************
 
-class _$FCM extends FCM {
+class _$FCMModel extends FCMModel {
   @override
   final String key;
   @override
@@ -14,32 +14,32 @@ class _$FCM extends FCM {
   @override
   final String language;
 
-  factory _$FCM([void Function(FCMBuilder) updates]) =>
-      (new FCMBuilder()..update(updates)).build();
+  factory _$FCMModel([void Function(FCMModelBuilder) updates]) =>
+      (new FCMModelBuilder()..update(updates)).build();
 
-  _$FCM._({this.key, this.name, this.language}) : super._() {
+  _$FCMModel._({this.key, this.name, this.language}) : super._() {
     if (key == null) {
-      throw new BuiltValueNullFieldError('FCM', 'key');
+      throw new BuiltValueNullFieldError('FCMModel', 'key');
     }
     if (name == null) {
-      throw new BuiltValueNullFieldError('FCM', 'name');
+      throw new BuiltValueNullFieldError('FCMModel', 'name');
     }
     if (language == null) {
-      throw new BuiltValueNullFieldError('FCM', 'language');
+      throw new BuiltValueNullFieldError('FCMModel', 'language');
     }
   }
 
   @override
-  FCM rebuild(void Function(FCMBuilder) updates) =>
+  FCMModel rebuild(void Function(FCMModelBuilder) updates) =>
       (toBuilder()..update(updates)).build();
 
   @override
-  FCMBuilder toBuilder() => new FCMBuilder()..replace(this);
+  FCMModelBuilder toBuilder() => new FCMModelBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
-    return other is FCM &&
+    return other is FCMModel &&
         key == other.key &&
         name == other.name &&
         language == other.language;
@@ -53,7 +53,7 @@ class _$FCM extends FCM {
 
   @override
   String toString() {
-    return (newBuiltValueToStringHelper('FCM')
+    return (newBuiltValueToStringHelper('FCMModel')
           ..add('key', key)
           ..add('name', name)
           ..add('language', language))
@@ -61,8 +61,8 @@ class _$FCM extends FCM {
   }
 }
 
-class FCMBuilder implements Builder<FCM, FCMBuilder> {
-  _$FCM _$v;
+class FCMModelBuilder implements Builder<FCMModel, FCMModelBuilder> {
+  _$FCMModel _$v;
 
   String _key;
   String get key => _$this._key;
@@ -76,9 +76,9 @@ class FCMBuilder implements Builder<FCM, FCMBuilder> {
   String get language => _$this._language;
   set language(String language) => _$this._language = language;
 
-  FCMBuilder();
+  FCMModelBuilder();
 
-  FCMBuilder get _$this {
+  FCMModelBuilder get _$this {
     if (_$v != null) {
       _key = _$v.key;
       _name = _$v.name;
@@ -89,22 +89,22 @@ class FCMBuilder implements Builder<FCM, FCMBuilder> {
   }
 
   @override
-  void replace(FCM other) {
+  void replace(FCMModel other) {
     if (other == null) {
       throw new ArgumentError.notNull('other');
     }
-    _$v = other as _$FCM;
+    _$v = other as _$FCMModel;
   }
 
   @override
-  void update(void Function(FCMBuilder) updates) {
+  void update(void Function(FCMModelBuilder) updates) {
     if (updates != null) updates(this);
   }
 
   @override
-  _$FCM build() {
+  _$FCMModel build() {
     final _$result =
-        _$v ?? new _$FCM._(key: key, name: name, language: language);
+        _$v ?? new _$FCMModel._(key: key, name: name, language: language);
     replace(_$result);
     return _$result;
   }

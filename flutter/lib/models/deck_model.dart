@@ -54,13 +54,18 @@ abstract class DeckModel
   DateTime get lastSyncAt;
   @nullable
   String get category;
+
   @nullable
+  @BuiltValueField(compare: false, serialize: false)
   DataListAccessor<CardModel> get cards;
   @nullable
+  @BuiltValueField(compare: false, serialize: false)
   DataListAccessor<ScheduledCardModel> get scheduledCards;
   @nullable
+  @BuiltValueField(compare: false, serialize: false)
   _ScheduledCardsDueCounter get numberOfCardsDue;
   @nullable
+  @BuiltValueField(compare: false, serialize: false)
   DataListAccessor<DeckAccessModel> get usersAccess;
 
   static Serializer<DeckModel> get serializer => _$deckModelSerializer;

@@ -113,33 +113,6 @@ class _$DeckModelSerializer implements StructuredSerializer<DeckModel> {
         ..add(serializers.serialize(object.category,
             specifiedType: const FullType(String)));
     }
-    if (object.cards != null) {
-      result
-        ..add('cards')
-        ..add(serializers.serialize(object.cards,
-            specifiedType: const FullType(
-                DataListAccessor, const [const FullType(CardModel)])));
-    }
-    if (object.scheduledCards != null) {
-      result
-        ..add('scheduledCards')
-        ..add(serializers.serialize(object.scheduledCards,
-            specifiedType: const FullType(
-                DataListAccessor, const [const FullType(ScheduledCardModel)])));
-    }
-    if (object.numberOfCardsDue != null) {
-      result
-        ..add('numberOfCardsDue')
-        ..add(serializers.serialize(object.numberOfCardsDue,
-            specifiedType: const FullType(_ScheduledCardsDueCounter)));
-    }
-    if (object.usersAccess != null) {
-      result
-        ..add('usersAccess')
-        ..add(serializers.serialize(object.usersAccess,
-            specifiedType: const FullType(
-                DataListAccessor, const [const FullType(DeckAccessModel)])));
-    }
     return result;
   }
 
@@ -185,29 +158,6 @@ class _$DeckModelSerializer implements StructuredSerializer<DeckModel> {
         case 'category':
           result.category = serializers.deserialize(value,
               specifiedType: const FullType(String)) as String;
-          break;
-        case 'cards':
-          result.cards = serializers.deserialize(value,
-                  specifiedType: const FullType(
-                      DataListAccessor, const [const FullType(CardModel)]))
-              as DataListAccessor<CardModel>;
-          break;
-        case 'scheduledCards':
-          result.scheduledCards = serializers.deserialize(value,
-              specifiedType: const FullType(DataListAccessor, const [
-                const FullType(ScheduledCardModel)
-              ])) as DataListAccessor<ScheduledCardModel>;
-          break;
-        case 'numberOfCardsDue':
-          result.numberOfCardsDue = serializers.deserialize(value,
-                  specifiedType: const FullType(_ScheduledCardsDueCounter))
-              as _ScheduledCardsDueCounter;
-          break;
-        case 'usersAccess':
-          result.usersAccess = serializers.deserialize(value,
-              specifiedType: const FullType(DataListAccessor, const [
-                const FullType(DeckAccessModel)
-              ])) as DataListAccessor<DeckAccessModel>;
           break;
       }
     }
@@ -285,11 +235,7 @@ class _$DeckModel extends DeckModel {
         accepted == other.accepted &&
         access == other.access &&
         lastSyncAt == other.lastSyncAt &&
-        category == other.category &&
-        cards == other.cards &&
-        scheduledCards == other.scheduledCards &&
-        numberOfCardsDue == other.numberOfCardsDue &&
-        usersAccess == other.usersAccess;
+        category == other.category;
   }
 
   @override
@@ -299,23 +245,13 @@ class _$DeckModel extends DeckModel {
             $jc(
                 $jc(
                     $jc(
-                        $jc(
-                            $jc(
-                                $jc(
-                                    $jc(
-                                        $jc(
-                                            $jc($jc(0, key.hashCode),
-                                                name.hashCode),
-                                            markdown.hashCode),
-                                        type.hashCode),
-                                    accepted.hashCode),
-                                access.hashCode),
-                            lastSyncAt.hashCode),
-                        category.hashCode),
-                    cards.hashCode),
-                scheduledCards.hashCode),
-            numberOfCardsDue.hashCode),
-        usersAccess.hashCode));
+                        $jc($jc($jc(0, key.hashCode), name.hashCode),
+                            markdown.hashCode),
+                        type.hashCode),
+                    accepted.hashCode),
+                access.hashCode),
+            lastSyncAt.hashCode),
+        category.hashCode));
   }
 
   @override

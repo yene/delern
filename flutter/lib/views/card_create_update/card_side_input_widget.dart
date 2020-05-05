@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:delern_flutter/remote/app_config.dart';
 import 'package:delern_flutter/views/card_create_update/pick_image_menu_widget.dart';
 import 'package:delern_flutter/views/helpers/localization.dart';
 import 'package:delern_flutter/views/helpers/styles.dart' as app_styles;
@@ -44,44 +45,45 @@ class CardSideInputWidget extends StatelessWidget {
                     style: app_styles.primaryText
                         .copyWith(fontWeight: FontWeight.w700),
                   ),
-                  IconButton(
-                    icon: Icon(
-                      Icons.camera_alt,
-                      size: app_styles.kImageMenuButtonSize,
-                      semanticLabel: context.l.accessibilityAddImageLabel,
+                  if (AppConfig.instance.imageFeatureEnabled)
+                    IconButton(
+                      icon: Icon(
+                        Icons.camera_alt,
+                        size: app_styles.kImageMenuButtonSize,
+                        semanticLabel: context.l.accessibilityAddImageLabel,
+                      ),
+                      onPressed: () {
+                        hideTextInput();
+                        showBottomSheet<void>(
+                          context: context,
+                          builder: (context) => Padding(
+                            padding: const EdgeInsets.all(24),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: <Widget>[
+                                PickImageMenuWidget(
+                                  onImageSelected: (file) {
+                                    onImageSelected(file);
+                                    // Close BottomSheet
+                                    Navigator.pop(context);
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                          backgroundColor: app_styles.kBottomSheetColor,
+                          elevation: app_styles.kBottomSheetElevation,
+                          shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.only(
+                              topRight: Radius.circular(
+                                  app_styles.kBottomSheetBorderRadius),
+                              topLeft: Radius.circular(
+                                  app_styles.kBottomSheetBorderRadius),
+                            ),
+                          ),
+                        );
+                      },
                     ),
-                    onPressed: () {
-                      hideTextInput();
-                      showBottomSheet<void>(
-                        context: context,
-                        builder: (context) => Padding(
-                          padding: const EdgeInsets.all(24),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: <Widget>[
-                              PickImageMenuWidget(
-                                onImageSelected: (file) {
-                                  onImageSelected(file);
-                                  // Close BottomSheet
-                                  Navigator.pop(context);
-                                },
-                              ),
-                            ],
-                          ),
-                        ),
-                        backgroundColor: app_styles.kBottomSheetColor,
-                        elevation: app_styles.kBottomSheetElevation,
-                        shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.only(
-                            topRight: Radius.circular(
-                                app_styles.kBottomSheetBorderRadius),
-                            topLeft: Radius.circular(
-                                app_styles.kBottomSheetBorderRadius),
-                          ),
-                        ),
-                      );
-                    },
-                  ),
                 ],
               ),
               TextField(

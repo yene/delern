@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:delern_flutter/remote/app_config.dart';
 import 'package:delern_flutter/views/card_create_update/card_create_update.dart';
 import 'package:delern_flutter/views/card_preview/card_preview.dart';
@@ -15,7 +13,6 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_sentry/flutter_sentry.dart';
-import 'package:pedantic/pedantic.dart';
 
 class App extends StatelessWidget {
   static final _analyticsNavigatorObserver =
@@ -40,8 +37,7 @@ class App extends StatelessWidget {
       ],
       navigatorObservers: [
         _analyticsNavigatorObserver,
-        FlutterSentryNavigatorObserver(
-            breadcrumbs: FlutterSentry.instance.breadcrumbs),
+        FlutterSentryNavigatorObserver(),
       ],
       title: title,
       // SignInWidget must be above Navigator to provide CurrentUserWidget.of().
@@ -62,10 +58,10 @@ class App extends StatelessWidget {
   }
 }
 
-Future<void> main() => FlutterSentry.wrap(
-      () async {
-        unawaited(FirebaseDatabase.instance.setPersistenceEnabled(true));
-        unawaited(FirebaseAnalytics().logAppOpen());
+void main() => FlutterSentry.wrap(
+      () {
+        FirebaseDatabase.instance.setPersistenceEnabled(true);
+        FirebaseAnalytics().logAppOpen();
         AppConfig.instance;
         runApp(App());
       },

@@ -48,13 +48,19 @@ abstract class ScreenBloc {
   /// Call to inform the user that an error has occured. Report the error via
   /// error_reporting separately, if needed.
   @protected
-  void notifyErrorOccurred(dynamic e) => _doShowErrorController
-      .add(UserMessages.formUserFriendlyErrorMessage(locale, e));
+  void notifyErrorOccurred(dynamic e) {
+    if (!_doShowErrorController.isClosed) {
+      _doShowErrorController
+          .add(UserMessages.formUserFriendlyErrorMessage(locale, e));
+    }
+  }
 
   /// Call to show message to user
   @protected
   void showMessage(String message) {
-    _doShowMessageController.add(message);
+    if (!_doShowMessageController.isClosed) {
+      _doShowMessageController.add(message);
+    }
   }
 
   /// Method that checks whether it is ok to close the screen.
@@ -66,7 +72,9 @@ abstract class ScreenBloc {
   /// Internal method that called by BLoC when screen must be closed
   @protected
   void notifyPop() {
-    _doPopController.add(null);
+    if (!_doPopController.isClosed) {
+      _doPopController.add(null);
+    }
   }
 
   /// Method releases resources

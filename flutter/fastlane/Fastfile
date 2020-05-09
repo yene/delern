@@ -1,5 +1,6 @@
 fastlane_require 'fileutils'
 
+APP_IDENTIFIER = 'org.dasfoo.delern'
 default_platform(:android)
 
 module SharedValues
@@ -178,6 +179,7 @@ platform :android do
       supply(
         track: lane_context[SharedValues::PROMOTE_RELEASE] ? 'alpha'
                                                            : 'internal',
+        package_name: APP_IDENTIFIER,
         aab: aab,
       )
     end
@@ -203,11 +205,9 @@ platform :ios do
     # no effect outside CI.
     setup_travis
 
-    app_identifier = 'org.dasfoo.delern'
-
     match(
       type: 'appstore',
-      app_identifier: app_identifier,
+      app_identifier: APP_IDENTIFIER,
     )
     FileUtils.cp(
       'debug-project/org.dasfoo.delern',
@@ -244,7 +244,7 @@ platform :ios do
           UI.error("upload + distribute failed: #{e}, retrying distribute")
           config.merge!({
             ipa: File.expand_path(lane_context[SharedValues::IPA_OUTPUT_PATH]),
-            app_identifier: app_identifier,
+            app_identifier: APP_IDENTIFIER,
           })
           fastlane_require 'pilot'
           Pilot::BuildManager.new.distribute(config)
@@ -257,7 +257,7 @@ platform :ios do
       if lane_context[SharedValues::PROMOTE_RELEASE]
         retry_on_exception do
           upload_to_app_store(
-            app_identifier: app_identifier,
+            app_identifier: APP_IDENTIFIER,
             overwrite_screenshots: true,
             submit_for_review: true,
             submission_information: {

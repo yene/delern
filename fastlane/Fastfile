@@ -5,38 +5,13 @@ end
 lane :update_analysis_options do
   # TODO(dotdoom): move into fastlane-flutter plugin.
 
-  # Dragons ahead!
-  # This is a terrible hack using some fragile assumptions, but this is a
-  # concious decision which keeps the application build reliable.
-
-  # Extract Dart build commit hash (assuming it's present) from a string like
-  # "Dart 2.8.0 (build 2.8.0-dev.5.0 fc3af737c7)".
-  unless flutter(args: %w(--version), capture_stdout: true)
-    .lines
-    .grep(/Dart/)
-    .first =~ /[(]build .* (.*)[)]/
-    UI.abort_with_message!('Unable to parse "flutter --version" output.')
-  end
-  pinned_sdk_deps = "https://raw.githubusercontent.com/dart-lang/sdk/#$1/DEPS"
-
-  # Extract linter version from a file which has something like
-  #   "linter_tag": "0.1.7",
-  fastlane_require 'open-uri'
-  linter_version = open(pinned_sdk_deps)
-    .lines
-    .grep(/"linter_tag":/)
-    .first
-    .split('"')[3]
-  # Make an assumption that a linter version is also a tag in its GitHub repo.
-  # TODO(dotdoom): speculate less here and actually use "flutter pub pub get".
-  linter_root_uri =
-    "https://raw.githubusercontent.com/dart-lang/linter/#{linter_version}"
-
   File.write(
     '../flutter/analysis_options.autogen.yaml',
     <<-YAML)
 include: package:flutter/analysis_options_user.yaml
-#{open("#{linter_root_uri}/example/all.yaml").read}
+#{open(
+  'https://raw.githubusercontent.com/dart-lang/linter/master/example/all.yaml'
+).read}
   YAML
 end
 

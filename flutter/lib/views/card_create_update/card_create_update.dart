@@ -1,5 +1,6 @@
 import 'package:built_collection/built_collection.dart';
 import 'package:delern_flutter/models/deck_model.dart';
+import 'package:delern_flutter/remote/analytics.dart';
 import 'package:delern_flutter/view_models/card_create_update_bloc.dart';
 import 'package:delern_flutter/views/base/screen_bloc_view.dart';
 import 'package:delern_flutter/views/card_create_update/card_side_input_widget.dart';
@@ -146,6 +147,7 @@ class _CardCreateUpdateState extends State<CardCreateUpdate> {
         onImageSelected: (file) {
           bloc.onFrontImageAdded.add(file);
           _isChanged = true;
+          logAddImageToCard(isFrontSide: true);
         },
         imageList: DisplayImageListWidget(
           addImageStream: bloc.doFrontImageAdded,
@@ -171,6 +173,7 @@ class _CardCreateUpdateState extends State<CardCreateUpdate> {
         onImageSelected: (file) {
           bloc.onBackImageAdded.add(file);
           _isChanged = true;
+          logAddImageToCard(isFrontSide: false);
         },
         imageList: DisplayImageListWidget(
           addImageStream: bloc.doBackImageAdded,

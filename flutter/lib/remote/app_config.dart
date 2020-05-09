@@ -15,7 +15,7 @@ class AppConfig {
 
   /// Remote Config: whether enable or disable images uploading feature.
   bool get imageFeatureEnabled =>
-      _remoteValueOrNull('images_feature_enabled')?.asBool() ?? true;
+      _remoteValueOrNull('images_feature_enabled')?.asBool() ?? false;
 
   /// Remote Config: whether enable or disable sharing decks with other users.
   bool get sharingFeatureEnabled =>

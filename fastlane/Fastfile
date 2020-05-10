@@ -1,3 +1,5 @@
+fastlane_require 'fileutils'
+
 lane :ensure_clean_git do
   ensure_git_status_clean(show_diff: true)
 end
@@ -41,7 +43,9 @@ lane :update do
       end
     end
     npm_update = proc do
-      sh %w(npm update)
+      FileUtils.rm_rf('node_modules')
+      sh %w(npm install)
+      sh %w(npm update --dev)
       sh %w(npm audit fix)
       # And autofix any lint errors.
       sh %w(npm run fix)

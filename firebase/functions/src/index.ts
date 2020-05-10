@@ -105,13 +105,14 @@ export const userLookup = functions.https.onRequest((req, res) =>
     // TODO(dotdoom): check auth, e.g.:
     // https://github.com/firebase/functions-samples/tree/master/authorized-https-endpoint
 
-    if (!req.query.q) {
+    const q = req.query.q;
+    if (typeof q !== 'string') {
       res.status(400).end();
       return;
     }
 
     try {
-      res.send((await admin.auth().getUserByEmail(req.query.q)).uid);
+      res.send((await admin.auth().getUserByEmail(q)).uid);
     } catch (error) {
       // TODO(dotdoom): getUserByPhoneNumber.
       res.status(404).end();

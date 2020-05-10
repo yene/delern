@@ -29,12 +29,9 @@ jobs:
           gem install bundler --no-doc
           bundle install
           bundle console <<<RUBY_VERSION
-      - name: "Build Flutter app to install Pods"
+      - name: "Install artifacts so that Flutter app can be built (for Pods)"
         working-directory: flutter
-        run: |
-          bundle exec fastlane install_dependencies
-          bundle exec fastlane install_debug_keys
-          bundle exec fastlane ios build
+        run: bundle exec fastlane install_debug_keys
       - name: "Fastlane Update"
         run: bundle exec fastlane update
       - name: "Check for changes and create/update PR"

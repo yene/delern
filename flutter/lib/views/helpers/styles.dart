@@ -9,14 +9,16 @@ final kIconColor = Colors.grey[600];
 const kSecondaryTextDeckItemColor = Color(0xff757575);
 const kEditDismissibleColor = Color(0xFF2196F3);
 const kDeleteDismissibleColor = Color(0xFFFF5252);
-const kHyperlinkColor = Colors.blueAccent;
-// "Facebook brand blue" color per instructions at
-// https://developers.facebook.com/docs/facebook-login/for-devices
-const kFacebookBlueColor = Color(0xFF1877F2);
+const kHyperlinkColor = Color(0xFF2196F3);
 const kDeckItemColor = Colors.white;
 const kCurrentDeckTypeColor = Colors.grey;
 final kGeneralDeckTypeColor = Colors.grey[200];
 final kBottomSheetColor = Colors.blueGrey[50];
+
+const kFacebookBlueColor = Color(0xFF4267B2);
+const kSignInSectionSeparationColor = Color(0xFFC1C0C0);
+const kGoogleSignInButtonColor = Color(0xFF4285F4);
+const kSignInTextColor = Color(0xFF1A1A1A);
 
 const double kMinItemHeight = 48;
 const double kMinIconHeight = 24;
@@ -102,4 +104,11 @@ final TextStyle editDeckText = TextStyle(
   fontSize: 24,
   fontWeight: FontWeight.w400,
   color: Colors.grey[900],
+);
+
+const TextStyle signInTextButton = TextStyle(
+  fontSize: 20,
+  fontFamily: 'Roboto Medium',
+  color: Colors.white,
+  fontWeight: FontWeight.bold,
 );

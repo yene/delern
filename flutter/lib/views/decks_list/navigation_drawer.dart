@@ -175,7 +175,7 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
         break;
       case FacebookAuthProvider.providerId:
         backgroundColor = app_styles.kFacebookBlueColor;
-        providerImageAsset = 'images/facebook_sign_in.png';
+        providerImageAsset = 'images/facebook_sign_in.webp';
         break;
       default:
         unawaited(error_reporting.report('Unknown provider: $provider'));

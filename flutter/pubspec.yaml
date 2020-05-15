@@ -57,7 +57,7 @@ dev_dependencies:
   mockito: ^3.0.0
   pedantic: ^1.0.0
   build_runner: ^1.10.0
-  built_value_generator: ^7.1.0
+  built_value_generator: any
   test: ^1.15.2
 
 dependency_overrides:
@@ -69,18 +69,4 @@ flutter:
   uses-material-design: true
 
   assets:
-    # Onboarding.
-    - images/card_sharing.png
-    - images/child_learning.png
-    - images/deck_creation.png
-
-    # Icons for Sign In buttons and Navigation Drawer.
-    - images/anonymous.jpg
-    - images/google_sign_in.png
-    - images/facebook_sign_in.png
-
-    # Image for login screen
-    - images/delern_with_logo.png
-
-    # Logo to display in e.g. About dialog.
-    - images/ic_launcher.png
+    - images/

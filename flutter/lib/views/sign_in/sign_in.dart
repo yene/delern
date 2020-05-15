@@ -1,3 +1,4 @@
+import 'package:delern_flutter/remote/analytics.dart';
 import 'package:delern_flutter/views/helpers/legal.dart';
 import 'package:delern_flutter/views/helpers/localization.dart';
 import 'package:delern_flutter/views/helpers/styles.dart' as app_styles;
@@ -7,10 +8,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
+const _kDivider = Divider(
+  height: 2,
+  color: app_styles.kSignInSectionSeparationColor,
+);
+
 /// A screen with sign in information and buttons.
 class SignIn extends StatelessWidget {
   static const routeName = '/signIn';
-  static const _kBorderPadding = 15.0;
   static const _kHeightBetweenWidgets = SizedBox(height: 8);
 
   const SignIn() : super();
@@ -32,15 +37,9 @@ class SignIn extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                vertical: 30,
-                horizontal: _kBorderPadding,
-              ),
-              child: Image.asset(
-                'images/delern_with_logo.png',
-                width: width,
-              ),
+            Image.asset(
+              'images/delern_with_logo.png',
+              width: width,
             ),
           ],
         ),
@@ -59,64 +58,105 @@ class SignIn extends StatelessWidget {
             constraints: BoxConstraints(
               minHeight: viewportConstraints.maxHeight,
             ),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: _kBorderPadding),
+            child: IntrinsicHeight(
               child: Column(
                 mainAxisSize: MainAxisSize.max,
                 // We put two Column widgets inside one with spaceBetween so
                 // that any space unoccupied by the two is in between them.
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: _kBorderPadding),
-                        child: Text(
-                          context.l.signInWithLabel.toUpperCase(),
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w700,
+                  Expanded(
+                    flex: 6,
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(
+                          horizontal:
+                              MediaQuery.of(context).size.shortestSide * 0.1),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Expanded(
+                            child: Center(
+                              child: Text(
+                                context.l.signInWithLabel.toUpperCase(),
+                                textAlign: TextAlign.center,
+                                style: Theme.of(context).textTheme.headline6,
+                              ),
+                            ),
                           ),
+                          GoogleSignInButton(
+                            onPressed: () {
+                              logLoginEvent(GoogleAuthProvider.providerId);
+                              signInWithProvider(
+                                  context: context,
+                                  provider: GoogleAuthProvider.providerId);
+                            },
+                          ),
+                          _kHeightBetweenWidgets,
+                          FacebookSignInButton(
+                            onPressed: () {
+                              logLoginEvent(FacebookAuthProvider.providerId);
+                              signInWithProvider(
+                                  context: context,
+                                  provider: FacebookAuthProvider.providerId);
+                            },
+                          ),
+                          _kHeightBetweenWidgets,
+                        ],
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    flex: 4,
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(
+                          horizontal:
+                              MediaQuery.of(context).size.shortestSide * 0.1),
+                      child: Center(
+                        child: Text(
+                          context.l.splashScreenFeatures,
+                          style: app_styles.secondaryText
+                              .copyWith(color: app_styles.kSignInTextColor),
+                          textAlign: TextAlign.center,
                         ),
                       ),
-                      const SignInButton(
-                          providerId: GoogleAuthProvider.providerId),
-                      _kHeightBetweenWidgets,
-                      const SignInButton(
-                          providerId: FacebookAuthProvider.providerId),
-                      _kHeightBetweenWidgets,
-                      Text(
-                        context.l.splashScreenFeatures,
-                        style: app_styles.secondaryText,
-                        textAlign: TextAlign.center,
-                      ),
-                      _kHeightBetweenWidgets,
-                    ],
+                    ),
                   ),
                   Column(
                     children: [
+                      _kHeightBetweenWidgets,
                       Row(
                         children: <Widget>[
-                          const Expanded(child: Divider()),
+                          const Expanded(child: _kDivider),
                           Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: _kBorderPadding),
+                            padding: const EdgeInsets.symmetric(horizontal: 15),
                             child: Text(
                               context.l.signInScreenOr.toUpperCase(),
-                              style: app_styles.secondaryText,
+                              style: app_styles.secondaryText.copyWith(
+                                  color:
+                                      app_styles.kSignInSectionSeparationColor),
                               textAlign: TextAlign.center,
                             ),
                           ),
-                          const Expanded(child: Divider()),
+                          const Expanded(child: _kDivider),
                         ],
                       ),
                       _kHeightBetweenWidgets,
-                      const SignInButton(providerId: null),
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                            horizontal:
+                                MediaQuery.of(context).size.shortestSide * 0.1),
+                        child: AnonymousSighInButton(
+                          onPressed: () {
+                            signInWithProvider(
+                                context: context, provider: null);
+                          },
+                        ),
+                      ),
                       _kHeightBetweenWidgets,
                       _buildLegalInfo(context),
-                      _kHeightBetweenWidgets,
+                      const SafeArea(
+                        child: _kHeightBetweenWidgets,
+                      ),
                     ],
                   ),
                 ],
@@ -128,36 +168,54 @@ class SignIn extends StatelessWidget {
 
   Widget _buildPortraitSignInScreen(BuildContext context) => Column(
         children: <Widget>[
-          _buildLogoPicture(context, MediaQuery.of(context).size.width / 2),
-          const Divider(),
-          Expanded(child: _buildSignInControls(context)),
+          Expanded(
+            flex: 2,
+            child: _buildLogoPicture(
+              context,
+              MediaQuery.of(context).size.width / 2,
+            ),
+          ),
+          _kDivider,
+          Expanded(
+            flex: 8,
+            child: _buildSignInControls(context),
+          ),
         ],
       );
 
   Widget _buildLandscapeSignInScreen(BuildContext context) => Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          _buildLogoPicture(context, MediaQuery.of(context).size.width / 3),
+          Padding(
+              padding: EdgeInsets.symmetric(
+                  horizontal: MediaQuery.of(context).size.shortestSide * 0.05),
+              child: _buildLogoPicture(
+                  context, MediaQuery.of(context).size.width / 3)),
           Expanded(child: _buildSignInControls(context)),
         ],
       );
 
-  Widget _buildLegalInfo(BuildContext context) => RichText(
-        textAlign: TextAlign.center,
-        text: TextSpan(
-          style: app_styles.secondaryText,
-          children: <TextSpan>[
-            TextSpan(text: context.l.legacyAcceptanceLabel),
-            _buildLegalUrl(
-                context: context,
-                url: kPrivacyPolicy,
-                text: context.l.privacyPolicySignIn),
-            TextSpan(text: context.l.legacyPartsConnector),
-            _buildLegalUrl(
-                context: context,
-                url: kTermsOfService,
-                text: context.l.termsOfServiceSignIn),
-          ],
+  Widget _buildLegalInfo(BuildContext context) => Padding(
+        padding: EdgeInsets.symmetric(
+            horizontal: MediaQuery.of(context).size.shortestSide * 0.1),
+        child: RichText(
+          textAlign: TextAlign.center,
+          text: TextSpan(
+            style: app_styles.secondaryText
+                .copyWith(color: app_styles.kSignInTextColor),
+            children: <TextSpan>[
+              TextSpan(text: context.l.legacyAcceptanceLabel),
+              _buildLegalUrl(
+                  context: context,
+                  url: kPrivacyPolicy,
+                  text: context.l.privacyPolicySignIn),
+              TextSpan(text: context.l.legacyPartsConnector),
+              _buildLegalUrl(
+                  context: context,
+                  url: kTermsOfService,
+                  text: context.l.termsOfServiceSignIn),
+            ],
+          ),
         ),
       );
 

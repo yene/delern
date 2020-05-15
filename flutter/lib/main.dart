@@ -5,6 +5,7 @@ import 'package:delern_flutter/views/cards_interval_learning/cards_interval_lear
 import 'package:delern_flutter/views/decks_list/decks_list.dart';
 import 'package:delern_flutter/views/edit_deck/edit_deck.dart';
 import 'package:delern_flutter/views/helpers/auth_widget.dart';
+import 'package:delern_flutter/views/helpers/device_info.dart';
 import 'package:delern_flutter/views/helpers/localization.dart';
 import 'package:delern_flutter/views/helpers/styles.dart' as app_styles;
 import 'package:firebase_analytics/firebase_analytics.dart';
@@ -63,6 +64,7 @@ void main() => FlutterSentry.wrap(
         FirebaseDatabase.instance.setPersistenceEnabled(true);
         FirebaseAnalytics().logAppOpen();
         AppConfig.instance;
+        setDeviceOrientation();
         runApp(App());
       },
       dsn: 'https://e6b5021448e14a49803b2c734621deae@sentry.io/1867466',

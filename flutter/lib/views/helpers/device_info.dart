@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:delern_flutter/remote/error_reporting.dart' as error_reporting;
 import 'package:device_info/device_info.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 @immutable
 class DeviceInfo {
@@ -80,5 +81,17 @@ class DeviceInfo {
     }
     // In landscape device is small to prevent overlapping
     return true;
+  }
+}
+
+/// If devices is phone, do not allow landscape orientation
+void setDeviceOrientation() {
+  WidgetsFlutterBinding.ensureInitialized();
+  final isPhone = MediaQueryData.fromWindow(WidgetsBinding.instance.window)
+          .size
+          .shortestSide <
+      600;
+  if (isPhone) {
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   }
 }

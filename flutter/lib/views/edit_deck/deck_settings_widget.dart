@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 
 const double _kBorderPadding = 8;
 const double _kMinDeckTypeWidgetWidth = 90;
-final _kItemListPadding = Container(width: _kBorderPadding * 2);
+const _kItemListPadding = SizedBox(width: _kBorderPadding * 2);
 
 class DeckSettingsWidget extends StatefulWidget {
   final DeckModel deck;

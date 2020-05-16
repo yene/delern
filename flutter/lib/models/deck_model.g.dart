@@ -113,6 +113,13 @@ class _$DeckModelSerializer implements StructuredSerializer<DeckModel> {
         ..add(serializers.serialize(object.category,
             specifiedType: const FullType(String)));
     }
+    if (object.latestTagSelection != null) {
+      result
+        ..add('latestTagSelection')
+        ..add(serializers.serialize(object.latestTagSelection,
+            specifiedType:
+                const FullType(BuiltSet, const [const FullType(String)])));
+    }
     return result;
   }
 
@@ -159,6 +166,12 @@ class _$DeckModelSerializer implements StructuredSerializer<DeckModel> {
           result.category = serializers.deserialize(value,
               specifiedType: const FullType(String)) as String;
           break;
+        case 'latestTagSelection':
+          result.latestTagSelection.replace(serializers.deserialize(value,
+                  specifiedType:
+                      const FullType(BuiltSet, const [const FullType(String)]))
+              as BuiltSet<dynamic>);
+          break;
       }
     }
 
@@ -184,6 +197,8 @@ class _$DeckModel extends DeckModel {
   @override
   final String category;
   @override
+  final BuiltSet<String> latestTagSelection;
+  @override
   final DataListAccessor<CardModel> cards;
   @override
   final DataListAccessor<ScheduledCardModel> scheduledCards;
@@ -204,6 +219,7 @@ class _$DeckModel extends DeckModel {
       this.access,
       this.lastSyncAt,
       this.category,
+      this.latestTagSelection,
       this.cards,
       this.scheduledCards,
       this.numberOfCardsDue,
@@ -235,7 +251,8 @@ class _$DeckModel extends DeckModel {
         accepted == other.accepted &&
         access == other.access &&
         lastSyncAt == other.lastSyncAt &&
-        category == other.category;
+        category == other.category &&
+        latestTagSelection == other.latestTagSelection;
   }
 
   @override
@@ -245,13 +262,15 @@ class _$DeckModel extends DeckModel {
             $jc(
                 $jc(
                     $jc(
-                        $jc($jc($jc(0, key.hashCode), name.hashCode),
-                            markdown.hashCode),
-                        type.hashCode),
-                    accepted.hashCode),
-                access.hashCode),
-            lastSyncAt.hashCode),
-        category.hashCode));
+                        $jc(
+                            $jc($jc($jc(0, key.hashCode), name.hashCode),
+                                markdown.hashCode),
+                            type.hashCode),
+                        accepted.hashCode),
+                    access.hashCode),
+                lastSyncAt.hashCode),
+            category.hashCode),
+        latestTagSelection.hashCode));
   }
 
   @override
@@ -265,6 +284,7 @@ class _$DeckModel extends DeckModel {
           ..add('access', access)
           ..add('lastSyncAt', lastSyncAt)
           ..add('category', category)
+          ..add('latestTagSelection', latestTagSelection)
           ..add('cards', cards)
           ..add('scheduledCards', scheduledCards)
           ..add('numberOfCardsDue', numberOfCardsDue)
@@ -308,6 +328,12 @@ class DeckModelBuilder implements Builder<DeckModel, DeckModelBuilder> {
   String get category => _$this._category;
   set category(String category) => _$this._category = category;
 
+  SetBuilder<String> _latestTagSelection;
+  SetBuilder<String> get latestTagSelection =>
+      _$this._latestTagSelection ??= new SetBuilder<String>();
+  set latestTagSelection(SetBuilder<String> latestTagSelection) =>
+      _$this._latestTagSelection = latestTagSelection;
+
   DataListAccessor<CardModel> _cards;
   DataListAccessor<CardModel> get cards => _$this._cards;
   set cards(DataListAccessor<CardModel> cards) => _$this._cards = cards;
@@ -342,6 +368,7 @@ class DeckModelBuilder implements Builder<DeckModel, DeckModelBuilder> {
       _access = _$v.access;
       _lastSyncAt = _$v.lastSyncAt;
       _category = _$v.category;
+      _latestTagSelection = _$v.latestTagSelection?.toBuilder();
       _cards = _$v.cards;
       _scheduledCards = _$v.scheduledCards;
       _numberOfCardsDue = _$v.numberOfCardsDue;
@@ -366,20 +393,34 @@ class DeckModelBuilder implements Builder<DeckModel, DeckModelBuilder> {
 
   @override
   _$DeckModel build() {
-    final _$result = _$v ??
-        new _$DeckModel._(
-            key: key,
-            name: name,
-            markdown: markdown,
-            type: type,
-            accepted: accepted,
-            access: access,
-            lastSyncAt: lastSyncAt,
-            category: category,
-            cards: cards,
-            scheduledCards: scheduledCards,
-            numberOfCardsDue: numberOfCardsDue,
-            usersAccess: usersAccess);
+    _$DeckModel _$result;
+    try {
+      _$result = _$v ??
+          new _$DeckModel._(
+              key: key,
+              name: name,
+              markdown: markdown,
+              type: type,
+              accepted: accepted,
+              access: access,
+              lastSyncAt: lastSyncAt,
+              category: category,
+              latestTagSelection: _latestTagSelection?.build(),
+              cards: cards,
+              scheduledCards: scheduledCards,
+              numberOfCardsDue: numberOfCardsDue,
+              usersAccess: usersAccess);
+    } catch (_) {
+      String _$failedField;
+      try {
+        _$failedField = 'latestTagSelection';
+        _latestTagSelection?.build();
+      } catch (e) {
+        throw new BuiltValueNestedFieldError(
+            'DeckModel', _$failedField, e.toString());
+      }
+      rethrow;
+    }
     replace(_$result);
     return _$result;
   }

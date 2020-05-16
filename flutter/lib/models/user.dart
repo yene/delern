@@ -106,6 +106,7 @@ class User {
       '$deckPath/accepted': deck.accepted,
       '$deckPath/lastSyncAt': deck.lastSyncAt.millisecondsSinceEpoch,
       '$deckPath/category': deck.category,
+      '$deckPath/latestTagSelection': deck.latestTagSelection,
       '$deckPath/access': deck.access.toString(),
       '$deckAccessPath/access': deck.access.toString(),
       '$deckAccessPath/email': email,
@@ -125,6 +126,7 @@ class User {
       '$deckPath/accepted': deck.accepted,
       '$deckPath/lastSyncAt': deck.lastSyncAt.millisecondsSinceEpoch,
       '$deckPath/category': deck.category,
+      '$deckPath/latestTagSelection': deck.latestTagSelection?.toList(),
     });
   }
 
@@ -288,6 +290,7 @@ class User {
         '$deckPath/accepted': false,
         '$deckPath/lastSyncAt': 0,
         '$deckPath/category': deck.category,
+        // Do not save latestTagSelection because it's very individual.
         // Do not save displayName and photoUrl because these are populated by
         // Cloud functions.
         '$deckAccessPath/email': shareWithUserEmail,

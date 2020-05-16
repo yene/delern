@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:built_collection/built_collection.dart';
 import 'package:delern_flutter/models/deck_access_model.dart';
 import 'package:delern_flutter/models/deck_model.dart';
 import 'package:delern_flutter/remote/analytics.dart';
@@ -164,8 +165,11 @@ class DeckListItemWidget extends StatelessWidget {
   final DecksListBloc bloc;
   final double minHeight;
 
-  const DeckListItemWidget(
-      {@required this.deck, @required this.bloc, @required this.minHeight});
+  const DeckListItemWidget({
+    @required this.deck,
+    @required this.bloc,
+    @required this.minHeight,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -216,6 +220,12 @@ class DeckListItemWidget extends StatelessWidget {
       // If deck is empty, open a screen with adding cards
       return openNewCardScreen(context, deckKey: deck.key);
     }
+
+    final tagSelection = ValueNotifier<BuiltSet<String>>(
+      deck.latestTagSelection?.isEmpty == false
+          ? deck.latestTagSelection
+          : BuiltSet<String>(),
+    );
     return showDialog(
         context: context,
         barrierDismissible: true,
@@ -235,10 +245,13 @@ class DeckListItemWidget extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
-                  buildStreamBuilderWithValue<Set<String>>(
+                  buildStreamBuilderWithValue<BuiltSet<String>>(
                     streamWithValue: deck.tags,
                     builder: (_, snapshot) => snapshot.hasData
-                        ? TagsWidget(tags: snapshot.data)
+                        ? TagsWidget(
+                            tags: snapshot.data,
+                            selection: tagSelection,
+                          )
                         : const ProgressIndicatorWidget(),
                   ),
                   SingleChildScrollView(
@@ -252,11 +265,20 @@ class DeckListItemWidget extends StatelessWidget {
                           tooltip: context.l.intervalLearningTooltip,
                           icon: Icons.autorenew,
                           onTap: () {
+                            final updatedDeck = deck.rebuild((builder) {
+                              builder.latestTagSelection
+                                  .replace(tagSelection.value);
+                            });
+                            if (updatedDeck != deck) {
+                              bloc.user.updateDeck(deck: updatedDeck);
+                            }
+
                             // Close dialog
                             Navigator.pop(context);
                             openLearnCardIntervalScreen(
                               context,
                               deckKey: deck.key,
+                              tags: tagSelection.value,
                             );
                           },
                         ),
@@ -267,7 +289,11 @@ class DeckListItemWidget extends StatelessWidget {
                           onTap: () {
                             // Close dialog
                             Navigator.pop(context);
-                            openLearnCardViewScreen(context, deck);
+                            openLearnCardViewScreen(
+                              context,
+                              deckKey: deck.key,
+                              tags: tagSelection.value,
+                            );
                           },
                         ),
                       ],

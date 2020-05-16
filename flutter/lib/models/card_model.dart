@@ -41,13 +41,15 @@ abstract class CardModel
   // consequent tags into meaningless spaces.
   static final _tagExtractorRegExp = RegExp(r'#[^\s.,!]+\s*');
 
-  Set<String> get tags => _tagExtractorRegExp
+  BuiltSet<String> get tags => BuiltSet<String>.of(_tagExtractorRegExp
       .allMatches(front)
       // Since the _tagExtractorRegExp includes spaces, trim them away.
-      .map((match) => match.group(0).trim())
-      .toSet();
+      .map((match) => match.group(0).trim()));
 
-  String get frontWithoutTags => front.replaceAll(_tagExtractorRegExp, '');
+  String get frontWithoutTags =>
+      // When tags are at the end of the card text, there's a residual trailing
+      // space, after the tags are removed.
+      front.replaceAll(_tagExtractorRegExp, '').trimRight();
 }
 
 class CardModelListAccessor extends DataListAccessor<CardModel> {

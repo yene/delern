@@ -54,6 +54,8 @@ abstract class DeckModel
   DateTime get lastSyncAt;
   @nullable
   String get category;
+  @nullable
+  BuiltSet<String> get latestTagSelection;
 
   @nullable
   @BuiltValueField(compare: false, serialize: false)
@@ -80,32 +82,52 @@ abstract class DeckModel
     ..type = DeckType.basic
     ..accepted = true;
 
-  StreamWithValue<Set<String>> get tags => cards
-      ?.map<Set<String>>((cards) => cards.expand((card) => card.tags).toSet());
+  /// A set of tags from all cards, sorted alphabetically.
+  StreamWithValue<BuiltSet<String>> get tags =>
+      cards?.map<BuiltSet<String>>((cards) => BuiltSet<String>.of(
+          cards.expand((card) => card.tags).toList()..sort()));
 
   /// Yield one [ScheduledCardModel] and then yield one every time [answers]
   /// stream generates an event, excluding the cards which keys are provided on
-  /// [answers].
+  /// [answers]. If [ScheduledCardModel] has a corresponding [CardModel], it
+  /// must have non-empty intersection of [CardModel.tags] with [tags], unless
+  /// [tags] is empty.
   Stream<ScheduledCardModel> startLearningSession({
     @required Stream<String> answers,
+    @required BuiltSet<String> tags,
   }) async* {
-    yield (scheduledCards.value.toList()
-          ..sort((c1, c2) => c1.repeatAt.compareTo(c2.repeatAt)))
-        .first;
-
     final cardsAnswered = <String>{};
+    List<ScheduledCardModel> unansweredMatchingCards() =>
+        (scheduledCards.value.where((scheduledCard) {
+          if (!cardsAnswered.contains(scheduledCard.key)) {
+            if (tags.isEmpty) {
+              return true;
+            }
+            final cardsSnapshot = cards.value;
+            final cardIndex = cardsSnapshot.indexOfKey(scheduledCard.key);
+            if (cardIndex < 0) {
+              // If we can't find card (yet?), let it through and UI will
+              // figure it out (most likely clean up an orphan).
+              return true;
+            }
+            return cardsSnapshot[cardIndex].tags.intersection(tags).isNotEmpty;
+          }
+          return false;
+        }).toList()
+          ..sort((c1, c2) => c1.repeatAt.compareTo(c2.repeatAt)));
+
+    final initialCards = unansweredMatchingCards();
+    if (initialCards.isEmpty) {
+      return;
+    }
+    yield initialCards.first;
+
     await for (final cardKey in answers) {
       cardsAnswered.add(cardKey);
-
-      final cardsLeft = (scheduledCards.value
-          .where((scheduledCard) => !cardsAnswered.contains(scheduledCard.key))
-          .toList()
-            ..sort((c1, c2) => c1.repeatAt.compareTo(c2.repeatAt)));
-
+      final cardsLeft = unansweredMatchingCards();
       if (cardsLeft.isEmpty) {
         break;
       }
-
       yield cardsLeft.first;
     }
   }

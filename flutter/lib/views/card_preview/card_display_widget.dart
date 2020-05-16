@@ -36,7 +36,7 @@ class CardDisplayWidget extends StatelessWidget {
 
   List<Widget> _buildCardBody(BuildContext context) {
     final widgetList = <Widget>[
-      TagsWidget(tags: tags),
+      TagsWidget(tags: BuiltSet<String>.of(tags)),
       CardSideWidget(text: front, imagesList: frontImages),
     ];
 

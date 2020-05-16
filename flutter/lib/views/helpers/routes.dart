@@ -20,6 +20,15 @@ import 'package:flutter/material.dart';
 //   "Deck 1234abcd" page ("/cards" named route), and pressing "Back" again will
 //   take them to list of decks page ("/" named route).
 
+final routes = <String, Widget Function(BuildContext)>{
+  EditDeck.routeName: (_) => const EditDeck(),
+  CardCreateUpdate.routeNameNew: (_) => const CardCreateUpdate(),
+  CardCreateUpdate.routeNameEdit: (_) => const CardCreateUpdate(),
+  CardPreview.routeName: (_) => const CardPreview(),
+  CardsIntervalLearning.routeName: (_) => const CardsIntervalLearning(),
+  CardsViewLearning.routeName: (_) => const CardsViewLearning(),
+};
+
 Future<void> openEditDeckScreen(
   BuildContext context, {
   @required String deckKey,
@@ -33,20 +42,30 @@ Future<void> openEditDeckScreen(
 Future<void> openLearnCardIntervalScreen(
   BuildContext context, {
   @required String deckKey,
+  Iterable<String> tags,
 }) =>
     Navigator.pushNamed(
       context,
       CardsIntervalLearning.routeName,
-      arguments: CardsIntervalLearning.buildArguments(deckKey: deckKey),
+      arguments: CardsIntervalLearning.buildArguments(
+        deckKey: deckKey,
+        tags: tags,
+      ),
     );
 
-Future<void> openLearnCardViewScreen(BuildContext context, DeckModel deck) =>
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-          settings: const RouteSettings(name: CardsViewLearning.routeName),
-          builder: (context) => CardsViewLearning(deck: deck),
-        ));
+Future<void> openLearnCardViewScreen(
+  BuildContext context, {
+  @required String deckKey,
+  Iterable<String> tags,
+}) =>
+    Navigator.pushNamed(
+      context,
+      CardsViewLearning.routeName,
+      arguments: CardsViewLearning.buildArguments(
+        deckKey: deckKey,
+        tags: tags,
+      ),
+    );
 
 Future<void> openNewCardScreen(
   BuildContext context, {

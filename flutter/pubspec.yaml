@@ -21,7 +21,7 @@ dependencies:
   rxdart: ^0.23.1
   uuid: ^2.0.1
 
-  flutter_sentry: ^0.3.4
+  flutter_sentry: ^0.4.0
   # Needed for the User context type, version is bound by flutter_sentry.
   sentry: any
 

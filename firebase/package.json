@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "configstore": "^5.0.0",
-    "firebase-admin": "^8.6.0",
+    "firebase-admin": "^8.12.1",
     "firebase-bolt": "^0.8.4",
     "firebase-tools": "^7.16.1",
     "ini": "^1.3.5",
@@ -23,9 +23,9 @@
   "devDependencies": {
     "@types/configstore": "^4.0.0",
     "@types/ini": "^1.3.30",
-    "@types/node": "^10.17.20",
+    "@types/node": "^10.17.21",
     "@types/plist": "^3.0.2",
-    "gts": "^2.0.0",
+    "gts": "^2.0.2",
     "typescript": "~3.8.0"
   },
   "engines": {

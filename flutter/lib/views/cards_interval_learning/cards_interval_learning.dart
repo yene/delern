@@ -200,6 +200,7 @@ class CardsIntervalLearningState extends State<CardsIntervalLearning> {
                               unawaited(logCardResponse(
                                 deckId: deck.key,
                                 knows: knows,
+                                previousLevel: scheduledCard.level,
                               ));
                             },
                           ),

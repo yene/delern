@@ -183,6 +183,14 @@ platform :android do
         aab: aab,
       )
     end
+
+    # This is the standard release name format, used by Sentry.io clients by
+    # default.
+    sentry_release =
+      "#{APP_IDENTIFIER}-#{lane_context[SharedValues::VERSION_NUMBER]}"
+    sh %W(sentry-cli releases --org dasfoo new -p delern #{sentry_release})
+    sh %W(sentry-cli releases --org dasfoo set-commits --auto #{sentry_release})
+    sh %W(sentry-cli releases --org dasfoo finalize #{sentry_release})
   end
 end
 

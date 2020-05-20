@@ -138,6 +138,7 @@ jobs:
       MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
       FASTLANE_USER: ${{ secrets.FASTLANE_USER }}
       FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
+      SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v1
@@ -159,9 +160,11 @@ jobs:
         with:
           java-version: 1.8
       - if: matrix.platform == 'android'
-        run: >
+        run: |
           echo '${{ secrets.ANDROID_KEYSTORE_DATA }}' |
-          base64 -d > "${ANDROID_KEYSTORE_PATH?}"
+            base64 -d > "${ANDROID_KEYSTORE_PATH?}"
+
+          curl -sL https://sentry.io/get-cli/ | bash
 
       # The credentials are going to be used for both gcloud and Play Store.
       - run: >

@@ -90,12 +90,17 @@ Future<void> logCardCreate(String deckId) => FirebaseAnalytics().logEvent(
       },
     );
 
-Future<void> logCardResponse({@required String deckId, @required bool knows}) =>
+Future<void> logCardResponse({
+  @required String deckId,
+  @required bool knows,
+  @required int previousLevel,
+}) =>
     FirebaseAnalytics().logEvent(
       name: 'card_response',
       parameters: <String, dynamic>{
         'item_id': deckId,
         'knows': knows ? 1 : 0,
+        'previous_level': previousLevel,
       },
     );
 

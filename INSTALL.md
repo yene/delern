@@ -1,10 +1,6 @@
 # Configuration of production CI/CD environment
 
-We use multiple CIs to take advantage of most developed infrastructure for each
-operating system. Configuration files can be found below:
-
-* [CirrusCI](.cirrus.yml) for Linux and OSX;
-* [AppVeyor](appveyor.yml) for Windows (because it's faster);
+We use exclusively GitHub Actions for CI/CD and automation.
 
 ## Production environment
 
@@ -35,16 +31,16 @@ Android and OSX for iOS, because deploying Android from Windows would be
 redundant.
 
 Every Pull Request is built before it can be merged. Pull Requests may come from
-external contributors, therefore Build phase does not have access to secret
-keys. All our dependencies are public and pulled from public external resources.
+external contributors, therefore Build phase does not try to access secret keys.
+All our dependencies are public and pulled from public external resources.
 
-There are 3 items that stand out (but not considered secret):
+There are 2 items that stand out (but not considered secret):
 
- - CodeCov coverage reporting tool;
- - `google-services.json` and `GoogleService-Info.plist` from the Debug Firebase
-   project are included to make the application build;
- - `debug.keystore` is included to sign the application for access to the Debug
-   Firebase project.
+- `google-services.json` and `GoogleService-Info.plist` from the CI Firebase
+  project are included so that it can build and access Firebase during Flutter
+  Drive testing;
+- `debug.keystore` is included to sign the application for Anonymous Sign In via
+  the CI Firebase project.
 
 ## Deploy
 
@@ -55,12 +51,11 @@ a Release build before being deployed.
 
 Building Android app for release requires two artifacts:
 
- - `google-services.json` and `GoogleService-Info.plist` from the Release
-   Firebase are checked in at `app/src/release`;
+- `google-services.json` and `GoogleService-Info.plist` from the Release
+  Firebase are checked in at `app/src/release`;
 
- - upload key to sign the app for access to the Release Firebase project is
-   stored in `ANDROID_KEYSTORE_DATA` secret environment variable
-   (base64-encoded).
+- upload key to sign the app for access to the Release Firebase project is
+  stored in `ANDROID_KEYSTORE_DATA` encrypted secret (base64-encoded).
 
 A new key can be generated with `keytool`. Use the following argument:
 `-dname 'CN=dasfoo.org, OU=IT, O=DasFoo, L=Zurich, S=ZH, C=CH'`.
@@ -77,8 +72,8 @@ on the
 [Service accounts](https://console.cloud.google.com/iam-admin/serviceaccounts)
 page. On the same page, you can create any number of keys anytime for the same
 account, in case you need to debug it from your workstation. One of the keys has
-to be stored in JSON format in `GOOGLE_APPLICATION_CREDENTIALS_DATA` environment
-variable.
+to be stored in JSON format in `GOOGLE_APPLICATION_CREDENTIALS_DATA` encrypted
+secret (base64-encoded).
 
 This service account has to be given "Release manager" role on the
 "Settings > Users & permissions" page of
@@ -96,20 +91,14 @@ repository. For that, the account has to be given "Source Repository Reader"
 role at the
 [Repository Permissions](https://source.cloud.google.com/admin/permissions)
 page. The repository may belong to the same Play-enabled GCP project. The Clone
-URL of the repository has to be in `MATCH_GIT_URL` environment variable.
+URL of the repository has to be in `MATCH_GIT_URL` encrypted secret.
 
 The repository contains encrypted keys, which have to be decrypted with a
-password stored in `MATCH_PASSWORD` environment variable.
+password stored in `MATCH_PASSWORD` encrypted secret.
 
 One the app is signed, it is published to App Store. We use a separate Apple
 account (which does not have to be a Developer enabled account). The credentials
-to this account are stored in `FASTLANE_USER` and `FASTLANE_PASSWORD`
-environment variables.
-
-### Automated Fastlane Update
-
-This is implemented via GitHub Actions and requires an OAuth Access token with
-"repo" access.
+to this account are stored in `FASTLANE_USER` and `FASTLANE_PASSWORD` secrets.
 
 ### Deploy Website, Security Rules and Cloud Functions
 
@@ -117,6 +106,19 @@ The website is hosted on Firebase, and we use `firebase` command line tool to
 deploy it, along with the rest of Firebase artifacts. Until Service Accounts are
 [supported](https://github.com/firebase/firebase-tools/issues/787) by Firebase
 CLI, we have to generate a token via `firebase login:ci` and store it in
-`FIREBASE_TOKEN` environment variable. See
+`FIREBASE_TOKEN` secret. See
 [Firebase](https://github.com/firebase/firebase-tools#using-with-ci-systems)
 documentation for up-to-date information.
+
+### Annotate Sentry.io release
+
+We use `sentry-cli` to annotate Sentry.io releases with commits included in that
+release. This requires `SENTRY_AUTH_TOKEN` encrypted secret containing an
+[Internal Integration Token](https://docs.sentry.io/workflow/integrations/integration-platform/#auth-tokens-1).
+
+## Automated Fastlane Update
+
+This is implemented via GitHub Actions and requires an OAuth Access token with
+"repo" access (`FASTLANE_UPDATE_GITHUB_TOKEN` token). The token provided by
+GitHub actions can not be used, because repository pushes performed with that
+token do not trigger GitHub Actions (tests).

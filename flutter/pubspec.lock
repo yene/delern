@@ -394,7 +394,7 @@ packages:
       name: google_sign_in
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.4.6"
+    version: "4.5.1"
   google_sign_in_platform_interface:
     dependency: transitive
     description:
@@ -450,7 +450,7 @@ packages:
       name: image_picker
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.6.6+1"
+    version: "0.6.6+4"
   image_picker_platform_interface:
     dependency: transitive
     description:
@@ -647,6 +647,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.2.1"
+  platform_detect:
+    dependency: transitive
+    description:
+      name: platform_detect
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.4.0"
   plugin_platform_interface:
     dependency: transitive
     description:
@@ -868,7 +875,7 @@ packages:
       name: test
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.14.3"
+    version: "1.14.4"
   test_api:
     dependency: transitive
     description:
@@ -924,7 +931,7 @@ packages:
       name: url_launcher_web
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.1.1+5"
+    version: "0.1.1+6"
   usage:
     dependency: transitive
     description:
@@ -987,7 +994,7 @@ packages:
       name: webkit_inspection_protocol
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.5.4"
+    version: "0.7.1"
   yaml:
     dependency: transitive
     description:

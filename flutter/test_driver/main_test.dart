@@ -44,6 +44,10 @@ void main() {
     }
 
     Future<void> fillInAndAddCard(String front, String back) async {
+      // Wait until the message about card added disappears.
+      await driver.waitForAbsent(find.text(localizations.cardAddedUserMessage),
+          timeout: timeoutDuration);
+
       final frontInput = find.byValueKey('frontCardInput');
       await driver.waitFor(frontInput, timeout: timeoutDuration);
       await driver.enterText(front);

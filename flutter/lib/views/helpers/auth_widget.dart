@@ -49,7 +49,8 @@ class _AuthWidgetState extends State<AuthWidget> {
             ..key = token)
           .build();
 
-      debugPrint('Registering for FCM as ${fcm.name} in ${fcm.language}');
+      debugPrint('Registering ${_currentUser.uid} for FCM as ${fcm.name} '
+          'in ${fcm.language}');
       unawaited(_currentUser.addFCM(fcm: fcm));
     });
 

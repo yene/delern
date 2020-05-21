@@ -31,7 +31,7 @@ jobs:
           bundle console <<<RUBY_VERSION
       - name: "Install artifacts so that Flutter app can be built (for Pods)"
         working-directory: flutter
-        run: bundle exec fastlane install_debug_keys
+        run: bundle exec fastlane install_ci_keys
       - name: "Fastlane Update"
         run: bundle exec fastlane update
       - name: "Check for changes and create/update PR"

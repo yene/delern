@@ -105,8 +105,8 @@ lane :lint do
 end
 
 desc 'Replace system-wide Android debug keystore and app-wide GoogleServices'
-desc 'with those configured for "delern-debug" Firebase project'
-lane :install_debug_keys do |options|
+desc 'with those configured for "delern-debug" Firebase project (used by CI)'
+lane :install_ci_keys do |options|
   FileUtils.cp(
     'keys/google-services.json',
     '../android/app/',

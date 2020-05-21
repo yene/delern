@@ -50,7 +50,7 @@ jobs:
         working-directory: flutter
         run: |
           bundle exec fastlane install_dependencies
-          bundle exec fastlane install_debug_keys
+          bundle exec fastlane install_ci_keys
 
       - name: "Generate and lint"
         working-directory: flutter
@@ -151,9 +151,7 @@ jobs:
           bundle install --clean --deployment
       - name: "Install dependencies"
         working-directory: flutter
-        run: |
-          bundle exec fastlane install_dependencies
-          bundle exec fastlane install_debug_keys
+        run: bundle exec fastlane install_dependencies
 
       - if: matrix.platform == 'android'
         uses: actions/setup-java@v1

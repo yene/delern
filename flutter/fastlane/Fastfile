@@ -105,26 +105,19 @@ lane :lint do
 end
 
 desc 'Replace system-wide Android debug keystore and app-wide GoogleServices'
-desc 'with those configured for "delern-debug" Firebase project'
-lane :install_debug_keys do |options|
+desc 'with those configured for "delern-debug" Firebase project (used by CI)'
+lane :install_ci_keys do |options|
   FileUtils.cp(
-    'debug-project/google-services.json',
+    'keys/google-services.json',
     '../android/app/',
     verbose: true)
   FileUtils.cp(
-    'debug-project/org.dasfoo.delern.debug',
+    'keys/org.dasfoo.delern.debug',
     '../ios/Runner/GoogleService-Info.plist',
     verbose: true)
   FileUtils.cp(
-    'debug-project/FirebaseLocalDeveloper.xcconfig',
+    'keys/FirebaseLocalDeveloper.xcconfig',
     '../ios/Flutter/',
-    verbose: true)
-
-  system_wide_android_directory = File.expand_path('~/.android/')
-  FileUtils.mkdir_p(system_wide_android_directory)
-  FileUtils.cp(
-    'debug-project/debug.keystore',
-    system_wide_android_directory,
     verbose: true)
 end
 
@@ -221,7 +214,7 @@ platform :ios do
       app_identifier: APP_IDENTIFIER,
     )
     FileUtils.cp(
-      'debug-project/org.dasfoo.delern',
+      'keys/org.dasfoo.delern',
       '../ios/Runner/GoogleService-Info.plist',
       verbose: true)
     # Perform an (otherwise unnecessary) build to:

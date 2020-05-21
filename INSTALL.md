@@ -34,14 +34,6 @@ Every Pull Request is built before it can be merged. Pull Requests may come from
 external contributors, therefore Build phase does not try to access secret keys.
 All our dependencies are public and pulled from public external resources.
 
-There are 2 items that stand out (but not considered secret):
-
-- `google-services.json` and `GoogleService-Info.plist` from the CI Firebase
-  project are included so that it can build and access Firebase during Flutter
-  Drive testing;
-- `debug.keystore` is included to sign the application for Anonymous Sign In via
-  the CI Firebase project.
-
 ## Deploy
 
 We deploy multiple artifacts to different services, and each of them requires

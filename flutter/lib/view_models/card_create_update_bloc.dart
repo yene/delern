@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:built_collection/built_collection.dart';
 import 'package:delern_flutter/models/base/stream_with_value.dart';
@@ -9,7 +9,6 @@ import 'package:delern_flutter/models/user.dart';
 import 'package:delern_flutter/remote/analytics.dart';
 import 'package:delern_flutter/remote/error_reporting.dart' as error_reporting;
 import 'package:delern_flutter/view_models/base/screen_bloc.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:meta/meta.dart';
 import 'package:pedantic/pedantic.dart';
 import 'package:rxdart/rxdart.dart';
@@ -93,14 +92,14 @@ class CardCreateUpdateBloc extends ScreenBloc {
   final _onDiscardChangesController = StreamController<void>();
   Sink<void> get onDiscardChanges => _onDiscardChangesController.sink;
 
-  final _onFrontImageAddedController = StreamController<File>();
-  Sink<File> get onFrontImageAdded => _onFrontImageAddedController.sink;
+  final _onFrontImageAddedController = StreamController<Uint8List>();
+  Sink<Uint8List> get onFrontImageAdded => _onFrontImageAddedController.sink;
 
   final _onFrontImageDeletedController = StreamController<int>();
   Sink<int> get onFrontImageDeleted => _onFrontImageDeletedController.sink;
 
-  final _onBackImageAddedController = StreamController<File>();
-  Sink<File> get onBackImageAdded => _onBackImageAddedController.sink;
+  final _onBackImageAddedController = StreamController<Uint8List>();
+  Sink<Uint8List> get onBackImageAdded => _onBackImageAddedController.sink;
 
   final _onBackImageDeletedController = StreamController<int>();
   Sink<int> get onBackImageDeleted => _onBackImageDeletedController.sink;
@@ -158,10 +157,10 @@ class CardCreateUpdateBloc extends ScreenBloc {
       }
       notifyPop();
     });
-    _onFrontImageAddedController.stream.listen((file) async {
+    _onFrontImageAddedController.stream.listen((data) async {
       _doShowFrontImagePlaceholderController.add(true);
       try {
-        final url = await user.uploadImage(file, _card.deckKey);
+        final url = await user.uploadImage(data, _card.deckKey);
         _card.frontImagesUri.add(url);
         _doShowFrontImagePlaceholderController.add(false);
         _doFrontImageAddedController.add(_card.frontImagesUri.build());
@@ -173,10 +172,10 @@ class CardCreateUpdateBloc extends ScreenBloc {
       }
     });
 
-    _onBackImageAddedController.stream.listen((file) async {
+    _onBackImageAddedController.stream.listen((data) async {
       try {
         _doShowBackImagePlaceholderController.add(true);
-        final url = await user.uploadImage(file, _card.deckKey);
+        final url = await user.uploadImage(data, _card.deckKey);
         _card.backImagesUri.add(url);
         _doShowBackImagePlaceholderController.add(false);
         _doBackImageAddedController.add(_card.backImagesUri.build());

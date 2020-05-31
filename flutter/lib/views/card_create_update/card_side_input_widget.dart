@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:delern_flutter/remote/app_config.dart';
 import 'package:delern_flutter/views/card_create_update/pick_image_menu_widget.dart';
@@ -9,12 +9,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 typedef TextChangedCallback = void Function(String text);
-typedef OnImageSelectedCallback = void Function(File file);
 
 class CardSideInputWidget extends StatelessWidget {
   final TextEditingController controller;
   final TextChangedCallback onTextChanged;
-  final OnImageSelectedCallback onImageSelected;
+  final void Function(Uint8List data) onImageSelected;
   final FocusNode focusNode;
   final bool autofocus;
   final String hint;
@@ -62,8 +61,8 @@ class CardSideInputWidget extends StatelessWidget {
                               mainAxisSize: MainAxisSize.min,
                               children: <Widget>[
                                 PickImageMenuWidget(
-                                  onImageSelected: (file) {
-                                    onImageSelected(file);
+                                  onImageSelected: (data) {
+                                    onImageSelected(data);
                                     // Close BottomSheet
                                     Navigator.pop(context);
                                   },

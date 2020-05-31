@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:built_collection/built_collection.dart';
 import 'package:delern_flutter/models/base/list_accessor.dart';
@@ -381,13 +381,13 @@ class User {
   Future<void> deleteImage(String url) async =>
       (await FirebaseStorage.instance.getReferenceFromUrl(url)).delete();
 
-  Future<String> uploadImage(File file, String deckKey) async =>
+  Future<String> uploadImage(Uint8List data, String deckKey) async =>
       (await (await FirebaseStorage.instance
                   .ref()
                   .child('cards')
                   .child(deckKey)
                   .child(Uuid().v1())
-                  .putFile(file)
+                  .putData(data)
                   .onComplete)
               .ref
               .getDownloadURL())

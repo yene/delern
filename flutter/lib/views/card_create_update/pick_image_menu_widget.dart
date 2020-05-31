@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:app_settings/app_settings.dart';
 import 'package:delern_flutter/views/helpers/localization.dart';
@@ -8,12 +8,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 
-typedef ImageSelected = void Function(File file);
-
 const double _kImageSideSizeLimit = 600;
 
+final ImagePicker imagePicker = ImagePicker();
+
 class PickImageMenuWidget extends StatelessWidget {
-  final ImageSelected onImageSelected;
+  final void Function(Uint8List data) onImageSelected;
 
   const PickImageMenuWidget({@required this.onImageSelected, Key key})
       : super(key: key);
@@ -25,9 +25,9 @@ class PickImageMenuWidget extends StatelessWidget {
             .entries
             .map((entry) => GestureDetector(
                   onTap: () async {
-                    final file = await _openImage(entry.key, context);
-                    if (file != null) {
-                      onImageSelected(file);
+                    final data = await _openImage(entry.key, context);
+                    if (data != null) {
+                      onImageSelected(data);
                     }
                   },
                   child: entry.value,
@@ -35,15 +35,15 @@ class PickImageMenuWidget extends StatelessWidget {
             .toList(),
       );
 
-  Future<File> _openImage(ImageSource source, BuildContext context) async {
+  Future<Uint8List> _openImage(ImageSource source, BuildContext context) async {
     try {
-      final file = await ImagePicker.pickImage(
+      final file = await imagePicker.getImage(
         source: source,
         maxWidth: _kImageSideSizeLimit,
         maxHeight: _kImageSideSizeLimit,
       );
       if (file != null) {
-        return file;
+        return file.readAsBytes();
       }
     } on PlatformException {
       await AppSettings.openAppSettings();

@@ -24,7 +24,11 @@ class NonScrollingMarkdownWidget extends StatelessWidget {
             tableColumnWidth: const IntrinsicColumnWidth(),
           ),
           // Use custom image builder to have loading
-          imageBuilder: (uri) => buildDisplayImageWidget(uri.toString()),
+          imageBuilder: (uri, title, alt) => buildDisplayImageWidget(
+            uri.toString(),
+            title: title,
+            alt: alt,
+          ),
           onTapLink: (href) => launchUrl(href, context),
         ),
       );

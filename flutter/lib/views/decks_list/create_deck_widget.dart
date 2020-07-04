@@ -103,23 +103,24 @@ class _CreateDeckDialogState extends State<_CreateDeckDialog> {
     } else {
       return _HorizontalDialog(
         child: SingleChildScrollView(
-          child: Container(
-              width: MediaQuery.of(context).size.width,
-              child: Padding(
-                padding: EdgeInsets.symmetric(
-                    horizontal: MediaQuery.of(context).size.width * 0.05),
-                child: Row(
-                  children: <Widget>[
-                    Flexible(child: deckNameTextField),
-                    Column(
-                      children: <Widget>[
-                        addDeckButton,
-                        cancelButton,
-                      ],
-                    )
-                  ],
-                ),
-              )),
+          child: SizedBox(
+            width: MediaQuery.of(context).size.width,
+            child: Padding(
+              padding: EdgeInsets.symmetric(
+                  horizontal: MediaQuery.of(context).size.width * 0.05),
+              child: Row(
+                children: <Widget>[
+                  Flexible(child: deckNameTextField),
+                  Column(
+                    children: <Widget>[
+                      addDeckButton,
+                      cancelButton,
+                    ],
+                  )
+                ],
+              ),
+            ),
+          ),
         ),
       );
     }

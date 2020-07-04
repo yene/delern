@@ -57,6 +57,10 @@ linter:
     # inferred is a source of errors. Annotate with dynamic explicitly.
     avoid_annotating_with_dynamic: false
 
+    # Default values may change in future, if we decided to specify it
+    # explicitly, let it be.
+    avoid_redundant_argument_values: false
+
     # Questionable effort-to-gain ratio.
     avoid_catches_without_on_clauses: false
     avoid_function_literals_in_foreach_calls: false

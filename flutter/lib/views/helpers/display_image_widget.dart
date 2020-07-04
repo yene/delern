@@ -4,30 +4,43 @@ import 'package:delern_flutter/views/helpers/localization.dart';
 import 'package:delern_flutter/views/helpers/progress_indicator_widget.dart';
 import 'package:delern_flutter/views/helpers/styles.dart' as app_styles;
 import 'package:flutter/material.dart';
-import 'package:pedantic/pedantic.dart';
+import 'package:quiver/strings.dart';
 
-Widget buildDisplayImageWidget(String uri) => CachedNetworkImage(
-      imageUrl: uri,
-      placeholder: (context, url) =>
-          const ImageProgressIndicatorPlaceholderWidget(),
-      errorWidget: (context, url, error) {
-        unawaited(error_reporting.report(
-          error,
-          description: 'Image loading failed: $url',
-        ));
-        return Column(
-          children: <Widget>[
-            Icon(
-              Icons.error,
-              color: app_styles.kIconColor,
-            ),
-            Text(
-              context.l.imageLoadingErrorUserMessage,
-              softWrap: true,
-              textAlign: TextAlign.center,
-              style: app_styles.secondaryText,
-            ),
-          ],
-        );
-      },
-    );
+Widget buildDisplayImageWidget(
+  String url, {
+  String title,
+  String alt,
+}) {
+  final image = CachedNetworkImage(
+    imageUrl: url,
+    placeholder: (context, url) =>
+        const ImageProgressIndicatorPlaceholderWidget(),
+    errorWidget: (context, url, error) {
+      error_reporting.report(
+        error,
+        description: 'Image loading failed: $url',
+      );
+      return Column(
+        children: <Widget>[
+          Icon(
+            Icons.error,
+            color: app_styles.kIconColor,
+          ),
+          Text(
+            isBlank(alt) ? context.l.imageLoadingErrorUserMessage : alt,
+            softWrap: true,
+            textAlign: TextAlign.center,
+            style: app_styles.secondaryText,
+          ),
+        ],
+      );
+    },
+  );
+  if (isBlank(title)) {
+    return image;
+  }
+  return Tooltip(
+    message: title,
+    child: image,
+  );
+}

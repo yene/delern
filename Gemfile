@@ -4,6 +4,9 @@ gem 'fastlane'
 gem 'cocoapods'
 gem 'git-remote-parser'
 
+# Workaround for https://github.com/postmodern/digest-crc/issues/18.
+gem 'rake'
+
 # Since we have a GitHub Actions workflow to automatically check for updates,
 # it is reasonable to disable Fastlane self-update checks. We can't do it in
 # Fastfile because updater initializes before that.

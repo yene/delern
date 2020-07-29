@@ -33,12 +33,12 @@ Serializer<DeckType> _$deckTypeSerializer = new _$DeckTypeSerializer();
 Serializer<DeckModel> _$deckModelSerializer = new _$DeckModelSerializer();
 
 class _$DeckTypeSerializer implements PrimitiveSerializer<DeckType> {
-  static const Map<String, String> _toWire = const <String, String>{
+  static const Map<String, Object> _toWire = const <String, Object>{
     'basic': 'BASIC',
     'german': 'GERMAN',
     'swiss': 'SWISS',
   };
-  static const Map<String, String> _fromWire = const <String, String>{
+  static const Map<Object, String> _fromWire = const <Object, String>{
     'BASIC': 'basic',
     'GERMAN': 'german',
     'SWISS': 'swiss',
@@ -170,7 +170,7 @@ class _$DeckModelSerializer implements StructuredSerializer<DeckModel> {
           result.latestTagSelection.replace(serializers.deserialize(value,
                   specifiedType:
                       const FullType(BuiltSet, const [const FullType(String)]))
-              as BuiltSet<dynamic>);
+              as BuiltSet<Object>);
           break;
       }
     }

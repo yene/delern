@@ -60,8 +60,10 @@ dev_dependencies:
   built_value_generator: ^7.1.0
   test: ^1.15.2
 
+dependency_overrides:
+# Workaround for https://github.com/flutter/flutter/issues/56779.
+  analyzer: '0.39.14'
 # Uncomment the following to override any dependency.
-#dependency_overrides:
 #  flutter_sentry:
 #    path: ../../flutter_sentry/
 

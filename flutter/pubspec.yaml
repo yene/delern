@@ -16,8 +16,8 @@ dependencies:
   share: ^0.6.0
   shared_preferences: ^0.5.1
   quiver: ">=2.0.0 <3.0.0"
-  built_collection: ^4.2.2
-  built_value: ^6.6.0
+  built_collection: ^4.3.2
+  built_value: ^7.1.0
   rxdart: ^0.23.1
   uuid: ^2.0.1
 
@@ -56,12 +56,14 @@ dev_dependencies:
   intl_translation: ^0.17.3
   mockito: ^3.0.0
   pedantic: ^1.0.0
-  build_runner: ^1.6.1
-  built_value_generator: ^6.6.0
-  test: ^1.6.2
+  build_runner: ^1.10.0
+  built_value_generator: ^7.1.0
+  test: ^1.15.2
 
+dependency_overrides:
+# Workaround for https://github.com/flutter/flutter/issues/56779.
+  analyzer: '0.39.14'
 # Uncomment the following to override any dependency.
-#dependency_overrides:
 #  flutter_sentry:
 #    path: ../../flutter_sentry/
 

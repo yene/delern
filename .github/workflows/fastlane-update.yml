@@ -10,16 +10,13 @@ jobs:
     # Do not run on forks.
     if: "github.repository == 'dasfoo/delern'"
     env:
-      # Make it an environment variable because it's also used by "hub".
-      GITHUB_TOKEN: ${{ secrets.FASTLANE_UPDATE_GITHUB_TOKEN }}
-      UPDATE_BRANCH: automated-update
       # The default SDK directory created by fastlane-plugin-flutter is
       # vendor/flutter under application root, which likely confuses flutter
       # cocoapods integration. Reroute here, and debug when we have spare time.
       FLUTTER_ROOT: /tmp/flutter
     runs-on: macOS-latest
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
       - uses: actions/setup-ruby@v1
         with:
           ruby-version: 2.6
@@ -35,24 +32,10 @@ jobs:
       - name: "Fastlane Update"
         run: bundle exec fastlane update
       - name: "Check for changes and create/update PR"
-        run: |
-          git config \
-              url."https://dotdoom:${GITHUB_TOKEN?}@github.com/".insteadOf \
-              'https://github.com/'
-
-          if [ -n "$(git status --porcelain)" ]; then
-            git checkout -b "${UPDATE_BRANCH?}"
-            git add .
-            git diff --cached
-            git commit --message "[auto] update dependencies"
-            git push -f origin HEAD
-
-            brew install hub
-            # If PR already exists, hub exits with code 1 (just like any other
-            # failure). Ignore it.
-            hub pull-request --labels dependencies --no-edit || true
-          else
-            # Delete branch when there are no changes (e.g. to close PR), ignore
-            # if it does not exist.
-            git push origin ":${UPDATE_BRANCH?}" || true
-          fi
+        uses: peter-evans/create-pull-request@v3
+        with:
+          token: "${{ secrets.FASTLANE_UPDATE_GITHUB_TOKEN }}"
+          commit-message: "[auto] update dependencies"
+          branch: automated-update
+          title: "[auto] update dependencies"
+          labels: dependencies

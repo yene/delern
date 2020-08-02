@@ -6,7 +6,7 @@ on:
     - cron: "3 4 * * *"
 
 jobs:
-  maintenance-and-backup:
+  maintenance:
     # TODO(dotdoom): infer project name from repository.
     if: startsWith(github.repository, 'dasfoo/')
     env:

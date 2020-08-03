@@ -8,7 +8,7 @@ on:
 jobs:
   fastlane-update:
     # Do not run on forks.
-    if: "github.repository == 'dasfoo/delern'"
+    if: startsWith(github.repository, 'futureware-tech/')
     env:
       # The default SDK directory created by fastlane-plugin-flutter is
       # vendor/flutter under application root, which likely confuses flutter

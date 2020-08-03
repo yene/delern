@@ -18,15 +18,14 @@ Features:
 - Available learning in offline;
 - Markdown support.
 
-[badge/firebase]:      https://github.com/dasfoo/delern/workflows/firebase/badge.svg?branch=master&event=push
-[badge/flutter]:       https://github.com/dasfoo/delern/workflows/flutter/badge.svg?branch=master&event=push
-[badge/flutter-drive]: https://github.com/dasfoo/delern/workflows/flutter%20drive/badge.svg?branch=master&event=push
-[badge/codecov]:       https://codecov.io/gh/dasfoo/delern/branch/master/graph/badge.svg
-
-[link/firebase]:      https://github.com/dasfoo/delern/actions?query=workflow%3Afirebase+branch%3Amaster
-[link/flutter]:       https://github.com/dasfoo/delern/actions?query=workflow%3Aflutter+branch%3Amaster
-[link/flutter-drive]: https://github.com/dasfoo/delern/actions?query=workflow%3A"flutter+drive"+branch%3Amaster
-[link/codecov]:       https://codecov.io/gh/dasfoo/delern
+[badge/firebase]: https://github.com/futureware-tech/delern/workflows/firebase/badge.svg?branch=master&event=push
+[badge/flutter]: https://github.com/futureware-tech/delern/workflows/flutter/badge.svg?branch=master&event=push
+[badge/flutter-drive]: https://github.com/futureware-tech/delern/workflows/flutter%20drive/badge.svg?branch=master&event=push
+[badge/codecov]: https://codecov.io/gh/futureware-tech/delern/branch/master/graph/badge.svg
+[link/firebase]: https://github.com/futureware-tech/delern/actions?query=workflow%3Afirebase+branch%3Amaster
+[link/flutter]: https://github.com/futureware-tech/delern/actions?query=workflow%3Aflutter+branch%3Amaster
+[link/flutter-drive]: https://github.com/futureware-tech/delern/actions?query=workflow%3A"flutter+drive"+branch%3Amaster
+[link/codecov]: https://codecov.io/gh/futureware-tech/delern
 
 | CI/CD                     | Status (on master)                                 |
 | ------------------------- | -------------------------------------------------- |

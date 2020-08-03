@@ -11,7 +11,7 @@ on:
 jobs:
   test:
     # Don't clutter up CI project with tests from other repos.
-    if: startsWith(github.repository, 'dasfoo/')
+    if: startsWith(github.repository, 'futureware-tech/')
     strategy:
       fail-fast: false
       matrix:

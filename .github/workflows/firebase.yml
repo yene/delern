@@ -40,7 +40,7 @@ jobs:
 
   publish:
     if: >
-      startsWith(github.repository, 'dasfoo/') &&
+      startsWith(github.repository, 'futureware-tech/') &&
       github.event_name == 'push'
     needs: build
     env:

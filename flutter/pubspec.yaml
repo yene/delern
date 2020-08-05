@@ -61,8 +61,8 @@ dev_dependencies:
   test: ^1.15.2
 
 dependency_overrides:
-# Workaround for https://github.com/flutter/flutter/issues/56779.
-  analyzer: '0.39.14'
+  # Workaround for https://github.com/flutter/flutter/issues/56779.
+  analyzer: "0.39.14"
 # Uncomment the following to override any dependency.
 #  flutter_sentry:
 #    path: ../../flutter_sentry/
@@ -86,10 +86,3 @@ flutter:
 
     # Logo to display in e.g. About dialog.
     - images/ic_launcher.png
-# Disable builders for now because it breaks builds (need "flutter clean" all
-# the time) and debug mode (breakpoints are not triggering).
-# This means that after each change to BuiltValue we have to run
-# "bundle exec fastlane generate".
-#
-# builders:
-#   built_value_generator: any

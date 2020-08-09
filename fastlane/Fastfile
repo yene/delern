@@ -17,11 +17,10 @@ include: package:flutter/analysis_options_user.yaml
   YAML
 end
 
-desc 'Update all dependencies in lockfiles (bundler, npm, Flutter)'
+desc 'Update dependencies in lockfiles (npm, Flutter), excluding bundler'
 lane :update do
   update_analysis_options
   Dir.chdir('..') do
-    sh %w(bundle update)
     Dir.chdir('flutter') do
       # This will automatically upgrade flutter, if necessary. It won't run
       # "flutter update-packages", but we don't need it.

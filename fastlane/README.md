@@ -29,7 +29,7 @@ fastlane update_analysis_options
 ```
 fastlane update
 ```
-Update all dependencies in lockfiles (bundler, npm, Flutter)
+Update dependencies in lockfiles (npm, Flutter), excluding bundler
 ### setup
 ```
 fastlane setup

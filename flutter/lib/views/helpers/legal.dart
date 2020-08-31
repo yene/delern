@@ -1,2 +1,2 @@
-const String kPrivacyPolicy = 'https://dasfoo.org/delern/privacy';
-const String kTermsOfService = 'https://dasfoo.org/delern/tos';
+const String kPrivacyPolicy = 'https://static.futureware.dev/delern/privacy';
+const String kTermsOfService = 'https://static.futureware.dev/delern/tos';

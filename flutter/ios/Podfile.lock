@@ -18,29 +18,29 @@ PODS:
     - FBSDKLoginKit/Login (= 5.15.1)
   - FBSDKLoginKit/Login (5.15.1):
     - FBSDKCoreKit (~> 5.0)
-  - Firebase/Analytics (6.31.0):
+  - Firebase/Analytics (6.31.1):
     - Firebase/Core
-  - Firebase/Auth (6.31.0):
+  - Firebase/Auth (6.31.1):
     - Firebase/CoreOnly
     - FirebaseAuth (~> 6.9.0)
-  - Firebase/Core (6.31.0):
+  - Firebase/Core (6.31.1):
     - Firebase/CoreOnly
     - FirebaseAnalytics (= 6.8.0)
-  - Firebase/CoreOnly (6.31.0):
+  - Firebase/CoreOnly (6.31.1):
     - FirebaseCore (= 6.10.1)
-  - Firebase/Database (6.31.0):
+  - Firebase/Database (6.31.1):
     - Firebase/CoreOnly
     - FirebaseDatabase (~> 6.5.0)
-  - Firebase/Messaging (6.31.0):
+  - Firebase/Messaging (6.31.1):
     - Firebase/CoreOnly
     - FirebaseMessaging (~> 4.6.2)
-  - Firebase/Performance (6.31.0):
+  - Firebase/Performance (6.31.1):
     - Firebase/CoreOnly
     - FirebasePerformance (~> 3.3.0)
-  - Firebase/RemoteConfig (6.31.0):
+  - Firebase/RemoteConfig (6.31.1):
     - Firebase/CoreOnly
     - FirebaseRemoteConfig (~> 4.9.0)
-  - Firebase/Storage (6.31.0):
+  - Firebase/Storage (6.31.1):
     - Firebase/CoreOnly
     - FirebaseStorage (~> 3.9.0)
   - firebase_analytics (0.0.1):
@@ -329,7 +329,7 @@ SPEC CHECKSUMS:
   device_info: d7d233b645a32c40dfdc212de5cf646ca482f175
   FBSDKCoreKit: 1d5acf7c9d7a2f92bb1a242dc60cae5b7adb91df
   FBSDKLoginKit: f1ea8026a58b52d30c9f2e6a58ca7d813619fb83
-  Firebase: 87483fa19acfdf99244523f2389e931927b91457
+  Firebase: 658370fa0181826a74b7cfca8d68c5856ca749ae
   firebase_analytics: 9118044ffb98bee71d84733fc594f5134fe4bc1b
   firebase_auth: 4ee3a54d3f09434c508c284a62f895a741a30637
   firebase_core: 335c02abd48672b7c83c683df833d0488a72e73e

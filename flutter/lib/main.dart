@@ -5,6 +5,7 @@ import 'package:delern_flutter/views/helpers/device_info.dart';
 import 'package:delern_flutter/views/helpers/localization.dart';
 import 'package:delern_flutter/views/helpers/routes.dart';
 import 'package:delern_flutter/views/helpers/styles.dart' as app_styles;
+import 'package:device_preview/device_preview.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -18,33 +19,40 @@ class App extends StatelessWidget {
       FirebaseAnalyticsObserver(analytics: FirebaseAnalytics());
 
   @override
-  Widget build(BuildContext context) => MaterialApp(
-        // Produce collections of localized values
-        localizationsDelegates: const [
-          AppLocalizationsDelegate(),
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-        ],
-        supportedLocales: const [
-          // This list limits what locales Global Localizations delegates above
-          // will support. The first element of this list is a fallback locale.
-          Locale('en', 'US'),
-          Locale('ru', 'RU'),
-        ],
-        navigatorObservers: [
-          _analyticsNavigatorObserver,
-          FlutterSentryNavigatorObserver(),
-        ],
-        title: kReleaseMode ? 'Delern' : 'Delern DEBUG',
-        // AuthWidget must be above Navigator to provide CurrentUserWidget.of().
-        builder: (context, child) => AuthWidget(child: child),
-        theme: ThemeData(
-          scaffoldBackgroundColor: app_styles.kScaffoldBackgroundColor,
-          primarySwatch: app_styles.kPrimarySwatch,
-          accentColor: app_styles.kAccentColor,
+  Widget build(BuildContext context) => DevicePreview(
+        enabled: !kReleaseMode,
+        builder: (context) => MaterialApp(
+          locale: DevicePreview.of(context).locale,
+          // Produce collections of localized values
+          localizationsDelegates: const [
+            AppLocalizationsDelegate(),
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+          ],
+          supportedLocales: const [
+            // This list limits what locales Global Localizations delegates
+            // above will support. The first element of this list is
+            // a fallback locale.
+            Locale('en', 'US'),
+            Locale('ru', 'RU'),
+          ],
+          navigatorObservers: [
+            _analyticsNavigatorObserver,
+            FlutterSentryNavigatorObserver(),
+          ],
+          title: kReleaseMode ? 'Delern' : 'Delern DEBUG',
+          builder: (context, child) =>
+              // AuthWidget must be above Navigator to provide
+              // CurrentUserWidget.of().
+              DevicePreview.appBuilder(context, AuthWidget(child: child)),
+          theme: ThemeData(
+            scaffoldBackgroundColor: app_styles.kScaffoldBackgroundColor,
+            primarySwatch: app_styles.kPrimarySwatch,
+            accentColor: app_styles.kAccentColor,
+          ),
+          routes: routes,
+          home: const DecksList(),
         ),
-        routes: routes,
-        home: const DecksList(),
       );
 }
 

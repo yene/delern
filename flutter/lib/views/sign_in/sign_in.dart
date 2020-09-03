@@ -24,12 +24,7 @@ class SignIn extends StatelessWidget {
   Widget build(BuildContext context) => Scaffold(
         backgroundColor: app_styles.signInBackgroundColor,
         body: SafeArea(
-          child: OrientationBuilder(
-            builder: (context, orientation) =>
-                (orientation == Orientation.portrait)
-                    ? _buildPortraitSignInScreen(context)
-                    : _buildLandscapeSignInScreen(context),
-          ),
+          child: _buildPortraitSignInScreen(context),
         ),
       );
 
@@ -190,18 +185,6 @@ class SignIn extends StatelessWidget {
             flex: 8,
             child: _buildSignInControls(context),
           ),
-        ],
-      );
-
-  Widget _buildLandscapeSignInScreen(BuildContext context) => Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          Padding(
-              padding: EdgeInsets.symmetric(
-                  horizontal: MediaQuery.of(context).size.shortestSide * 0.05),
-              child: _buildLogoPicture(
-                  context, MediaQuery.of(context).size.width / 3)),
-          Expanded(child: _buildSignInControls(context)),
         ],
       );
 

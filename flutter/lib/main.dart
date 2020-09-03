@@ -19,41 +19,48 @@ class App extends StatelessWidget {
       FirebaseAnalyticsObserver(analytics: FirebaseAnalytics());
 
   @override
-  Widget build(BuildContext context) => DevicePreview(
-        enabled: !kReleaseMode,
-        builder: (context) => MaterialApp(
-          locale: DevicePreview.of(context).locale,
-          // Produce collections of localized values
-          localizationsDelegates: const [
-            AppLocalizationsDelegate(),
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-          ],
-          supportedLocales: const [
-            // This list limits what locales Global Localizations delegates
-            // above will support. The first element of this list is
-            // a fallback locale.
-            Locale('en', 'US'),
-            Locale('ru', 'RU'),
-          ],
-          navigatorObservers: [
-            _analyticsNavigatorObserver,
-            FlutterSentryNavigatorObserver(),
-          ],
-          title: kReleaseMode ? 'Delern' : 'Delern DEBUG',
-          builder: (context, child) =>
-              // AuthWidget must be above Navigator to provide
-              // CurrentUserWidget.of().
-              DevicePreview.appBuilder(context, AuthWidget(child: child)),
-          theme: ThemeData(
-            scaffoldBackgroundColor: app_styles.kScaffoldBackgroundColor,
-            primarySwatch: app_styles.kPrimarySwatch,
-            accentColor: app_styles.kAccentColor,
-          ),
-          routes: routes,
-          home: const DecksList(),
+  Widget build(BuildContext context) {
+    const isDevicePreviewEnabled =
+        bool.fromEnvironment('device_preview', defaultValue: false);
+    return DevicePreview(
+      // device_preview is disabled by default. To run app with device_preview
+      // use flutter run --dart-define=device_preview=true
+      enabled: isDevicePreviewEnabled,
+      builder: (context) => MaterialApp(
+        locale:
+            isDevicePreviewEnabled ? DevicePreview.of(context).locale : null,
+        // Produce collections of localized values
+        localizationsDelegates: const [
+          AppLocalizationsDelegate(),
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+        ],
+        supportedLocales: const [
+          // This list limits what locales Global Localizations delegates
+          // above will support. The first element of this list is
+          // a fallback locale.
+          Locale('en', 'US'),
+          Locale('ru', 'RU'),
+        ],
+        navigatorObservers: [
+          _analyticsNavigatorObserver,
+          FlutterSentryNavigatorObserver(),
+        ],
+        title: kReleaseMode ? 'Delern' : 'Delern DEBUG',
+        builder: (context, child) =>
+            // AuthWidget must be above Navigator to provide
+            // CurrentUserWidget.of().
+            DevicePreview.appBuilder(context, AuthWidget(child: child)),
+        theme: ThemeData(
+          scaffoldBackgroundColor: app_styles.kScaffoldBackgroundColor,
+          primarySwatch: app_styles.kPrimarySwatch,
+          accentColor: app_styles.kAccentColor,
         ),
-      );
+        routes: routes,
+        home: const DecksList(),
+      ),
+    );
+  }
 }
 
 void main() => FlutterSentry.wrap(

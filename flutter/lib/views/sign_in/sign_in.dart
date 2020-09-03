@@ -24,19 +24,19 @@ class SignIn extends StatelessWidget {
   Widget build(BuildContext context) => Scaffold(
         backgroundColor: app_styles.signInBackgroundColor,
         body: SafeArea(
-          child: _buildPortraitSignInScreen(context),
-        ),
-      );
-
-  Widget _buildLogoPicture(BuildContext context, double width) => Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Image.asset(
-              'images/delern_with_logo.png',
-              width: width,
-            ),
-          ],
+          child: Column(
+            children: <Widget>[
+              Expanded(
+                  flex: 2,
+                  child:
+                      LogoImage(width: MediaQuery.of(context).size.width / 2)),
+              _kDivider,
+              Expanded(
+                flex: 8,
+                child: _buildSignInControls(context),
+              ),
+            ],
+          ),
         ),
       );
 
@@ -151,14 +151,12 @@ class SignIn extends StatelessWidget {
                             horizontal:
                                 MediaQuery.of(context).size.shortestSide * 0.1),
                         child: AnonymousSighInButton(
-                          onPressed: () {
-                            signInWithProvider(
-                                context: context, provider: null);
-                          },
+                          onPressed: () => signInWithProvider(
+                              context: context, provider: null),
                         ),
                       ),
                       _kHeightBetweenWidgets,
-                      _buildLegalInfo(context),
+                      const LegalInfoWidget(),
                       const SafeArea(
                         child: _kHeightBetweenWidgets,
                       ),
@@ -170,25 +168,34 @@ class SignIn extends StatelessWidget {
           ),
         ),
       );
+}
 
-  Widget _buildPortraitSignInScreen(BuildContext context) => Column(
-        children: <Widget>[
-          Expanded(
-            flex: 2,
-            child: _buildLogoPicture(
-              context,
-              MediaQuery.of(context).size.width / 2,
+@immutable
+class LogoImage extends StatelessWidget {
+  final double width;
+
+  const LogoImage({@required this.width}) : assert(width != null);
+
+  @override
+  Widget build(BuildContext context) => Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Image.asset(
+              'images/delern_with_logo.png',
+              width: width,
             ),
-          ),
-          _kDivider,
-          Expanded(
-            flex: 8,
-            child: _buildSignInControls(context),
-          ),
-        ],
+          ],
+        ),
       );
+}
 
-  Widget _buildLegalInfo(BuildContext context) => Padding(
+@immutable
+class LegalInfoWidget extends StatelessWidget {
+  const LegalInfoWidget();
+
+  @override
+  Widget build(BuildContext context) => Padding(
         padding: EdgeInsets.symmetric(
             horizontal: MediaQuery.of(context).size.shortestSide * 0.1),
         child: RichText(

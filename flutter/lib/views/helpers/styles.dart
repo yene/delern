@@ -107,7 +107,7 @@ final TextStyle editDeckText = TextStyle(
 );
 
 const TextStyle signInTextButton = TextStyle(
-  fontSize: 20,
+  fontSize: 22,
   fontFamily: 'Roboto Medium',
   color: Colors.white,
   fontWeight: FontWeight.bold,

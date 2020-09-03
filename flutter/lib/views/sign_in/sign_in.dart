@@ -79,7 +79,13 @@ class SignIn extends StatelessWidget {
                               child: Text(
                                 context.l.signInWithLabel.toUpperCase(),
                                 textAlign: TextAlign.center,
-                                style: Theme.of(context).textTheme.headline6,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .headline6
+                                    .copyWith(
+                                      fontSize: 32,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                               ),
                             ),
                           ),
@@ -114,8 +120,10 @@ class SignIn extends StatelessWidget {
                       child: Center(
                         child: Text(
                           context.l.splashScreenFeatures,
-                          style: app_styles.secondaryText
-                              .copyWith(color: app_styles.kSignInTextColor),
+                          style: app_styles.secondaryText.copyWith(
+                            color: app_styles.kSignInTextColor,
+                            fontSize: 18,
+                          ),
                           textAlign: TextAlign.center,
                         ),
                       ),
@@ -132,6 +140,8 @@ class SignIn extends StatelessWidget {
                             child: Text(
                               context.l.signInScreenOr.toUpperCase(),
                               style: app_styles.secondaryText.copyWith(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
                                   color:
                                       app_styles.kSignInSectionSeparationColor),
                               textAlign: TextAlign.center,

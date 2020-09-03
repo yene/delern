@@ -38,7 +38,10 @@ class GoogleSignInButton extends StatelessWidget {
                   child: FractionallySizedBox(
                     heightFactor: 0.85,
                     child: Container(
-                      color: Colors.white,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(2),
+                        color: Colors.white,
+                      ),
                       child: Padding(
                         padding: const EdgeInsets.all(8),
                         child: Image.asset('images/google_sign_in.png'),

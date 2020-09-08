@@ -78,7 +78,7 @@ class SignIn extends StatelessWidget {
                                     .textTheme
                                     .headline6
                                     .copyWith(
-                                      fontSize: 32,
+                                      fontSize: 30,
                                       fontWeight: FontWeight.bold,
                                     ),
                               ),
@@ -117,7 +117,6 @@ class SignIn extends StatelessWidget {
                           context.l.splashScreenFeatures,
                           style: app_styles.secondaryText.copyWith(
                             color: app_styles.kSignInTextColor,
-                            fontSize: 18,
                           ),
                           textAlign: TextAlign.center,
                         ),

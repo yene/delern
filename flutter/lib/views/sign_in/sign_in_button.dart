@@ -32,11 +32,11 @@ class GoogleSignInButton extends StatelessWidget {
                 ],
               ),
               Padding(
-                padding: const EdgeInsets.only(left: 4),
+                padding: const EdgeInsets.only(left: 2),
                 child: Align(
                   alignment: Alignment.centerLeft,
                   child: FractionallySizedBox(
-                    heightFactor: 0.85,
+                    heightFactor: 0.95,
                     child: Container(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(2),
@@ -142,8 +142,6 @@ class SignInButtonContainer extends StatelessWidget {
       child: SizedBox(
         height: _buttonHeight,
         child: Container(
-            //elevation: _buttonElevation,
-            //onPressed: onPressed,
             decoration: BoxDecoration(
               color: color,
               borderRadius: BorderRadius.circular(2),
@@ -191,61 +189,7 @@ Future<void> signInWithProvider({
           // Sign out of Firebase but retain the account that has been picked
           // by user.
           await Auth.instance.signOut();
-          return _signInWithProvider(
-              context: context, provider: provider, forceAccountPicker: false);
-        }
-        break;
-
-      case 'ERROR_ACCOUNT_EXISTS_WITH_DIFFERENT_CREDENTIAL':
-        // Trying to sign in with a different provider but the same email.
-        // Can't showDialog because we don't have Navigator before sign in.
-        UserMessages.showMessage(Scaffold.of(context),
-            context.l.signInAccountExistWithDifferentCredentialWarning);
-        break;
-
-      default:
-        UserMessages.showAndReportError(
-          () => Scaffold.of(context),
-          e,
-          stackTrace: stackTrace,
-        );
-    }
-  }
-}
-
-Future<void> _signInWithProvider({
-  @required BuildContext context,
-  @required String provider,
-  bool forceAccountPicker = true,
-}) async {
-  try {
-    await Auth.instance.signIn(
-      provider,
-      forceAccountPicker: forceAccountPicker,
-    );
-  } on PlatformException catch (e, stackTrace) {
-    // Cover only those scenarios where we can recover or an additional action
-    // from user can be helpful.
-    switch (e.code) {
-      case 'ERROR_EMAIL_ALREADY_IN_USE':
-      // Already signed in (as anonymous, normally) and trying to link with
-      // account that already exists. And on top of that, using a different
-      // provider than the one used for initial account registration.
-      case 'ERROR_CREDENTIAL_ALREADY_IN_USE':
-        // Already signed in (as anonymous, normally) and trying to link with
-        // account that already exists.
-
-        // TODO(ksheremet): Merge data
-        final signIn = await showSaveUpdatesDialog(
-            context: context,
-            changesQuestion: context.l.signInCredentialAlreadyInUseWarning,
-            yesAnswer: context.l.navigationDrawerSignIn,
-            noAnswer: MaterialLocalizations.of(context).cancelButtonLabel);
-        if (signIn) {
-          // Sign out of Firebase but retain the account that has been picked
-          // by user.
-          await Auth.instance.signOut();
-          return _signInWithProvider(
+          return signInWithProvider(
               context: context, provider: provider, forceAccountPicker: false);
         }
         break;

@@ -1,4 +1,5 @@
 import 'package:delern_flutter/remote/analytics.dart';
+import 'package:delern_flutter/remote/auth.dart';
 import 'package:delern_flutter/views/helpers/legal.dart';
 import 'package:delern_flutter/views/helpers/localization.dart';
 import 'package:delern_flutter/views/helpers/styles.dart' as app_styles;
@@ -150,8 +151,12 @@ class SignIn extends StatelessWidget {
                             horizontal:
                                 MediaQuery.of(context).size.shortestSide * 0.1),
                         child: AnonymousSighInButton(
-                          onPressed: () => signInWithProvider(
-                              context: context, provider: null),
+                          onPressed: () {
+                            Auth.instance.currentUser == null
+                                ? signInWithProvider(
+                                    context: context, provider: null)
+                                : Navigator.of(context).pop();
+                          },
                         ),
                       ),
                       _kHeightBetweenWidgets,

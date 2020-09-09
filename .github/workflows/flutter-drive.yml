@@ -18,9 +18,9 @@ jobs:
         device:
           # Flutter only supports 64-bit simulators:
           # https://flutter.dev/docs/get-started/install/macos.
-          - "iPhone 8 (13.6)"
-          - "iPhone 11 Pro Max (13.6)"
-          - "iPad Pro (12.9-inch) (4th generation) (13.6)"
+          - "iPhone 8 (13.7)"
+          - "iPhone 11 Pro Max (13.7)"
+          - "iPad Pro (12.9-inch) (4th generation) (13.7)"
     runs-on: macOS-latest
     env:
       FLUTTER_ROOT: /tmp/flutter

@@ -77,7 +77,3 @@ linter:
 
     # TODO(dotdoom): support key parameter in widget constructors.
     use_key_in_widget_constructors: false
-
-    # Environment variable is used to enable device_preview package.
-    # This package is disabled by default.
-    do_not_use_environment: false

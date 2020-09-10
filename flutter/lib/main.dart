@@ -21,6 +21,7 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const isDevicePreviewEnabled =
+        // ignore: do_not_use_environment
         bool.fromEnvironment('device_preview', defaultValue: false);
     return DevicePreview(
       // device_preview is disabled by default. To run app with device_preview

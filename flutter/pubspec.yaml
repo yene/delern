@@ -20,6 +20,7 @@ dependencies:
   built_value: ^7.1.0
   rxdart: ^0.23.1
   uuid: ^2.0.1
+  device_preview: ^0.4.8
 
   flutter_sentry: ^0.4.1
   # Needed for the User context type, version is bound by flutter_sentry.
